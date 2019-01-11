@@ -4,7 +4,10 @@ MAIN = elfmain.sail
 AARCH64_FLAGS = -non_lexical_flow -no_lexp_bounds_check -memo_z3 -no_warn
 AARCH64_SRCS  = model/prelude.sail model/$(DEVICES) model/aarch64.sail model/aarch64_decode.sail model/$(MAIN)
 
-.PHONY: clean
+.PHONY: clean check
+
+check: model/*.sail
+	sail -just_check -verbose 1 $(AARCH64_FLAGS) $(OPTS) $(AARCH64_SRCS)
 
 aarch64.c: model/*.sail
 	sail -c -O -Oconstant_fold $(AARCH64_FLAGS) $(OPTS) $(AARCH64_SRCS) 1> aarch64.c.tmp

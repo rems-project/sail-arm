@@ -7328,7 +7328,7 @@ function aget_Elem__1 (vector_name, e, size) = {
 }
 
 val __WriteMemory : forall ('N : Int).
-  (int('N), bits(56), bits(8 * 'N)) -> unit effect {escape, rreg, wmem, wreg}
+  (int('N), bits(56), bits(8 * 'N)) -> unit effect {rreg, wmem}
 
 function __WriteMemory (N, address, val_name) = {
     __WriteRAM(56, N, __defaultRAM, address, val_name);
@@ -7337,7 +7337,7 @@ function __WriteMemory (N, address, val_name) = {
 }
 
 val __ReadMemory : forall ('N : Int).
-  (int('N), bits(56)) -> bits(8 * 'N) effect {escape, rmem, rreg, wreg}
+  (int('N), bits(56)) -> bits(8 * 'N) effect {rmem, rreg}
 
 function __ReadMemory (N, address) = {
     let r : vector(8 * 'N, dec, bit) = __ReadRAM(56, N, __defaultRAM, address);
@@ -8327,7 +8327,7 @@ function LSR (x, shift) = {
     result
 }
 
-val aset__MemTag : (AddressDescriptor, bits(4)) -> unit effect {escape, rreg, undef, wmem, wreg}
+val aset__MemTag : (AddressDescriptor, bits(4)) -> unit effect {escape, rreg, undef, wmem}
 
 function aset__MemTag (desc, value_name) = {
     let offset : bits(64) = ZeroExtend(desc.paddress.address);
@@ -8340,7 +8340,7 @@ function aset__MemTag (desc, value_name) = {
 
 overload _MemTag = {aset__MemTag}
 
-val aget__MemTag : AddressDescriptor -> bits(4) effect {escape, rmem, rreg, undef, wreg}
+val aget__MemTag : AddressDescriptor -> bits(4) effect {escape, rmem, rreg, undef}
 
 function aget__MemTag desc = {
     let offset : bits(64) = ZeroExtend(desc.paddress.address);
@@ -9215,7 +9215,7 @@ function __Reset cold = {
 }
 
 val GTEPerformExtObsCommon : forall ('observer : Int).
-  int('observer) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
+  int('observer) -> unit effect {rmem, rreg, undef, wmem, wreg}
 
 function GTEPerformExtObsCommon observer = {
     let currentNS : vector(1, dec, bit) = 0b1;
@@ -14871,7 +14871,7 @@ function GTEReleaseExtObs () = {
     return()
 }
 
-val GTEPerformExtObs64 : unit -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
+val GTEPerformExtObs64 : unit -> unit effect {rmem, rreg, undef, wmem, wreg}
 
 function GTEPerformExtObs64 () = {
     prerr("GTEPerformExtObs64(" ++ DecStr(UInt(slice(_GTEParam[0], 0, 32))) ++ ")\n");
@@ -14885,7 +14885,7 @@ function GTEPerformExtObs64 () = {
     return()
 }
 
-val GTEPerformExtObs : unit -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
+val GTEPerformExtObs : unit -> unit effect {rmem, rreg, undef, wmem, wreg}
 
 function GTEPerformExtObs () = {
     prerr("GTEPerformExtObs(" ++ DecStr(UInt(slice(_GTEParam[0], 0, 32))) ++ ")\n");
@@ -14914,7 +14914,7 @@ function GTEEnableExtObs () = {
     return()
 }
 
-val GTEProcessParam : unit -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
+val GTEProcessParam : unit -> unit effect {rmem, rreg, undef, wmem, wreg}
 
 function GTEProcessParam () = {
     match _GTECurrentAPI {
@@ -15111,7 +15111,7 @@ function GTEProcessParam () = {
     return()
 }
 
-val set_GTE_API : bits(32) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
+val set_GTE_API : bits(32) -> unit effect {rmem, rreg, undef, wmem, wreg}
 
 function set_GTE_API val_name = {
     _GTEActive = true;
@@ -22001,7 +22001,7 @@ val AArch64_S1AttrDecode : (bits(2), bits(3), AccType) -> MemoryAttributes effec
 function AArch64_S1AttrDecode (SH, attr, acctype) = {
     memattrs : MemoryAttributes = undefined : MemoryAttributes;
     let mair : vector(64, dec, bit) = MAIR();
-    let index : {'ex140968#, (0 <= 'ex140968# & 'ex140968# <= 2 ^ 3 - 1). int(8 * 'ex140968#)} = 8 * UInt(attr);
+    let index : {'ex140927#, (0 <= 'ex140927# & 'ex140927# <= 2 ^ 3 - 1). int(8 * 'ex140927#)} = 8 * UInt(attr);
     attrfield : bits(8) = undefined : bits(8);
     attrfield = slice(mair, index, 8);
     memattrs.tagged = false;
@@ -41743,7 +41743,7 @@ function AArch32_S1AttrDecode (SH, attr, acctype) = {
     } else {
         mair = get_MAIR1() @ get_MAIR0()
     };
-    let index : {'ex197438#, (0 <= 'ex197438# & 'ex197438# <= 2 ^ 3 - 1). int(8 * 'ex197438#)} = 8 * UInt(attr);
+    let index : {'ex197397#, (0 <= 'ex197397# & 'ex197397# <= 2 ^ 3 - 1). int(8 * 'ex197397#)} = 8 * UInt(attr);
     attrfield : bits(8) = undefined : bits(8);
     attrfield = slice(mair, index, 8);
     memattrs.tagged = false;
@@ -42350,7 +42350,7 @@ function AArch32_TakeUndefInstrException__1 exception = {
     let route_to_hyp : bool = (EL2Enabled() & PSTATE.EL == EL0) & [get_HCR()[27]] == 0b1;
     let preferred_exception_return : bits(32) = ThisInstrAddr();
     let vect_offset : int(4) = 4;
-    let lr_offset : {'ex198031#, 'ex198031# in {4, 2}. int('ex198031#)} = if CurrentInstrSet() == InstrSet_A32 then 4 else 2;
+    let lr_offset : {'ex197990#, 'ex197990# in {4, 2}. int('ex197990#)} = if CurrentInstrSet() == InstrSet_A32 then 4 else 2;
     if PSTATE.EL == EL2 then {
         AArch32_EnterHypMode(exception, preferred_exception_return, vect_offset)
     } else {
@@ -43401,7 +43401,7 @@ val AArch32_CheckDomain : forall ('level : Int) ('iswrite : Bool).
   (bits(4), bits(32), int('level), AccType, bool('iswrite)) -> (bool, FaultRecord) effect {escape, rreg, undef}
 
 function AArch32_CheckDomain (domain, vaddress, level, acctype, iswrite) = {
-    let index : {'ex199183#, (0 <= 'ex199183# & 'ex199183# <= 2 ^ 4 - 1). int(2 * 'ex199183#)} = 2 * UInt(domain);
+    let index : {'ex199142#, (0 <= 'ex199142# & 'ex199142# <= 2 ^ 4 - 1). int(2 * 'ex199142#)} = 2 * UInt(domain);
     attrfield : bits(2) = undefined : bits(2);
     attrfield = slice(get_DACR(), index, 2);
     __anon1 : Constraint = undefined : Constraint;

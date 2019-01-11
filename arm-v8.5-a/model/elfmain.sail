@@ -59,7 +59,7 @@ let CNT_IRQ  = [0x0000_000d,       0x0000_000a,        0x0000_03ff,        0x000
 let SPI_OFFSET = 32
 
 // Advance CPU by one cycle
-val Step_CPU : unit -> unit effect {escape, undef, wreg, rreg, rmem, wmem}
+val Step_CPU : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
 
 function Step_CPU() = {
   // Check for pending interrupts
@@ -190,7 +190,7 @@ function Step_CPU() = {
 }
 
 // Advance Timers by one cycle
-val Step_Timers : unit -> unit effect {escape, undef, wreg, rreg, rmem, wmem}
+val Step_Timers : unit -> unit effect {escape, undef, wreg, rreg}
 
 function Step_Timers() = {
   // Increment the counter
@@ -246,7 +246,7 @@ function Step_Timers() = {
 }
 
 // Simple top level fetch and execute loop.
-val Step_System : unit -> unit effect {escape, undef, wreg, rreg, rmem, wmem}
+val Step_System : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
 
 function Step_System () = {
     try {
@@ -345,7 +345,7 @@ function init() = {
   TakeReset(COLD_RESET);
 }
 
-val main : unit -> unit effect {escape, undef, wreg, rreg, rmem, wmem}
+val main : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
 
 val check_cycle_count = { c: "cycle_count" } : unit -> unit
 

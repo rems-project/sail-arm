@@ -16,3 +16,30 @@ make aarch64
 ```
 
 will build an executable version of the model by compiling it to C.
+
+## Booting Linux
+
+Linux can be booted on the model. The shell script `boot.sh` contains
+commands for automatically doing so
+
+First, it downloads the
+[sail-arm-boot](https://github.com/Alasdair/sail-arm-boot) repository,
+and uses it to build a tiny bootloader (derived from u-boot), the
+device tree blob, and a minimal initramfs. This repository also
+contains a config file for the kernel.
+
+Then it downloads Linux 4.14.92 from kernel.org, and builds it using
+the previously downloaded config.
+
+To boot linux the Sail model must be built with a file containing a
+minimal implementation of the Arm generic interrupt controller (GIC)
+which is just sufficient for the timer interrupt, as well as a Sail
+init function that loads the device tree blob, kernel, and bootloader
+in the model's memory. To do this the model must be compiled as
+
+```
+make DEVICES=devices.sail MAIN=mail.sail aarch64
+```
+
+Otherwise, the model is configured to load and run elf binaries. The
+`boot.sh` script will prompt to re-build the model if necessary.

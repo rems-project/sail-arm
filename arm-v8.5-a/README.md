@@ -1,11 +1,12 @@
 # Sail Arm-v8.5-A
 
-This is a Sail model for a substantial fragment of the Armv8.5-A
-instruction-set architecture, based on the Arm XML release at:
+This is a [Sail](https://www.cl.cam.ac.uk/~pes20/sail/) model for a substantial fragment of the Armv8.5-A
+instruction-set architecture, based on the Arm XML release (version Arm v8.5 00bet8) at:
 
 https://developer.arm.com/products/architecture/cpu-architecture/a-profile/exploration-tools
 
-It currently contains all 64-bit instructions.
+(with additional glue code and system register material needed to boot
+an OS). The Sail version currently contains all 64-bit instructions.
 
 ## Building
 

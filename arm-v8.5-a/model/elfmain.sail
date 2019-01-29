@@ -153,7 +153,7 @@ function Step_CPU() = {
       try {
           __PC_changed = false;
           ShouldAdvanceIT = (PSTATE.nRW == [bitone]) & (PSTATE.T == [bitone]);
-          decode(__currentInstr);
+	  decode64(__currentInstr);
       } catch {
           // note: if supporting AArch32 as well, call _UndefinedFault() instead
           Error_Undefined()         => try { AArch64_UndefinedFault() } catch { _ => print("Exception during Undefined recovery\n") },

@@ -16,14 +16,14 @@
 /* modification, are permitted (subject to the limitations in the         */
 /* disclaimer below) provided that the following conditions are met:      */
 /*                                                                        */
-/* 	* Redistributions of source code must retain the above            */
+/*      * Redistributions of source code must retain the above            */
 /*        copyright notice, this list of conditions and the following     */
-/* 	  disclaimer.                                                     */
+/*        disclaimer.                                                     */
 /*      * Redistributions in binary form must reproduce the above         */
 /*        copyright notice, this list of conditions and the following     */
 /*        disclaimer in the documentation and/or other materials          */
-/* 	  provided with the distribution.                                 */
-/* 	* Neither the name of ARM Limited nor the names of its            */
+/*        provided with the distribution.                                 */
+/*      * Neither the name of ARM Limited nor the names of its            */
 /*        contributors may be used to endorse or promote products         */
 /*        derived from this software without specific prior written       */
 /*        permission.                                                     */
@@ -44,11 +44,6 @@
 /**************************************************************************/
 
 $include <elf.sail>
-$include <trace.sail>
-
-val "get_time_ns" : unit -> int
-
-val "cycle_count" : unit -> unit
 
 val read_register = "reg_deref" : forall ('a : Type). register('a) -> 'a effect {rreg}
 
@@ -56,171 +51,307 @@ val read_register = "reg_deref" : forall ('a : Type). register('a) -> 'a effect 
 let CNT_CVAL = [ref CNTP_CVAL_EL0, ref CNTHP_CVAL_EL2, ref CNTPS_CVAL_EL1, ref CNTV_CVAL_EL0, ref CNTHV_CVAL_EL2]
 let CNT_TVAL = [ref CNTP_TVAL_EL0, ref CNTHP_TVAL_EL2, ref CNTPS_TVAL_EL1, ref CNTV_TVAL_EL0, ref CNTHV_TVAL_EL2]
 let CNT_CTL  = [ref CNTP_CTL_EL0,  ref CNTHP_CTL_EL2,  ref CNTPS_CTL_EL1,  ref CNTV_CTL_EL0,  ref CNTHV_CTL_EL2 ]
-let CNT_IRQ  = [0x0000_beef,       0x0000_cafe,        0x0000_fee1,        0x0000_000b,       0x0000_dead       ]
-//                                                     No IRQ
+let CNT_CTL  = [ref CNTP_CTL_EL0,  ref CNTHP_CTL_EL2,  ref CNTPS_CTL_EL1,  ref CNTV_CTL_EL0,  ref CNTHV_CTL_EL2 ]
+let CNT_IRQ  = [0x0000_000d,       0x0000_000a,        0x0000_03ff,        0x0000_000b,       0x0000_03ff       ]
+//                                                     No IRQ                                 No IRQ?
 
 // SGI Interrupts are 0-15, PPI interrupts are 16-31, and SPI interrupts have an offset of 32.
 let PPI_OFFSET = 16
 
-register startTime : int
-register instCount : int
+enum ISET = A32 | A64
+
+// Advance CPU by one cycle
+val Step_CPU : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
+
+function Step_CPU() = {
+  // Check for pending interrupts
+  /* var interrupt_req : InterruptReq = undefined; */
+  /* interrupt_req.take_SE  = true; interrupt_req.take_vSE  = true; */
+  /* interrupt_req.take_IRQ = true; interrupt_req.take_vIRQ = true; */
+  /* interrupt_req.take_FIQ = true; interrupt_req.take_vFIQ = true; */
+  /* try { */
+  /*     var interrupted : bool = false; */
+  /*     interrupted = TakePendingInterrupts(interrupt_req); */
+  /*     if interrupted then { */
+  /*         print("Pending interrupt taken\n"); */
+  /*     } */
+  /* } catch { */
+  /*     _ => { */
+  /*       print("Unhandled exception while pending exceptions\n"); */
+  /*     } */
+  /* }; */
+
+  var fetch_ok : bool = false;
+  var iset : ISET = A64;
+  try {
+    match __getISET() {
+      0 => {
+        __currentInstr       = __fetchA32();
+        __currentInstrLength = 4;
+        iset = A32;
+        fetch_ok = true;
+      },
+      4 => {
+        __currentInstr       = __fetchA64();
+        __currentInstrLength = 4;
+        iset = A64;
+        fetch_ok = true;
+      },
+      _ => {
+        print("Illegal instruction set\n");
+        exit()
+      }
+    }
+  } catch {
+    Error_ExceptionTaken() => {
+      print("Exception taken during IFetch from PC=" ++ HexStr(UInt(aget_PC())) ++ " in cycle=" ++ DecStr(get_cycle_count()) ++ "\n");
+    },
+    _ => {
+      print("Exiting due to unhandled exception in IFetch\n");
+      exit()
+    }
+  };
+
+  // Use a magic instruction to kill the simulator in init
+  if __currentInstr == 0xfee1dead then {
+    print("[Sail] Finished Successfully!\n");
+    exit()
+  };
+
+  if fetch_ok then {
+    // test for ERET instruction from EL3_Secure - only supported in v8.4
+    if (__currentInstr == 0xd69f_03e0) & (PSTATE.EL == EL3) & (SCR_EL3[0] == bitzero) then {
+      print(concat_str("UNIMPLEMENTED: EL2_Secure support (v8.4 feature) ",
+            concat_str(HexStr(UInt(__currentInstr)),
+            "\n")));
+      exit()
+    };
+
+    try {
+      __PC_changed = false;
+      ShouldAdvanceIT = (PSTATE.nRW == [bitone]) & (PSTATE.T == [bitone]);
+
+      var continue_decode : bool = true;
+      SEE = -1;
+      while continue_decode do {
+	try {
+	  match iset {
+	    A32 => decode32(__currentInstr),
+	    A64 => decode64(__currentInstr)
+	  };
+	  continue_decode = false
+	} catch {
+	  Error_See(_) => {
+	    prerr_int("Error_See thrown by decoder: ", SEE)
+	  },
+	  exn => throw(exn)
+	}
+      }
+    } catch {
+      // note: if supporting AArch32 as well, call _UndefinedFault() instead
+      Error_Undefined()         => try { AArch64_UndefinedFault() } catch { _ => print("Exception during Undefined recovery\n") },
+      Error_See(_) => {
+	print("Unexpected SEE, exiting.\n");
+        exit()
+      },
+      Error_ReservedEncoding(_) => try { AArch64_UndefinedFault() } catch { _ => print("Exception during ReservedEncoding recovery\n") },
+      Error_ExceptionTaken() => {
+	prerr(concat_str("Exception taken during Decode/Execute from PC=",
+              concat_str(HexStr(UInt(aget_PC())),
+              concat_str(" opcode=",
+              concat_str(HexStr(UInt(__currentInstr)),
+              concat_str(" in cycle ",
+              concat_str(DecStr(get_cycle_count()),
+              "\n")))))));
+        // print("  This might just be a HINT like 0xd50320df\n");
+        ()
+      },
+      Error_Implementation_Defined(s) => {
+        print(concat_str("IMPLEMENTATION_DEFINED ",
+              concat_str(s,
+              "\n")));
+        exit();
+      }
+    };
+    if ~(__PC_changed) then _PC = _PC + __currentInstrLength else ();
+    if ShouldAdvanceIT then AArch32_ITAdvance() else ();
+    SSAdvance();
+  };
+  __UpdateSystemCounter(); // should this happen even if sleeping?
+}
 
 let ISTATUS = 0x0000_0004
 let IMASK = 0x0000_0002
 
-// Simple top level fetch and execute loop.
-val fetch_and_execute : unit -> unit effect {escape, undef, wreg, rreg, rmem, wmem, configuration}
+// Advance Timers by one cycle
+val Step_Timers : unit -> unit effect {escape, undef, wreg, rreg}
 
-function fetch_and_execute () = {
-  while true do {
-    // print_bits("PC = ", _PC);
+function Step_Timers() = {
+  // Increment the counter
+  CNTPCT_EL0 = CNTPCT_EL0 + 1;
+  CNTVCT_EL0 = CNTPCT_EL0 - CNTVOFF_EL2;
+
+  // Timer value view for each timer
+  foreach (timer from 0 to 4) {
+    let CTL = CNT_CTL[timer];
+    let ctl = read_register(CTL);
+
+    // If the timer is enabled
+    if ctl[0] == bitone then {
+      let TVAL = CNT_TVAL[timer];
+      let nextTVAL = read_register(TVAL) - 1;
+      (*TVAL) = nextTVAL;
+
+      // If the timer condition is met
+      if nextTVAL == 0x0000_0000 then {
+	prerr_int("[Clock] Tick (TVAL) ", timer);
+	(*CTL) = ctl | ISTATUS // Set the ISTATUS bit
+      };
+
+      if SInt(nextTVAL) <= 0 then {
+	 /* IMASK unset         interrupts unmasked */
+	 if ctl[1] == bitzero & PSTATE.I == bitzero then {
+	   __GIC_Pending = CNT_IRQ[timer] + PPI_OFFSET;
+	   prerr_bits("[Clock] GIC interrupt ", __GIC_Pending);
+	   _IRQPending = true;
+	   AArch64_TakePhysicalIRQException()
+	 }
+      } else {
+	(*CTL) = ctl & ~(ISTATUS)
+      }
+    }
+  };
+
+  // // Handle the Kernel event stream, if enabled by CNTKCTL_EL1[2].
+  // if CNTKCTL_EL1[2] == bitone then {
+  //        let mask = LSL(ZeroExtend(0x1, 64), UInt(CNTKCTL_EL1[7 .. 4]));
+
+  //   // Trigger event stream on either rising bit (0-1, bitzero) or falling (1-0, bitone)
+  //   let trigger : bool = if CNTKCTL_EL1[3] == bitzero then {
+  //     ((CNTVCT_EL0 - 1) & mask) == Zeros() & (CNTVCT_EL0 & mask) != Zeros()
+  //   } else {
+  //     ((CNTVCT_EL0 - 1) & mask) != Zeros() & (CNTVCT_EL0 & mask) == Zeros()
+  //   };
+
+  //        if trigger & PSTATE.I == bitzero then {
+  //          prerr("[Clock] Tick\n");
+  //          __GIC_Pending = 0x0000_000b + PPI_OFFSET; // This might not be 0x000a...
+  //          CNTV_CTL_EL0 = CNTV_CTL_EL0 | ISTATUS;
+  //     _IRQPending = true;
+  //     AArch64_TakePhysicalIRQException()
+  //   }
+  // };
+
+  // // Handle the Hypervisor event stream, if enabled by CNTHCTL_EL2[2].
+  // if CNTHCTL_EL2[2] == bitone then {
+  //        let mask = LSL(ZeroExtend(0x1, 64), UInt(CNTHCTL_EL2[7 .. 4]));
+
+  //   // Trigger event stream on either rising bit (0-1, bitzero) or falling (1-0, bitone)
+  //   let trigger : bool = if CNTHCTL_EL2[3] == bitzero then {
+  //     ((CNTPCT_EL0 - 1) & mask) == Zeros() & (CNTPCT_EL0 & mask) != Zeros()
+  //   } else {
+  //     ((CNTPCT_EL0 - 1) & mask) != Zeros() & (CNTPCT_EL0 & mask) == Zeros()
+  //   };
+
+  //        if trigger & PSTATE.I == bitzero then {
+  //          prerr("[Clock] Tick\n");
+  //          __GIC_Pending = 0x0000_000a + PPI_OFFSET;
+  //     _IRQPending = true;
+  //     AArch64_TakePhysicalIRQException()
+  //   }
+  // };
+}
+
+// Simple top level fetch and execute loop.
+val Step_System : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
+
+function Step_System () = {
+  try {
+    try {
+      Step_Timers();
+    } catch {
+      _ => {
+	prerr(concat_str("Exception taken during Step_Timers.  PC=",
+              concat_str(HexStr(UInt(aget_PC())),
+              concat_str(" cycle=",
+              concat_str(DecStr(get_cycle_count()),
+              "\n")))));
+      }
+    };
 
     var prevEL = PSTATE.EL;
     var prevI = PSTATE.I;
 
-    // if (instCount == 1000000) then {
-    //   endTime = get_time_ns();
-    //   elapsed = endTime - startTime;
-    //   inst_1e9 = instCount * 1000000000;
-    //   ips = inst_1e9 / elapsed;
-    //   print_int("*IPS*: ", ips);
-    //   startTime = get_time_ns();
-    //   instCount = 0;
-    // };
-    // instCount = instCount + 1;
+    // Store the old values of the Counter-timer Kernel/Hypervisor Control
+    // registers, as we want to figure out when they changes.
+    var prevCNTKCTL_EL1 = CNTKCTL_EL1;
+    var prevCNTHCTL_EL2 = CNTHCTL_EL2;
 
-    try {
-      // Increment the counter
-      CNTPCT_EL0 = CNTPCT_EL0 + 1;
-      CNTVCT_EL0 = CNTPCT_EL0 - CNTVOFF_EL2;
-
-      // Timer value view for each timer
-      foreach (timer from 0 to 4) {
-	let CTL = CNT_CTL[timer];
-	let ctl = read_register(CTL);
-
-	// If the timer is enabled
-	if ctl[0] == bitone then {
-	  let TVAL = CNT_TVAL[timer];
-	  let nextTVAL = read_register(TVAL) - 1;
-	  (*TVAL) = nextTVAL;
-
-	  // If the timer condition is met
-	  if nextTVAL == 0x0000_0000 then {
-	    prerr_int("[Clock] Tick (TVAL) ", timer);
-	    (*CTL) = ctl | ISTATUS // Set the ISTATUS bit
-	  };
-
-	  if SInt(nextTVAL) <= 0 then {
-	     /* IMASK unset         interrupts unmasked */
-	     if ctl[1] == bitzero & PSTATE.I == bitzero then {
-	       __GIC_Pending = CNT_IRQ[timer] + PPI_OFFSET;
-	       prerr_bits("[Clock] GIC interrupt ", __GIC_Pending);
-	       _IRQPending = true;
-	       AArch64_TakePhysicalIRQException()
-	     }
-	  } else {
-	    (*CTL) = ctl & ~(ISTATUS)
-	  }
-	}
+    if ~(__Sleeping()) then {
+      try {
+        Step_CPU();
+      } catch {
+        _ => {
+	  prerr(concat_str("Exception taken during Step_CPU.  PC=",
+                concat_str(HexStr(UInt(aget_PC())),
+                concat_str(" cycle=",
+                concat_str(DecStr(get_cycle_count()),
+                "\n")))));
+        }
       };
-
-      // // Handle the Kernel event stream, if enabled by CNTKCTL_EL1[2].
-      // if CNTKCTL_EL1[2] == bitone then {
-      // 	let mask = LSL(ZeroExtend(0x1, 64), UInt(CNTKCTL_EL1[7 .. 4]));
-
-      //   // Trigger event stream on either rising bit (0-1, bitzero) or falling (1-0, bitone)
-      //   let trigger : bool = if CNTKCTL_EL1[3] == bitzero then {
-      //     ((CNTVCT_EL0 - 1) & mask) == Zeros() & (CNTVCT_EL0 & mask) != Zeros()
-      //   } else {
-      //     ((CNTVCT_EL0 - 1) & mask) != Zeros() & (CNTVCT_EL0 & mask) == Zeros()
-      //   };
-
-      // 	if trigger & PSTATE.I == bitzero then {
-      // 	  prerr("[Clock] Tick\n");
-      // 	  __GIC_Pending = 0x0000_000b + PPI_OFFSET; // This might not be 0x000a...
-      // 	  CNTV_CTL_EL0 = CNTV_CTL_EL0 | ISTATUS;
-      //     _IRQPending = true;
-      //     AArch64_TakePhysicalIRQException()
-      //   }
-      // };
-
-      // // Handle the Hypervisor event stream, if enabled by CNTHCTL_EL2[2].
-      // if CNTHCTL_EL2[2] == bitone then {
-      // 	let mask = LSL(ZeroExtend(0x1, 64), UInt(CNTHCTL_EL2[7 .. 4]));
-
-      //   // Trigger event stream on either rising bit (0-1, bitzero) or falling (1-0, bitone)
-      //   let trigger : bool = if CNTHCTL_EL2[3] == bitzero then {
-      //     ((CNTPCT_EL0 - 1) & mask) == Zeros() & (CNTPCT_EL0 & mask) != Zeros()
-      //   } else {
-      //     ((CNTPCT_EL0 - 1) & mask) != Zeros() & (CNTPCT_EL0 & mask) == Zeros()
-      //   };
-
-      // 	if trigger & PSTATE.I == bitzero then {
-      // 	  prerr("[Clock] Tick\n");
-      // 	  __GIC_Pending = 0x0000_000a + PPI_OFFSET;
-      //     _IRQPending = true;
-      //     AArch64_TakePhysicalIRQException()
-      //   }
-      // };
-
-      // Store the old values of the Counter-timer Kernel/Hypervisor Control
-      // registers, as we want to figure out when they changes.
-      var prevCNTKCTL_EL1 = CNTKCTL_EL1;
-      var prevCNTHCTL_EL2 = CNTHCTL_EL2;
-
-      __currentInstr = __fetchA64();
-      // print_bits("__currentInstr = ", __currentInstr);
-
-      // Use a magic instruction to kill the simulator in init
-      if __currentInstr == 0xFEE1DEAD then {
-	 print("[Sail] Finished Successfully!\n");
-	 exit()
-      };
-
-      __PC_changed = false;
-      ShouldAdvanceIT = (PSTATE.nRW == [bitone]) & (PSTATE.T == [bitone]);
-      decode(__currentInstr);
-      if ~(__PC_changed) then _PC = _PC + 4 else ();
-      if ShouldAdvanceIT then AArch32_ITAdvance() else ();
-      SSAdvance();
-      __UpdateSystemCounter()
-
-    } catch {
-      Error_See(str) if str == "HINT" => (),
-      Error_ExceptionTaken(_) => {
-	() // prerr_bits("[Sail] Exception taken to ", _PC);
-      },
-      Error_See(str) => {
-	print("[Sail] Failed: See " ++ str ++ "\n");
-	print_bits("[Sail] Current instruction: ", __currentInstr);
-	exit()
-      },
-      Error_Undefined(_) => {
-	print("[Sail] Failed: Undefined\n");
-	print_bits("[Sail] Current instruction: ", __currentInstr);
-	exit()
-      },
-      Error_Implementation_Defined(msg) => {
-	prerr("Implementation defined " ++ msg ++ "\n");
-      },
-      Error_ReservedEncoding(_) => {
-	prerr("ReservedEncoding\n");
-      }
     };
+
     // We want to keep track of what exception level we are in for debugging purposes.
-    if UInt(prevEL) > UInt(PSTATE.EL) then {
-      prerr_bits("[Sail] Exception level dropped to: ", PSTATE.EL);
-      prerr_bits("[Sail] _PC is ", _PC)
+    if UInt(prevEL) != UInt(PSTATE.EL) then {
+      prerr_bits(concat_str("[Sail] ",
+                 concat_str(DecStr(get_cycle_count()),
+                 " Exception level changed to: ")),
+                 PSTATE.EL);
     };
     if prevI != PSTATE.I then {
-      () //prerr_bits("[Sail] PSTATE.I changed to: ", PSTATE.I);
+      prerr_bits("[Sail] PSTATE.I changed to: ", PSTATE.I);
+      prerr(concat_str("   at PC=",
+            concat_str(HexStr(UInt(aget_PC())),
+            concat_str(" in cycle=",
+            concat_str(DecStr(get_cycle_count()),
+            "\n")))));
     };
+    if prevCNTKCTL_EL1 != CNTKCTL_EL1 then {
+      prerr_bits("[Clock] CNTKCTL_EL1 changed to ", CNTKCTL_EL1);
+    };
+    if prevCNTHCTL_EL2 != CNTHCTL_EL2 then {
+      prerr_bits("[Clock] CNTHCTL_EL2 changed to ", CNTHCTL_EL2);
+    }
 
-    if __GIC_Pending == 0x0000_03ff then _IRQPending = false else ();
-    __EndCycle();
-    cycle_count();
-  }
+  } catch {
+    Error_ExceptionTaken(_) => {
+      // enable_tracing()
+      prerr(concat_str("Exception taken during Step_System.  PC=",
+            concat_str(HexStr(UInt(aget_PC())),
+            concat_str(" cycle=",
+            concat_str(DecStr(get_cycle_count()),
+            "\n")))));
+      ()
+    },
+    _ => {
+      prerr("Exiting due to unhandled exception\n");
+      exit()
+    }
+  };
+
+  if __GIC_Pending == 0x0000_03ff then _IRQPending = false else ();
+
+  try {
+    __EndCycle(); // advance state of non-sleeping parts of the system
+  } catch {
+    _ => {
+      print(concat_str("Exception taken during __EndCycle.  PC=",
+            concat_str(HexStr(UInt(aget_PC())),
+            concat_str(" cycle=",
+            concat_str(DecStr(get_cycle_count()),
+            "\n")))));
+    }
+  };
 }
 
 let BOOTLOADER : string = "bootloader.bin"
@@ -242,12 +373,9 @@ let NO_RAS = 0b0000
 
 val "load_raw" : (bits(64), string) -> unit
 
-val init : unit -> unit effect {escape, undef, rreg, wreg, configuration}
+val init : unit -> unit effect {escape, undef, rreg, wreg}
 
 function init() = {
-  init_devices();
-  __currentInstrLength = 4;
-  print("Resetting\n");
   TakeReset(COLD_RESET);
 
   // Set the feature register. We want to disable as many features as
@@ -278,10 +406,25 @@ function init() = {
   _PC = bootloader;
 }
 
-val main : unit -> unit effect {escape, undef, wreg, rreg, rmem, wmem, configuration}
+val main : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
+
+val check_cycle_count = { c: "cycle_count" } : unit -> unit
 
 function main() = {
+  let verbosity = __GetVerbosity();
   init();
-  startTime = get_time_ns();
-  fetch_and_execute()
+  while true do {
+    if verbosity[0] == bitone then {
+        nzcv = (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V);
+        print(concat_str("[Sail] ",
+              concat_str(DecStr(get_cycle_count()),
+              concat_str(" PC=",
+              concat_str(HexStr(UInt(aget_PC())),
+              concat_str(" NZCV=",
+              concat_str(HexStr(UInt(nzcv)),
+              "\n")))))));
+    };
+    Step_System();
+    check_cycle_count();
+  }
 }

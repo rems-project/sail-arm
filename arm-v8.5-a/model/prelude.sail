@@ -333,7 +333,7 @@ val RoundUp = {ocaml: "round_up", lem: "realCeiling", c: "round_up"} : real -> i
 
 val abs_real = "abs_real" : real -> real
 
-overload abs = {abs_atom, abs_real}
+overload abs = {abs_int, abs_real}
 
 val quotient_nat = {ocaml: "quotient", lem: "integerDiv", c: "tdiv_int"} : (nat, nat) -> nat
 
@@ -459,6 +459,4 @@ union option ('a : Type) = {
 }
 */
 
-function __id forall 'n. (x: int('n)) -> int('n) = x
-
-overload __size = {__id, length}
+overload __size = {length}

@@ -124,9 +124,9 @@ function HaveFJCVTZSExt () = {
 
 val aget_Vpart : forall 'width 'n 'part,
   ('n >= 0 & 'n <= 31 & 'part in {0, 1}).
-  (int('n), int('part)) -> bits('width) effect {escape, rreg}
+  (implicit('width), int('n), int('part)) -> bits('width) effect {escape, rreg}
 
-function aget_Vpart (n, part) = {
+function aget_Vpart (width, n, part) = {
     assert(n >= 0 & n <= 31);
     assert(part == 0 | part == 1);
     if part == 0 then {
@@ -226,9 +226,9 @@ function aset_Vpart (n, part, value_name) = {
 
 overload Vpart = {aset_Vpart}
 
-val FPZero : forall ('N : Int). bits(1) -> bits('N) effect {escape}
+val FPZero : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPZero sign = {
+function FPZero(N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -237,9 +237,9 @@ function FPZero sign = {
     (sign @ exp) @ frac
 }
 
-val FPTwo : forall ('N : Int). bits(1) -> bits('N) effect {escape}
+val FPTwo : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPTwo sign = {
+function FPTwo(N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -248,9 +248,9 @@ function FPTwo sign = {
     (sign @ exp) @ frac
 }
 
-val FPThree : forall ('N : Int). bits(1) -> bits('N) effect {escape}
+val FPThree : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPThree sign = {
+function FPThree(N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -259,9 +259,9 @@ function FPThree sign = {
     (sign @ exp) @ frac
 }
 
-val VFPExpandImm : forall ('N : Int). bits(8) -> bits('N) effect {escape}
+val VFPExpandImm : forall ('N : Int). (implicit('N), bits(8)) -> bits('N) effect {escape}
 
-function VFPExpandImm imm8 = {
+function VFPExpandImm(N, imm8) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - 'E - 1. int('n)} = 'N - E - 1;
@@ -271,9 +271,9 @@ function VFPExpandImm imm8 = {
     (sign @ exp) @ frac
 }
 
-val FPMaxNormal : forall ('N : Int). bits(1) -> bits('N) effect {escape}
+val FPMaxNormal : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPMaxNormal sign = {
+function FPMaxNormal(N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -282,9 +282,9 @@ function FPMaxNormal sign = {
     (sign @ exp) @ frac
 }
 
-val FPInfinity : forall ('N : Int). bits(1) -> bits('N) effect {escape}
+val FPInfinity : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPInfinity sign = {
+function FPInfinity(N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -293,9 +293,9 @@ function FPInfinity sign = {
     (sign @ exp) @ frac
 }
 
-val FPDefaultNaN : forall ('N : Int). unit -> bits('N) effect {escape}
+val FPDefaultNaN : forall ('N : Int). (implicit('N), unit) -> bits('N) effect {escape}
 
-function FPDefaultNaN () = {
+function FPDefaultNaN(N, _) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -306,9 +306,9 @@ function FPDefaultNaN () = {
 }
 
 val FPConvertNaN : forall ('N : Int) ('M : Int), 'N >= 0.
-  bits('N) -> bits('M) effect {escape, undef}
+  (implicit('M), bits('N)) -> bits('M) effect {escape, undef}
 
-function FPConvertNaN op = {
+function FPConvertNaN(M, op) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     assert('M == 16 | 'M == 32 | 'M == 64);
     result : bits('M) = undefined : bits('M);
@@ -380,9 +380,9 @@ function FPProcessException (exception, fpcr) = {
 }
 
 val FPRoundBase : forall ('N : Int).
-  (real, bits(32), FPRounding) -> bits('N) effect {escape, rreg, undef, wreg}
+  (implicit('N), real, bits(32), FPRounding) -> bits('N) effect {escape, rreg, undef, wreg}
 
-function FPRoundBase (op, fpcr, rounding) = {
+function FPRoundBase (N, op, fpcr, rounding) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     assert(op != 0.0);
     assert(rounding != FPRounding_TIEAWAY);
@@ -508,34 +508,34 @@ function FPRoundBase (op, fpcr, rounding) = {
 }
 
 val FPRoundCV : forall ('N : Int).
-  (real, bits(32), FPRounding) -> bits('N) effect {escape, rreg, undef, wreg}
+  (implicit('N), real, bits(32), FPRounding) -> bits('N) effect {escape, rreg, undef, wreg}
 
-function FPRoundCV (op, fpcr, rounding) = {
+function FPRoundCV (N, op, fpcr, rounding) = {
     let fpcr = __SetSlice_bits(32, 1, fpcr, 19, 0b0);
     FPRoundBase(op, fpcr, rounding)
 }
 
 val FPRound__0 : forall ('N : Int).
-  (real, bits(32), FPRounding) -> bits('N) effect {escape, rreg, undef, wreg}
+  (implicit('N), real, bits(32), FPRounding) -> bits('N) effect {escape, rreg, undef, wreg}
 
 val FPRound__1 : forall ('N : Int).
-  (real, bits(32)) -> bits('N) effect {escape, rreg, undef, wreg}
+  (implicit('N), real, bits(32)) -> bits('N) effect {escape, rreg, undef, wreg}
 
 overload FPRound = {FPRound__0, FPRound__1}
 
-function FPRound__0 (op, fpcr, rounding) = {
+function FPRound__0 (N, op, fpcr, rounding) = {
     let fpcr = __SetSlice_bits(32, 1, fpcr, 26, 0b0);
     FPRoundBase(op, fpcr, rounding)
 }
 
-function FPRound__1 (op, fpcr) = {
+function FPRound__1 (N, op, fpcr) = {
     FPRound(op, fpcr, FPRoundingMode(fpcr))
 }
 
 val FixedToFP : forall ('M : Int) ('N : Int) ('fbits : Int), 'M >= 0.
-  (bits('M), int('fbits), bool, bits(32), FPRounding) -> bits('N) effect {escape, undef, wreg, rreg}
+  (implicit('N), bits('M), int('fbits), bool, bits(32), FPRounding) -> bits('N) effect {escape, undef, wreg, rreg}
 
-function FixedToFP (op, fbits, unsigned, fpcr, rounding) = {
+function FixedToFP (N, op, fbits, unsigned, fpcr, rounding) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     assert('M == 16 | 'M == 32 | 'M == 64);
     result : bits('N) = undefined : bits('N);
@@ -776,14 +776,14 @@ function FPUnpackCV (fpval, fpcr) = {
 }
 
 val FPConvert__0 : forall ('N : Int) ('M : Int), 'N >= 0.
-  (bits('N), bits(32), FPRounding) -> bits('M) effect {escape, rreg, undef, wreg}
+  (implicit('M), bits('N), bits(32), FPRounding) -> bits('M) effect {escape, rreg, undef, wreg}
 
 val FPConvert__1 : forall ('N : Int) ('M : Int), 'N >= 0.
-  (bits('N), bits(32)) -> bits('M) effect {escape, rreg, undef, wreg}
+  (implicit('M), bits('N), bits(32)) -> bits('M) effect {escape, rreg, undef, wreg}
 
 overload FPConvert = {FPConvert__0, FPConvert__1}
 
-function FPConvert__0 (op, fpcr, rounding) = {
+function FPConvert__0 (M, op, fpcr, rounding) = {
     assert('M == 16 | 'M == 32 | 'M == 64);
     assert('N == 16 | 'N == 32 | 'N == 64);
     result : bits('M) = undefined : bits('M);
@@ -824,7 +824,7 @@ function FPConvert__0 (op, fpcr, rounding) = {
     result
 }
 
-function FPConvert__1 (op, fpcr) = {
+function FPConvert__1 (M, op, fpcr) = {
     FPConvert(op, fpcr, FPRoundingMode(fpcr))
 }
 
@@ -841,9 +841,9 @@ function FPUnpack (fpval, fpcr) = {
 }
 
 val FPToFixedJS : forall ('M : Int) ('N : Int) ('Is64 : Bool), 'M >= 0.
-  (bits('M), bits(32), bool('Is64)) -> bits('N) effect {escape, rreg, undef, wreg}
+  (implicit('N), bits('M), bits(32), bool('Is64)) -> bits('N) effect {escape, rreg, undef, wreg}
 
-function FPToFixedJS (op, fpcr, Is64) = {
+function FPToFixedJS (N, op, fpcr, Is64) = {
     assert('M == 64 & 'N == 32);
     sign : bits(1) = undefined : bits(1);
     typ : FPType = undefined : FPType;
@@ -893,9 +893,9 @@ function FPToFixedJS (op, fpcr, Is64) = {
 
 val FPToFixed : forall 'N 'M 'fbits ('unsigned : Bool),
   ('N >= 0 & 'fbits >= 0).
-  (bits('N), int('fbits), bool('unsigned), bits(32), FPRounding) -> bits('M) effect {escape, rreg, undef, wreg}
+  (implicit('M), bits('N), int('fbits), bool('unsigned), bits(32), FPRounding) -> bits('M) effect {escape, rreg, undef, wreg}
 
-function FPToFixed (op, fbits, unsigned, fpcr, rounding) = {
+function FPToFixed (M, op, fbits, unsigned, fpcr, rounding) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     assert('M == 16 | 'M == 32 | 'M == 64);
     assert(fbits >= 0);

@@ -1200,9 +1200,9 @@ function aset_DBGDTR_EL0 value_name__arg = {
 overload DBGDTR_EL0 = {aset_DBGDTR_EL0}
 
 val aget_DBGDTR_EL0 : forall ('N : Int).
-  unit -> bits('N) effect {escape, rreg, undef, wreg}
+  (implicit('N), unit) -> bits('N) effect {escape, rreg, undef, wreg}
 
-function aget_DBGDTR_EL0 () = {
+function aget_DBGDTR_EL0(N, _) = {
     assert('N == 32 | 'N == 64);
     result : bits('N) = undefined : bits('N);
     if [EDSCR[30]] == 0b0 then {

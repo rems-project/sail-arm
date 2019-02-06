@@ -174,7 +174,7 @@ val and_vec = {lem: "and_vec", c: "and_bits"} : forall 'n. (bits('n), bits('n)) 
 
 function and_vec (xs, ys) = builtin_and_vec(xs, ys)
 
-overload operator & = {and_bool, and_vec}
+overload operator & = {and_vec}
 
 val builtin_or_vec = {ocaml: "or_vec", c: "or_bits"} : forall 'n. (bits('n), bits('n)) -> bits('n)
 
@@ -182,7 +182,7 @@ val or_vec = {lem: "or_vec", c: "or_bits"}: forall 'n. (bits('n), bits('n)) -> b
 
 function or_vec (xs, ys) = builtin_or_vec(xs, ys)
 
-overload operator | = {or_bool, or_vec}
+overload operator | = {or_vec}
 
 val UInt = {
   ocaml: "uint",
@@ -313,19 +313,19 @@ val Sqrt = {ocaml: "sqrt_real", lem: "realSqrt", c: "sqrt_real"} : real -> real
 
 val gteq_real = {ocaml: "gteq_real", lem: "gteq", c: "gteq_real"} : (real, real) -> bool
 
-overload operator >= = {gteq_atom, gteq_int, gteq_real}
+overload operator >= = {gteq_real}
 
 val lteq_real = {ocaml: "lteq_real", lem: "lteq", c: "lteq_real"} : (real, real) -> bool
 
-overload operator <= = {lteq_atom, lteq_int, lteq_real}
+overload operator <= = {lteq_real}
 
 val gt_real = {ocaml: "gt_real", lem: "gt", c: "gt_real"} : (real, real) -> bool
 
-overload operator > = {gt_atom, gt_int, gt_real}
+overload operator > = {gt_real}
 
 val lt_real = {ocaml: "lt_real", lem: "lt", c: "lt_real"} : (real, real) -> bool
 
-overload operator < = {lt_atom, lt_int, lt_real}
+overload operator < = {lt_real}
 
 val RoundDown = {ocaml: "round_down", lem: "realFloor", c: "round_down"} : real -> int
 
@@ -432,9 +432,9 @@ function __tarmacEvent(str: string) -> unit = {
 
 val sail_zeros = "zeros" : forall 'n. int('n) -> bits('n)
 
-val cast zero_vector : forall 'n. int(0) -> bits('n)
+val cast zero_vector : forall 'n. (implicit('n), int(0)) -> bits('n)
 
-function zero_vector(_) = sail_zeros('n)
+function zero_vector(n, _) = sail_zeros(n)
 
 val __SleepRequest = {ocaml: "sleep_request", lem: "sleep_request", smt: "sleep_request", interpreter: "sleep_request", c: "sleep_request"}: unit -> unit effect {rreg, undef}
 
@@ -458,3 +458,7 @@ union option ('a : Type) = {
   Some : 'a
 }
 */
+
+function __id forall 'n. (x: int('n)) -> int('n) = x
+
+overload __size = {__id, length}

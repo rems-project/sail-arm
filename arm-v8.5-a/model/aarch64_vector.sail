@@ -205,9 +205,9 @@ function PolynomialMult (op1, op2) = {
     result
 }
 
-val FPOnePointFive : forall ('N : Int). bits(1) -> bits('N) effect {escape}
+val FPOnePointFive : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPOnePointFive sign = {
+function FPOnePointFive(N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -2996,7 +2996,7 @@ function vector_shift_rightinsert_sisd_decode (Rd, Rn, opcode, immb, immh, U) = 
     let 'datasize : {'n, 'n == 'esize. int('n)} = esize;
     let 'elements : {'n, 'n == 1. int('n)} = 1;
     let 'shift = esize * 2 - UInt(immh @ immb);
-    assert(constraint(('_esize * 2 - '_shift >= 0 & '_esize >= 0)));
+    assert(constraint(('shift >= 0 & '_esize >= 0)));
     assert(constraint(('_d >= 0 & '_d <= 31)));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
@@ -3019,7 +3019,7 @@ function vector_shift_rightinsert_simd_decode (Rd, Rn, opcode, immb, immh, U, Q)
     let 'datasize : {'n, 'n in {128, 64}. int('n)} = if Q == 0b1 then 128 else 64;
     let 'elements : {'n, 'n == div('datasize, 'esize). int('n)} = datasize / esize;
     let 'shift = esize * 2 - UInt(immh @ immb);
-    assert(constraint(('_esize * 2 - '_shift >= 0 & '_esize >= 0)));
+    assert(constraint(('shift >= 0 & '_esize >= 0)));
     assert(constraint(('_d >= 0 & '_d <= 31)));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
@@ -3055,7 +3055,7 @@ function vector_shift_left_sisd_decode (Rd, Rn, opcode, immb, immh, U) = {
     let 'elements : {'n, 'n == 1. int('n)} = 1;
     let 'shift = UInt(immh @ immb) - esize;
     assert(constraint(('_d >= 0 & '_d <= 31)));
-    assert(constraint(('_shift - '_esize >= 0 & '_esize >= 0)));
+    assert(constraint(('shift >= 0 & '_esize >= 0)));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
     vector_shift_left_sisd(d, datasize, elements, esize, n, shift)
@@ -3078,7 +3078,7 @@ function vector_shift_left_simd_decode (Rd, Rn, opcode, immb, immh, U, Q) = {
     let 'elements : {'n, 'n == div('datasize, 'esize). int('n)} = datasize / esize;
     let 'shift = UInt(immh @ immb) - esize;
     assert(constraint(('_d >= 0 & '_d <= 31)));
-    assert(constraint(('_shift - '_esize >= 0 & '_esize >= 0)));
+    assert(constraint(('shift >= 0 & '_esize >= 0)));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
     vector_shift_left_sisd(d, datasize, elements, esize, n, shift)
@@ -3257,7 +3257,7 @@ function vector_shift_leftinsert_sisd_decode (Rd, Rn, opcode, immb, immh, U) = {
     let 'datasize : {'n, 'n == 'esize. int('n)} = esize;
     let 'elements : {'n, 'n == 1. int('n)} = 1;
     let 'shift = UInt(immh @ immb) - esize;
-    assert(constraint(('_shift - '_esize >= 0 & '_esize >= 0)));
+    assert(constraint(('shift >= 0 & '_esize >= 0)));
     assert(constraint(('_d >= 0 & '_d <= 31)));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
@@ -3280,7 +3280,7 @@ function vector_shift_leftinsert_simd_decode (Rd, Rn, opcode, immb, immh, U, Q) 
     let 'datasize : {'n, 'n in {128, 64}. int('n)} = if Q == 0b1 then 128 else 64;
     let 'elements : {'n, 'n == div('datasize, 'esize). int('n)} = datasize / esize;
     let 'shift = UInt(immh @ immb) - esize;
-    assert(constraint(('_shift - '_esize >= 0 & '_esize >= 0)));
+    assert(constraint(('shift >= 0 & '_esize >= 0)));
     assert(constraint(('_d >= 0 & '_d <= 31)));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();

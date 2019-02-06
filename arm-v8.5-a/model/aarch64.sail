@@ -3021,9 +3021,9 @@ function AArch32_CurrentCond () = {
     __currentCond
 }
 
-val aget_SP : forall ('width : Int). unit -> bits('width) effect {escape, rreg}
+val aget_SP : forall ('width : Int). (implicit('width), unit) -> bits('width) effect {escape, rreg}
 
-function aget_SP () = {
+function aget_SP(width, _) = {
     assert('width == 8 | 'width == 16 | 'width == 32 | 'width == 64);
     if PSTATE.SP == 0b0 then {
         return(slice(SP_EL0, 0, 'width))
@@ -3270,9 +3270,9 @@ function AArch32_ResetSIMDFPRegisters () = {
 }
 
 val aget_V : forall ('width : Int) ('n : Int), ('n >= 0 & 'n <= 31).
-  int('n) -> bits('width) effect {escape, rreg}
+  (implicit('width), int('n)) -> bits('width) effect {escape, rreg}
 
-function aget_V n = {
+function aget_V(width, n) = {
     assert(n >= 0 & n <= 31);
     assert('width == 8 | 'width == 16 | 'width == 32 | 'width == 64 | 'width == 128);
     slice(_V[n], 0, 'width)
@@ -3328,9 +3328,9 @@ function Hint_Prefetch (address, hint, target, stream) = {
 }
 
 val NextInstrAddr : forall ('N : Int), (0 <= 'N & 'N <= 64).
-  unit -> bits('N) effect {rreg}
+  (implicit('N), unit) -> bits('N) effect {rreg}
 
-function NextInstrAddr () = slice(_PC + __currentInstrLength, 0, 'N)
+function NextInstrAddr(N, _) = slice(_PC + __currentInstrLength, 0, 'N)
 
 val CountLeadingZeroBits : forall ('N : Int), 'N >= 0. bits('N) -> int
 
@@ -3479,7 +3479,7 @@ function aset_Elem__1 (vector_name, e, size, value_name) = {
 
 val aget_Elem__0 : forall 'N 'e 'size,
   ('e >= 0 & 'size >= 0 & ('e + 1) * 'size <= 'N).
-  (bits('N), int('e)) -> bits('size)
+  (implicit('size), bits('N), int('e)) -> bits('size)
 
 val aget_Elem__1 : forall 'N 'e 'size,
   ('e >= 0 & 'size >= 0 & ('e + 1) * 'size <= 'N).
@@ -3487,7 +3487,7 @@ val aget_Elem__1 : forall 'N 'e 'size,
 
 overload aget_Elem = {aget_Elem__0, aget_Elem__1}
 
-function aget_Elem__0 (vector_name, e) = aget_Elem(vector_name, e, 'size)
+function aget_Elem__0 (size, vector_name, e) = aget_Elem(vector_name, e, 'size)
 
 function aget_Elem__1 (vector_name, e, size) = {
     slice(vector_name, e * size, size)
@@ -4064,7 +4064,7 @@ val Extend__0 : forall ('M : Int) ('N : Int), 'M >= 0.
   (bits('M), int('N), bool) -> bits('N) effect {escape}
 
 val Extend__1 : forall ('M : Int) ('N : Int), 'M >= 0.
-  (bits('M), bool) -> bits('N) effect {escape}
+  (implicit('N), bits('M), bool) -> bits('N) effect {escape}
 
 overload Extend = {Extend__0, Extend__1}
 
@@ -4072,8 +4072,8 @@ function Extend__0 (x, N, unsigned) = {
     if unsigned then ZeroExtend(x, N) else SignExtend(x, N)
 }
 
-function Extend__1 (x, unsigned) = {
-    Extend(x, 'N, unsigned)
+function Extend__1 (N, x, unsigned) = {
+    Extend__0(x, N, unsigned)
 }
 
 val ASR_C : forall ('N : Int) ('shift : Int), 'N >= 0.
@@ -4485,9 +4485,9 @@ function AArch64_ResetGeneralRegisters () = {
 
 val aget_X : forall 'width 'n,
   ('n >= 0 & 'n <= 31 & 'width in {8, 16, 32, 64}).
-  int('n) -> bits('width) effect {rreg}
+  (implicit('width), int('n)) -> bits('width) effect {rreg}
 
-function aget_X n = if n != 31 then slice(_R[n], 0, 'width) else Zeros('width)
+function aget_X(width, n) = if n != 31 then slice(_R[n], 0, width) else Zeros(width)
 
 overload X = {aget_X}
 
@@ -4756,9 +4756,9 @@ function integer_arithmetic_addsub_carry (d, datasize, m, n, setflags, sub_op) =
 
 val ExtendReg : forall 'N 'reg 'shift,
   ('shift >= 0 & 'shift <= 4 & 'reg >= 0 & 'reg <= 31 & 'N in {8, 16, 32, 64}).
-  (int('reg), ExtendType, int('shift)) -> bits('N) effect {escape, rreg, undef}
+  (implicit('N), int('reg), ExtendType, int('shift)) -> bits('N) effect {escape, rreg, undef}
 
-function ExtendReg (reg, typ, shift) = {
+function ExtendReg (N, reg, typ, shift) = {
     assert(shift >= 0 & shift <= 4);
     let val_name : bits('N) = aget_X(reg);
     unsigned : bool = undefined : bool;
@@ -4874,9 +4874,9 @@ function integer_bitfield (R, S, d, datasize, extend, inzero, n, tmask, wmask) =
 
 val ShiftReg : forall 'N 'reg 'amount,
   ('reg >= 0 & 'reg <= 31 & 'N in {8, 16, 32, 64}) & 'amount >= 0.
-  (int('reg), ShiftType, int('amount)) -> bits('N) effect {escape, rreg, undef}
+  (implicit('N), int('reg), ShiftType, int('amount)) -> bits('N) effect {escape, rreg, undef}
 
-function ShiftReg (reg, typ, amount) = {
+function ShiftReg (N, reg, typ, amount) = {
     result : bits('N) = X(reg);
     match typ {
       ShiftType_LSL => {
@@ -7848,9 +7848,9 @@ function AArch32_ResetSpecialRegisters () = {
 }
 
 val DecodeBitMasks : forall ('M : Int), 'M >= 0.
-  (bits(1), bits(6), bits(6), bool) -> (bits('M), bits('M)) effect {escape, undef}
+  (implicit('M), bits(1), bits(6), bits(6), bool) -> (bits('M), bits('M)) effect {escape, undef}
 
-function DecodeBitMasks (immN, imms, immr, immediate) = {
+function DecodeBitMasks (M, immN, imms, immr, immediate) = {
     tmask : bits(64) = undefined : bits(64);
     wmask : bits(64) = undefined : bits(64);
     tmask_and : bits(6) = undefined : bits(6);
@@ -7863,7 +7863,7 @@ function DecodeBitMasks (immN, imms, immr, immediate) = {
         throw(Error_Undefined())
     };
     assert(len >= 1);
-    assert('M >= shl_int(1, len));
+    assert(M >= shl_int(1, len));
     let levels = ZeroExtend(Ones(len), 6);
     if immediate & (imms & levels) == levels then {
         throw(Error_Undefined())
@@ -7894,7 +7894,7 @@ function DecodeBitMasks (immN, imms, immr, immediate) = {
     } else {
         wmask = wmask | tmask
     };
-    return((slice(wmask, 0, 'M), slice(tmask, 0, 'M)))
+    return((slice(wmask, 0, M), slice(tmask, 0, M)))
 }
 
 val ChooseNonExcludedTag : (bits(4), bits(4), bits(16)) -> bits(4)

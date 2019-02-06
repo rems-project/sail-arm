@@ -56,7 +56,7 @@ val IsOnes_slice : forall ('n : Int), 'n >= 0.
 
 val ZeroExtend_slice_append : forall 'n 'm 'o,
   ('n >= 0 & 'o >= 0).
-  (bits('n), int, int, bits('m)) -> bits('o) effect {escape}
+  (implicit('o), bits('n), int, int, bits('m)) -> bits('o) effect {escape}
 
 val AArch64_CheckAndUpdateDescriptor : (DescriptorUpdate, FaultRecord, bool, bits(64), AccType, bool, bool, bool) -> FaultRecord effect {undef, escape, rmem, rreg, wmem, wreg}
 
@@ -2724,9 +2724,9 @@ function AArch32_ReportHypEntry exception = {
 }
 
 val Replicate : forall ('M : Int) ('N : Int).
-  bits('M) -> bits('N) effect {escape}
+  (implicit('N), bits('M)) -> bits('N) effect {escape}
 
-function Replicate x = {
+function Replicate(N, x) = {
     assert('N % 'M == 0, "((N MOD M) == 0)");
     let 'P = 'N / 'M;
     assert(constraint('N == 'P * 'M));
@@ -2736,12 +2736,12 @@ function Replicate x = {
 val Zeros__0 = {ocaml: "zeros", lem: "zeros", smt: "zeros", interpreter: "zeros", c: "zeros"}: forall ('N : Int).
   int('N) -> bits('N)
 
-val Zeros__1 : forall ('N : Int). unit -> bits('N)
+val Zeros__1 : forall ('N : Int). (implicit('N), unit) -> bits('N)
 
 overload Zeros = {Zeros__0, Zeros__1}
 
-function Zeros__1 () = {
-    Zeros('N)
+function Zeros__1(N, _) = {
+    Zeros__0(N)
 }
 
 val set_ClearIRQ : bits(32) -> unit effect {rreg, wreg}
@@ -2926,7 +2926,7 @@ val ZeroExtend__0 : forall ('M : Int) ('N : Int), 'M >= 0.
   (bits('M), int('N)) -> bits('N) effect {escape}
 
 val ZeroExtend__1 : forall ('M : Int) ('N : Int), 'M >= 0.
-  bits('M) -> bits('N) effect {escape}
+  (implicit('N), bits('M)) -> bits('N) effect {escape}
 
 overload ZeroExtend = {ZeroExtend__0, ZeroExtend__1}
 
@@ -2935,8 +2935,8 @@ function ZeroExtend__0 (x, N) = {
     Zeros(N - 'M) @ x
 }
 
-function ZeroExtend__1 x = {
-    ZeroExtend(x, 'N)
+function ZeroExtend__1 (N, x) = {
+    ZeroExtend__0(x, N)
 }
 
 val get_ScheduleIRQ : unit -> bits(32) effect {escape, rreg}
@@ -3100,12 +3100,12 @@ function ExceptionSyndrome typ = {
 }
 
 val ConstrainUnpredictableBits : forall ('width : Int).
-  Unpredictable -> (Constraint, bits('width)) effect {undef}
+  (implicit('width), Unpredictable) -> (Constraint, bits('width)) effect {undef}
 
-function ConstrainUnpredictableBits which = {
+function ConstrainUnpredictableBits(width, which) = {
     let c : Constraint = ConstrainUnpredictable(which);
     if c == Constraint_UNKNOWN then {
-        return((c, Zeros('width)))
+        return((c, Zeros(width)))
     } else {
         return((c, undefined : bits('width)))
     }
@@ -3143,7 +3143,7 @@ val SignExtend__0 : forall ('M : Int) ('N : Int), 'M >= 0.
   (bits('M), int('N)) -> bits('N) effect {escape}
 
 val SignExtend__1 : forall ('M : Int) ('N : Int), 'M >= 0.
-  bits('M) -> bits('N) effect {escape}
+  (implicit('N), bits('M)) -> bits('N) effect {escape}
 
 overload SignExtend = {SignExtend__0, SignExtend__1}
 
@@ -3152,13 +3152,13 @@ function SignExtend__0 (x, N) = {
     replicate_bits([x['M - 1]], N - 'M) @ x
 }
 
-function SignExtend__1 x = {
-    SignExtend(x, 'N)
+function SignExtend__1 (N, x) = {
+    SignExtend(x, N)
 }
 
 val Ones__0 : forall ('N : Int). int('N) -> bits('N)
 
-val Ones__1 : forall ('N : Int). unit -> bits('N)
+val Ones__1 : forall ('N : Int). (implicit('N), unit) -> bits('N)
 
 overload Ones = {Ones__0, Ones__1}
 
@@ -3166,8 +3166,8 @@ function Ones__0 N = {
     replicate_bits(0b1, N)
 }
 
-function Ones__1 () = {
-    Ones('N)
+function Ones__1(N, _) = {
+    Ones(N)
 }
 
 register configuration sp_rel_access_pc : bits(64) = Ones(64)
@@ -3426,7 +3426,7 @@ overload Align = {Align__0, Align__1}
 
 function Align__0 (x, y) = y * (x / y)
 
-function Align__1 (x, y) = let x = UInt(x) in __GetSlice_int('N, Align(x, y), 0)
+function Align__1 (x, y) = let x2 = UInt(x) in __GetSlice_int('N, Align(x2, y), 0)
 
 val aset_ELR__0 : (bits(2), bits(64)) -> unit effect {escape, wreg}
 
@@ -3967,11 +3967,11 @@ function aset_SPSR value_name = {
 
 overload SPSR = {aset_SPSR}
 
-val ThisInstrAddr : forall ('N : Int). unit -> bits('N) effect {escape, rreg}
+val ThisInstrAddr : forall ('N : Int). (implicit('N), unit) -> bits('N) effect {escape, rreg}
 
-function ThisInstrAddr () = {
-    assert('N == 64 | 'N == 32 & UsingAArch32());
-    slice(_PC, 0, 'N)
+function ThisInstrAddr(N, _) = {
+    assert(N == 64 | N == 32 & UsingAArch32());
+    slice(_PC, 0, N)
 }
 
 val IsNonTagCheckedInstruction : unit -> bool effect {escape, rreg}
@@ -4615,7 +4615,7 @@ val GTECheckAccessSensitiveAccess : forall ('size : Int), 'size >= 0.
   (bits(52), int('size), bits(8 * 'size), bool) -> unit effect {escape, rreg, wreg}
 
 function GTECheckAccessSensitiveAccess (address, size, data, isRead) = {
-    if (~(_GTEActive) | _GTE_AS_Size == 0) | _GTE_AS_Access == 0 then {
+    if (~(_GTEActive) | _GTE_AS_Size == Zeros(64)) | _GTE_AS_Access == 0 then {
         return()
     };
     if (_GTE_AS_AccessCount < NUM_GTE_AS_ACCESSES & UInt(address) >= UInt(_GTE_AS_Address)) & UInt(address) < UInt(_GTE_AS_Address + _GTE_AS_Size) then {
@@ -10098,7 +10098,7 @@ function IsOnes_slice (xs, i, 'l) = {
     IsOnes(slice(xs, i, l))
 }
 
-function ZeroExtend_slice_append (xs, i, 'l, ys) = {
+function ZeroExtend_slice_append (o, xs, i, 'l, ys) = {
     assert(constraint(('l >= 0 & 'm >= 0)));
     ZeroExtend(slice(xs, i, l) @ ys)
 }

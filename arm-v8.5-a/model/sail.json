@@ -1,0 +1,14 @@
+{
+    "options" : "-non_lexical_flow -no_lexp_bounds_check",
+    "files" : [
+	"prelude.sail",
+	"no_devices.sail",
+	"aarch_types.sail",
+	"aarch_mem.sail",
+	"aarch64.sail",
+	"aarch64_float.sail",
+	"aarch64_vector.sail",
+	"aarch32.sail",
+	"aarch_decode.sail"
+    ]
+}

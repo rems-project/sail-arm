@@ -226,9 +226,10 @@ function aset_Vpart (n, part, value_name) = {
 
 overload Vpart = {aset_Vpart}
 
-val FPZero : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
+val FPZero : forall ('N : Int).
+  (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPZero(N, sign) = {
+function FPZero (N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -237,9 +238,10 @@ function FPZero(N, sign) = {
     (sign @ exp) @ frac
 }
 
-val FPTwo : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
+val FPTwo : forall ('N : Int).
+  (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPTwo(N, sign) = {
+function FPTwo (N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -248,9 +250,10 @@ function FPTwo(N, sign) = {
     (sign @ exp) @ frac
 }
 
-val FPThree : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
+val FPThree : forall ('N : Int).
+  (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPThree(N, sign) = {
+function FPThree (N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -259,21 +262,23 @@ function FPThree(N, sign) = {
     (sign @ exp) @ frac
 }
 
-val VFPExpandImm : forall ('N : Int). (implicit('N), bits(8)) -> bits('N) effect {escape}
+val VFPExpandImm : forall ('N : Int).
+  (implicit('N), bits(8)) -> bits('N) effect {escape}
 
-function VFPExpandImm(N, imm8) = {
+function VFPExpandImm (N, imm8) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - 'E - 1. int('n)} = 'N - E - 1;
-    let sign : bits(1) = [imm8[7]];
+    let sign = [imm8[7]];
     let exp : bits('E) = (~([imm8[6]]) @ replicate_bits([imm8[6]], E - 3)) @ slice(imm8, 4, 2);
     let frac : bits('N - 1 - 'E) = slice(imm8, 0, 4) @ Zeros(F - 4);
     (sign @ exp) @ frac
 }
 
-val FPMaxNormal : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
+val FPMaxNormal : forall ('N : Int).
+  (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPMaxNormal(N, sign) = {
+function FPMaxNormal (N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -282,9 +287,10 @@ function FPMaxNormal(N, sign) = {
     (sign @ exp) @ frac
 }
 
-val FPInfinity : forall ('N : Int). (implicit('N), bits(1)) -> bits('N) effect {escape}
+val FPInfinity : forall ('N : Int).
+  (implicit('N), bits(1)) -> bits('N) effect {escape}
 
-function FPInfinity(N, sign) = {
+function FPInfinity (N, sign) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
@@ -293,13 +299,13 @@ function FPInfinity(N, sign) = {
     (sign @ exp) @ frac
 }
 
-val FPDefaultNaN : forall ('N : Int). (implicit('N), unit) -> bits('N) effect {escape}
+val FPDefaultNaN : forall ('N : Int). implicit('N) -> bits('N) effect {escape}
 
-function FPDefaultNaN(N, _) = {
+function FPDefaultNaN N = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     let 'E : {'n, 'n in {5, 8, 11}. int('n)} = if 'N == 16 then 5 else if 'N == 32 then 8 else 11;
     let 'F : {'n, 'n == 'N - ('E + 1). int('n)} = 'N - (E + 1);
-    let sign : vector(1, dec, bit) = 0b0;
+    let sign = 0b0;
     let exp : bits('E) = Ones(E);
     let frac : bits('N - 1 - 'E) = 0b1 @ Zeros(F - 1);
     (sign @ exp) @ frac
@@ -308,12 +314,12 @@ function FPDefaultNaN(N, _) = {
 val FPConvertNaN : forall ('N : Int) ('M : Int), 'N >= 0.
   (implicit('M), bits('N)) -> bits('M) effect {escape, undef}
 
-function FPConvertNaN(M, op) = {
+function FPConvertNaN (M, op) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     assert('M == 16 | 'M == 32 | 'M == 64);
     result : bits('M) = undefined : bits('M);
     frac : bits(51) = undefined : bits(51);
-    let sign : bits(1) = [op['N - 1]];
+    let sign = [op['N - 1]];
     match 'N {
       64 => {
           frac = slice(op, 0, 51)
@@ -1158,7 +1164,7 @@ val FPSub : forall ('N : Int), ('N >= 0 & 'N >= 0).
 
 function FPSub (op1, op2, fpcr) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
-    let rounding : FPRounding = FPRoundingMode(fpcr);
+    let rounding = FPRoundingMode(fpcr);
     sign1 : bits(1) = undefined : bits(1);
     type1 : FPType = undefined : FPType;
     value1_name : real = undefined : real;
@@ -1214,7 +1220,7 @@ val FPMulAdd : forall ('N : Int), ('N >= 0 & 'N >= 0 & 'N >= 0).
 
 function FPMulAdd (addend, op1, op2, fpcr) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
-    let rounding : FPRounding = FPRoundingMode(fpcr);
+    let rounding = FPRoundingMode(fpcr);
     signA : bits(1) = undefined : bits(1);
     typeA : FPType = undefined : FPType;
     valueA_name : real = undefined : real;
@@ -1501,7 +1507,7 @@ val FPAdd : forall ('N : Int), ('N >= 0 & 'N >= 0).
 
 function FPAdd (op1, op2, fpcr) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
-    let rounding : FPRounding = FPRoundingMode(fpcr);
+    let rounding = FPRoundingMode(fpcr);
     sign1 : bits(1) = undefined : bits(1);
     type1 : FPType = undefined : FPType;
     value1_name : real = undefined : real;
@@ -1588,7 +1594,7 @@ function float_move_fp_select_decode (Rd, Rn, cond, Rm, typ, S, M) = {
           }
       }
     };
-    let condition : vector(4, dec, bit) = cond;
+    let condition = cond;
     __PostDecode();
     float_move_fp_select(condition, d, datasize, m, n)
 }

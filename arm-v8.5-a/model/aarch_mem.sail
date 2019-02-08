@@ -1570,8 +1570,8 @@ val AArch64_TranslationFault : forall 'level ('iswrite : Bool) ('secondstage : B
   (bits(52), bits(1), int('level), AccType, bool('iswrite), bool('secondstage), bool('s2fs1walk)) -> FaultRecord effect {undef}
 
 function AArch64_TranslationFault (ipaddress, NS, level, acctype, iswrite, secondstage, s2fs1walk) = {
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
+    let extflag = undefined : bits(1);
+    let errortype = undefined : bits(2);
     AArch64_CreateFaultRecord(Fault_Translation, ipaddress, NS, level, acctype, iswrite, extflag, errortype, secondstage, s2fs1walk)
 }
 
@@ -1579,22 +1579,22 @@ val AArch64_PermissionFault : forall 'level ('iswrite : Bool) ('secondstage : Bo
   (bits(52), bits(1), int('level), AccType, bool('iswrite), bool('secondstage), bool('s2fs1walk)) -> FaultRecord effect {undef}
 
 function AArch64_PermissionFault (ipaddress, NS, level, acctype, iswrite, secondstage, s2fs1walk) = {
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
+    let extflag = undefined : bits(1);
+    let errortype = undefined : bits(2);
     AArch64_CreateFaultRecord(Fault_Permission, ipaddress, NS, level, acctype, iswrite, extflag, errortype, secondstage, s2fs1walk)
 }
 
 val AArch64_NoFault : unit -> FaultRecord effect {undef}
 
 function AArch64_NoFault () = {
-    let ipaddress : vector(52, dec, bit) = undefined : bits(52);
-    let level : int = undefined : int;
-    let acctype : AccType = AccType_NORMAL;
-    let iswrite : bool = undefined : bool;
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
-    let secondstage : bool(false) = false;
-    let s2fs1walk : bool(false) = false;
+    let ipaddress = undefined : bits(52);
+    let level = undefined : int;
+    let acctype = AccType_NORMAL;
+    let iswrite = undefined : bool;
+    let extflag = undefined : bits(1);
+    let errortype = undefined : bits(2);
+    let secondstage = false;
+    let s2fs1walk = false;
     AArch64_CreateFaultRecord(Fault_None, ipaddress, undefined : bits(1), level, acctype, iswrite, extflag, errortype, secondstage, s2fs1walk)
 }
 
@@ -1602,12 +1602,12 @@ val AArch64_DebugFault : forall ('iswrite : Bool).
   (AccType, bool('iswrite)) -> FaultRecord effect {undef}
 
 function AArch64_DebugFault (acctype, iswrite) = {
-    let ipaddress : vector(52, dec, bit) = undefined : bits(52);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
-    let level : int = undefined : int;
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let secondstage : bool(false) = false;
-    let s2fs1walk : bool(false) = false;
+    let ipaddress = undefined : bits(52);
+    let errortype = undefined : bits(2);
+    let level = undefined : int;
+    let extflag = undefined : bits(1);
+    let secondstage = false;
+    let s2fs1walk = false;
     AArch64_CreateFaultRecord(Fault_Debug, ipaddress, undefined : bits(1), level, acctype, iswrite, extflag, errortype, secondstage, s2fs1walk)
 }
 
@@ -1615,11 +1615,11 @@ val AArch64_AlignmentFault : forall ('iswrite : Bool) ('secondstage : Bool).
   (AccType, bool('iswrite), bool('secondstage)) -> FaultRecord effect {undef}
 
 function AArch64_AlignmentFault (acctype, iswrite, secondstage) = {
-    let ipaddress : vector(52, dec, bit) = undefined : bits(52);
-    let level : int = undefined : int;
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
-    let s2fs1walk : bool = undefined : bool;
+    let ipaddress = undefined : bits(52);
+    let level = undefined : int;
+    let extflag = undefined : bits(1);
+    let errortype = undefined : bits(2);
+    let s2fs1walk = undefined : bool;
     AArch64_CreateFaultRecord(Fault_Alignment, ipaddress, undefined : bits(1), level, acctype, iswrite, extflag, errortype, secondstage, s2fs1walk)
 }
 
@@ -1627,8 +1627,8 @@ val AArch64_AddressSizeFault : forall 'level ('iswrite : Bool) ('secondstage : B
   (bits(52), bits(1), int('level), AccType, bool('iswrite), bool('secondstage), bool('s2fs1walk)) -> FaultRecord effect {undef}
 
 function AArch64_AddressSizeFault (ipaddress, NS, level, acctype, iswrite, secondstage, s2fs1walk) = {
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
+    let extflag = undefined : bits(1);
+    let errortype = undefined : bits(2);
     AArch64_CreateFaultRecord(Fault_AddressSize, ipaddress, NS, level, acctype, iswrite, extflag, errortype, secondstage, s2fs1walk)
 }
 
@@ -1636,8 +1636,8 @@ val AArch64_AccessFlagFault : forall 'level ('iswrite : Bool) ('secondstage : Bo
   (bits(52), bits(1), int('level), AccType, bool('iswrite), bool('secondstage), bool('s2fs1walk)) -> FaultRecord effect {undef}
 
 function AArch64_AccessFlagFault (ipaddress, NS, level, acctype, iswrite, secondstage, s2fs1walk) = {
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
+    let extflag = undefined : bits(1);
+    let errortype = undefined : bits(2);
     AArch64_CreateFaultRecord(Fault_AccessFlag, ipaddress, NS, level, acctype, iswrite, extflag, errortype, secondstage, s2fs1walk)
 }
 
@@ -2156,7 +2156,7 @@ val ConstrainUnpredictableInteger : forall ('low : Int) ('high : Int).
   (int('low), int('high), Unpredictable) -> (Constraint, int) effect {undef}
 
 function ConstrainUnpredictableInteger (low, high, which) = {
-    let c : Constraint = ConstrainUnpredictable(which);
+    let c = ConstrainUnpredictable(which);
     if c == Constraint_UNKNOWN then {
         return((c, low))
     } else {
@@ -2231,7 +2231,7 @@ val AArch64_InstructionDevice : forall 'level ('iswrite : Bool) ('secondstage : 
 
 function AArch64_InstructionDevice (addrdesc__arg, vaddress, ipaddress, level, acctype, iswrite, secondstage, s2fs1walk) = {
     addrdesc = addrdesc__arg;
-    let c : Constraint = ConstrainUnpredictable(Unpredictable_INSTRDEVICE);
+    let c = ConstrainUnpredictable(Unpredictable_INSTRDEVICE);
     assert(c == Constraint_NONE | c == Constraint_FAULT);
     if c == Constraint_FAULT then {
         addrdesc.fault = AArch64_PermissionFault(ipaddress, undefined : bits(1), level, acctype, iswrite, secondstage, s2fs1walk)
@@ -2326,7 +2326,7 @@ function GTESetCriticalEvent () = {
 val GTERandNum : unit -> unit effect {rreg}
 
 function GTERandNum () = {
-    let data : vector(32, dec, bit) = slice(_GTEParam[0], 0, 32);
+    let data = slice(_GTEParam[0], 0, 32);
     prerr("TODO: implement GTERandNum\n");
     return()
 }
@@ -2334,8 +2334,8 @@ function GTERandNum () = {
 val GTEEventGenSetup : unit -> unit effect {rreg}
 
 function GTEEventGenSetup () = {
-    let handle : vector(32, dec, bit) = slice(_GTEParam[0], 0, 32);
-    let event : vector(32, dec, bit) = slice(_GTEParam[1], 0, 32);
+    let handle = slice(_GTEParam[0], 0, 32);
+    let event = slice(_GTEParam[1], 0, 32);
     let 'triggers_count = UInt(_GTEParam[2]);
     prerr("TODO: implement GTEEventGenSetup\n");
     return()
@@ -2344,7 +2344,7 @@ function GTEEventGenSetup () = {
 val GTEEventGenQuery : unit -> unit effect {rreg}
 
 function GTEEventGenQuery () = {
-    let handle : vector(32, dec, bit) = slice(_GTEParam[0], 0, 32);
+    let handle = slice(_GTEParam[0], 0, 32);
     prerr("TODO: implement GTEEventGenQuery\n");
     return()
 }
@@ -2352,7 +2352,7 @@ function GTEEventGenQuery () = {
 val GTEEventGenPrime : unit -> unit effect {rreg}
 
 function GTEEventGenPrime () = {
-    let handle : vector(32, dec, bit) = slice(_GTEParam[0], 0, 32);
+    let handle = slice(_GTEParam[0], 0, 32);
     prerr("TODO: implement GTEEventGenPrime\n");
     return()
 }
@@ -2360,7 +2360,7 @@ function GTEEventGenPrime () = {
 val GTEEventGenFree : unit -> unit effect {rreg}
 
 function GTEEventGenFree () = {
-    let handle : vector(32, dec, bit) = slice(_GTEParam[0], 0, 32);
+    let handle = slice(_GTEParam[0], 0, 32);
     prerr("TODO: implement GTEEventGenFree\n");
     return()
 }
@@ -2368,7 +2368,7 @@ function GTEEventGenFree () = {
 val GTEEventGenDisable : unit -> unit effect {rreg}
 
 function GTEEventGenDisable () = {
-    let handle : vector(32, dec, bit) = slice(_GTEParam[0], 0, 32);
+    let handle = slice(_GTEParam[0], 0, 32);
     prerr("TODO: implement GTEEventGenDisable\n");
     return()
 }
@@ -2376,7 +2376,7 @@ function GTEEventGenDisable () = {
 val GTEEventGenClear : unit -> unit effect {rreg}
 
 function GTEEventGenClear () = {
-    let handle : vector(32, dec, bit) = slice(_GTEParam[0], 0, 32);
+    let handle = slice(_GTEParam[0], 0, 32);
     prerr("TODO: implement GTEEventGenClear\n");
     return()
 }
@@ -2384,7 +2384,7 @@ function GTEEventGenClear () = {
 val GTEDeassert : unit -> unit effect {rreg}
 
 function GTEDeassert () = {
-    let cpus : vector(32, dec, bit) = slice(_GTEParam[0], 0, 32);
+    let cpus = slice(_GTEParam[0], 0, 32);
     prerr("TODO: implement GTEDeassert\n");
     return()
 }
@@ -2393,7 +2393,7 @@ val GTEAssert : unit -> unit effect {rreg}
 
 function GTEAssert () = {
     let 'triggers_count = UInt(_GTEParam[0]);
-    let cpus : vector(32, dec, bit) = slice(_GTEParam[1], 0, 32);
+    let cpus = slice(_GTEParam[1], 0, 32);
     prerr("TODO: implement GTEAssert\n");
     return()
 }
@@ -2455,7 +2455,7 @@ function GTEPPUControl () = {
     prerr(", enable=" ++ DecStr(UInt([_GTEParam[1][0]])));
     prerr(")\n");
     let 'region = UInt(slice(_GTEParam[0], 0, 32));
-    let enable : vector(1, dec, bit) = [_GTEParam[1][0]];
+    let enable = [_GTEParam[1][0]];
     if region >= NUM_GTE_REGIONS then {
         foreach (i from 0 to (NUM_GTE_REGIONS - 1) by 1 in inc) {
             __tc1 : bits(32) = _GTE_PPU_SizeEn[region];
@@ -2575,7 +2575,7 @@ val BigEndianReverse : forall ('width : Int), 'width >= 0.
 
 function BigEndianReverse value_name = {
     assert('width == 8 | 'width == 16 | 'width == 32 | 'width == 64 | 'width == 128);
-    let 'half : {'n, 'n == div('width, 2). int('n)} = 'width / 2;
+    let 'half = 'width / 2;
     if 'width == 8 then {
         return(value_name)
     };
@@ -2595,7 +2595,7 @@ val __ReadMemory : forall ('N : Int).
   (int('N), bits(56)) -> bits(8 * 'N) effect {rmem, rreg}
 
 function __ReadMemory (N, address) = {
-    let r : vector(8 * 'N, dec, bit) = __ReadRAM(56, N, __defaultRAM, address);
+    let r = __ReadRAM(56, N, __defaultRAM, address);
     __TraceMemoryRead(N, address, r);
     r
 }
@@ -2723,26 +2723,13 @@ function AArch32_ReportHypEntry exception = {
     return()
 }
 
-val Replicate : forall ('M : Int) ('N : Int).
-  (implicit('N), bits('M)) -> bits('N) effect {escape}
+val Replicate : forall ('M : Int) ('N : Int), ('M >= 1 & mod('N, 'M) == 0).
+  (implicit('N), bits('M)) -> bits('N)
 
-function Replicate(N, x) = {
-    assert('N % 'M == 0, "((N MOD M) == 0)");
-    let 'P = 'N / 'M;
-    assert(constraint('N == 'P * 'M));
-    replicate_bits(x, 'P)
-}
+function Replicate (N, x) = replicate_bits(x, N / 'M)
 
-val Zeros__0 = {ocaml: "zeros", lem: "zeros", smt: "zeros", interpreter: "zeros", c: "zeros"}: forall ('N : Int).
-  int('N) -> bits('N)
-
-val Zeros__1 : forall ('N : Int). (implicit('N), unit) -> bits('N)
-
-overload Zeros = {Zeros__0, Zeros__1}
-
-function Zeros__1(N, _) = {
-    Zeros__0(N)
-}
+val Zeros = {ocaml: "zeros", lem: "zeros", smt: "zeros", interpreter: "zeros", c: "zeros"}: forall ('N : Int).
+  implicit('N) -> bits('N)
 
 val set_ClearIRQ : bits(32) -> unit effect {rreg, wreg}
 
@@ -2769,7 +2756,7 @@ val mapvpmw : forall ('vpartid : Int).
 
 function mapvpmw vpartid = {
     vpmw : bits(64) = undefined : bits(64);
-    let 'wd : {'n, 'n == div('vpartid, 4). int('n)} = vpartid / 4;
+    let 'wd = vpartid / 4;
     match wd {
       0 => {
           vpmw = MPAMVPM0_EL2
@@ -2935,9 +2922,7 @@ function ZeroExtend__0 (x, N) = {
     Zeros(N - 'M) @ x
 }
 
-function ZeroExtend__1 (N, x) = {
-    ZeroExtend__0(x, N)
-}
+function ZeroExtend__1 (N, x) = ZeroExtend__0(x, N)
 
 val get_ScheduleIRQ : unit -> bits(32) effect {escape, rreg}
 
@@ -3102,10 +3087,10 @@ function ExceptionSyndrome typ = {
 val ConstrainUnpredictableBits : forall ('width : Int).
   (implicit('width), Unpredictable) -> (Constraint, bits('width)) effect {undef}
 
-function ConstrainUnpredictableBits(width, which) = {
-    let c : Constraint = ConstrainUnpredictable(which);
+function ConstrainUnpredictableBits (width, which) = {
+    let c = ConstrainUnpredictable(which);
     if c == Constraint_UNKNOWN then {
-        return((c, Zeros(width)))
+        return((c, Zeros('width)))
     } else {
         return((c, undefined : bits('width)))
     }
@@ -3153,22 +3138,12 @@ function SignExtend__0 (x, N) = {
 }
 
 function SignExtend__1 (N, x) = {
-    SignExtend(x, N)
+    SignExtend(x, 'N)
 }
 
-val Ones__0 : forall ('N : Int). int('N) -> bits('N)
+val Ones : forall ('N : Int). implicit('N) -> bits('N)
 
-val Ones__1 : forall ('N : Int). (implicit('N), unit) -> bits('N)
-
-overload Ones = {Ones__0, Ones__1}
-
-function Ones__0 N = {
-    replicate_bits(0b1, N)
-}
-
-function Ones__1(N, _) = {
-    Ones(N)
-}
+function Ones N = replicate_bits(0b1, N)
 
 register configuration sp_rel_access_pc : bits(64) = Ones(64)
 
@@ -3192,7 +3167,7 @@ val GTEPerformExtObsCommon : forall ('observer : Int).
   int('observer) -> unit effect {rmem, rreg, undef, wmem, wreg}
 
 function GTEPerformExtObsCommon observer = {
-    let currentNS : vector(1, dec, bit) = 0b1;
+    let currentNS = 0b1;
     let 'procid = UInt(MPIDR_EL1);
     ok : bool = undefined : bool;
     foreach (i
@@ -3287,7 +3262,7 @@ function MAP_vPARTID vpartid = {
     err : bool = undefined : bool;
     virt : int = UInt(vpartid);
     let 'vmprmax = UInt(slice(MPAMIDR_EL1, 18, 3));
-    let 'vpartid_max : {'n, 'n == 4 * 'vmprmax + 3. int('n)} = 4 * vmprmax + 3;
+    let 'vpartid_max = 4 * vmprmax + 3;
     if virt > vpartid_max then {
         virt = virt % (vpartid_max + 1)
     };
@@ -3346,7 +3321,7 @@ function GTESetupExtObs64 () = {
         _GTEStatus = Ones(64);
         return()
     };
-    let 'ibase : {'n, 'n == 64 * 'observer. int('n)} = NUM_GTE_EXT_OBS_OBSERVATIONS_PER_OBSERVER * observer;
+    let 'ibase = NUM_GTE_EXT_OBS_OBSERVATIONS_PER_OBSERVER * observer;
     ai : int = 8;
     foreach (i from 0 to (num_addresses - 1) by 1 in inc) {
         let access_lo : bits(8) = slice(_GTEListParam0[shr_int(ai, 6)], ai % 64, 8);
@@ -3401,7 +3376,7 @@ function GTESetupExtObs () = {
         _GTEStatus = Ones(64);
         return()
     };
-    let 'ibase : {'n, 'n == 64 * 'observer. int('n)} = NUM_GTE_EXT_OBS_OBSERVATIONS_PER_OBSERVER * observer;
+    let 'ibase = NUM_GTE_EXT_OBS_OBSERVATIONS_PER_OBSERVER * observer;
     ai : int = 8;
     foreach (i from 0 to (num_addresses - 1) by 1 in inc) {
         let access : bits(8) = slice(_GTEListParam1[shr_int(ai, 5)], ai % 32, 8);
@@ -3426,7 +3401,7 @@ overload Align = {Align__0, Align__1}
 
 function Align__0 (x, y) = y * (x / y)
 
-function Align__1 (x, y) = let x2 = UInt(x) in __GetSlice_int('N, Align(x2, y), 0)
+function Align__1 (x, y) = __GetSlice_int('N, Align(UInt(x), y), 0)
 
 val aset_ELR__0 : (bits(2), bits(64)) -> unit effect {escape, wreg}
 
@@ -3656,7 +3631,7 @@ function HighestEL () = {
 val MPAMisEnabled : unit -> bool effect {escape, rreg}
 
 function MPAMisEnabled () = {
-    let el : vector(2, dec, bit) = HighestEL();
+    let el = HighestEL();
     match el {
       ? if ? == EL3 => {
           return([MPAM3_EL3[63]] == 0b1)
@@ -3727,7 +3702,7 @@ val GTEChkAccessSensitiveBEH : unit -> unit effect {rreg, wreg}
 
 function GTEChkAccessSensitiveBEH () = {
     let 'list_count = UInt(_GTEParam[0]);
-    let 'address_count : {'n, 'n == div('list_count, 3). int('n)} = list_count / 3;
+    let 'address_count = list_count / 3;
     prerr("GTEChkAccessSensitiveBEH(");
     foreach (i from 0 to (address_count - 1) by 1 in inc) {
         prerr("( address=" ++ HexStr(UInt(_GTEListParam0[i * 3])));
@@ -3906,7 +3881,7 @@ function AArch32_AccessIsPrivileged acctype = {
 val UsingAArch32 : unit -> bool effect {escape, rreg}
 
 function UsingAArch32 () = {
-    let aarch32 : bool = PSTATE.nRW == 0b1;
+    let aarch32 = PSTATE.nRW == 0b1;
     if ~(HaveAnyAArch32()) then {
         assert(~(aarch32))
     };
@@ -3967,11 +3942,12 @@ function aset_SPSR value_name = {
 
 overload SPSR = {aset_SPSR}
 
-val ThisInstrAddr : forall ('N : Int). (implicit('N), unit) -> bits('N) effect {escape, rreg}
+val ThisInstrAddr : forall ('N : Int).
+  implicit('N) -> bits('N) effect {escape, rreg}
 
-function ThisInstrAddr(N, _) = {
-    assert(N == 64 | N == 32 & UsingAArch32());
-    slice(_PC, 0, N)
+function ThisInstrAddr N = {
+    assert('N == 64 | 'N == 32 & UsingAArch32());
+    slice(_PC, 0, 'N)
 }
 
 val IsNonTagCheckedInstruction : unit -> bool effect {escape, rreg}
@@ -3996,8 +3972,8 @@ function CurrentInstrSet () = {
 val AArch32_ExecutingLSMInstr : unit -> bool effect {escape, rreg, undef}
 
 function AArch32_ExecutingLSMInstr () = {
-    let instr : vector(32, dec, bit) = ThisInstr();
-    let instr_set : InstrSet = CurrentInstrSet();
+    let instr = ThisInstr();
+    let instr_set = CurrentInstrSet();
     assert(instr_set == InstrSet_A32 | instr_set == InstrSet_T32);
     if instr_set == InstrSet_A32 then {
         return(slice(instr, 28, 4) != 0xF & slice(instr, 25, 3) == 0b100)
@@ -4592,7 +4568,7 @@ function _WriteTrickbox (address, UNP, UP, PNP, PP, val_name) = {
           set_AXIAbortCtl(val_name)
       },
       2560 if ((UNP | PNP) | UP) | PP => {
-          let GTE_API : vector(32, dec, bit) = undefined : bits(32);
+          let GTE_API = undefined : bits(32);
           set_GTE_API(val_name)
       },
       2564 if ((UNP | PNP) | UP) | PP => {
@@ -4611,11 +4587,11 @@ function _WriteTrickbox (address, UNP, UP, PNP, PP, val_name) = {
     }
 }
 
-val GTECheckAccessSensitiveAccess : forall ('size : Int), 'size >= 0.
+val GTECheckAccessSensitiveAccess : forall ('size : Int), 0 <= 'size.
   (bits(52), int('size), bits(8 * 'size), bool) -> unit effect {escape, rreg, wreg}
 
 function GTECheckAccessSensitiveAccess (address, size, data, isRead) = {
-    if (~(_GTEActive) | _GTE_AS_Size == Zeros(64)) | _GTE_AS_Access == 0 then {
+    if (~(_GTEActive) | _GTE_AS_Size == 0) | _GTE_AS_Access == 0 then {
         return()
     };
     if (_GTE_AS_AccessCount < NUM_GTE_AS_ACCESSES & UInt(address) >= UInt(_GTE_AS_Address)) & UInt(address) < UInt(_GTE_AS_Address + _GTE_AS_Size) then {
@@ -4962,7 +4938,7 @@ val S2AttrDecode : (bits(2), bits(4), AccType) -> MemoryAttributes effect {escap
 
 function S2AttrDecode (SH, attr, acctype) = {
     memattrs : MemoryAttributes = undefined : MemoryAttributes;
-    let apply_force_writeback : bool = HaveStage2MemAttrControl() & [HCR_EL2[46]] == 0b1;
+    let apply_force_writeback = HaveStage2MemAttrControl() & [HCR_EL2[46]] == 0b1;
     if apply_force_writeback & [attr[2]] == 0b0 | slice(attr, 2, 2) == 0b00 then {
         memattrs.typ = MemType_Device;
         match slice(attr, 0, 2) {
@@ -5334,7 +5310,7 @@ val WalkAttrDecode : forall ('secondstage : Bool).
 
 function WalkAttrDecode (SH, ORGN, IRGN, secondstage) = {
     memattrs : MemoryAttributes = undefined : MemoryAttributes;
-    let acctype : AccType = AccType_NORMAL;
+    let acctype = AccType_NORMAL;
     memattrs.typ = MemType_Normal;
     memattrs.inner = ShortConvertAttrsHints(IRGN, acctype, secondstage);
     memattrs.outer = ShortConvertAttrsHints(ORGN, acctype, secondstage);
@@ -5513,7 +5489,7 @@ val EffectiveTCMA : (bits(64), bits(2)) -> bits(1) effect {escape, rreg, undef}
 
 function EffectiveTCMA (address, el) = {
     assert(HaveEL(el));
-    let regime : vector(2, dec, bit) = S1TranslationRegime(el);
+    let regime = S1TranslationRegime(el);
     assert(~(ELUsingAArch32(regime)));
     tcma : bits(1) = undefined : bits(1);
     match regime {
@@ -5539,7 +5515,7 @@ val EffectiveTBI : forall ('IsInstr : Bool).
 
 function EffectiveTBI (address, IsInstr, el) = {
     assert(HaveEL(el));
-    let regime : vector(2, dec, bit) = S1TranslationRegime(el);
+    let regime = S1TranslationRegime(el);
     assert(~(ELUsingAArch32(regime)));
     tbi : bits(1) = undefined : bits(1);
     tbid : bits(1) = undefined : bits(1);
@@ -5584,7 +5560,7 @@ val getMPAM_PMG : forall ('MPAMn : Int) ('InD : Bool).
 
 function getMPAM_PMG (MPAMn, InD) = {
     pmg : bits(8) = undefined : bits(8);
-    let el2avail : bool = EL2Enabled();
+    let el2avail = EL2Enabled();
     if InD then {
         match MPAMn {
           3 => {
@@ -5633,7 +5609,7 @@ function genPMG (el, InD, partid_err) = {
     if partid_err then {
         return(DefaultPMG)
     };
-    let groupel : vector(8, dec, bit) = getMPAM_PMG(el, InD);
+    let groupel = getMPAM_PMG(el, InD);
     if UInt(groupel) <= pmg_max then {
         return(groupel)
     };
@@ -5645,7 +5621,7 @@ val getMPAM_PARTID : forall ('MPAMn : Int) ('InD : Bool).
 
 function getMPAM_PARTID (MPAMn, InD) = {
     partid : bits(16) = undefined : bits(16);
-    let el2avail : bool = EL2Enabled();
+    let el2avail = EL2Enabled();
     if InD then {
         match MPAMn {
           3 => {
@@ -5697,7 +5673,7 @@ val genPARTID : forall ('el : Int) ('InD : Bool).
   (int('el), bool('InD)) -> (bits(16), bool) effect {escape, rreg, undef}
 
 function genPARTID (el, InD) = {
-    let partidel : vector(16, dec, bit) = getMPAM_PARTID(el, InD);
+    let partidel = getMPAM_PARTID(el, InD);
     let 'partid_max = UInt(slice(MPAMIDR_EL1, 0, 16));
     if UInt(partidel) > partid_max then {
         return((DefaultPARTID, true))
@@ -5716,8 +5692,8 @@ function genMPAM (el, InD, secure) = {
     returnInfo : MPAMinfo = undefined : MPAMinfo;
     partidel : bits(16) = undefined : bits(16);
     perr : bool = undefined : bool;
-    let gstplk : bool = ((el == 0 & EL2Enabled()) & [MPAMHCR_EL2[8]] == 0b1) & [HCR_EL2[27]] == 0b0;
-    let 'eff_el : {'n, ('n == 1 | 'n == 'el). int('n)} = if gstplk then 1 else el;
+    let gstplk = ((el == 0 & EL2Enabled()) & [MPAMHCR_EL2[8]] == 0b1) & [HCR_EL2[27]] == 0b0;
+    let 'eff_el = if gstplk then 1 else el;
     (partidel, perr) = genPARTID(eff_el, InD);
     let groupel : bits(8) = genPMG(eff_el, InD, perr);
     returnInfo.mpam_ns = if secure then 0b0 else 0b1;
@@ -5809,7 +5785,7 @@ function DebugTargetFrom secure = {
 val DebugTarget : unit -> bits(2) effect {escape, rreg, undef}
 
 function DebugTarget () = {
-    let secure : bool = IsSecure();
+    let secure = IsSecure();
     DebugTargetFrom(secure)
 }
 
@@ -5948,7 +5924,7 @@ val GenMPAMcurEL : forall ('InD : Bool).
 function GenMPAMcurEL InD = {
     mpamel : bits(2) = undefined : bits(2);
     validEL_name : bool = undefined : bool;
-    let secure : bool = IsSecure();
+    let secure = IsSecure();
     if HaveMPAMExt() & MPAMisEnabled() then {
         if UsingAArch32() then {
             (validEL_name, mpamel) = ELFromM32(PSTATE.M)
@@ -6006,7 +5982,7 @@ val AddrTop : forall ('IsInstr : Bool).
 
 function AddrTop (address, IsInstr, el) = {
     assert(HaveEL(el));
-    let regime : vector(2, dec, bit) = S1TranslationRegime(el);
+    let regime = S1TranslationRegime(el);
     tbi : bits(1) = undefined : bits(1);
     tbid : bits(1) = undefined : bits(1);
     if ELUsingAArch32(regime) then {
@@ -6056,7 +6032,7 @@ function getTLBContext (inputaddr, secondstage, s1_nonsecure, acctype) = {
     granule : bits(2) = undefined : bits(2);
     t_sz : bits(6) = undefined : bits(6);
     secure = IsSecure();
-    let top : int = AddrTop(inputaddr, acctype == AccType_IFETCH, PSTATE.EL);
+    let top = AddrTop(inputaddr, acctype == AccType_IFETCH, PSTATE.EL);
     if ~(secondstage) then {
         if PSTATE.nRW == 0b1 then {
             if PSTATE.EL == EL2 then {
@@ -6163,7 +6139,7 @@ val TLBCache : forall ('secondstage : Bool).
   (bits(64), bool('secondstage), bits(1), AccType, TLBRecord) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBCache (address, secondstage, s1_nonsecure, acctype, data) = {
-    let context : TLBContext = getTLBContext(address, secondstage, s1_nonsecure, acctype);
+    let context = getTLBContext(address, secondstage, s1_nonsecure, acctype);
     let idx = UInt(TLBIndex(address, context));
     __tc1 : TLBLine = _TLB[idx];
     __tc1.address = address;
@@ -6451,8 +6427,8 @@ val AArch64_S1AttrDecode : (bits(2), bits(3), AccType) -> MemoryAttributes effec
 
 function AArch64_S1AttrDecode (SH, attr, acctype) = {
     memattrs : MemoryAttributes = undefined : MemoryAttributes;
-    let mair : vector(64, dec, bit) = MAIR();
-    let index : {'ex3436#, (0 <= 'ex3436# & 'ex3436# <= 2 ^ 3 - 1). int(8 * 'ex3436#)} = 8 * UInt(attr);
+    let mair = MAIR();
+    let index = 8 * UInt(attr);
     attrfield : bits(8) = undefined : bits(8);
     attrfield = slice(mair, index, 8);
     memattrs.tagged = false;
@@ -6520,9 +6496,9 @@ val AArch64_PendingUnmaskedPhysicalInterrupts : bits(3) -> (bool, bool, bool) ef
 
 function AArch64_PendingUnmaskedPhysicalInterrupts mask__arg = {
     mask = mask__arg;
-    let se_pending : vector(1, dec, bit) = if IsPhysicalSErrorPending() then 0b1 else 0b0;
-    let irq_pending : vector(1, dec, bit) = if IRQPending() then 0b1 else 0b0;
-    let fiq_pending : vector(1, dec, bit) = if FIQPending() then 0b1 else 0b0;
+    let se_pending = if IsPhysicalSErrorPending() then 0b1 else 0b0;
+    let irq_pending = if IRQPending() then 0b1 else 0b0;
+    let fiq_pending = if FIQPending() then 0b1 else 0b0;
     let pending : bits(3) = (se_pending @ irq_pending) @ fiq_pending;
     mask_override : bits(3) = undefined : bits(3);
     if EL2Enabled() then {
@@ -6593,7 +6569,7 @@ function AArch64_GenerateDebugExceptionsFrom (from, secure, mask) = {
     if ([OSLSR_EL1[1]] == 0b1 | DoubleLockStatus()) | Halted() then {
         return(false)
     };
-    let route_to_el2 : bool = (HaveEL(EL2) & ~(secure)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
+    let route_to_el2 = (HaveEL(EL2) & ~(secure)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
     let target : bits(2) = if route_to_el2 then EL2 else EL1;
     enabled : bool = undefined : bool;
     enabled = (~(HaveEL(EL3)) | ~(secure)) | [MDCR_EL3[16]] == 0b0;
@@ -6647,7 +6623,7 @@ val AArch64_AbortSyndrome : (Exception, FaultRecord, bits(64)) -> ExceptionRecor
 function AArch64_AbortSyndrome (typ, fault, vaddress) = {
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(typ);
-    let d_side : bool = typ == Exception_DataAbort | typ == Exception_NV2DataAbort | typ == Exception_Watchpoint;
+    let d_side = typ == Exception_DataAbort | typ == Exception_NV2DataAbort | typ == Exception_Watchpoint;
     exception.syndrome = AArch64_FaultSyndrome(d_side, fault);
     exception.vaddress = ZeroExtend(vaddress);
     if IPAValid(fault) then {
@@ -6666,7 +6642,7 @@ function AArch64_ExecutingATS1xPInstr () = {
     if ~(HavePrivATExt()) then {
         return(false)
     };
-    let instr : vector(32, dec, bit) = ThisInstr();
+    let instr = ThisInstr();
     CRm : bits(4) = undefined : bits(4);
     CRn : bits(4) = undefined : bits(4);
     op1 : bits(3) = undefined : bits(3);
@@ -6687,7 +6663,7 @@ val AArch64_ExceptionClass : (Exception, bits(2)) -> (int, bits(1)) effect {esca
 function AArch64_ExceptionClass (typ, target_el) = {
     il : bits(1) = undefined : bits(1);
     il = if ThisInstrLength() == 32 then 0b1 else 0b0;
-    let from_32 : bool = UsingAArch32();
+    let from_32 = UsingAArch32();
     assert(from_32 | il == 0b1);
     ec : int = undefined : int;
     match typ {
@@ -6812,11 +6788,11 @@ function AArch64_ExceptionClass (typ, target_el) = {
 val AArch64_ReportException : (ExceptionRecord, bits(2)) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_ReportException (exception, target_el) = {
-    let typ : Exception = exception.typ;
+    let typ = exception.typ;
     ec : int = undefined : int;
     il : bits(1) = undefined : bits(1);
     (ec, il) = AArch64_ExceptionClass(typ, target_el);
-    let iss : vector(25, dec, bit) = exception.syndrome;
+    let iss = exception.syndrome;
     if (ec == 36 | ec == 37) & [iss[24]] == 0b0 then {
         il = 0b1
     };
@@ -6848,8 +6824,8 @@ val AArch64_CheckS2Permission : forall 'level ('iswrite : Bool) ('s2fs1walk : Bo
 
 function AArch64_CheckS2Permission (perms, vaddress, ipaddress, level, acctype, iswrite, NS, s2fs1walk, hwupdatewalk) = {
     assert((IsSecureEL2Enabled() | (HaveEL(EL2) & ~(IsSecure())) & ~(ELUsingAArch32(EL2))) & HasS2Translation());
-    let r : bool = [perms.ap[1]] == 0b1;
-    let w : bool = [perms.ap[2]] == 0b1;
+    let r = [perms.ap[1]] == 0b1;
+    let w = [perms.ap[2]] == 0b1;
     xn : bool = undefined : bool;
     if HaveExtendedExecuteNeverExt() then {
         match perms.xn @ perms.xxn {
@@ -6913,8 +6889,8 @@ val AArch64_SecondStageTranslate : forall ('iswrite : Bool) ('wasaligned : Bool)
 
 function AArch64_SecondStageTranslate (S1, vaddress, acctype, iswrite, wasaligned, s2fs1walk, size, hwupdatewalk) = {
     assert(HasS2Translation());
-    let s2_enabled : bool = [HCR_EL2[0]] == 0b1 | [HCR_EL2[12]] == 0b1;
-    let secondstage : bool(true) = true;
+    let s2_enabled = [HCR_EL2[0]] == 0b1 | [HCR_EL2[12]] == 0b1;
+    let secondstage = true;
     NS : bits(1) = undefined : bits(1);
     S2 : TLBRecord = undefined : TLBRecord;
     ipaddress : bits(52) = undefined : bits(52);
@@ -6956,8 +6932,8 @@ val AArch64_SecondStageWalk : forall ('iswrite : Bool) 'size ('hwupdatewalk : Bo
 
 function AArch64_SecondStageWalk (S1, vaddress, acctype, iswrite, size, hwupdatewalk) = {
     assert(HasS2Translation());
-    let s2fs1walk : bool(true) = true;
-    let wasaligned : bool(true) = true;
+    let s2fs1walk = true;
+    let wasaligned = true;
     AArch64_SecondStageTranslate(S1, vaddress, acctype, iswrite, wasaligned, s2fs1walk, size, hwupdatewalk)
 }
 
@@ -7148,11 +7124,11 @@ val AArch64_WatchpointMatch : forall 'n 'size ('ispriv : Bool) ('iswrite : Bool)
 function AArch64_WatchpointMatch (n, vaddress, size, ispriv, acctype, iswrite) = {
     assert(~(ELUsingAArch32(S1TranslationRegime())));
     assert(n <= UInt(slice(ID_AA64DFR0_EL1, 20, 4)));
-    let enabled : bool = [DBGWCR_EL1[n][0]] == 0b1;
-    let linked : bool = [DBGWCR_EL1[n][20]] == 0b1;
-    let isbreakpnt : bool(false) = false;
+    let enabled = [DBGWCR_EL1[n][0]] == 0b1;
+    let linked = [DBGWCR_EL1[n][20]] == 0b1;
+    let isbreakpnt = false;
     let state_match : bool = AArch64_StateMatch(slice(DBGWCR_EL1[n], 14, 2), [DBGWCR_EL1[n][13]], slice(DBGWCR_EL1[n], 1, 2), linked, slice(DBGWCR_EL1[n], 16, 4), isbreakpnt, acctype, ispriv);
-    let ls_match : bool = [slice(DBGWCR_EL1[n], 3, 2)[if iswrite then 1 else 0]] == 0b1;
+    let ls_match = [slice(DBGWCR_EL1[n], 3, 2)[if iswrite then 1 else 0]] == 0b1;
     value_match_name : bool = undefined : bool;
     value_match_name = false;
     foreach (byte from 0 to (size - 1) by 1 in inc) {
@@ -7167,11 +7143,11 @@ val AArch64_BreakpointMatch : forall ('n : Int) ('size : Int).
 function AArch64_BreakpointMatch (n, vaddress, acctype, size) = {
     assert(~(ELUsingAArch32(S1TranslationRegime())));
     assert(n <= UInt(slice(ID_AA64DFR0_EL1, 12, 4)));
-    let enabled : bool = [DBGBCR_EL1[n][0]] == 0b1;
-    let ispriv : bool = PSTATE.EL != EL0;
-    let linked : bool = (slice(DBGBCR_EL1[n], 20, 4) & 0xB) == 0x1;
-    let isbreakpnt : bool(true) = true;
-    let linked_to : bool(false) = false;
+    let enabled = [DBGBCR_EL1[n][0]] == 0b1;
+    let ispriv = PSTATE.EL != EL0;
+    let linked = (slice(DBGBCR_EL1[n], 20, 4) & 0xB) == 0x1;
+    let isbreakpnt = true;
+    let linked_to = false;
     let state_match : bool = AArch64_StateMatch(slice(DBGBCR_EL1[n], 14, 2), [DBGBCR_EL1[n][13]], slice(DBGBCR_EL1[n], 1, 2), linked, slice(DBGBCR_EL1[n], 16, 4), isbreakpnt, acctype, ispriv);
     value_match_name : bool = undefined : bool;
     value_match_name = AArch64_BreakpointValueMatch(n, vaddress, linked_to);
@@ -7355,7 +7331,7 @@ val TagCheckFault : forall ('write : Bool).
 function TagCheckFault (va, write) = {
     target_el : bits(2) = undefined : bits(2);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let 'vect_offset : {'n, 'n == 0. int('n)} = 0;
+    let 'vect_offset = 0;
     if PSTATE.EL == EL0 then {
         target_el = if [HCR_EL2[27]] == 0 then EL1 else EL2
     } else {
@@ -7379,7 +7355,7 @@ val TagCheckFail : forall ('iswrite : Bool).
   (bits(64), bool('iswrite)) -> unit effect {escape, rreg, undef, wreg}
 
 function TagCheckFail (vaddress, iswrite) = {
-    let tcf : vector(2, dec, bit) = EffectiveTCF(PSTATE.EL);
+    let tcf = EffectiveTCF(PSTATE.EL);
     if tcf == 0b01 then {
         TagCheckFault(vaddress, iswrite)
     } else {
@@ -7393,10 +7369,10 @@ val AArch64_WatchpointException : (bits(64), FaultRecord) -> unit effect {escape
 
 function AArch64_WatchpointException (vaddress, fault) = {
     assert(PSTATE.EL != EL3);
-    let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
+    let route_to_el2 = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
-    let exception : ExceptionRecord = AArch64_AbortSyndrome(Exception_Watchpoint, fault, vaddress);
+    let vect_offset = 0;
+    let exception = AArch64_AbortSyndrome(Exception_Watchpoint, fault, vaddress);
     if PSTATE.EL == EL2 | route_to_el2 then {
         AArch64_TakeException(EL2, exception, preferred_exception_return, vect_offset)
     } else {
@@ -7410,8 +7386,8 @@ function AArch64_VectorCatchException fault = {
     assert(PSTATE.EL != EL2);
     assert(EL2Enabled() & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1));
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
-    let vaddress : vector(64, dec, bit) = undefined : bits(64);
+    let vect_offset = 0;
+    let vaddress = undefined : bits(64);
     let exception : ExceptionRecord = AArch64_AbortSyndrome(Exception_VectorCatch, fault, vaddress);
     AArch64_TakeException(EL2, exception, preferred_exception_return, vect_offset)
 }
@@ -7423,7 +7399,7 @@ function AArch64_TakeVirtualSErrorException (impdef_syndrome, syndrome) = {
     assert(EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1));
     assert([HCR_EL2[27]] == 0b0 & [HCR_EL2[5]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(384) = 384;
+    let vect_offset = 384;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_SError);
     if HaveRASExt() then {
@@ -7453,8 +7429,8 @@ function AArch64_TakeVirtualIRQException () = {
     assert(EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1));
     assert([HCR_EL2[27]] == 0b0 & [HCR_EL2[4]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(128) = 128;
-    let exception : ExceptionRecord = ExceptionSyndrome(Exception_IRQ);
+    let vect_offset = 128;
+    let exception = ExceptionSyndrome(Exception_IRQ);
     AArch64_TakeException(EL1, exception, preferred_exception_return, vect_offset)
 }
 
@@ -7464,8 +7440,8 @@ function AArch64_TakeVirtualFIQException () = {
     assert(EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1));
     assert([HCR_EL2[27]] == 0b0 & [HCR_EL2[3]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(256) = 256;
-    let exception : ExceptionRecord = ExceptionSyndrome(Exception_FIQ);
+    let vect_offset = 256;
+    let exception = ExceptionSyndrome(Exception_FIQ);
     AArch64_TakeException(EL1, exception, preferred_exception_return, vect_offset)
 }
 
@@ -7473,10 +7449,10 @@ val AArch64_TakePhysicalSErrorException : forall ('impdef_syndrome : Bool).
   (bool('impdef_syndrome), bits(24)) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_TakePhysicalSErrorException (impdef_syndrome, syndrome) = {
-    let route_to_el3 : bool = HaveEL(EL3) & [SCR_EL3[3]] == 0b1;
-    let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | ~(IsInHost()) & [HCR_EL2[5]] == 0b1);
+    let route_to_el3 = HaveEL(EL3) & [SCR_EL3[3]] == 0b1;
+    let route_to_el2 = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | ~(IsInHost()) & [HCR_EL2[5]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(384) = 384;
+    let vect_offset = 384;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_SError);
     __tc1 : bits(25) = exception.syndrome;
@@ -7500,11 +7476,11 @@ function AArch64_TakePhysicalSErrorException (impdef_syndrome, syndrome) = {
 val AArch64_TakePhysicalIRQException : unit -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_TakePhysicalIRQException () = {
-    let route_to_el3 : bool = HaveEL(EL3) & [SCR_EL3[1]] == 0b1;
-    let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [HCR_EL2[4]] == 0b1);
+    let route_to_el3 = HaveEL(EL3) & [SCR_EL3[1]] == 0b1;
+    let route_to_el2 = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [HCR_EL2[4]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(128) = 128;
-    let exception : ExceptionRecord = ExceptionSyndrome(Exception_IRQ);
+    let vect_offset = 128;
+    let exception = ExceptionSyndrome(Exception_IRQ);
     if route_to_el3 then {
         AArch64_TakeException(EL3, exception, preferred_exception_return, vect_offset)
     } else {
@@ -7521,11 +7497,11 @@ function AArch64_TakePhysicalIRQException () = {
 val AArch64_TakePhysicalFIQException : unit -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_TakePhysicalFIQException () = {
-    let route_to_el3 : bool = HaveEL(EL3) & [SCR_EL3[2]] == 0b1;
-    let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [HCR_EL2[3]] == 0b1);
+    let route_to_el3 = HaveEL(EL3) & [SCR_EL3[2]] == 0b1;
+    let route_to_el2 = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [HCR_EL2[3]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(256) = 256;
-    let exception : ExceptionRecord = ExceptionSyndrome(Exception_FIQ);
+    let vect_offset = 256;
+    let exception = ExceptionSyndrome(Exception_FIQ);
     if route_to_el3 then {
         AArch64_TakeException(EL3, exception, preferred_exception_return, vect_offset)
     } else {
@@ -7543,9 +7519,9 @@ val AArch64_SoftwareStepException : unit -> unit effect {escape, rreg, undef, wr
 
 function AArch64_SoftwareStepException () = {
     assert(PSTATE.EL != EL3);
-    let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
+    let route_to_el2 = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_SoftwareStep);
     if SoftwareStep_DidNotStep() then {
@@ -7581,7 +7557,7 @@ val AArch64_PCAlignmentFault : unit -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_PCAlignmentFault () = {
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_PCAlignment);
     exception.vaddress = ThisInstrAddr();
@@ -7611,11 +7587,11 @@ function AArch64_InstructionAbort (vaddress, fault) = {
     if HaveDoubleFaultExt() then {
         assert(fault.typ != Fault_AsyncExternal)
     };
-    let route_to_el3 : bool = (HaveEL(EL3) & [SCR_EL3[3]] == 0b1) & IsExternalAbort(fault);
-    let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & (([HCR_EL2[27]] == 0b1 | IsSecondStage(fault)) | (HaveRASExt() & [HCR_EL2[37]] == 0b1) & IsExternalAbort(fault));
+    let route_to_el3 = (HaveEL(EL3) & [SCR_EL3[3]] == 0b1) & IsExternalAbort(fault);
+    let route_to_el2 = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & (([HCR_EL2[27]] == 0b1 | IsSecondStage(fault)) | (HaveRASExt() & [HCR_EL2[37]] == 0b1) & IsExternalAbort(fault));
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
-    let exception : ExceptionRecord = AArch64_AbortSyndrome(Exception_InstructionAbort, fault, vaddress);
+    let vect_offset = 0;
+    let exception = AArch64_AbortSyndrome(Exception_InstructionAbort, fault, vaddress);
     if PSTATE.EL == EL3 | route_to_el3 then {
         AArch64_TakeException(EL3, exception, preferred_exception_return, vect_offset)
     } else {
@@ -7630,8 +7606,8 @@ function AArch64_InstructionAbort (vaddress, fault) = {
 val AArch64_DataAbort : (bits(64), FaultRecord) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_DataAbort (vaddress, fault) = {
-    let route_to_el3 : bool = (HaveEL(EL3) & [SCR_EL3[3]] == 0b1) & IsExternalAbort(fault);
-    let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ((([HCR_EL2[27]] == 0b1 | (HaveRASExt() & [HCR_EL2[37]] == 0b1) & IsExternalAbort(fault)) | HaveNV2Ext() & fault.acctype == AccType_NV2REGISTER) | IsSecondStage(fault));
+    let route_to_el3 = (HaveEL(EL3) & [SCR_EL3[3]] == 0b1) & IsExternalAbort(fault);
+    let route_to_el2 = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ((([HCR_EL2[27]] == 0b1 | (HaveRASExt() & [HCR_EL2[37]] == 0b1) & IsExternalAbort(fault)) | HaveNV2Ext() & fault.acctype == AccType_NV2REGISTER) | IsSecondStage(fault));
     let preferred_exception_return : bits(64) = ThisInstrAddr();
     vect_offset : int = undefined : int;
     if ((HaveDoubleFaultExt() & (PSTATE.EL == EL3 | route_to_el3)) & IsExternalAbort(fault)) & [SCR_EL3[19]] == 0b1 then {
@@ -7683,10 +7659,10 @@ val AArch64_BreakpointException : FaultRecord -> unit effect {escape, rreg, unde
 
 function AArch64_BreakpointException fault = {
     assert(PSTATE.EL != EL3);
-    let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
+    let route_to_el2 = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
-    let vaddress : vector(64, dec, bit) = undefined : bits(64);
+    let vect_offset = 0;
+    let vaddress = undefined : bits(64);
     let exception : ExceptionRecord = AArch64_AbortSyndrome(Exception_Breakpoint, fault, vaddress);
     if PSTATE.EL == EL2 | route_to_el2 then {
         AArch64_TakeException(EL2, exception, preferred_exception_return, vect_offset)
@@ -7723,7 +7699,7 @@ val AArch32_EnterMode : forall ('lr_offset : Int) ('vect_offset : Int).
 function AArch32_EnterMode (target_mode, preferred_exception_return, lr_offset, vect_offset) = {
     SynchronizeContext();
     assert(ELUsingAArch32(EL1) & PSTATE.EL != EL2);
-    let spsr : vector(32, dec, bit) = GetPSRFromPSTATE();
+    let spsr = GetPSRFromPSTATE();
     if PSTATE.M == M32_Monitor then {
         __tc1 : bits(32) = get_SCR();
         __tc1 = __SetSlice_bits(32, 1, __tc1, 0, 0b0);
@@ -7808,9 +7784,9 @@ val AArch64_CheckDebug : forall ('iswrite : Bool) ('size : Int).
 
 function AArch64_CheckDebug (vaddress, acctype, iswrite, size) = {
     fault : FaultRecord = AArch64_NoFault();
-    let d_side : bool = acctype != AccType_IFETCH;
-    let generate_exception : bool = AArch64_GenerateDebugExceptions() & [MDSCR_EL1[15]] == 0b1;
-    let halt : bool = HaltOnBreakpointOrWatchpoint();
+    let d_side = acctype != AccType_IFETCH;
+    let generate_exception = AArch64_GenerateDebugExceptions() & [MDSCR_EL1[15]] == 0b1;
+    let halt = HaltOnBreakpointOrWatchpoint();
     if generate_exception | halt then {
         if d_side then {
             fault = AArch64_CheckWatchpoint(vaddress, acctype, iswrite, size)
@@ -7826,7 +7802,7 @@ val AArch64_CheckPermission : forall ('level : Int) ('iswrite : Bool).
 
 function AArch64_CheckPermission (perms, vaddress, level, NS, acctype, iswrite) = {
     assert(~(ELUsingAArch32(S1TranslationRegime())));
-    let wxn : bool = [SCTLR()[19]] == 0b1;
+    let wxn = [SCTLR()[19]] == 0b1;
     is_ats1xp : bool = undefined : bool;
     is_ldst : bool = undefined : bool;
     ispriv : bool = undefined : bool;
@@ -7921,8 +7897,8 @@ function AArch64_FirstStageTranslate (vaddress, acctype, iswrite, wasaligned, si
             s1_enabled = [SCTLR()[0]] == 0b1
         }
     };
-    let ipaddress : vector(52, dec, bit) = undefined : bits(52);
-    let secondstage : bool(false) = false;
+    let ipaddress = undefined : bits(52);
+    let secondstage = false;
     s2fs1walk : bool = undefined : bool;
     s2fs1walk = false;
     S1 : TLBRecord = undefined : TLBRecord;
@@ -7961,7 +7937,7 @@ function AArch64_FirstStageTranslate (vaddress, acctype, iswrite, wasaligned, si
     if (~(IsFault(S1.addrdesc)) & S1.addrdesc.memattrs.typ == MemType_Device) & acctype == AccType_IFETCH then {
         S1.addrdesc = AArch64_InstructionDevice(S1.addrdesc, vaddress, ipaddress, S1.level, acctype, iswrite, secondstage, s2fs1walk)
     };
-    let hwupdatewalk : bool(false) = false;
+    let hwupdatewalk = false;
     let s2fs1walk = false;
     __tc4 : AddressDescriptor = S1.addrdesc;
     __tc4.fault = AArch64_CheckAndUpdateDescriptor(S1.descupdate, S1.addrdesc.fault, secondstage, vaddress, acctype, iswrite, s2fs1walk, hwupdatewalk);
@@ -7973,7 +7949,7 @@ val AArch64_FullTranslate : forall ('iswrite : Bool) ('wasaligned : Bool) 'size.
   (bits(64), AccType, bool('iswrite), bool('wasaligned), int('size)) -> AddressDescriptor effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_FullTranslate (vaddress, acctype, iswrite, wasaligned, size) = {
-    let S1 : AddressDescriptor = AArch64_FirstStageTranslate(vaddress, acctype, iswrite, wasaligned, size);
+    let S1 = AArch64_FirstStageTranslate(vaddress, acctype, iswrite, wasaligned, size);
     hwupdatewalk : bool = undefined : bool;
     result : AddressDescriptor = undefined : AddressDescriptor;
     s2fs1walk : bool = undefined : bool;
@@ -8004,8 +7980,8 @@ val aget_MemTag : bits(64) -> bits(4) effect {escape, rmem, rreg, undef, wmem, w
 
 function aget_MemTag address = {
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
-    let value_name : vector(4, dec, bit) = undefined : bits(4);
-    let iswrite : bool(false) = false;
+    let value_name = undefined : bits(4);
+    let iswrite = false;
     let memaddrdesc = AArch64_TranslateAddress(address, AccType_NORMAL, iswrite, true, TAG_GRANULE);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
@@ -8135,8 +8111,8 @@ function AArch32_TakeVirtualIRQException () = {
         AArch64_TakeVirtualIRQException()
     };
     let preferred_exception_return : bits(32) = ThisInstrAddr();
-    let vect_offset : int(24) = 24;
-    let lr_offset : int(4) = 4;
+    let vect_offset = 24;
+    let lr_offset = 4;
     AArch32_EnterMode(M32_IRQ, preferred_exception_return, lr_offset, vect_offset)
 }
 
@@ -8153,8 +8129,8 @@ function AArch32_TakeVirtualFIQException () = {
         AArch64_TakeVirtualFIQException()
     };
     let preferred_exception_return : bits(32) = ThisInstrAddr();
-    let vect_offset : int(28) = 28;
-    let lr_offset : int(4) = 4;
+    let vect_offset = 28;
+    let lr_offset = 4;
     AArch32_EnterMode(M32_FIQ, preferred_exception_return, lr_offset, vect_offset)
 }
 
@@ -8177,7 +8153,7 @@ function AArch32_S1AttrDecode (SH, attr, acctype) = {
     } else {
         mair = get_MAIR1() @ get_MAIR0()
     };
-    let index : {'ex6955#, (0 <= 'ex6955# & 'ex6955# <= 2 ^ 3 - 1). int(8 * 'ex6955#)} = 8 * UInt(attr);
+    let index = 8 * UInt(attr);
     attrfield : bits(8) = undefined : bits(8);
     attrfield = slice(mair, index, 8);
     memattrs.tagged = false;
@@ -8252,7 +8228,7 @@ function AArch32_ReportPrefetchAbort (route_to_monitor, fault, vaddress) = {
     } else {
         long_format = [get_TTBCR()[31]] == 0b1
     };
-    let d_side : bool(false) = false;
+    let d_side = false;
     fsr : bits(32) = undefined : bits(32);
     if long_format then {
         fsr = AArch32_FaultStatusLD(d_side, fault)
@@ -8283,7 +8259,7 @@ function AArch32_ReportDataAbort (route_to_monitor, fault, vaddress) = {
     } else {
         long_format = [get_TTBCR()[31]] == 0b1
     };
-    let d_side : bool(true) = true;
+    let d_side = true;
     syndrome : bits(32) = undefined : bits(32);
     if long_format then {
         syndrome = AArch32_FaultStatusLD(d_side, fault)
@@ -8320,7 +8296,7 @@ function AArch32_PendingUnmaskedVirtualInterrupts () = {
     if HaveEL(EL2) & ~(ELUsingAArch32(EL2)) | HaveEL(EL3) & ~(ELUsingAArch32(EL3)) then {
         return(AArch64_PendingUnmaskedVirtualInterrupts(PSTATE.A @ (PSTATE.I @ PSTATE.F)))
     };
-    let mask : vector(1 + (1 + 1), dec, bit) = PSTATE.A @ (PSTATE.I @ PSTATE.F);
+    let mask = PSTATE.A @ (PSTATE.I @ PSTATE.F);
     pending : bits(3) = undefined : bits(3);
     if (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & [get_HCR()[27]] == 0b0 then {
         pending = (get_HCR()[8 .. 8] @ (get_HCR()[7 .. 7] @ get_HCR()[6 .. 6])) & (get_HCR()[5 .. 5] @ (get_HCR()[4 .. 4] @ get_HCR()[3 .. 3]))
@@ -8337,9 +8313,9 @@ function AArch32_PendingUnmaskedPhysicalInterrupts () = {
     if HaveEL(EL3) & ~(ELUsingAArch32(EL3)) then {
         return(AArch64_PendingUnmaskedPhysicalInterrupts(PSTATE.A @ (PSTATE.I @ PSTATE.F)))
     };
-    let se_pending : vector(1, dec, bit) = if IsPhysicalSErrorPending() then 0b1 else 0b0;
-    let irq_pending : vector(1, dec, bit) = if IRQPending() then 0b1 else 0b0;
-    let fiq_pending : vector(1, dec, bit) = if FIQPending() then 0b1 else 0b0;
+    let se_pending = if IsPhysicalSErrorPending() then 0b1 else 0b0;
+    let irq_pending = if IRQPending() then 0b1 else 0b0;
+    let fiq_pending = if FIQPending() then 0b1 else 0b0;
     let pending : bits(3) = (se_pending @ irq_pending) @ fiq_pending;
     mask : bits(3) = undefined : bits(3);
     mask = PSTATE.A @ (PSTATE.I @ PSTATE.F);
@@ -8440,7 +8416,7 @@ val AArch32_AbortSyndrome : (Exception, FaultRecord, bits(32)) -> ExceptionRecor
 function AArch32_AbortSyndrome (typ, fault, vaddress) = {
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(typ);
-    let d_side : bool = typ == Exception_DataAbort;
+    let d_side = typ == Exception_DataAbort;
     exception.syndrome = AArch32_FaultSyndrome(d_side, fault);
     exception.vaddress = ZeroExtend(vaddress);
     if IPAValid(fault) then {
@@ -8459,7 +8435,7 @@ function AArch32_ExecutingATS1xPInstr () = {
     if ~(HavePrivATExt()) then {
         return(false)
     };
-    let instr : vector(32, dec, bit) = ThisInstr();
+    let instr = ThisInstr();
     CRm : bits(4) = undefined : bits(4);
     CRn : bits(4) = undefined : bits(4);
     op1 : bits(3) = undefined : bits(3);
@@ -8481,8 +8457,8 @@ val AArch32_EnterMonitorMode : forall ('lr_offset : Int) ('vect_offset : Int).
 function AArch32_EnterMonitorMode (preferred_exception_return, lr_offset, vect_offset) = {
     SynchronizeContext();
     assert(HaveEL(EL3) & ELUsingAArch32(EL3));
-    let from_secure : bool = IsSecure();
-    let spsr : vector(32, dec, bit) = GetPSRFromPSTATE();
+    let from_secure = IsSecure();
+    let spsr = GetPSRFromPSTATE();
     if PSTATE.M == M32_Monitor then {
         __tc1 : bits(32) = get_SCR();
         __tc1 = __SetSlice_bits(32, 1, __tc1, 0, 0b0);
@@ -8516,7 +8492,7 @@ val AArch32_EnterHypMode : forall ('vect_offset : Int).
 function AArch32_EnterHypMode (exception, preferred_exception_return, vect_offset) = {
     SynchronizeContext();
     assert((HaveEL(EL2) & ~(IsSecure())) & ELUsingAArch32(EL2));
-    let spsr : vector(32, dec, bit) = GetPSRFromPSTATE();
+    let spsr = GetPSRFromPSTATE();
     if ~(exception.typ == Exception_IRQ | exception.typ == Exception_FIQ) then {
         AArch32_ReportHypEntry(exception)
     };
@@ -8551,15 +8527,15 @@ overload AArch32_TakeUndefInstrException = {
 }
 
 function AArch32_TakeUndefInstrException__0 () = {
-    let exception : ExceptionRecord = ExceptionSyndrome(Exception_Uncategorized);
+    let exception = ExceptionSyndrome(Exception_Uncategorized);
     AArch32_TakeUndefInstrException(exception)
 }
 
 function AArch32_TakeUndefInstrException__1 exception = {
-    let route_to_hyp : bool = (EL2Enabled() & PSTATE.EL == EL0) & [get_HCR()[27]] == 0b1;
+    let route_to_hyp = (EL2Enabled() & PSTATE.EL == EL0) & [get_HCR()[27]] == 0b1;
     let preferred_exception_return : bits(32) = ThisInstrAddr();
-    let vect_offset : int(4) = 4;
-    let lr_offset : {'ex7375#, 'ex7375# in {4, 2}. int('ex7375#)} = if CurrentInstrSet() == InstrSet_A32 then 4 else 2;
+    let vect_offset = 4;
+    let lr_offset = if CurrentInstrSet() == InstrSet_A32 then 4 else 2;
     if PSTATE.EL == EL2 then {
         AArch32_EnterHypMode(exception, preferred_exception_return, vect_offset)
     } else {
@@ -8585,11 +8561,11 @@ function AArch32_TakePhysicalIRQException () = {
     if route_to_aarch64 then {
         AArch64_TakePhysicalIRQException()
     };
-    let route_to_monitor : bool = HaveEL(EL3) & [get_SCR()[1]] == 0b1;
-    let route_to_hyp : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([get_HCR()[27]] == 0b1 | [get_HCR()[4]] == 0b1);
+    let route_to_monitor = HaveEL(EL3) & [get_SCR()[1]] == 0b1;
+    let route_to_hyp = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([get_HCR()[27]] == 0b1 | [get_HCR()[4]] == 0b1);
     let preferred_exception_return : bits(32) = ThisInstrAddr();
-    let vect_offset : int(24) = 24;
-    let lr_offset : int(4) = 4;
+    let vect_offset = 24;
+    let lr_offset = 4;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     if route_to_monitor then {
         AArch32_EnterMonitorMode(preferred_exception_return, lr_offset, vect_offset)
@@ -8617,11 +8593,11 @@ function AArch32_TakePhysicalFIQException () = {
     if route_to_aarch64 then {
         AArch64_TakePhysicalFIQException()
     };
-    let route_to_monitor : bool = HaveEL(EL3) & [get_SCR()[2]] == 0b1;
-    let route_to_hyp : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([get_HCR()[27]] == 0b1 | [get_HCR()[3]] == 0b1);
+    let route_to_monitor = HaveEL(EL3) & [get_SCR()[2]] == 0b1;
+    let route_to_hyp = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([get_HCR()[27]] == 0b1 | [get_HCR()[3]] == 0b1);
     let preferred_exception_return : bits(32) = ThisInstrAddr();
-    let vect_offset : int(28) = 28;
-    let lr_offset : int(4) = 4;
+    let vect_offset = 28;
+    let lr_offset = 4;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     if route_to_monitor then {
         AArch32_EnterMonitorMode(preferred_exception_return, lr_offset, vect_offset)
@@ -8638,11 +8614,11 @@ function AArch32_TakePhysicalFIQException () = {
 val AArch32_InstructionAbort : (bits(32), FaultRecord) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch32_InstructionAbort (vaddress, fault) = {
-    let route_to_monitor : bool = (HaveEL(EL3) & [get_SCR()[3]] == 0b1) & IsExternalAbort(fault);
-    let route_to_hyp : bool = ((HaveEL(EL2) & ~(IsSecure())) & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ((([get_HCR()[27]] == 0b1 | IsSecondStage(fault)) | (HaveRASExt() & [get_HCR2()[5]] == 0b1) & IsExternalAbort(fault)) | IsDebugException(fault) & [get_HDCR()[8]] == 0b1);
+    let route_to_monitor = (HaveEL(EL3) & [get_SCR()[3]] == 0b1) & IsExternalAbort(fault);
+    let route_to_hyp = ((HaveEL(EL2) & ~(IsSecure())) & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ((([get_HCR()[27]] == 0b1 | IsSecondStage(fault)) | (HaveRASExt() & [get_HCR2()[5]] == 0b1) & IsExternalAbort(fault)) | IsDebugException(fault) & [get_HDCR()[8]] == 0b1);
     let preferred_exception_return : bits(32) = ThisInstrAddr();
-    let vect_offset : int(12) = 12;
-    let lr_offset : int(4) = 4;
+    let vect_offset = 12;
+    let lr_offset = 4;
     if IsDebugException(fault) then {
         __tc1 : bits(32) = get_DBGDSCRext();
         __tc1 = __SetSlice_bits(32, 4, __tc1, 2, fault.debugmoe);
@@ -8702,11 +8678,11 @@ function AArch32_CheckIllegalState () = {
 val AArch32_DataAbort : (bits(32), FaultRecord) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch32_DataAbort (vaddress, fault) = {
-    let route_to_monitor : bool = (HaveEL(EL3) & [get_SCR()[3]] == 0b1) & IsExternalAbort(fault);
-    let route_to_hyp : bool = ((HaveEL(EL2) & ~(IsSecure())) & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ((([get_HCR()[27]] == 0b1 | IsSecondStage(fault)) | (HaveRASExt() & [get_HCR2()[5]] == 0b1) & IsExternalAbort(fault)) | IsDebugException(fault) & [get_HDCR()[8]] == 0b1);
+    let route_to_monitor = (HaveEL(EL3) & [get_SCR()[3]] == 0b1) & IsExternalAbort(fault);
+    let route_to_hyp = ((HaveEL(EL2) & ~(IsSecure())) & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ((([get_HCR()[27]] == 0b1 | IsSecondStage(fault)) | (HaveRASExt() & [get_HCR2()[5]] == 0b1) & IsExternalAbort(fault)) | IsDebugException(fault) & [get_HDCR()[8]] == 0b1);
     let preferred_exception_return : bits(32) = ThisInstrAddr();
-    let vect_offset : int(16) = 16;
-    let lr_offset : int(8) = 8;
+    let vect_offset = 16;
+    let lr_offset = 8;
     if IsDebugException(fault) then {
         __tc1 : bits(32) = get_DBGDSCRext();
         __tc1 = __SetSlice_bits(32, 4, __tc1, 2, fault.debugmoe);
@@ -8762,11 +8738,11 @@ function AArch32_CreateFaultRecord (typ, ipaddress, domain, level, acctype, writ
 val _SyncExternalFault : (bits(52), AccessDescriptor, bits(1), bits(1)) -> FaultRecord effect {escape, rreg, undef}
 
 function _SyncExternalFault (paddress, accdesc, read, extflag) = {
-    let write : bool = read == 0b0;
-    let secondstage : bool = accdesc.secondstage;
-    let s2fs1walk : bool = accdesc.s2fs1walk;
-    let level : int = accdesc.level;
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
+    let write = read == 0b0;
+    let secondstage = accdesc.secondstage;
+    let s2fs1walk = accdesc.s2fs1walk;
+    let level = accdesc.level;
+    let errortype = undefined : bits(2);
     debugmoe : bits(4) = undefined : bits(4);
     domain : bits(4) = undefined : bits(4);
     if UsingAArch32() then {
@@ -8784,9 +8760,9 @@ val AArch32_TranslationFault : forall 'level ('iswrite : Bool) ('secondstage : B
   (bits(40), bits(4), int('level), AccType, bool('iswrite), bool('secondstage), bool('s2fs1walk)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_TranslationFault (ipaddress, domain, level, acctype, iswrite, secondstage, s2fs1walk) = {
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let debugmoe : vector(4, dec, bit) = undefined : bits(4);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
+    let extflag = undefined : bits(1);
+    let debugmoe = undefined : bits(4);
+    let errortype = undefined : bits(2);
     AArch32_CreateFaultRecord(Fault_Translation, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
@@ -8794,9 +8770,9 @@ val AArch32_PermissionFault : forall 'level ('iswrite : Bool) ('secondstage : Bo
   (bits(40), bits(4), int('level), AccType, bool('iswrite), bool('secondstage), bool('s2fs1walk)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_PermissionFault (ipaddress, domain, level, acctype, iswrite, secondstage, s2fs1walk) = {
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let debugmoe : vector(4, dec, bit) = undefined : bits(4);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
+    let extflag = undefined : bits(1);
+    let debugmoe = undefined : bits(4);
+    let errortype = undefined : bits(2);
     AArch32_CreateFaultRecord(Fault_Permission, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
@@ -8805,7 +8781,7 @@ val AArch32_InstructionDevice : forall 'level ('iswrite : Bool) ('secondstage : 
 
 function AArch32_InstructionDevice (addrdesc__arg, vaddress, ipaddress, level, domain, acctype, iswrite, secondstage, s2fs1walk) = {
     addrdesc = addrdesc__arg;
-    let c : Constraint = ConstrainUnpredictable(Unpredictable_INSTRDEVICE);
+    let c = ConstrainUnpredictable(Unpredictable_INSTRDEVICE);
     assert(c == Constraint_NONE | c == Constraint_FAULT);
     if c == Constraint_FAULT then {
         addrdesc.fault = AArch32_PermissionFault(ipaddress, domain, level, acctype, iswrite, secondstage, s2fs1walk)
@@ -8837,16 +8813,16 @@ function AArch32_InstructionDevice (addrdesc__arg, vaddress, ipaddress, level, d
 val AArch32_NoFault : unit -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_NoFault () = {
-    let ipaddress : vector(40, dec, bit) = undefined : bits(40);
-    let domain : vector(4, dec, bit) = undefined : bits(4);
-    let level : int = undefined : int;
-    let acctype : AccType = AccType_NORMAL;
-    let iswrite : bool = undefined : bool;
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let debugmoe : vector(4, dec, bit) = undefined : bits(4);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
-    let secondstage : bool(false) = false;
-    let s2fs1walk : bool(false) = false;
+    let ipaddress = undefined : bits(40);
+    let domain = undefined : bits(4);
+    let level = undefined : int;
+    let acctype = AccType_NORMAL;
+    let iswrite = undefined : bool;
+    let extflag = undefined : bits(1);
+    let debugmoe = undefined : bits(4);
+    let errortype = undefined : bits(2);
+    let secondstage = false;
+    let s2fs1walk = false;
     AArch32_CreateFaultRecord(Fault_None, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
@@ -8856,7 +8832,7 @@ val AArch32_TranslateAddressS1Off : forall ('iswrite : Bool).
 function AArch32_TranslateAddressS1Off (vaddress, acctype, iswrite) = {
     assert(ELUsingAArch32(S1TranslationRegime()));
     result : TLBRecord = undefined : TLBRecord;
-    let default_cacheable : bool = HasS2Translation() & (if ELUsingAArch32(EL2) then [get_HCR()[12]] else [HCR_EL2[12]]) == 0b1;
+    let default_cacheable = HasS2Translation() & (if ELUsingAArch32(EL2) then [get_HCR()[12]] else [HCR_EL2[12]]) == 0b1;
     cacheable : bool = undefined : bool;
     if default_cacheable then {
         __tc1 : MemoryAttributes = result.addrdesc.memattrs;
@@ -9016,12 +8992,12 @@ val AArch32_DomainFault : forall ('level : Int) ('iswrite : Bool).
   (bits(4), int('level), AccType, bool('iswrite)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_DomainFault (domain, level, acctype, iswrite) = {
-    let ipaddress : vector(40, dec, bit) = undefined : bits(40);
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let debugmoe : vector(4, dec, bit) = undefined : bits(4);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
-    let secondstage : bool(false) = false;
-    let s2fs1walk : bool(false) = false;
+    let ipaddress = undefined : bits(40);
+    let extflag = undefined : bits(1);
+    let debugmoe = undefined : bits(4);
+    let errortype = undefined : bits(2);
+    let secondstage = false;
+    let s2fs1walk = false;
     AArch32_CreateFaultRecord(Fault_Domain, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
@@ -9029,7 +9005,7 @@ val AArch32_CheckDomain : forall ('level : Int) ('iswrite : Bool).
   (bits(4), bits(32), int('level), AccType, bool('iswrite)) -> (bool, FaultRecord) effect {escape, rreg, undef}
 
 function AArch32_CheckDomain (domain, vaddress, level, acctype, iswrite) = {
-    let index : {'ex8167#, (0 <= 'ex8167# & 'ex8167# <= 2 ^ 4 - 1). int(2 * 'ex8167#)} = 2 * UInt(domain);
+    let index = 2 * UInt(domain);
     attrfield : bits(2) = undefined : bits(2);
     attrfield = slice(get_DACR(), index, 2);
     __anon1 : Constraint = undefined : Constraint;
@@ -9050,13 +9026,13 @@ val AArch32_DebugFault : forall ('iswrite : Bool).
   (AccType, bool('iswrite), bits(4)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_DebugFault (acctype, iswrite, debugmoe) = {
-    let ipaddress : vector(40, dec, bit) = undefined : bits(40);
-    let domain : vector(4, dec, bit) = undefined : bits(4);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
-    let level : int = undefined : int;
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let secondstage : bool(false) = false;
-    let s2fs1walk : bool(false) = false;
+    let ipaddress = undefined : bits(40);
+    let domain = undefined : bits(4);
+    let errortype = undefined : bits(2);
+    let level = undefined : int;
+    let extflag = undefined : bits(1);
+    let secondstage = false;
+    let s2fs1walk = false;
     AArch32_CreateFaultRecord(Fault_Debug, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
@@ -9064,15 +9040,15 @@ val AArch32_AsynchExternalAbort : forall ('parity : Bool).
   (bool('parity), bits(2), bits(1)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_AsynchExternalAbort (parity, errortype, extflag) = {
-    let typ : Fault = if parity then Fault_AsyncParity else Fault_AsyncExternal;
-    let ipaddress : vector(40, dec, bit) = undefined : bits(40);
-    let domain : vector(4, dec, bit) = undefined : bits(4);
-    let level : int = undefined : int;
-    let acctype : AccType = AccType_NORMAL;
-    let iswrite : bool = undefined : bool;
-    let debugmoe : vector(4, dec, bit) = undefined : bits(4);
-    let secondstage : bool(false) = false;
-    let s2fs1walk : bool(false) = false;
+    let typ = if parity then Fault_AsyncParity else Fault_AsyncExternal;
+    let ipaddress = undefined : bits(40);
+    let domain = undefined : bits(4);
+    let level = undefined : int;
+    let acctype = AccType_NORMAL;
+    let iswrite = undefined : bool;
+    let debugmoe = undefined : bits(4);
+    let secondstage = false;
+    let s2fs1walk = false;
     AArch32_CreateFaultRecord(typ, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
@@ -9089,12 +9065,12 @@ function AArch32_TakeVirtualSErrorException (extflag, errortype, impdef_syndrome
     if PSTATE.EL == EL0 & ~(ELUsingAArch32(EL1)) then {
         AArch64_TakeVirtualSErrorException(impdef_syndrome, full_syndrome)
     };
-    let route_to_monitor : bool(false) = false;
+    let route_to_monitor = false;
     let preferred_exception_return : bits(32) = ThisInstrAddr();
-    let vect_offset : int(16) = 16;
-    let lr_offset : int(8) = 8;
-    let vaddress : vector(32, dec, bit) = undefined : bits(32);
-    let parity : bool(false) = false;
+    let vect_offset = 16;
+    let lr_offset = 8;
+    let vaddress = undefined : bits(32);
+    let parity = false;
     fault : FaultRecord = undefined : FaultRecord;
     if HaveRASExt() then {
         if ELUsingAArch32(EL2) then {
@@ -9126,13 +9102,13 @@ function AArch32_TakePhysicalSErrorException (parity, extflag, errortype, impdef
     if route_to_aarch64 then {
         AArch64_TakePhysicalSErrorException(impdef_syndrome, full_syndrome)
     };
-    let route_to_monitor : bool = HaveEL(EL3) & [get_SCR()[3]] == 0b1;
-    let route_to_hyp : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([get_HCR()[27]] == 0b1 | [get_HCR()[5]] == 0b1);
+    let route_to_monitor = HaveEL(EL3) & [get_SCR()[3]] == 0b1;
+    let route_to_hyp = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([get_HCR()[27]] == 0b1 | [get_HCR()[5]] == 0b1);
     let preferred_exception_return : bits(32) = ThisInstrAddr();
-    let vect_offset : int(16) = 16;
-    let lr_offset : int(8) = 8;
-    let fault : FaultRecord = AArch32_AsynchExternalAbort(parity, errortype, extflag);
-    let vaddress : vector(32, dec, bit) = undefined : bits(32);
+    let vect_offset = 16;
+    let lr_offset = 8;
+    let fault = AArch32_AsynchExternalAbort(parity, errortype, extflag);
+    let vaddress = undefined : bits(32);
     exception : ExceptionRecord = undefined : ExceptionRecord;
     if route_to_monitor then {
         AArch32_ReportDataAbort(route_to_monitor, fault, vaddress);
@@ -9274,13 +9250,13 @@ val AArch32_AlignmentFault : forall ('iswrite : Bool) ('secondstage : Bool).
   (AccType, bool('iswrite), bool('secondstage)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_AlignmentFault (acctype, iswrite, secondstage) = {
-    let ipaddress : vector(40, dec, bit) = undefined : bits(40);
-    let domain : vector(4, dec, bit) = undefined : bits(4);
-    let level : int = undefined : int;
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let debugmoe : vector(4, dec, bit) = undefined : bits(4);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
-    let s2fs1walk : bool = undefined : bool;
+    let ipaddress = undefined : bits(40);
+    let domain = undefined : bits(4);
+    let level = undefined : int;
+    let extflag = undefined : bits(1);
+    let debugmoe = undefined : bits(4);
+    let errortype = undefined : bits(2);
+    let s2fs1walk = undefined : bool;
     AArch32_CreateFaultRecord(Fault_Alignment, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
@@ -9288,9 +9264,9 @@ val AArch32_AddressSizeFault : forall 'level ('iswrite : Bool) ('secondstage : B
   (bits(40), bits(4), int('level), AccType, bool('iswrite), bool('secondstage), bool('s2fs1walk)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_AddressSizeFault (ipaddress, domain, level, acctype, iswrite, secondstage, s2fs1walk) = {
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let debugmoe : vector(4, dec, bit) = undefined : bits(4);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
+    let extflag = undefined : bits(1);
+    let debugmoe = undefined : bits(4);
+    let errortype = undefined : bits(2);
     AArch32_CreateFaultRecord(Fault_AddressSize, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
@@ -9298,9 +9274,9 @@ val AArch32_AccessFlagFault : forall 'level ('iswrite : Bool) ('secondstage : Bo
   (bits(40), bits(4), int('level), AccType, bool('iswrite), bool('secondstage), bool('s2fs1walk)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_AccessFlagFault (ipaddress, domain, level, acctype, iswrite, secondstage, s2fs1walk) = {
-    let extflag : vector(1, dec, bit) = undefined : bits(1);
-    let debugmoe : vector(4, dec, bit) = undefined : bits(4);
-    let errortype : vector(2, dec, bit) = undefined : bits(2);
+    let extflag = undefined : bits(1);
+    let debugmoe = undefined : bits(4);
+    let errortype = undefined : bits(2);
     AArch32_CreateFaultRecord(Fault_AccessFlag, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
@@ -9332,8 +9308,8 @@ val AArch32_CheckS2Permission : forall 'level ('iswrite : Bool) ('s2fs1walk : Bo
 
 function AArch32_CheckS2Permission (perms, vaddress, ipaddress, level, acctype, iswrite, s2fs1walk) = {
     assert(((HaveEL(EL2) & ~(IsSecure())) & ELUsingAArch32(EL2)) & HasS2Translation());
-    let r : bool = [perms.ap[1]] == 0b1;
-    let w : bool = [perms.ap[2]] == 0b1;
+    let r = [perms.ap[1]] == 0b1;
+    let w = [perms.ap[2]] == 0b1;
     xn : bool = undefined : bool;
     if HaveExtendedExecuteNeverExt() then {
         match perms.xn @ perms.xxn {
@@ -9393,12 +9369,12 @@ val AArch32_SecondStageTranslate : forall ('iswrite : Bool) ('wasaligned : Bool)
 function AArch32_SecondStageTranslate (S1, vaddress, acctype, iswrite, wasaligned, s2fs1walk, size) = {
     assert(HasS2Translation());
     assert(IsZero(slice(S1.paddress.address, 40, 8)));
-    let hwupdatewalk : bool(false) = false;
+    let hwupdatewalk = false;
     if ~(ELUsingAArch32(EL2)) then {
         return(AArch64_SecondStageTranslate(S1, ZeroExtend(vaddress, 64), acctype, iswrite, wasaligned, s2fs1walk, size, hwupdatewalk))
     };
-    let s2_enabled : bool = [get_HCR()[0]] == 0b1 | [get_HCR()[12]] == 0b1;
-    let secondstage : bool(true) = true;
+    let s2_enabled = [get_HCR()[0]] == 0b1 | [get_HCR()[12]] == 0b1;
+    let secondstage = true;
     S2 : TLBRecord = undefined : TLBRecord;
     domain : bits(4) = undefined : bits(4);
     ipaddress : bits(40) = undefined : bits(40);
@@ -9438,8 +9414,8 @@ val AArch32_SecondStageWalk : forall ('iswrite : Bool) ('size : Int).
 
 function AArch32_SecondStageWalk (S1, vaddress, acctype, iswrite, size) = {
     assert(HasS2Translation());
-    let s2fs1walk : bool(true) = true;
-    let wasaligned : bool(true) = true;
+    let s2fs1walk = true;
+    let wasaligned = true;
     AArch32_SecondStageTranslate(S1, vaddress, acctype, iswrite, wasaligned, s2fs1walk, size)
 }
 
@@ -9723,11 +9699,11 @@ val AArch32_WatchpointMatch : forall 'n 'size ('ispriv : Bool) ('iswrite : Bool)
 function AArch32_WatchpointMatch (n, vaddress, size, ispriv, iswrite) = {
     assert(ELUsingAArch32(S1TranslationRegime()));
     assert(n <= UInt(slice(DBGDIDR, 28, 4)));
-    let enabled : bool = [DBGWCR[n][0]] == 0b1;
-    let linked : bool = [DBGWCR[n][20]] == 0b1;
-    let isbreakpnt : bool(false) = false;
+    let enabled = [DBGWCR[n][0]] == 0b1;
+    let linked = [DBGWCR[n][20]] == 0b1;
+    let isbreakpnt = false;
     let state_match : bool = AArch32_StateMatch(slice(DBGWCR[n], 14, 2), [DBGWCR[n][13]], slice(DBGWCR[n], 1, 2), linked, slice(DBGWCR[n], 16, 4), isbreakpnt, ispriv);
-    let ls_match : bool = [slice(DBGWCR[n], 3, 2)[if iswrite then 1 else 0]] == 0b1;
+    let ls_match = [slice(DBGWCR[n], 3, 2)[if iswrite then 1 else 0]] == 0b1;
     value_match_name : bool = undefined : bool;
     value_match_name = false;
     foreach (byte from 0 to (size - 1) by 1 in inc) {
@@ -9769,11 +9745,11 @@ val AArch32_BreakpointMatch : forall ('n : Int) ('size : Int).
 function AArch32_BreakpointMatch (n, vaddress, size) = {
     assert(ELUsingAArch32(S1TranslationRegime()));
     assert(n <= UInt(slice(DBGDIDR, 24, 4)));
-    let enabled : bool = [DBGBCR[n][0]] == 0b1;
-    let ispriv : bool = PSTATE.EL != EL0;
-    let linked : bool = (slice(DBGBCR[n], 20, 4) & 0xB) == 0x1;
-    let isbreakpnt : bool(true) = true;
-    let linked_to : bool(false) = false;
+    let enabled = [DBGBCR[n][0]] == 0b1;
+    let ispriv = PSTATE.EL != EL0;
+    let linked = (slice(DBGBCR[n], 20, 4) & 0xB) == 0x1;
+    let isbreakpnt = true;
+    let linked_to = false;
     let state_match : bool = AArch32_StateMatch(slice(DBGBCR[n], 14, 2), [DBGBCR[n][13]], slice(DBGBCR[n], 1, 2), linked, slice(DBGBCR[n], 16, 4), isbreakpnt, ispriv);
     value_match_name : bool = undefined : bool;
     value_mismatch_name : bool = undefined : bool;
@@ -9844,10 +9820,10 @@ val AArch32_CheckDebug : forall ('iswrite : Bool) ('size : Int).
 
 function AArch32_CheckDebug (vaddress, acctype, iswrite, size) = {
     fault : FaultRecord = AArch32_NoFault();
-    let d_side : bool = acctype != AccType_IFETCH;
-    let generate_exception : bool = AArch32_GenerateDebugExceptions() & [get_DBGDSCRext()[15]] == 0b1;
-    let halt : bool = HaltOnBreakpointOrWatchpoint();
-    let vector_catch_first_name : bool = ConstrainUnpredictableBool(Unpredictable_BPVECTORCATCHPRI);
+    let d_side = acctype != AccType_IFETCH;
+    let generate_exception = AArch32_GenerateDebugExceptions() & [get_DBGDSCRext()[15]] == 0b1;
+    let halt = HaltOnBreakpointOrWatchpoint();
+    let vector_catch_first_name = ConstrainUnpredictableBool(Unpredictable_BPVECTORCATCHPRI);
     if (~(d_side) & vector_catch_first_name) & generate_exception then {
         fault = AArch32_CheckVectorCatch(vaddress, size)
     };
@@ -9890,12 +9866,12 @@ val _CheckAbortRegions : forall ('size : Int).
   (AddressDescriptor, int('size), AccessDescriptor, bits(1)) -> unit effect {escape, rreg, undef, wreg}
 
 function _CheckAbortRegions (desc, size, accdesc, read) = {
-    let address : vector(52, dec, bit) = desc.paddress.address;
-    let extflag : vector(1, dec, bit) = desc.paddress.NS;
-    let AbortRgnBase1 : vector(32 + 32, dec, bit) = AbortRgn64Lo1_Hi @ AbortRgn64Lo1;
-    let AbortRgnTop1 : vector(32 + 32, dec, bit) = AbortRgn64Hi1_Hi @ AbortRgn64Hi1;
-    let AbortRgnBase2 : vector(32 + 32, dec, bit) = AbortRgn64Lo2_Hi @ AbortRgn64Lo2;
-    let AbortRgnTop2 : vector(32 + 32, dec, bit) = AbortRgn64Hi2_Hi @ AbortRgn64Hi2;
+    let address = desc.paddress.address;
+    let extflag = desc.paddress.NS;
+    let AbortRgnBase1 = AbortRgn64Lo1_Hi @ AbortRgn64Lo1;
+    let AbortRgnTop1 = AbortRgn64Hi1_Hi @ AbortRgn64Hi1;
+    let AbortRgnBase2 = AbortRgn64Lo2_Hi @ AbortRgn64Lo2;
+    let AbortRgnTop2 = AbortRgn64Hi2_Hi @ AbortRgn64Hi2;
     let AbortLo1 : bool = UInt(address) >= UInt(slice(AbortRgnBase1, 0, 52));
     let AbortHi1 : bool = UInt(address) < UInt(slice(AbortRgnTop1, 0, 52));
     let AbortLo2 : bool = UInt(address) >= UInt(slice(AbortRgnBase2, 0, 52));
@@ -9903,10 +9879,10 @@ function _CheckAbortRegions (desc, size, accdesc, read) = {
     fault : FaultRecord = undefined : FaultRecord;
     sync : bool = undefined : bool;
     if AbortLo1 & AbortHi1 | AbortLo2 & AbortHi2 then {
-        let cacheable : bool = desc.memattrs.inner.attrs != MemAttr_NC;
-        let normal_access : bool = desc.memattrs.typ == MemType_Normal;
-        let device : bool = desc.memattrs.typ == MemType_Device;
-        let strongly_ordered : bool = desc.memattrs.device == DeviceType_nGnRnE;
+        let cacheable = desc.memattrs.inner.attrs != MemAttr_NC;
+        let normal_access = desc.memattrs.typ == MemType_Normal;
+        let device = desc.memattrs.typ == MemType_Device;
+        let strongly_ordered = desc.memattrs.device == DeviceType_nGnRnE;
         if accdesc.page_table_walk then {
             sync = cacheable & __syncAbortOnTTWCache | ~(cacheable) & __syncAbortOnTTWNonCache
         } else {
@@ -9995,9 +9971,9 @@ val aget__Mem : forall 'size,
   (AddressDescriptor, int('size), AccessDescriptor) -> bits(8 * 'size) effect {escape, rmem, rreg, undef, wreg}
 
 function aget__Mem (desc, size, accdesc) = {
-    let read : vector(1, dec, bit) = 0b1;
+    let read = 0b1;
     paddress : bits(52) = desc.paddress.address;
-    let extflag : vector(1, dec, bit) = desc.paddress.NS;
+    let extflag = desc.paddress.NS;
     if __trickbox_enabled then {
         _CheckAbortRegions(desc, size, accdesc, read)
     };
@@ -10058,15 +10034,15 @@ function AArch64_aget_MemSingle (address, size, acctype, wasaligned) = {
     assert(address == Align(address, size));
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     value_name : bits(8 * 'size) = undefined : bits('size * 8);
-    let iswrite : bool(false) = false;
+    let iswrite = false;
     let memaddrdesc = AArch64_TranslateAddress(address, acctype, iswrite, wasaligned, size);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
     };
-    let accdesc : AccessDescriptor = CreateAccessDescriptor(acctype);
+    let accdesc = CreateAccessDescriptor(acctype);
     if HaveMTEExt() then {
         if AccessIsTagChecked(ZeroExtend(address, 64), acctype) then {
-            let ptag : vector(4, dec, bit) = TransformTag(ZeroExtend(address, 64));
+            let ptag = TransformTag(ZeroExtend(address, 64));
             if ~(CheckTag(memaddrdesc, ptag, iswrite)) then {
                 TagCheckFail(ZeroExtend(address, 64), iswrite)
             }
@@ -10083,7 +10059,7 @@ val __fetchA64 : unit -> bits(32) effect {escape, rmem, rreg, undef, wmem, wreg}
 function __fetchA64 () = {
     CheckSoftwareStep();
     AArch64_CheckPCAlignment();
-    let a64 : vector(8 * 4, dec, bit) = MemSingle(PC(), 4, AccType_IFETCH, true);
+    let a64 = MemSingle(PC(), 4, AccType_IFETCH, true);
     AArch64_CheckIllegalState();
     a64
 }
@@ -10099,7 +10075,7 @@ function IsOnes_slice (xs, i, 'l) = {
 }
 
 function ZeroExtend_slice_append (o, xs, i, 'l, ys) = {
-    assert(constraint(('l >= 0 & 'm >= 0)));
+    assert(l >= 0 & 'm >= 0 & length(ys) + l <= o);
     ZeroExtend(slice(xs, i, l) @ ys)
 }
 
@@ -11066,9 +11042,9 @@ function AArch32_FirstStageTranslate (vaddress, acctype, iswrite, wasaligned, si
             s1_enabled = [get_SCTLR()[0]] == 0b1
         }
     };
-    let ipaddress : vector(40, dec, bit) = undefined : bits(40);
-    let secondstage : bool(false) = false;
-    let s2fs1walk : bool(false) = false;
+    let ipaddress = undefined : bits(40);
+    let secondstage = false;
+    let s2fs1walk = false;
     S1 : TLBRecord = undefined : TLBRecord;
     domaincheck : bool = undefined : bool;
     nTLSMD : bits(1) = undefined : bits(1);
@@ -11127,7 +11103,7 @@ val AArch32_FullTranslate : forall ('iswrite : Bool) ('wasaligned : Bool) 'size.
   (bits(32), AccType, bool('iswrite), bool('wasaligned), int('size)) -> AddressDescriptor effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch32_FullTranslate (vaddress, acctype, iswrite, wasaligned, size) = {
-    let S1 : AddressDescriptor = AArch32_FirstStageTranslate(vaddress, acctype, iswrite, wasaligned, size);
+    let S1 = AArch32_FirstStageTranslate(vaddress, acctype, iswrite, wasaligned, size);
     result : AddressDescriptor = undefined : AddressDescriptor;
     s2fs1walk : bool = undefined : bool;
     if (~(IsFault(S1)) & ~(HaveNV2Ext() & acctype == AccType_NV2REGISTER)) & HasS2Translation() then {
@@ -11490,15 +11466,15 @@ function AArch32_aget_MemSingle (address, size, acctype, wasaligned) = {
     assert(address == Align(address, size));
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     value_name : bits(8 * 'size) = undefined : bits('size * 8);
-    let iswrite : bool(false) = false;
+    let iswrite = false;
     let memaddrdesc = AArch32_TranslateAddress(address, acctype, iswrite, wasaligned, size);
     if IsFault(memaddrdesc) then {
         AArch32_Abort(address, memaddrdesc.fault)
     };
-    let accdesc : AccessDescriptor = CreateAccessDescriptor(acctype);
+    let accdesc = CreateAccessDescriptor(acctype);
     if HaveMTEExt() then {
         if AccessIsTagChecked(ZeroExtend(address, 64), acctype) then {
-            let ptag : vector(4, dec, bit) = TransformTag(ZeroExtend(address, 64));
+            let ptag = TransformTag(ZeroExtend(address, 64));
             if ~(CheckTag(memaddrdesc, ptag, iswrite)) then {
                 TagCheckFail(ZeroExtend(address, 64), iswrite)
             }
@@ -11535,7 +11511,7 @@ val __fetchA32 : unit -> bits(32) effect {escape, rmem, rreg, undef, wmem, wreg}
 function __fetchA32 () = {
     CheckSoftwareStep();
     AArch32_CheckPCAlignment();
-    let a32 : vector(8 * 4, dec, bit) = MemSingle(slice(_PC, 0, 32), 4, AccType_IFETCH, true);
+    let a32 = MemSingle(slice(_PC, 0, 32), 4, AccType_IFETCH, true);
     AArch32_CheckIllegalState();
     a32
 }

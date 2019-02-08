@@ -1089,7 +1089,7 @@ val asl_Int : forall ('N : Int) ('unsigned : Bool), 'N >= 0.
   (bits('N), bool('unsigned)) -> int
 
 function asl_Int (x, unsigned) = {
-    let result : int = if unsigned then UInt(x) else SInt(x);
+    let result = if unsigned then UInt(x) else SInt(x);
     result
 }
 
@@ -2942,10 +2942,10 @@ function system_register_cpsr (field, operand) = {
 val integer_flags_xaflag : unit -> unit effect {rreg, wreg}
 
 function integer_flags_xaflag () = {
-    let N : vector(1, dec, bit) = ~(PSTATE.C) & ~(PSTATE.Z);
-    let Z : vector(1, dec, bit) = PSTATE.Z & PSTATE.C;
-    let C : vector(1, dec, bit) = PSTATE.C | PSTATE.Z;
-    let V : vector(1, dec, bit) = ~(PSTATE.C) & PSTATE.Z;
+    let N = ~(PSTATE.C) & ~(PSTATE.Z);
+    let Z = PSTATE.Z & PSTATE.C;
+    let C = PSTATE.C | PSTATE.Z;
+    let V = ~(PSTATE.C) & PSTATE.Z;
     PSTATE.N = N;
     PSTATE.Z = Z;
     PSTATE.C = C;
@@ -2955,10 +2955,10 @@ function integer_flags_xaflag () = {
 val integer_flags_axflag : unit -> unit effect {rreg, wreg}
 
 function integer_flags_axflag () = {
-    let N : vector(1, dec, bit) = 0b0;
-    let Z : vector(1, dec, bit) = PSTATE.Z | PSTATE.V;
-    let C : vector(1, dec, bit) = PSTATE.C & ~(PSTATE.V);
-    let V : vector(1, dec, bit) = 0b0;
+    let N = 0b0;
+    let Z = PSTATE.Z | PSTATE.V;
+    let C = PSTATE.C & ~(PSTATE.V);
+    let V = 0b0;
     PSTATE.N = N;
     PSTATE.Z = Z;
     PSTATE.C = C;
@@ -3021,9 +3021,10 @@ function AArch32_CurrentCond () = {
     __currentCond
 }
 
-val aget_SP : forall ('width : Int). (implicit('width), unit) -> bits('width) effect {escape, rreg}
+val aget_SP : forall ('width : Int).
+  implicit('width) -> bits('width) effect {escape, rreg}
 
-function aget_SP(width, _) = {
+function aget_SP width = {
     assert('width == 8 | 'width == 16 | 'width == 32 | 'width == 64);
     if PSTATE.SP == 0b0 then {
         return(slice(SP_EL0, 0, 'width))
@@ -3272,7 +3273,7 @@ function AArch32_ResetSIMDFPRegisters () = {
 val aget_V : forall ('width : Int) ('n : Int), ('n >= 0 & 'n <= 31).
   (implicit('width), int('n)) -> bits('width) effect {escape, rreg}
 
-function aget_V(width, n) = {
+function aget_V (width, n) = {
     assert(n >= 0 & n <= 31);
     assert('width == 8 | 'width == 16 | 'width == 32 | 'width == 64 | 'width == 128);
     slice(_V[n], 0, 'width)
@@ -3328,9 +3329,9 @@ function Hint_Prefetch (address, hint, target, stream) = {
 }
 
 val NextInstrAddr : forall ('N : Int), (0 <= 'N & 'N <= 64).
-  (implicit('N), unit) -> bits('N) effect {rreg}
+  implicit('N) -> bits('N) effect {rreg}
 
-function NextInstrAddr(N, _) = slice(_PC + __currentInstrLength, 0, 'N)
+function NextInstrAddr N = slice(_PC + __currentInstrLength, 0, N)
 
 val CountLeadingZeroBits : forall ('N : Int), 'N >= 0. bits('N) -> int
 
@@ -3368,7 +3369,7 @@ function system_monitors () = {
 val NextRandomTagBit : unit -> bits(1) effect {rreg, wreg}
 
 function NextRandomTagBit () = {
-    let lfsr : vector(16, dec, bit) = slice(RGSR_EL1, 8, 16);
+    let lfsr = slice(RGSR_EL1, 8, 16);
     let top : bits(1) = (([lfsr[5]] ^ [lfsr[3]]) ^ [lfsr[2]]) ^ [lfsr[0]];
     RGSR_EL1 = __SetSlice_bits(32, 16, RGSR_EL1, 8, top @ slice(lfsr, 1, 15));
     top
@@ -3407,9 +3408,9 @@ function MakeLSInstructionSyndrome (size, sign_extend, Rt, sixty_four, acq_rel) 
       }
     };
     let sz = sz;
-    let ext : vector(1, dec, bit) = if sign_extend then 0b1 else 0b0;
-    let sf : vector(1, dec, bit) = if sixty_four then 0b1 else 0b0;
-    let ar : vector(1, dec, bit) = if acq_rel then 0b1 else 0b0;
+    let ext = if sign_extend then 0b1 else 0b0;
+    let sf = if sixty_four then 0b1 else 0b0;
+    let ar = if acq_rel then 0b1 else 0b0;
     ((((0b1 @ sz) @ ext) @ __GetSlice_int(5, Rt, 0)) @ sf) @ ar
 }
 
@@ -3449,7 +3450,7 @@ val AddressWithAllocationTag : (bits(64), bits(4)) -> bits(64)
 
 function AddressWithAllocationTag (address, allocation_tag) = {
     result : bits(64) = address;
-    let tag : vector(4, dec, bit) = allocation_tag - (0b000 @ [address[55]]);
+    let tag = allocation_tag - (0b000 @ [address[55]]);
     let result = __SetSlice_bits(64, 4, result, 56, tag);
     result
 }
@@ -3478,16 +3479,16 @@ function aset_Elem__1 (vector_name, e, size, value_name) = {
 }
 
 val aget_Elem__0 : forall 'N 'e 'size,
-  ('e >= 0 & 'size >= 0 & ('e + 1) * 'size <= 'N).
+  ('N >= 0 & 'size >= 0).
   (implicit('size), bits('N), int('e)) -> bits('size)
 
 val aget_Elem__1 : forall 'N 'e 'size,
-  ('e >= 0 & 'size >= 0 & ('e + 1) * 'size <= 'N).
+  ('N >= 0 & 'size >= 0).
   (bits('N), int('e), int('size)) -> bits('size)
 
 overload aget_Elem = {aget_Elem__0, aget_Elem__1}
 
-function aget_Elem__0 (size, vector_name, e) = aget_Elem(vector_name, e, 'size)
+function aget_Elem__0 (size, vector_name, e) = aget_Elem__1(vector_name, e, size)
 
 function aget_Elem__1 (vector_name, e, size) = {
     slice(vector_name, e * size, size)
@@ -4072,9 +4073,7 @@ function Extend__0 (x, N, unsigned) = {
     if unsigned then ZeroExtend(x, N) else SignExtend(x, N)
 }
 
-function Extend__1 (N, x, unsigned) = {
-    Extend__0(x, N, unsigned)
-}
+function Extend__1 (N, x, unsigned) = Extend__0(x, 'N, unsigned)
 
 val ASR_C : forall ('N : Int) ('shift : Int), 'N >= 0.
   (bits('N), int('shift)) -> (bits('N), bits(1)) effect {escape}
@@ -4487,7 +4486,7 @@ val aget_X : forall 'width 'n,
   ('n >= 0 & 'n <= 31 & 'width in {8, 16, 32, 64}).
   (implicit('width), int('n)) -> bits('width) effect {rreg}
 
-function aget_X(width, n) = if n != 31 then slice(_R[n], 0, width) else Zeros(width)
+function aget_X (width, n) = if n != 31 then slice(_R[n], 0, width) else Zeros(width)
 
 overload X = {aget_X}
 
@@ -4580,7 +4579,7 @@ val integer_crc : forall ('crc32c : Bool) 'd 'm 'n 'size,
 function integer_crc (crc32c, d, m, n, size) = {
     let acc : bits(32) = X(n);
     let val_name : bits('size) = X(m);
-    let poly : vector(32, dec, bit) = __GetSlice_int(32, if crc32c then 517762881 else 79764919, 0);
+    let poly = __GetSlice_int(32, if crc32c then 517762881 else 79764919, 0);
     let tempacc : bits('size + 32) = BitReverse(acc) @ Zeros(size);
     let tempval : bits('size + 32) = BitReverse(val_name) @ Zeros(32);
     X(d) = BitReverse(Poly32Mod2(tempacc ^ tempval, poly))
@@ -4593,8 +4592,8 @@ val integer_arithmetic_rev : forall 'container_size 'd 'datasize 'n,
 function integer_arithmetic_rev (container_size, d, datasize, n) = {
     let operand : bits('datasize) = X(n);
     result : bits('datasize) = undefined : bits('datasize);
-    let 'containers : {'n, 'n == div('datasize, 'container_size). int('n)} = datasize / container_size;
-    let 'elements_per_container : {'n, 'n == div('container_size, 8). int('n)} = container_size / 8;
+    let 'containers = datasize / container_size;
+    let 'elements_per_container = container_size / 8;
     index : int = 0;
     rev_index : int = undefined : int;
     foreach (c from 0 to (containers - 1) by 1 in inc) {
@@ -4755,12 +4754,12 @@ function integer_arithmetic_addsub_carry (d, datasize, m, n, setflags, sub_op) =
 }
 
 val ExtendReg : forall 'N 'reg 'shift,
-  ('shift >= 0 & 'shift <= 4 & 'reg >= 0 & 'reg <= 31 & 'N in {8, 16, 32, 64}).
+  ('shift >= 0 & 'shift <= 4) & ('reg >= 0 & 'reg <= 31 & 'N in {8, 16, 32, 64}).
   (implicit('N), int('reg), ExtendType, int('shift)) -> bits('N) effect {escape, rreg, undef}
 
 function ExtendReg (N, reg, typ, shift) = {
     assert(shift >= 0 & shift <= 4);
-    let val_name : bits('N) = aget_X(reg);
+    let val_name : bits('N) = X(reg);
     unsigned : bool = undefined : bool;
     len : int = undefined : int;
     match typ {
@@ -4797,8 +4796,10 @@ function ExtendReg (N, reg, typ, shift) = {
           len = 64
       }
     };
-    let 'len = min(len, 'N - shift);
-    assert(constraint(('len in {8, 16, 32, 64} | 'len == 'N - 'shift)));
+    let len = len;
+    let unsigned = unsigned;
+    let len = min(len, 'N - shift);
+    assert(constraint('_len >= 0));
     Extend(slice(val_name, 0, len) @ Zeros(shift), 'N, unsigned)
 }
 
@@ -7863,7 +7864,7 @@ function DecodeBitMasks (M, immN, imms, immr, immediate) = {
         throw(Error_Undefined())
     };
     assert(len >= 1);
-    assert(M >= shl_int(1, len));
+    assert('M >= shl_int(1, len));
     let levels = ZeroExtend(Ones(len), 6);
     if immediate & (imms & levels) == levels then {
         throw(Error_Undefined())
@@ -7894,7 +7895,7 @@ function DecodeBitMasks (M, immN, imms, immr, immediate) = {
     } else {
         wmask = wmask | tmask
     };
-    return((slice(wmask, 0, M), slice(tmask, 0, M)))
+    return((slice(wmask, 0, 'M), slice(tmask, 0, 'M)))
 }
 
 val ChooseNonExcludedTag : (bits(4), bits(4), bits(16)) -> bits(4)
@@ -7941,7 +7942,7 @@ val integer_tags_mcsubtag : forall ('ADD : Bool) 'd 'n,
 function integer_tags_mcsubtag (ADD, d, n, offset, tag_offset) = {
     let operand1 : bits(64) = if n == 31 then SP() else X(n);
     let start_tag : bits(4) = AllocationTagFromAddress(operand1);
-    let exclude : vector(16, dec, bit) = slice(GCR_EL1, 0, 16);
+    let exclude = slice(GCR_EL1, 0, 16);
     result : bits(64) = undefined : bits(64);
     rtag : bits(4) = undefined : bits(4);
     if AllocationTagAccessIsEnabled() then {
@@ -7978,8 +7979,8 @@ function integer_tags_mcinsertrandomtag (d, m, n) = {
             RGSR_EL1 = undefined : bits(32);
             rtag = _ChooseRandomNonExcludedTag(exclude)
         } else {
-            let start : vector(4, dec, bit) = slice(RGSR_EL1, 0, 4);
-            let offset : vector(4, dec, bit) = RandomTag();
+            let start = slice(RGSR_EL1, 0, 4);
+            let offset = RandomTag();
             rtag = ChooseNonExcludedTag(start, offset, exclude);
             RGSR_EL1 = __SetSlice_bits(32, 4, RGSR_EL1, 0, rtag)
         }
@@ -8001,7 +8002,7 @@ val integer_tags_mcaddtag : forall ('ADD : Bool) 'd 'n,
 function integer_tags_mcaddtag (ADD, d, n, offset, tag_offset) = {
     let operand1 : bits(64) = if n == 31 then SP() else X(n);
     let start_tag : bits(4) = AllocationTagFromAddress(operand1);
-    let exclude : vector(16, dec, bit) = slice(GCR_EL1, 0, 16);
+    let exclude = slice(GCR_EL1, 0, 16);
     result : bits(64) = undefined : bits(64);
     rtag : bits(4) = undefined : bits(4);
     if AllocationTagAccessIsEnabled() then {
@@ -8031,7 +8032,7 @@ val integer_logical_immediate : forall 'd 'datasize 'n ('setflags : Bool),
 function integer_logical_immediate (d, datasize, imm, n, op, setflags) = {
     result : bits('datasize) = undefined : bits('datasize);
     let operand1 : bits('datasize) = X(n);
-    let operand2 : vector('datasize, dec, bit) = imm;
+    let operand2 = imm;
     match op {
       LogicalOp_AND => {
           result = operand1 & operand2
@@ -8082,7 +8083,7 @@ function integer_arithmetic_addsub_immediate (d, datasize, imm, n, setflags, sub
 }
 
 val integer_arithmetic_addsub_extendedreg : forall 'd 'datasize 'm 'n ('setflags : Bool) 'shift ('sub_op : Bool),
-  ('n >= 0 & 'n <= 31 & 'datasize in {8, 16, 32, 64} | not(not('n == 31))) & ('shift >= 0 & 'shift <= 4 & 'm >= 0 & 'm <= 31 & 'datasize in {8, 16, 32, 64}) & ('d >= 0 & 'd <= 31 | not(not(('d == 31 & not('setflags))))).
+  ('n >= 0 & 'n <= 31 & 'datasize in {8, 16, 32, 64} | not(not('n == 31))) & ('shift >= 0 & 'shift <= 4) & ('m >= 0 & 'm <= 31 & 'datasize in {8, 16, 32, 64}) & ('d >= 0 & 'd <= 31 | not(not(('d == 31 & not('setflags))))).
   (int('d), int('datasize), ExtendType, int('m), int('n), bool('setflags), int('shift), bool('sub_op)) -> unit effect {escape, rreg, undef, wreg}
 
 function integer_arithmetic_addsub_extendedreg (d, datasize, extend_type, m, n, setflags, shift, sub_op) = {
@@ -8172,8 +8173,8 @@ function SetNotTagCheckedInstruction unchecked = {
 val AArch32_ExecutingCP10or11Instr : unit -> bool effect {escape, rreg, undef}
 
 function AArch32_ExecutingCP10or11Instr () = {
-    let instr : vector(32, dec, bit) = ThisInstr();
-    let instr_set : InstrSet = CurrentInstrSet();
+    let instr = ThisInstr();
+    let instr_set = CurrentInstrSet();
     assert(instr_set == InstrSet_A32 | instr_set == InstrSet_T32);
     if instr_set == InstrSet_A32 then {
         return((slice(instr, 24, 4) == 0xE | slice(instr, 25, 3) == 0b110) & (slice(instr, 8, 4) & 0xE) == 0xA)
@@ -8467,7 +8468,7 @@ function RestoredITBits spsr = {
     if ~(IsZero(slice(it, 4, 4))) & IsZero(slice(it, 0, 4)) then {
         return(0x00)
     };
-    let itd : vector(1, dec, bit) = if PSTATE.EL == EL2 then [get_HSCTLR()[7]] else [get_SCTLR()[7]];
+    let itd = if PSTATE.EL == EL2 then [get_HSCTLR()[7]] else [get_SCTLR()[7]];
     if [spsr[5]] == 0b0 & ~(IsZero(it)) | itd == 0b1 & ~(IsZero(slice(it, 0, 3))) then {
         return(0x00)
     } else {
@@ -11188,8 +11189,8 @@ overload CPACR = {aget_CPACR}
 val InterruptPending : unit -> bool effect {escape, rreg, undef}
 
 function InterruptPending () = {
-    let pending_physical_interrupt : bool = (IsPhysicalSErrorPending() | IRQPending()) | FIQPending();
-    let pending_virtual_interrupt : bool = ~(IsInHost()) & ((HCR_EL2[8 .. 8] @ (HCR_EL2[7 .. 7] @ HCR_EL2[6 .. 6])) & (HCR_EL2[5 .. 5] @ (HCR_EL2[4 .. 4] @ HCR_EL2[3 .. 3]))) != 0b000;
+    let pending_physical_interrupt = (IsPhysicalSErrorPending() | IRQPending()) | FIQPending();
+    let pending_virtual_interrupt = ~(IsInHost()) & ((HCR_EL2[8 .. 8] @ (HCR_EL2[7 .. 7] @ HCR_EL2[6 .. 6])) & (HCR_EL2[5 .. 5] @ (HCR_EL2[4 .. 4] @ HCR_EL2[3 .. 3]))) != 0b000;
     pending_physical_interrupt | pending_virtual_interrupt
 }
 
@@ -11243,9 +11244,9 @@ val AArch64_vESBOperation : unit -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_vESBOperation () = {
     assert(EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1));
-    let vSEI_enabled : bool = [HCR_EL2[27]] == 0b0 & [HCR_EL2[5]] == 0b1;
+    let vSEI_enabled = [HCR_EL2[27]] == 0b0 & [HCR_EL2[5]] == 0b1;
     let vSEI_pending : bool = vSEI_enabled & [HCR_EL2[8]] == 0b1;
-    let vintdis : bool = Halted() | ExternalDebugInterruptsDisabled(EL1);
+    let vintdis = Halted() | ExternalDebugInterruptsDisabled(EL1);
     let vmasked : bool = vintdis | PSTATE.A == 0b1;
     if vSEI_pending & vmasked then {
         if ELUsingAArch32(EL1) then {
@@ -11270,7 +11271,7 @@ function AArch64_CheckNVCondsIfCurrentEL (op0, op1, crn, crm, op2) = {
 val SSAdvance : unit -> unit effect {escape, rreg, undef, wreg}
 
 function SSAdvance () = {
-    let target : vector(2, dec, bit) = DebugTarget();
+    let target = DebugTarget();
     let step_enabled : bool = ~(ELUsingAArch32(target)) & [MDSCR_EL1[0]] == 0b1;
     let active_not_pending : bool = step_enabled & PSTATE.SS == 0b1;
     if active_not_pending then {
@@ -11971,7 +11972,7 @@ function AArch64_ExecutingBTIInstr () = {
     if ~(HaveBTIExt()) then {
         return(false)
     };
-    let instr : vector(32, dec, bit) = ThisInstr();
+    let instr = ThisInstr();
     CRm : bits(4) = undefined : bits(4);
     op2 : bits(3) = undefined : bits(3);
     if (slice(instr, 22, 10) == 0b1101010100 & slice(instr, 12, 10) == 0b0000110010) & slice(instr, 0, 5) == 0b11111 then {
@@ -11989,7 +11990,7 @@ function AArch64_ExecutingBROrBLROrRetInstr () = {
     if ~(HaveBTIExt()) then {
         return(false)
     };
-    let instr : vector(32, dec, bit) = ThisInstr();
+    let instr = ThisInstr();
     opc : bits(4) = undefined : bits(4);
     if slice(instr, 25, 7) == 0b1101011 & slice(instr, 16, 5) == 0b11111 then {
         opc = slice(instr, 21, 4);
@@ -12022,8 +12023,8 @@ function AArch64_EncodePAR addrdesc = {
 val AArch64_ESBOperation : unit -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_ESBOperation () = {
-    let route_to_el3 : bool = HaveEL(EL3) & [SCR_EL3[3]] == 0b1;
-    let route_to_el2 : bool = EL2Enabled() & ([HCR_EL2[27]] == 0b1 | [HCR_EL2[5]] == 0b1);
+    let route_to_el3 = HaveEL(EL3) & [SCR_EL3[3]] == 0b1;
+    let route_to_el2 = EL2Enabled() & ([HCR_EL2[27]] == 0b1 | [HCR_EL2[5]] == 0b1);
     let target : bits(2) = if route_to_el3 then EL3 else if route_to_el2 then EL2 else EL1;
     mask_active : bool = undefined : bool;
     if target == EL1 then {
@@ -12035,7 +12036,7 @@ function AArch64_ESBOperation () = {
             mask_active = PSTATE.EL == target
         }
     };
-    let mask_set : bool = PSTATE.A == 0b1 & (((~(HaveDoubleFaultExt()) | [SCR_EL3[3]] == 0b0) | PSTATE.EL != EL3) | [SCR_EL3[20]] == 0b0);
+    let mask_set = PSTATE.A == 0b1 & (((~(HaveDoubleFaultExt()) | [SCR_EL3[3]] == 0b0) | PSTATE.EL != EL3) | [SCR_EL3[20]] == 0b0);
     let intdis : bool = Halted() | ExternalDebugInterruptsDisabled(target);
     let masked : bool = (UInt(target) < UInt(PSTATE.EL) | intdis) | mask_active & mask_set;
     implicit_esb : bool = undefined : bool;
@@ -12061,7 +12062,7 @@ function AArch64_CheckUnallocatedSystemAccess (el, op0, op1, crn, crm, op2, read
     if (((((((op0 == 0b11 & crn == 0x4) & op1 == 0b011) & op2 == 0b001) & crm == 0x2) & PSTATE.EL == EL0) & ~(IsSecure())) & [HCR_EL2[34]] == 1) & [HCR_EL2[27]] == 1 then {
         return(false)
     };
-    let allocated : bool = AArch64_AutoGen_SysRegAlloc(el, op0, op1, crn, op2, crm, read);
+    let allocated = AArch64_AutoGen_SysRegAlloc(el, op0, op1, crn, op2, crm, read);
     ~(allocated)
 }
 
@@ -12150,7 +12151,7 @@ function TrapPACUse target_el = {
     assert((HaveEL(target_el) & target_el != EL0) & UInt(target_el) >= UInt(PSTATE.EL));
     let preferred_exception_return : bits(64) = ThisInstrAddr();
     exception : ExceptionRecord = undefined : ExceptionRecord;
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     let exception = ExceptionSyndrome(Exception_PACTrap);
     AArch64_TakeException(target_el, exception, preferred_exception_return, vect_offset)
 }
@@ -12785,7 +12786,7 @@ val AArch64_WFxTrap : forall ('is_wfe : Bool).
 function AArch64_WFxTrap (target_el, is_wfe) = {
     assert(UInt(target_el) > UInt(PSTATE.EL));
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_WFxTrap);
     __tc1 : bits(25) = exception.syndrome;
@@ -12894,10 +12895,10 @@ function system_hints op = {
 val AArch64_UndefinedFault : unit -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_UndefinedFault () = {
-    let route_to_el2 : bool = (EL2Enabled() & PSTATE.EL == EL0) & [HCR_EL2[27]] == 0b1;
+    let route_to_el2 = (EL2Enabled() & PSTATE.EL == EL0) & [HCR_EL2[27]] == 0b1;
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
-    let exception : ExceptionRecord = ExceptionSyndrome(Exception_Uncategorized);
+    let vect_offset = 0;
+    let exception = ExceptionSyndrome(Exception_Uncategorized);
     if UInt(PSTATE.EL) > UInt(EL1) then {
         AArch64_TakeException(PSTATE.EL, exception, preferred_exception_return, vect_offset)
     } else {
@@ -12914,7 +12915,7 @@ val AArch64_SystemRegisterTrap : (bits(2), bits(2), bits(3), bits(3), bits(4), b
 function AArch64_SystemRegisterTrap (target_el, op0, op2, op1, crn, rt, crm, dir) = {
     assert(UInt(target_el) >= UInt(PSTATE.EL));
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_SystemRegisterTrap);
     __tc1 : bits(25) = exception.syndrome;
@@ -12948,9 +12949,9 @@ function AArch64_SystemRegisterTrap (target_el, op0, op2, op1, crn, rt, crm, dir
 val AArch64_SoftwareBreakpoint : bits(16) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_SoftwareBreakpoint immediate = {
-    let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
+    let route_to_el2 = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ([HCR_EL2[27]] == 0b1 | [MDCR_EL2[8]] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_SoftwareBreakpoint);
     __tc1 : bits(25) = exception.syndrome;
@@ -12977,8 +12978,8 @@ val AArch64_SPAlignmentFault : unit -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_SPAlignmentFault () = {
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
-    let exception : ExceptionRecord = ExceptionSyndrome(Exception_SPAlignment);
+    let vect_offset = 0;
+    let exception = ExceptionSyndrome(Exception_SPAlignment);
     if UInt(PSTATE.EL) > UInt(EL1) then {
         AArch64_TakeException(PSTATE.EL, exception, preferred_exception_return, vect_offset)
     } else {
@@ -13044,7 +13045,7 @@ val AArch64_CheckForERetTrap : forall ('eret_with_pac : Bool) ('pac_uses_key_a :
   (bool('eret_with_pac), bool('pac_uses_key_a)) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_CheckForERetTrap (eret_with_pac, pac_uses_key_a) = {
-    let route_to_el2 : bool = ((HaveNVExt() & EL2Enabled()) & PSTATE.EL == EL1) & [HCR_EL2[42]] == 0b1;
+    let route_to_el2 = ((HaveNVExt() & EL2Enabled()) & PSTATE.EL == EL1) & [HCR_EL2[42]] == 0b1;
     vect_offset : int = undefined : int;
     if route_to_el2 then {
         exception : ExceptionRecord = undefined : ExceptionRecord;
@@ -13083,9 +13084,9 @@ function AArch64_CallSupervisor immediate = {
         AArch32_ITAdvance()
     };
     SSAdvance();
-    let route_to_el2 : bool = (EL2Enabled() & PSTATE.EL == EL0) & [HCR_EL2[27]] == 0b1;
+    let route_to_el2 = (EL2Enabled() & PSTATE.EL == EL0) & [HCR_EL2[27]] == 0b1;
     let preferred_exception_return : bits(64) = NextInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_SupervisorCall);
     __tc1 : bits(25) = exception.syndrome;
@@ -13117,7 +13118,7 @@ function AArch64_CallSecureMonitor immediate = {
     };
     SSAdvance();
     let preferred_exception_return : bits(64) = NextInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_MonitorCall);
     __tc1 : bits(25) = exception.syndrome;
@@ -13146,7 +13147,7 @@ function AArch64_CallHypervisor immediate = {
     };
     SSAdvance();
     let preferred_exception_return : bits(64) = NextInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_HypervisorCall);
     __tc1 : bits(25) = exception.syndrome;
@@ -13165,7 +13166,7 @@ function system_exceptions_runtime_hvc imm = {
     if (~(HaveEL(EL2)) | PSTATE.EL == EL0) | PSTATE.EL == EL1 & ~(IsSecureEL2Enabled()) & IsSecure() then {
         throw(Error_Undefined())
     };
-    let hvc_enable : vector(1, dec, bit) = if HaveEL(EL3) then [SCR_EL3[8]] else ~([HCR_EL2[29]]);
+    let hvc_enable = if HaveEL(EL3) then [SCR_EL3[8]] else ~([HCR_EL2[29]]);
     if hvc_enable == 0b0 then {
         AArch64_UndefinedFault()
     } else {
@@ -13177,10 +13178,10 @@ val AArch64_CheckAlignment : forall ('alignment : Int) ('iswrite : Bool).
   (bits(64), int('alignment), AccType, bool('iswrite)) -> bool effect {escape, rreg, undef, wreg}
 
 function AArch64_CheckAlignment (address, alignment, acctype, iswrite) = {
-    let aligned : bool = address == Align(address, alignment);
-    let atomic : bool = acctype == AccType_ATOMIC | acctype == AccType_ATOMICRW | acctype == AccType_ORDEREDATOMIC | acctype == AccType_ORDEREDATOMICRW;
-    let ordered : bool = acctype == AccType_ORDERED | acctype == AccType_ORDEREDRW | acctype == AccType_LIMITEDORDERED | acctype == AccType_ORDEREDATOMIC | acctype == AccType_ORDEREDATOMICRW;
-    let vector_name : bool = acctype == AccType_VEC;
+    let aligned = address == Align(address, alignment);
+    let atomic = acctype == AccType_ATOMIC | acctype == AccType_ATOMICRW | acctype == AccType_ORDEREDATOMIC | acctype == AccType_ORDEREDATOMICRW;
+    let ordered = acctype == AccType_ORDERED | acctype == AccType_ORDEREDRW | acctype == AccType_LIMITEDORDERED | acctype == AccType_ORDEREDATOMIC | acctype == AccType_ORDEREDATOMICRW;
+    let vector_name = acctype == AccType_VEC;
     check : bool = undefined : bool;
     if [SCTLR()[1]] == 0b1 then {
         check = true
@@ -13202,9 +13203,9 @@ function AArch64_CheckAlignment (address, alignment, acctype, iswrite) = {
 val AArch64_BranchTargetException : bits(52) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_BranchTargetException vaddress = {
-    let route_to_el2 : bool = (EL2Enabled() & PSTATE.EL == EL0) & [HCR_EL2[27]] == 0b1;
+    let route_to_el2 = (EL2Enabled() & PSTATE.EL == EL0) & [HCR_EL2[27]] == 0b1;
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     exception = ExceptionSyndrome(Exception_BranchTarget);
     __tc1 : bits(25) = exception.syndrome;
@@ -13232,8 +13233,8 @@ function BranchTargetCheck () = {
         let pc : bits(64) = ThisInstrAddr();
         AArch64_BranchTargetException(slice(pc, 0, 52))
     };
-    let branch_instr : bool = AArch64_ExecutingBROrBLROrRetInstr();
-    let bti_instr : bool = AArch64_ExecutingBTIInstr();
+    let branch_instr = AArch64_ExecutingBROrBLROrRetInstr();
+    let bti_instr = AArch64_ExecutingBTIInstr();
     if ~(branch_instr | bti_instr) then {
         BTypeNext = 0b00
     }
@@ -13325,7 +13326,7 @@ val system_exceptions_runtime_svc_decode : (bits(2), bits(3), bits(16), bits(3))
 
 function system_exceptions_runtime_svc_decode (LL, op2, imm16, opc) = {
     __unconditional = true;
-    let imm : vector(16, dec, bit) = imm16;
+    let imm = imm16;
     __PostDecode();
     system_exceptions_runtime_svc(imm)
 }
@@ -13334,7 +13335,7 @@ val system_exceptions_runtime_smc_decode : (bits(2), bits(3), bits(16), bits(3))
 
 function system_exceptions_runtime_smc_decode (LL, op2, imm16, opc) = {
     __unconditional = true;
-    let imm : vector(16, dec, bit) = imm16;
+    let imm = imm16;
     __PostDecode();
     system_exceptions_runtime_smc(imm)
 }
@@ -13343,7 +13344,7 @@ val system_exceptions_runtime_hvc_decode : (bits(2), bits(3), bits(16), bits(3))
 
 function system_exceptions_runtime_hvc_decode (LL, op2, imm16, opc) = {
     __unconditional = true;
-    let imm : vector(16, dec, bit) = imm16;
+    let imm = imm16;
     __PostDecode();
     system_exceptions_runtime_hvc(imm)
 }
@@ -13352,7 +13353,7 @@ val system_exceptions_debug_breakpoint_decode : (bits(2), bits(3), bits(16), bit
 
 function system_exceptions_debug_breakpoint_decode (LL, op2, imm16, opc) = {
     __unconditional = true;
-    let comment : vector(16, dec, bit) = imm16;
+    let comment = imm16;
     if HaveBTIExt() then {
         BTypeCompatible = true
     };
@@ -13481,8 +13482,8 @@ function integer_shift_variable_decode (Rd, Rn, op2, opcode2_5_2_, Rm, S, op, sf
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let shift_type : ShiftType = DecodeShift(op2);
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let shift_type = DecodeShift(op2);
     __PostDecode();
     integer_shift_variable(d, datasize, m, n, shift_type)
 }
@@ -13491,8 +13492,8 @@ val integer_pac_strip_hint_decode : (bits(5), bits(3), bits(4), bits(4), bits(3)
 
 function integer_pac_strip_hint_decode (Rt, op2, CRm, CRn, op1, op0, L) = {
     __unconditional = true;
-    let 'd : {'n, 'n == 30. int('n)} = 30;
-    let data : bool(false) = false;
+    let 'd = 30;
+    let data = false;
     __PostDecode();
     integer_pac_strip_dp_1src(d, data)
 }
@@ -13501,7 +13502,7 @@ val integer_pac_strip_dp_1src_decode : (bits(5), bits(5), bits(1), bits(5), bits
 
 function integer_pac_strip_dp_1src_decode (Rd, Rn, D, opcode2, S, sf) = {
     __unconditional = true;
-    let data : bool = D == 0b1;
+    let data = D == 0b1;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     if ~(HavePACExt()) then {
@@ -13928,7 +13929,7 @@ function integer_logical_shiftedreg_decode (Rd, Rn, imm6, Rm, N, shift, opc, sf)
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
+    let 'datasize = if sf == 0b1 then 64 else 32;
     setflags : bool = undefined : bool;
     op : LogicalOp = undefined : LogicalOp;
     match opc {
@@ -13954,9 +13955,9 @@ function integer_logical_shiftedreg_decode (Rd, Rn, imm6, Rm, N, shift, opc, sf)
     if sf == 0b0 & [imm6[5]] == 0b1 then {
         throw(Error_Undefined())
     };
-    let shift_type : ShiftType = DecodeShift(shift);
+    let shift_type = DecodeShift(shift);
     let 'shift_amount = UInt(imm6);
-    let invert : bool = N == 0b1;
+    let invert = N == 0b1;
     __PostDecode();
     integer_logical_shiftedreg(d, datasize, invert, m, n, op, setflags, shift_amount, shift_type)
 }
@@ -13967,7 +13968,7 @@ function integer_logical_immediate_decode (Rd, Rn, imms, immr, N, opc, sf) = {
     __unconditional = true;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
+    let 'datasize = if sf == 0b1 then 64 else 32;
     setflags : bool = undefined : bool;
     op : LogicalOp = undefined : LogicalOp;
     match opc {
@@ -14005,8 +14006,8 @@ val integer_insext_insert_movewide_decode : (bits(5), bits(16), bits(2), bits(2)
 function integer_insext_insert_movewide_decode (Rd, imm16, hw, opc, sf) = {
     __unconditional = true;
     let 'd = UInt(Rd);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let imm : vector(16, dec, bit) = imm16;
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let imm = imm16;
     pos : int = undefined : int;
     opcode : MoveWideOp = undefined : MoveWideOp;
     match opc {
@@ -14039,7 +14040,7 @@ function integer_insext_extract_immediate_decode (Rd, Rn, imms, Rm, o0, N, op21,
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
+    let 'datasize = if sf == 0b1 then 64 else 32;
     lsb : int = undefined : int;
     if N != sf then {
         throw(Error_Undefined())
@@ -14070,7 +14071,7 @@ function integer_flags_setf_decode (mask, Rn, opcode2, sz, imm6, sf) = {
     if ~(HaveFlagManipulateExt()) | sf != 0b0 then {
         throw(Error_Undefined())
     };
-    let 'msb : {'n, 'n in {15, 7}. int('n)} = if sz == 0b1 then 15 else 7;
+    let 'msb = if sz == 0b1 then 15 else 7;
     let 'n = UInt(Rn);
     __PostDecode();
     integer_flags_setf(msb, n)
@@ -14141,10 +14142,10 @@ function integer_conditional_select_decode (Rd, Rn, o2, cond, Rm, S, op, sf) = {
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let condition : vector(4, dec, bit) = cond;
-    let else_inv : bool = op == 0b1;
-    let else_inc : bool = o2 == 0b1;
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let condition = cond;
+    let else_inv = op == 0b1;
+    let else_inc = o2 == 0b1;
     __PostDecode();
     integer_conditional_select(condition, d, datasize, else_inc, else_inv, m, n)
 }
@@ -14155,10 +14156,10 @@ function integer_conditional_compare_register_decode (nzcv, o3, Rn, o2, cond, Rm
     __unconditional = true;
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let sub_op : bool = op == 0b1;
-    let condition : vector(4, dec, bit) = cond;
-    let flags : vector(4, dec, bit) = nzcv;
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let sub_op = op == 0b1;
+    let condition = cond;
+    let flags = nzcv;
     __PostDecode();
     integer_conditional_compare_register(condition, datasize, flags, m, n, sub_op)
 }
@@ -14168,10 +14169,10 @@ val integer_conditional_compare_immediate_decode : (bits(4), bits(1), bits(5), b
 function integer_conditional_compare_immediate_decode (nzcv, o3, Rn, o2, cond, imm5, S, op, sf) = {
     __unconditional = true;
     let 'n = UInt(Rn);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let sub_op : bool = op == 0b1;
-    let condition : vector(4, dec, bit) = cond;
-    let flags : vector(4, dec, bit) = nzcv;
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let sub_op = op == 0b1;
+    let condition = cond;
+    let flags = nzcv;
     let imm : bits('datasize) = ZeroExtend(imm5, datasize);
     __PostDecode();
     integer_conditional_compare_immediate(condition, datasize, flags, imm, n, sub_op)
@@ -14183,7 +14184,7 @@ function integer_bitfield_decode (Rd, Rn, imms, immr, N, opc, sf) = {
     __unconditional = true;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
+    let 'datasize = if sf == 0b1 then 64 else 32;
     inzero : bool = undefined : bool;
     extend : bool = undefined : bool;
     R : int = undefined : int;
@@ -14228,7 +14229,7 @@ function integer_arithmetic_rev_decode (Rd, Rn, opc, opcode2, S, sf) = {
     __unconditional = true;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
+    let 'datasize = if sf == 0b1 then 64 else 32;
     container_size : int = undefined : int;
     match opc {
       0b00 => {
@@ -14257,7 +14258,7 @@ function integer_arithmetic_rbit_decode (Rd, Rn, opcode2, S, sf) = {
     __unconditional = true;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
+    let 'datasize = if sf == 0b1 then 64 else 32;
     __PostDecode();
     integer_arithmetic_rbit(d, datasize, n)
 }
@@ -14269,7 +14270,7 @@ function integer_arithmetic_pointer_mcsubtracttaggedaddresssetflags_decode (Xd, 
     let 'd = UInt(Xd);
     let 'n = UInt(Xn);
     let 'm = UInt(Xm);
-    let setflags : bool(true) = true;
+    let setflags = true;
     __PostDecode();
     integer_arithmetic_pointer_mcsubtracttaggedaddresssetflags(d, m, n, setflags)
 }
@@ -14281,7 +14282,7 @@ function integer_arithmetic_pointer_mcsubtracttaggedaddress_decode (Xd, Xn, Xm) 
     let 'd = UInt(Xd);
     let 'n = UInt(Xn);
     let 'm = UInt(Xm);
-    let setflags : bool(false) = false;
+    let setflags = false;
     __PostDecode();
     integer_arithmetic_pointer_mcsubtracttaggedaddress(d, m, n, setflags)
 }
@@ -14294,9 +14295,9 @@ function integer_arithmetic_mul_widening_64128hi_decode (Rd, Rn, Ra, o0, Rm, U, 
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
     let 'a = UInt(Ra);
-    let 'destsize : {'n, 'n == 64. int('n)} = 64;
-    let 'datasize : {'n, 'n == 'destsize. int('n)} = destsize;
-    let unsigned : bool = U == 0b1;
+    let 'destsize = 64;
+    let 'datasize = destsize;
+    let unsigned = U == 0b1;
     __PostDecode();
     integer_arithmetic_mul_widening_64128hi(d, datasize, m, n, unsigned)
 }
@@ -14309,10 +14310,10 @@ function integer_arithmetic_mul_widening_3264_decode (Rd, Rn, Ra, o0, Rm, U, op5
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
     let 'a = UInt(Ra);
-    let 'destsize : {'n, 'n == 64. int('n)} = 64;
-    let 'datasize : {'n, 'n == 32. int('n)} = 32;
-    let sub_op : bool = o0 == 0b1;
-    let unsigned : bool = U == 0b1;
+    let 'destsize = 64;
+    let 'datasize = 32;
+    let sub_op = o0 == 0b1;
+    let unsigned = U == 0b1;
     __PostDecode();
     integer_arithmetic_mul_widening_3264(a, d, datasize, destsize, m, n, sub_op, unsigned)
 }
@@ -14325,9 +14326,9 @@ function integer_arithmetic_mul_uniform_addsub_decode (Rd, Rn, Ra, o0, Rm, op31,
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
     let 'a = UInt(Ra);
-    let 'destsize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let 'datasize : {'n, 'n == 'destsize. int('n)} = destsize;
-    let sub_op : bool = o0 == 0b1;
+    let 'destsize = if sf == 0b1 then 64 else 32;
+    let 'datasize = destsize;
+    let sub_op = o0 == 0b1;
     __PostDecode();
     integer_arithmetic_mul_uniform_addsub(a, d, datasize, destsize, m, n, sub_op)
 }
@@ -14339,8 +14340,8 @@ function integer_arithmetic_div_decode (Rd, Rn, o1, opcode2_5_1_, Rm, S, op, sf)
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let unsigned : bool = o1 == 0b0;
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let unsigned = o1 == 0b0;
     __PostDecode();
     integer_arithmetic_div(d, datasize, m, n, unsigned)
 }
@@ -14351,8 +14352,8 @@ function integer_arithmetic_cnt_decode (Rd, Rn, op, opcode2, S, sf) = {
     __unconditional = true;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let opcode : CountOp = if op == 0b0 then CountOp_CLZ else CountOp_CLS;
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let opcode = if op == 0b0 then CountOp_CLZ else CountOp_CLS;
     __PostDecode();
     integer_arithmetic_cnt(d, datasize, n, opcode)
 }
@@ -14362,7 +14363,7 @@ val integer_arithmetic_address_pcrel_decode : (bits(5), bits(19), bits(2), bits(
 function integer_arithmetic_address_pcrel_decode (Rd, immhi, immlo, op) = {
     __unconditional = true;
     let 'd = UInt(Rd);
-    let page : bool = op == 0b1;
+    let page = op == 0b1;
     imm : bits(64) = undefined : bits(64);
     if page then {
         imm = SignExtend((immhi @ immlo) @ Zeros(12), 64)
@@ -14380,16 +14381,16 @@ function integer_arithmetic_addsub_shiftedreg_decode (Rd, Rn, imm6, Rm, shift, S
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let sub_op : bool = op == 0b1;
-    let setflags : bool = S == 0b1;
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let sub_op = op == 0b1;
+    let setflags = S == 0b1;
     if shift == 0b11 then {
         throw(Error_Undefined())
     };
     if sf == 0b0 & [imm6[5]] == 0b1 then {
         throw(Error_Undefined())
     };
-    let shift_type : ShiftType = DecodeShift(shift);
+    let shift_type = DecodeShift(shift);
     let 'shift_amount = UInt(imm6);
     __PostDecode();
     integer_arithmetic_addsub_shiftedreg(d, datasize, m, n, setflags, shift_amount, shift_type, sub_op)
@@ -14422,9 +14423,9 @@ function integer_arithmetic_addsub_carry_decode (Rd, Rn, opcode2, Rm, S, op, sf)
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let sub_op : bool = op == 0b1;
-    let setflags : bool = S == 0b1;
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let sub_op = op == 0b1;
+    let setflags = S == 0b1;
     __PostDecode();
     integer_arithmetic_addsub_carry(d, datasize, m, n, setflags, sub_op)
 }
@@ -14482,8 +14483,8 @@ val branch_unconditional_immediate_decode : (bits(26), bits(1)) -> unit effect {
 
 function branch_unconditional_immediate_decode (imm26, op) = {
     __unconditional = true;
-    let branch_type : BranchType = if op == 0b1 then BranchType_DIRCALL else BranchType_DIR;
-    let offset : vector(64, dec, bit) = SignExtend(imm26 @ 0b00, 64);
+    let branch_type = if op == 0b1 then BranchType_DIRCALL else BranchType_DIR;
+    let offset = SignExtend(imm26 @ 0b00, 64);
     __PostDecode();
     branch_unconditional_immediate(branch_type, offset)
 }
@@ -14493,10 +14494,10 @@ val branch_conditional_test_decode : (bits(5), bits(14), bits(5), bits(1), bits(
 function branch_conditional_test_decode (Rt, imm14, b40, op, b5) = {
     __unconditional = true;
     let 't = UInt(Rt);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if b5 == 0b1 then 64 else 32;
+    let 'datasize = if b5 == 0b1 then 64 else 32;
     let 'bit_pos = UInt(b5 @ b40);
-    let bit_val : vector(1, dec, bit) = op;
-    let offset : vector(64, dec, bit) = SignExtend(imm14 @ 0b00, 64);
+    let bit_val = op;
+    let offset = SignExtend(imm14 @ 0b00, 64);
     __PostDecode();
     branch_conditional_test(bit_pos, bit_val, datasize, offset, t)
 }
@@ -14505,8 +14506,8 @@ val branch_conditional_cond_decode : (bits(4), bits(1), bits(19), bits(1)) -> un
 
 function branch_conditional_cond_decode (cond, o0, imm19, o1) = {
     __unconditional = true;
-    let offset : vector(64, dec, bit) = SignExtend(imm19 @ 0b00, 64);
-    let condition : vector(4, dec, bit) = cond;
+    let offset = SignExtend(imm19 @ 0b00, 64);
+    let condition = cond;
     __PostDecode();
     branch_conditional_cond(condition, offset)
 }
@@ -14516,9 +14517,9 @@ val branch_conditional_compare_decode : (bits(5), bits(19), bits(1), bits(1)) ->
 function branch_conditional_compare_decode (Rt, imm19, op, sf) = {
     __unconditional = true;
     let 't = UInt(Rt);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let iszero : bool = op == 0b0;
-    let offset : vector(64, dec, bit) = SignExtend(imm19 @ 0b00, 64);
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let iszero = op == 0b0;
+    let offset = SignExtend(imm19 @ 0b00, 64);
     __PostDecode();
     branch_conditional_compare(datasize, iszero, offset, t)
 }
@@ -14527,7 +14528,7 @@ val AArch64_AdvSIMDFPAccessTrap : bits(2) -> unit effect {escape, rreg, undef, w
 
 function AArch64_AdvSIMDFPAccessTrap target_el = {
     let preferred_exception_return : bits(64) = ThisInstrAddr();
-    let vect_offset : int(0) = 0;
+    let vect_offset = 0;
     let route_to_el2 : bool = (target_el == EL1 & EL2Enabled()) & [HCR_EL2[27]] == 0b1;
     exception : ExceptionRecord = undefined : ExceptionRecord;
     if route_to_el2 then {
@@ -14879,93 +14880,93 @@ function AArch64_CheckAdvSIMDFPSystemRegisterTraps (op0, op1, crn, crm, op2, rea
 val AArch64_AutoGen_SysRegTrap : (bits(2), bits(2), bits(3), bits(4), bits(3), bits(4), bits(1)) -> (bool, bits(2)) effect {escape, rreg, undef}
 
 function AArch64_AutoGen_SysRegTrap (el, op0, op1, CRn, op2, CRm, read) = {
-    let __CNTHCTL_EL2_EL0PCTEN : vector(1, dec, bit) = [CNTHCTL_EL2[0]];
-    let __HaveEL_EL3_ : bool = HaveEL(EL3);
-    let __HCR_EL2_EnSCXT : vector(1, dec, bit) = [HCR_EL2[53]];
-    let __SCTLR_EL1_EnRCTX : vector(1, dec, bit) = [SCTLR_EL1[10]];
-    let __MDCR_EL2_TPMCR : vector(1, dec, bit) = [MDCR_EL2[5]];
-    let __ICC_SRE_EL2_SRE : vector(1, dec, bit) = [ICC_SRE_EL2[0]];
-    let __EDSCR_TDA : vector(1, dec, bit) = [EDSCR[21]];
-    let __MDCR_EL2_TDOSA : vector(1, dec, bit) = [MDCR_EL2[10]];
-    let __CNTKCTL_EL1_EL0VTEN : vector(1, dec, bit) = [CNTKCTL_EL1[8]];
-    let __CNTHCTL_EL2_EL0VCTEN : vector(1, dec, bit) = [CNTHCTL_EL2[1]];
-    let __HCR_EL2_TACR : vector(1, dec, bit) = [HCR_EL2[21]];
-    let __SCR_EL3_EnSCXT : vector(1, dec, bit) = [SCR_EL3[25]];
-    let __MDCR_EL2_TTRF : vector(1, dec, bit) = [MDCR_EL2[19]];
-    let __CNTKCTL_EL1_EL0PCTEN : vector(1, dec, bit) = [CNTKCTL_EL1[0]];
-    let __SCTLR_EL2_EnRCTX : vector(1, dec, bit) = [SCTLR_EL2[10]];
-    let __MPAM2_EL2_TRAPMPAM0EL1 : vector(1, dec, bit) = [MPAM2_EL2[49]];
-    let __MDCR_EL3_TDA : vector(1, dec, bit) = [MDCR_EL3[9]];
-    let __HCR_EL2_TID1 : vector(1, dec, bit) = [HCR_EL2[16]];
-    let __HCR_EL2_TID2 : vector(1, dec, bit) = [HCR_EL2[17]];
-    let __HCR_EL2_TID3 : vector(1, dec, bit) = [HCR_EL2[18]];
-    let __MDCR_EL2_TPM : vector(1, dec, bit) = [MDCR_EL2[6]];
-    let __CNTHCTL_EL2_EL1PCTEN : vector(1, dec, bit) = [CNTHCTL_EL2[if [HCR_EL2[34]] == 0 then 0 else 10]];
-    let __MPAM2_EL2_TRAPMPAM1EL1 : vector(1, dec, bit) = [MPAM2_EL2[48]];
-    let __SCR_EL3_TLOR : vector(1, dec, bit) = [SCR_EL3[14]];
-    let __SCTLR___UCT : vector(1, dec, bit) = [SCTLR()[15]];
-    let __SCTLR___UCI : vector(1, dec, bit) = [SCTLR()[26]];
-    let __HCR_EL2_AT : vector(1, dec, bit) = [HCR_EL2[44]];
-    let __SCR_EL3_EEL2 : vector(1, dec, bit) = [SCR_EL3[18]];
-    let __MDCR_EL3_TDOSA : vector(1, dec, bit) = [MDCR_EL3[10]];
-    let __HCR_EL2_IMO : vector(1, dec, bit) = [HCR_EL2[4]];
-    let __HCR_EL2_TRVM : vector(1, dec, bit) = [HCR_EL2[30]];
-    let __HCR_EL2_NV : vector(1, dec, bit) = [HCR_EL2[42]];
-    let __MDCR_EL2_TDA : vector(1, dec, bit) = [MDCR_EL2[9]];
-    let __CNTHCTL_EL2_EL0VTEN : vector(1, dec, bit) = [CNTHCTL_EL2[8]];
-    let __HCR_EL2_NV1 : vector(1, dec, bit) = [HCR_EL2[43]];
-    let __HCR_EL2_NV2 : vector(1, dec, bit) = [HCR_EL2[45]];
-    let __HCR_EL2_E2H : vector(1, dec, bit) = [HCR_EL2[34]];
-    let __MDCR_EL3_TPM : vector(1, dec, bit) = [MDCR_EL3[6]];
-    let __SCTLR_EL1_UCI : vector(1, dec, bit) = [SCTLR_EL1[26]];
-    let __SCR_EL3_NS : vector(1, dec, bit) = [SCR_EL3[0]];
-    let __MDCR_EL2_TDRA : vector(1, dec, bit) = [MDCR_EL2[11]];
-    let __HCR_EL2_TDZ : vector(1, dec, bit) = [HCR_EL2[28]];
-    let __ICH_HCR_EL2_TC : vector(1, dec, bit) = [ICH_HCR_EL2[10]];
-    let __ICC_SRE_EL1_SRE : vector(1, dec, bit) = [get_ICC_SRE_EL1()[0]];
-    let __HCR_EL2_FMO : vector(1, dec, bit) = [HCR_EL2[3]];
-    let __CNTKCTL_EL1_EL0VCTEN : vector(1, dec, bit) = [CNTKCTL_EL1[1]];
-    let __SCR_EL3_IRQ : vector(1, dec, bit) = [SCR_EL3[1]];
-    let __SCTLR_EL2_UCI : vector(1, dec, bit) = [SCTLR_EL2[26]];
-    let __MPAMIDR_EL1_HAS_HCR : vector(1, dec, bit) = [MPAMIDR_EL1[17]];
-    let __CNTKCTL_EL1_EL0PTEN : vector(1, dec, bit) = [CNTKCTL_EL1[9]];
-    let ___ELUsingAArch32_EL3_ : bool = ~(ELUsingAArch32(EL3));
-    let __PMUSERENR_EL0_ER : vector(1, dec, bit) = [PMUSERENR_EL0[3]];
-    let __PMUSERENR_EL0_EN : vector(1, dec, bit) = [PMUSERENR_EL0[0]];
-    let __SCR_EL3_ST : vector(1, dec, bit) = [SCR_EL3[11]];
-    let __CPTR_EL2_TCPAC : vector(1, dec, bit) = [CPTR_EL2[31]];
-    let __MPAM3_EL3_TRAPLOWER : vector(1, dec, bit) = [MPAM3_EL3[62]];
-    let __ICC_SRE_EL3_Enable : vector(1, dec, bit) = [ICC_SRE_EL3[3]];
-    let __CNTHCTL_EL2_EL1PCEN : vector(1, dec, bit) = [CNTHCTL_EL2[1]];
-    let __HCR_EL2_TGE : vector(1, dec, bit) = [HCR_EL2[27]];
-    let __HCR_EL2_TVM : vector(1, dec, bit) = [HCR_EL2[26]];
-    let __ICC_SRE_EL2_Enable : vector(1, dec, bit) = [ICC_SRE_EL2[3]];
-    let __MPAMHCR_EL2_TRAP_MPAMIDR_EL1 : vector(1, dec, bit) = [MPAMHCR_EL2[31]];
-    let __CNTHCTL_EL2_EL0PTEN : vector(1, dec, bit) = [CNTHCTL_EL2[9]];
-    let __SCR_EL3_FIQ : vector(1, dec, bit) = [SCR_EL3[2]];
-    let ___ELUsingAArch32_EL2_ : bool = ~(ELUsingAArch32(EL2));
-    let __SCTLR___DZE : vector(1, dec, bit) = [SCTLR()[14]];
-    let __ICH_HCR_EL2_TDIR : vector(1, dec, bit) = [ICH_HCR_EL2[14]];
-    let __HSTR_EL2_T12 : vector(1, dec, bit) = [HSTR_EL2[12]];
-    let __CNTHCTL_EL2_EL1PTEN : vector(1, dec, bit) = [CNTHCTL_EL2[11]];
-    let __OSLSR_EL1_OSLK : vector(1, dec, bit) = [OSLSR_EL1[1]];
-    let __PMUSERENR_EL0_SW : vector(1, dec, bit) = [PMUSERENR_EL0[1]];
-    let __HCR_EL2_TLOR : vector(1, dec, bit) = [HCR_EL2[35]];
-    let __HCR_EL2_TSW : vector(1, dec, bit) = [HCR_EL2[22]];
-    let __HCR_EL2_TTLB : vector(1, dec, bit) = [HCR_EL2[25]];
-    let __HCR_EL2_APK : vector(1, dec, bit) = [HCR_EL2[40]];
-    let __SCR_EL3_APK : vector(1, dec, bit) = [SCR_EL3[16]];
-    let __SCTLR_EL1_UMA : vector(1, dec, bit) = [SCTLR_EL1[9]];
-    let __PMUSERENR_EL0_CR : vector(1, dec, bit) = [PMUSERENR_EL0[2]];
-    let __HaveEL_EL2_ : bool = HaveEL(EL2);
-    let __HCR_EL2_TPC : vector(1, dec, bit) = [HCR_EL2[23]];
-    let __CPTR_EL3_TCPAC : vector(1, dec, bit) = [CPTR_EL3[31]];
-    let __HCR_EL2_TPU : vector(1, dec, bit) = [HCR_EL2[24]];
-    let __SCTLR___TSCXT : vector(1, dec, bit) = [SCTLR()[20]];
-    let __ICC_SRE_EL3_SRE : vector(1, dec, bit) = [ICC_SRE_EL3[0]];
-    let __MDSCR_EL1_TDCC : vector(1, dec, bit) = [MDSCR_EL1[12]];
-    let __ICH_HCR_EL2_TALL0 : vector(1, dec, bit) = [ICH_HCR_EL2[11]];
-    let __ICH_HCR_EL2_TALL1 : vector(1, dec, bit) = [ICH_HCR_EL2[12]];
+    let __CNTHCTL_EL2_EL0PCTEN = [CNTHCTL_EL2[0]];
+    let __HaveEL_EL3_ = HaveEL(EL3);
+    let __HCR_EL2_EnSCXT = [HCR_EL2[53]];
+    let __SCTLR_EL1_EnRCTX = [SCTLR_EL1[10]];
+    let __MDCR_EL2_TPMCR = [MDCR_EL2[5]];
+    let __ICC_SRE_EL2_SRE = [ICC_SRE_EL2[0]];
+    let __EDSCR_TDA = [EDSCR[21]];
+    let __MDCR_EL2_TDOSA = [MDCR_EL2[10]];
+    let __CNTKCTL_EL1_EL0VTEN = [CNTKCTL_EL1[8]];
+    let __CNTHCTL_EL2_EL0VCTEN = [CNTHCTL_EL2[1]];
+    let __HCR_EL2_TACR = [HCR_EL2[21]];
+    let __SCR_EL3_EnSCXT = [SCR_EL3[25]];
+    let __MDCR_EL2_TTRF = [MDCR_EL2[19]];
+    let __CNTKCTL_EL1_EL0PCTEN = [CNTKCTL_EL1[0]];
+    let __SCTLR_EL2_EnRCTX = [SCTLR_EL2[10]];
+    let __MPAM2_EL2_TRAPMPAM0EL1 = [MPAM2_EL2[49]];
+    let __MDCR_EL3_TDA = [MDCR_EL3[9]];
+    let __HCR_EL2_TID1 = [HCR_EL2[16]];
+    let __HCR_EL2_TID2 = [HCR_EL2[17]];
+    let __HCR_EL2_TID3 = [HCR_EL2[18]];
+    let __MDCR_EL2_TPM = [MDCR_EL2[6]];
+    let __CNTHCTL_EL2_EL1PCTEN = [CNTHCTL_EL2[if [HCR_EL2[34]] == 0 then 0 else 10]];
+    let __MPAM2_EL2_TRAPMPAM1EL1 = [MPAM2_EL2[48]];
+    let __SCR_EL3_TLOR = [SCR_EL3[14]];
+    let __SCTLR___UCT = [SCTLR()[15]];
+    let __SCTLR___UCI = [SCTLR()[26]];
+    let __HCR_EL2_AT = [HCR_EL2[44]];
+    let __SCR_EL3_EEL2 = [SCR_EL3[18]];
+    let __MDCR_EL3_TDOSA = [MDCR_EL3[10]];
+    let __HCR_EL2_IMO = [HCR_EL2[4]];
+    let __HCR_EL2_TRVM = [HCR_EL2[30]];
+    let __HCR_EL2_NV = [HCR_EL2[42]];
+    let __MDCR_EL2_TDA = [MDCR_EL2[9]];
+    let __CNTHCTL_EL2_EL0VTEN = [CNTHCTL_EL2[8]];
+    let __HCR_EL2_NV1 = [HCR_EL2[43]];
+    let __HCR_EL2_NV2 = [HCR_EL2[45]];
+    let __HCR_EL2_E2H = [HCR_EL2[34]];
+    let __MDCR_EL3_TPM = [MDCR_EL3[6]];
+    let __SCTLR_EL1_UCI = [SCTLR_EL1[26]];
+    let __SCR_EL3_NS = [SCR_EL3[0]];
+    let __MDCR_EL2_TDRA = [MDCR_EL2[11]];
+    let __HCR_EL2_TDZ = [HCR_EL2[28]];
+    let __ICH_HCR_EL2_TC = [ICH_HCR_EL2[10]];
+    let __ICC_SRE_EL1_SRE = [get_ICC_SRE_EL1()[0]];
+    let __HCR_EL2_FMO = [HCR_EL2[3]];
+    let __CNTKCTL_EL1_EL0VCTEN = [CNTKCTL_EL1[1]];
+    let __SCR_EL3_IRQ = [SCR_EL3[1]];
+    let __SCTLR_EL2_UCI = [SCTLR_EL2[26]];
+    let __MPAMIDR_EL1_HAS_HCR = [MPAMIDR_EL1[17]];
+    let __CNTKCTL_EL1_EL0PTEN = [CNTKCTL_EL1[9]];
+    let ___ELUsingAArch32_EL3_ = ~(ELUsingAArch32(EL3));
+    let __PMUSERENR_EL0_ER = [PMUSERENR_EL0[3]];
+    let __PMUSERENR_EL0_EN = [PMUSERENR_EL0[0]];
+    let __SCR_EL3_ST = [SCR_EL3[11]];
+    let __CPTR_EL2_TCPAC = [CPTR_EL2[31]];
+    let __MPAM3_EL3_TRAPLOWER = [MPAM3_EL3[62]];
+    let __ICC_SRE_EL3_Enable = [ICC_SRE_EL3[3]];
+    let __CNTHCTL_EL2_EL1PCEN = [CNTHCTL_EL2[1]];
+    let __HCR_EL2_TGE = [HCR_EL2[27]];
+    let __HCR_EL2_TVM = [HCR_EL2[26]];
+    let __ICC_SRE_EL2_Enable = [ICC_SRE_EL2[3]];
+    let __MPAMHCR_EL2_TRAP_MPAMIDR_EL1 = [MPAMHCR_EL2[31]];
+    let __CNTHCTL_EL2_EL0PTEN = [CNTHCTL_EL2[9]];
+    let __SCR_EL3_FIQ = [SCR_EL3[2]];
+    let ___ELUsingAArch32_EL2_ = ~(ELUsingAArch32(EL2));
+    let __SCTLR___DZE = [SCTLR()[14]];
+    let __ICH_HCR_EL2_TDIR = [ICH_HCR_EL2[14]];
+    let __HSTR_EL2_T12 = [HSTR_EL2[12]];
+    let __CNTHCTL_EL2_EL1PTEN = [CNTHCTL_EL2[11]];
+    let __OSLSR_EL1_OSLK = [OSLSR_EL1[1]];
+    let __PMUSERENR_EL0_SW = [PMUSERENR_EL0[1]];
+    let __HCR_EL2_TLOR = [HCR_EL2[35]];
+    let __HCR_EL2_TSW = [HCR_EL2[22]];
+    let __HCR_EL2_TTLB = [HCR_EL2[25]];
+    let __HCR_EL2_APK = [HCR_EL2[40]];
+    let __SCR_EL3_APK = [SCR_EL3[16]];
+    let __SCTLR_EL1_UMA = [SCTLR_EL1[9]];
+    let __PMUSERENR_EL0_CR = [PMUSERENR_EL0[2]];
+    let __HaveEL_EL2_ = HaveEL(EL2);
+    let __HCR_EL2_TPC = [HCR_EL2[23]];
+    let __CPTR_EL3_TCPAC = [CPTR_EL3[31]];
+    let __HCR_EL2_TPU = [HCR_EL2[24]];
+    let __SCTLR___TSCXT = [SCTLR()[20]];
+    let __ICC_SRE_EL3_SRE = [ICC_SRE_EL3[0]];
+    let __MDSCR_EL1_TDCC = [MDSCR_EL1[12]];
+    let __ICH_HCR_EL2_TALL0 = [ICH_HCR_EL2[11]];
+    let __ICH_HCR_EL2_TALL1 = [ICH_HCR_EL2[12]];
     if (CRm & 0x0) == 0x0 then {
         if op0 == 0b10 then {
             if op1 == 0b000 then {
@@ -19895,7 +19896,7 @@ function AArch64_CheckSystemRegisterTraps (op0, op1, crn, crm, op2, read) = {
 val AArch64_CheckSystemAccess : (bits(2), bits(3), bits(4), bits(4), bits(3), bits(5), bits(1)) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_CheckSystemAccess (op0, op1, crn, crm, op2, rt, read) = {
-    let unallocated : bool(false) = false;
+    let unallocated = false;
     need_secure : bool = false;
     min_EL : bits(2) = undefined : bits(2);
     if HaveBTIExt() then {
@@ -19977,7 +19978,7 @@ function system_register_cpsr_decode (Rt, op2, CRm, CRn, op1, op0, L) = {
         throw(Error_See("AXFlag"))
     };
     AArch64_CheckSystemAccess(0b00, op1, 0x4, CRm, op2, 0b11111, 0b0);
-    let operand : vector(4, dec, bit) = CRm;
+    let operand = CRm;
     field : PSTATEField = undefined : PSTATEField;
     match op1 @ op2 {
       0b000011 => {
@@ -20035,12 +20036,12 @@ val aset_MemTag : (bits(64), bits(4)) -> unit effect {escape, rmem, rreg, undef,
 
 function aset_MemTag (address, value_name) = {
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
-    let iswrite : bool(true) = true;
+    let iswrite = true;
     if address != Align(address, TAG_GRANULE) then {
-        let secondstage : bool(false) = false;
+        let secondstage = false;
         AArch64_Abort(address, AArch64_AlignmentFault(AccType_NORMAL, iswrite, secondstage))
     };
-    let wasaligned : bool(true) = true;
+    let wasaligned = true;
     let memaddrdesc = AArch64_TranslateAddress(address, AccType_NORMAL, iswrite, wasaligned, TAG_GRANULE);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
@@ -20127,9 +20128,9 @@ val AArch64_SetExclusiveMonitors : forall ('size : Int).
   (bits(64), int('size)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_SetExclusiveMonitors (address, size) = {
-    let acctype : AccType = AccType_ATOMIC;
-    let iswrite : bool(false) = false;
-    let aligned : bool = address == Align(address, size);
+    let acctype = AccType_ATOMIC;
+    let iswrite = false;
+    let aligned = address == Align(address, size);
     let memaddrdesc : AddressDescriptor = AArch64_TranslateAddress(address, acctype, iswrite, aligned, size);
     if IsFault(memaddrdesc) then {
         return()
@@ -20145,9 +20146,9 @@ val AArch64_ExclusiveMonitorsPass : forall ('size : Int).
   (bits(64), int('size)) -> bool effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_ExclusiveMonitorsPass (address, size) = {
-    let acctype : AccType = AccType_ATOMIC;
-    let iswrite : bool(true) = true;
-    let aligned : bool = address == Align(address, size);
+    let acctype = AccType_ATOMIC;
+    let iswrite = true;
+    let aligned = address == Align(address, size);
     secondstage : bool = undefined : bool;
     if ~(aligned) then {
         secondstage = false;
@@ -20381,8 +20382,8 @@ function branch_unconditional_eret_decode (op4, Rn, M, A, op2) = {
     if PSTATE.EL == EL0 then {
         throw(Error_Undefined())
     };
-    let pac : bool = A == 0b1;
-    let use_key_a : bool = M == 0b0;
+    let pac = A == 0b1;
+    let use_key_a = M == 0b0;
     if ~(pac) & op4 != 0b00000 then {
         throw(Error_Undefined())
     } else {
@@ -20473,8 +20474,8 @@ function integer_tags_mcgettagarray_decode (Xt, Xn) = {
     __unconditional = true;
     let 't = UInt(Xt);
     let 'n = UInt(Xn);
-    let wback : bool(true) = true;
-    let wb_unknown : bool(false) = false;
+    let wback = true;
+    let wb_unknown = false;
     __PostDecode();
     integer_tags_mcgettagarray(n, t, wb_unknown, wback)
 }
@@ -20495,9 +20496,9 @@ function integer_arithmetic_addsub_immediate_decode (Rd, Rn, imm12, shift, S, op
     __unconditional = true;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
-    let 'datasize : {'n, 'n in {64, 32}. int('n)} = if sf == 0b1 then 64 else 32;
-    let sub_op : bool = op == 0b1;
-    let setflags : bool = S == 0b1;
+    let 'datasize = if sf == 0b1 then 64 else 32;
+    let sub_op = op == 0b1;
+    let setflags = S == 0b1;
     imm : bits('datasize) = undefined : bits('datasize);
     match shift {
       0b00 => {
@@ -20870,7 +20871,7 @@ function DCPSInstruction target_el = {
           Unreachable()
       }
     };
-    let from_secure : bool = IsSecure();
+    let from_secure = IsSecure();
     if ELUsingAArch32(handle_el) then {
         if PSTATE.M == M32_Monitor then {
             __tc1 : bits(32) = get_SCR();
@@ -20955,7 +20956,7 @@ val system_exceptions_debug_exception_decode : (bits(2), bits(3), bits(16), bits
 
 function system_exceptions_debug_exception_decode (LL, op2, imm16, opc) = {
     __unconditional = true;
-    let target_level : vector(2, dec, bit) = LL;
+    let target_level = LL;
     if LL == 0b00 then {
         throw(Error_Undefined())
     };
@@ -20981,7 +20982,7 @@ function AArch64_SysInstrWithResult (op0, op1, crn, crm, op2) = {
 val DC_ZVA : bits(64) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function DC_ZVA val_name = {
-    let iswrite : bool(true) = true;
+    let iswrite = true;
     let 'size = 4 * 2 ^ UInt(slice(DCZID_EL0, 0, 4));
     let vaddress : bits(64) = Align(val_name, size);
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
@@ -21024,7 +21025,7 @@ function AArch64_aset_MemSingle (address, size, acctype, wasaligned, value_name)
     assert(size == 1 | size == 2 | size == 4 | size == 8 | size == 16);
     assert(address == Align(address, size));
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
-    let iswrite : bool(true) = true;
+    let iswrite = true;
     let memaddrdesc = AArch64_TranslateAddress(address, acctype, iswrite, wasaligned, size);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
@@ -21032,10 +21033,10 @@ function AArch64_aset_MemSingle (address, size, acctype, wasaligned, value_name)
     if memaddrdesc.memattrs.shareable then {
         ClearExclusiveByAddress(memaddrdesc.paddress, ProcessorID(), size)
     };
-    let accdesc : AccessDescriptor = CreateAccessDescriptor(acctype);
+    let accdesc = CreateAccessDescriptor(acctype);
     if HaveMTEExt() then {
         if AccessIsTagChecked(ZeroExtend(address, 64), acctype) then {
-            let ptag : vector(4, dec, bit) = TransformTag(ZeroExtend(address, 64));
+            let ptag = TransformTag(ZeroExtend(address, 64));
             if ~(CheckTag(memaddrdesc, ptag, iswrite)) then {
                 TagCheckFail(ZeroExtend(address, 64), iswrite)
             }
@@ -21053,7 +21054,7 @@ val aset_Mem : forall 'size,
 
 function aset_Mem (address, size, acctype, value_name__arg) = {
     value_name = value_name__arg;
-    let iswrite : bool(true) = true;
+    let iswrite = true;
     if (HaveNV2Ext() & acctype == AccType_NV2REGISTER) & [SCTLR_EL2[25]] == 0b1 | BigEndian() then {
         value_name = BigEndianReverse(value_name)
     };
@@ -21096,7 +21097,7 @@ val semihost_writeparam : forall ('index : Int).
   (int('index), bits(64)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function semihost_writeparam (index, value_name) = {
-    let base : vector(64, dec, bit) = semihost_arg(1);
+    let base = semihost_arg(1);
     Mem(base + index * 8, 8, AccType_NORMAL) = value_name
 }
 
@@ -21119,15 +21120,15 @@ overload NVMem = {aset_NVMem}
 val AArch64_AutoGen_SysRegWrite : (bits(2), bits(2), bits(3), bits(4), bits(3), bits(4), bits(1), bits(64)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_AutoGen_SysRegWrite (el, op0, op1, CRn, op2, CRm, read, val_name) = {
-    let __HCR_EL2_NV1 : vector(1, dec, bit) = [HCR_EL2[43]];
-    let __HCR_EL2_FMO : vector(1, dec, bit) = [HCR_EL2[3]];
-    let __HCR_EL2_NV2 : vector(1, dec, bit) = [HCR_EL2[45]];
-    let __HCR_EL2_E2H : vector(1, dec, bit) = [HCR_EL2[34]];
-    let __HCR_EL2_TGE : vector(1, dec, bit) = [HCR_EL2[27]];
-    let __SCR_EL3_EEL2 : vector(1, dec, bit) = [SCR_EL3[18]];
-    let __SCR_EL3_NS : vector(1, dec, bit) = [SCR_EL3[0]];
-    let __HCR_EL2_IMO : vector(1, dec, bit) = [HCR_EL2[4]];
-    let __HCR_EL2_NV : vector(1, dec, bit) = [HCR_EL2[42]];
+    let __HCR_EL2_NV1 = [HCR_EL2[43]];
+    let __HCR_EL2_FMO = [HCR_EL2[3]];
+    let __HCR_EL2_NV2 = [HCR_EL2[45]];
+    let __HCR_EL2_E2H = [HCR_EL2[34]];
+    let __HCR_EL2_TGE = [HCR_EL2[27]];
+    let __SCR_EL3_EEL2 = [SCR_EL3[18]];
+    let __SCR_EL3_NS = [SCR_EL3[0]];
+    let __HCR_EL2_IMO = [HCR_EL2[4]];
+    let __HCR_EL2_NV = [HCR_EL2[42]];
     if (CRm & 0x0) == 0x0 then {
         if op0 == 0b10 then {
             if op1 == 0b000 then {
@@ -23735,7 +23736,7 @@ val aget_Mem : forall 'size,
 function aget_Mem (address, size, acctype) = {
     assert(size == 1 | size == 2 | size == 4 | size == 8 | size == 16);
     value_name : bits(8 * 'size) = undefined : bits('size * 8);
-    let iswrite : bool(false) = false;
+    let iswrite = false;
     aligned : bool = undefined : bool;
     aligned = AArch64_CheckAlignment(address, size, acctype, iswrite);
     atomic : bool = undefined : bool;
@@ -23778,7 +23779,7 @@ val semihost_readparam : forall ('index : Int).
   int('index) -> bits(64) effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function semihost_readparam index = {
-    let base : vector(64, dec, bit) = semihost_arg(1);
+    let base = semihost_arg(1);
     let data : bits(64) = Mem(base + index * 8, 8, AccType_NORMAL);
     data
 }
@@ -23790,8 +23791,8 @@ function semihost () = {
     ret : int = undefined : int;
     match op {
       1 => {
-          let namep : vector(64, dec, bit) = semihost_readparam(0);
-          let mode : vector(64, dec, bit) = semihost_readparam(1);
+          let namep = semihost_readparam(0);
+          let mode = semihost_readparam(1);
           let 'len = UInt(semihost_readparam(2));
           handle : int = undefined : int;
           let acc : bits(2) = slice(mode, 2, 2);
@@ -23812,11 +23813,11 @@ function semihost () = {
       },
       2 => {
           let 'handle = UInt(semihost_readparam(0));
-          let 'ret : {'n, 'n == 0. int('n)} = 0;
+          let 'ret = 0;
           semihost_ret(__GetSlice_int(64, ret, 0))
       },
       3 => {
-          let buffer : vector(64, dec, bit) = semihost_arg(1);
+          let buffer = semihost_arg(1);
           let data : bits(8) = Mem(buffer, 1, AccType_NORMAL);
           putchar(UInt(data))
       },
@@ -23831,7 +23832,7 @@ function semihost () = {
       },
       5 => {
           let 'handle = UInt(semihost_readparam(0));
-          let buffer : vector(64, dec, bit) = semihost_readparam(1);
+          let buffer = semihost_readparam(1);
           let 'len = UInt(semihost_readparam(2));
           ret : int = 0;
           if handle == STDOUT_HANDLE | handle == STDERR_HANDLE then {
@@ -23847,18 +23848,18 @@ function semihost () = {
       },
       9 => {
           let 'handle = UInt(semihost_readparam(0));
-          let 'istty : {'n, 'n == 1. int('n)} = 1;
+          let 'istty = 1;
           semihost_ret(__GetSlice_int(64, istty, 0))
       },
       16 => {
           semihost_ret(__GetSlice_int(64, RoundTowardsZero(Real(UInt(semihost_clock)) / 10.0), 0))
       },
       19 => {
-          let 'errnum : {'n, 'n == 0. int('n)} = 0;
+          let 'errnum = 0;
           semihost_ret(__GetSlice_int(64, errnum, 0))
       },
       21 => {
-          let buffer : vector(64, dec, bit) = semihost_readparam(0);
+          let buffer = semihost_readparam(0);
           let 'length = UInt(semihost_readparam(1));
           if length >= 7 then {
               Mem(buffer + 0, 1, AccType_NORMAL) = __GetSlice_int(8, 97, 0);
@@ -23877,7 +23878,7 @@ function semihost () = {
           semihost_ret(__GetSlice_int(64, ret, 0))
       },
       22 => {
-          let buffer : vector(64, dec, bit) = semihost_readparam(0);
+          let buffer = semihost_readparam(0);
           Mem(buffer + 0, 8, AccType_NORMAL) = HEAP_BASE;
           Mem(buffer + 8, 8, AccType_NORMAL) = HEAP_LIMIT;
           Mem(buffer + 16, 8, AccType_NORMAL) = STACK_BASE;
@@ -23939,15 +23940,15 @@ overload NVMem = {aget_NVMem}
 val AArch64_AutoGen_SysRegRead : (bits(2), bits(2), bits(3), bits(4), bits(3), bits(4), bits(1)) -> bits(64) effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_AutoGen_SysRegRead (el, op0, op1, CRn, op2, CRm, read) = {
-    let __HCR_EL2_NV1 : vector(1, dec, bit) = [HCR_EL2[43]];
-    let __HCR_EL2_FMO : vector(1, dec, bit) = [HCR_EL2[3]];
-    let __HCR_EL2_NV2 : vector(1, dec, bit) = [HCR_EL2[45]];
-    let __HCR_EL2_E2H : vector(1, dec, bit) = [HCR_EL2[34]];
-    let __HCR_EL2_TGE : vector(1, dec, bit) = [HCR_EL2[27]];
-    let __SCR_EL3_EEL2 : vector(1, dec, bit) = [SCR_EL3[18]];
-    let __SCR_EL3_NS : vector(1, dec, bit) = [SCR_EL3[0]];
-    let __HCR_EL2_IMO : vector(1, dec, bit) = [HCR_EL2[4]];
-    let __HCR_EL2_NV : vector(1, dec, bit) = [HCR_EL2[42]];
+    let __HCR_EL2_NV1 = [HCR_EL2[43]];
+    let __HCR_EL2_FMO = [HCR_EL2[3]];
+    let __HCR_EL2_NV2 = [HCR_EL2[45]];
+    let __HCR_EL2_E2H = [HCR_EL2[34]];
+    let __HCR_EL2_TGE = [HCR_EL2[27]];
+    let __SCR_EL3_EEL2 = [SCR_EL3[18]];
+    let __SCR_EL3_NS = [SCR_EL3[0]];
+    let __HCR_EL2_IMO = [HCR_EL2[4]];
+    let __HCR_EL2_NV = [HCR_EL2[42]];
     if (CRm & 0x0) == 0x0 then {
         if op0 == 0b10 then {
             if op1 == 0b000 then {
@@ -26114,7 +26115,7 @@ function system_register_system_decode (Rt, op2, CRm, CRn, op1, o0, L) = {
     let 'sys_op2 = UInt(op2);
     let 'sys_crn = UInt(CRn);
     let 'sys_crm = UInt(CRm);
-    let read : bool = L == 0b1;
+    let read = L == 0b1;
     __PostDecode();
     system_register_system(read, sys_crm, sys_crn, sys_op0, sys_op1, sys_op2, t)
 }
@@ -26181,7 +26182,7 @@ function memory_vector_single_postinc_memory_vector_single_nowb__decode (Rt, Rn,
     let 't = UInt(Rt);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let wback : bool(true) = true;
+    let wback = true;
     scale : int = UInt(slice(opcode, 1, 2));
     let 'selem = UInt([opcode[0]] @ R) + 1;
     replicate : bool = false;
@@ -26218,8 +26219,8 @@ function memory_vector_single_postinc_memory_vector_single_nowb__decode (Rt, Rn,
           }
       }
     };
-    let memop : MemOp = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
-    let 'datasize : {'n, 'n in {128, 64}. int('n)} = if Q == 0b1 then 128 else 64;
+    let memop = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let 'datasize = if Q == 0b1 then 128 else 64;
     let 'esize = shl_int(8, scale);
     __PostDecode();
     memory_vector_single_nowb(datasize, esize, index, m, memop, n, replicate, selem, t, wback)
@@ -26232,7 +26233,7 @@ function memory_vector_single_nowb_memory_vector_single_nowb__decode (Rt, Rn, si
     let 't = UInt(Rt);
     let 'n = UInt(Rn);
     let 'm = undefined : int;
-    let wback : bool(false) = false;
+    let wback = false;
     scale : int = UInt(slice(opcode, 1, 2));
     let 'selem = UInt([opcode[0]] @ R) + 1;
     replicate : bool = false;
@@ -26269,8 +26270,8 @@ function memory_vector_single_nowb_memory_vector_single_nowb__decode (Rt, Rn, si
           }
       }
     };
-    let memop : MemOp = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
-    let 'datasize : {'n, 'n in {128, 64}. int('n)} = if Q == 0b1 then 128 else 64;
+    let memop = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let 'datasize = if Q == 0b1 then 128 else 64;
     let 'esize = shl_int(8, scale);
     __PostDecode();
     memory_vector_single_nowb(datasize, esize, index, m, memop, n, replicate, selem, t, wback)
@@ -26335,11 +26336,11 @@ function memory_vector_multiple_postinc_memory_vector_multiple_nowb__decode (Rt,
     let 't = UInt(Rt);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
-    let wback : bool(true) = true;
-    let memop : MemOp = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
-    let 'datasize : {'n, 'n in {128, 64}. int('n)} = if Q == 0b1 then 128 else 64;
+    let wback = true;
+    let memop = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let 'datasize = if Q == 0b1 then 128 else 64;
     let 'esize = shl_int(8, UInt(size));
-    let 'elements : {'n, 'n == div('datasize, 'esize). int('n)} = datasize / esize;
+    let 'elements = datasize / esize;
     rpt : int = undefined : int;
     selem : int = undefined : int;
     match opcode {
@@ -26391,11 +26392,11 @@ function memory_vector_multiple_nowb_memory_vector_multiple_nowb__decode (Rt, Rn
     let 't = UInt(Rt);
     let 'n = UInt(Rn);
     let 'm = undefined : int;
-    let wback : bool(false) = false;
-    let memop : MemOp = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
-    let 'datasize : {'n, 'n in {128, 64}. int('n)} = if Q == 0b1 then 128 else 64;
+    let wback = false;
+    let memop = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let 'datasize = if Q == 0b1 then 128 else 64;
     let 'esize = shl_int(8, UInt(size));
-    let 'elements : {'n, 'n == div('datasize, 'esize). int('n)} = datasize / esize;
+    let 'elements = datasize / esize;
     rpt : int = undefined : int;
     selem : int = undefined : int;
     match opcode {
@@ -26561,8 +26562,8 @@ val memory_single_simdfp_immediate_unsigned_memory_single_simdfp_immediate_signe
 
 function memory_single_simdfp_immediate_unsigned_memory_single_simdfp_immediate_signed_postidx__decode (Rt, Rn, imm12, opc, V, size) = {
     __unconditional = true;
-    let wback : bool(false) = false;
-    let postindex : bool(false) = false;
+    let wback = false;
+    let postindex = false;
     let 'scale = UInt([opc[1]] @ size);
     if scale > 4 then {
         throw(Error_Undefined())
@@ -26570,8 +26571,8 @@ function memory_single_simdfp_immediate_unsigned_memory_single_simdfp_immediate_
     let offset : bits(64) = LSL(ZeroExtend(imm12, 64), scale);
     let 'n = UInt(Rn);
     let 't = UInt(Rt);
-    let acctype : AccType = AccType_VEC;
-    let memop : MemOp = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let acctype = AccType_VEC;
+    let memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = shl_int(8, scale);
     __PostDecode();
     memory_single_simdfp_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, t, wback)
@@ -26581,17 +26582,17 @@ val memory_single_simdfp_immediate_signed_preidx_memory_single_simdfp_immediate_
 
 function memory_single_simdfp_immediate_signed_preidx_memory_single_simdfp_immediate_signed_postidx__decode (Rt, Rn, imm9, opc, V, size) = {
     __unconditional = true;
-    let wback : bool(true) = true;
-    let postindex : bool(false) = false;
+    let wback = true;
+    let postindex = false;
     let 'scale = UInt([opc[1]] @ size);
     if scale > 4 then {
         throw(Error_Undefined())
     };
-    let offset : vector(64, dec, bit) = SignExtend(imm9, 64);
+    let offset = SignExtend(imm9, 64);
     let 'n = UInt(Rn);
     let 't = UInt(Rt);
-    let acctype : AccType = AccType_VEC;
-    let memop : MemOp = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let acctype = AccType_VEC;
+    let memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = shl_int(8, scale);
     __PostDecode();
     memory_single_simdfp_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, t, wback)
@@ -26601,17 +26602,17 @@ val memory_single_simdfp_immediate_signed_postidx_memory_single_simdfp_immediate
 
 function memory_single_simdfp_immediate_signed_postidx_memory_single_simdfp_immediate_signed_postidx__decode (Rt, Rn, imm9, opc, V, size) = {
     __unconditional = true;
-    let wback : bool(true) = true;
-    let postindex : bool(true) = true;
+    let wback = true;
+    let postindex = true;
     let 'scale = UInt([opc[1]] @ size);
     if scale > 4 then {
         throw(Error_Undefined())
     };
-    let offset : vector(64, dec, bit) = SignExtend(imm9, 64);
+    let offset = SignExtend(imm9, 64);
     let 'n = UInt(Rn);
     let 't = UInt(Rt);
-    let acctype : AccType = AccType_VEC;
-    let memop : MemOp = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let acctype = AccType_VEC;
+    let memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = shl_int(8, scale);
     __PostDecode();
     memory_single_simdfp_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, t, wback)
@@ -26666,17 +26667,17 @@ val memory_single_simdfp_immediate_signed_offset_normal_memory_single_simdfp_imm
 
 function memory_single_simdfp_immediate_signed_offset_normal_memory_single_simdfp_immediate_signed_offset_normal__decode (Rt, Rn, imm9, opc, V, size) = {
     __unconditional = true;
-    let wback : bool(false) = false;
-    let postindex : bool(false) = false;
+    let wback = false;
+    let postindex = false;
     let 'scale = UInt([opc[1]] @ size);
     if scale > 4 then {
         throw(Error_Undefined())
     };
-    let offset : vector(64, dec, bit) = SignExtend(imm9, 64);
+    let offset = SignExtend(imm9, 64);
     let 'n = UInt(Rn);
     let 't = UInt(Rt);
-    let acctype : AccType = AccType_VEC;
-    let memop : MemOp = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let acctype = AccType_VEC;
+    let memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = shl_int(8, scale);
     __PostDecode();
     memory_single_simdfp_immediate_signed_offset_normal(acctype, datasize, memop, n, offset, postindex, t, wback)
@@ -26807,7 +26808,7 @@ function memory_single_general_register_memory_single_general_register__decode (
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
     signed : bool = undefined : bool;
-    regsize : int = undefined : int;
+    regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
@@ -26828,6 +26829,9 @@ function memory_single_general_register_memory_single_general_register__decode (
         }
     };
     let 'datasize = shl_int(8, scale);
+    let 'regsize = regsize;
+    let signed = signed;
+    assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
     memory_single_general_register(acctype, datasize, extend_type, m, memop, n, postindex, regsize, shift, signed, t, wback)
@@ -26951,7 +26955,7 @@ function memory_single_general_immediate_unsigned_memory_single_general_immediat
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
     signed : bool = undefined : bool;
-    regsize : int = undefined : int;
+    regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
@@ -26972,6 +26976,9 @@ function memory_single_general_immediate_unsigned_memory_single_general_immediat
         }
     };
     let 'datasize = shl_int(8, scale);
+    let regsize = regsize;
+    let signed = signed;
+    assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
     memory_single_general_immediate_unsigned(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
@@ -26984,7 +26991,7 @@ val memory_single_general_immediate_signed_postidx : forall 'datasize 'n ('posti
 function memory_single_general_immediate_signed_postidx (acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback__arg) = {
     wback : bool = wback__arg;
     if HaveMTEExt() then {
-        let is_load_store : bool = memop == MemOp_STORE | memop == MemOp_LOAD;
+        let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
         SetNotTagCheckedInstruction((is_load_store & n == 31) & ~(wback))
     };
     address : bits(64) = undefined : bits(64);
@@ -27095,7 +27102,7 @@ function memory_single_general_immediate_unsigned_memory_single_general_immediat
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
     signed : bool = undefined : bool;
-    regsize : int = undefined : int;
+    regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
@@ -27113,6 +27120,9 @@ function memory_single_general_immediate_unsigned_memory_single_general_immediat
         }
     };
     let 'datasize = shl_int(8, scale);
+    let regsize = regsize;
+    let signed = signed;
+    assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
     memory_single_general_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
@@ -27131,7 +27141,7 @@ function memory_single_general_immediate_signed_preidx_memory_single_general_imm
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
     signed : bool = undefined : bool;
-    regsize : int = undefined : int;
+    regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
@@ -27149,6 +27159,9 @@ function memory_single_general_immediate_signed_preidx_memory_single_general_imm
         }
     };
     let 'datasize = shl_int(8, scale);
+    let regsize = regsize;
+    let signed = signed;
+    assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
     memory_single_general_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
@@ -27167,7 +27180,7 @@ function memory_single_general_immediate_signed_postidx_memory_single_general_im
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
     signed : bool = undefined : bool;
-    regsize : int = undefined : int;
+    regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
@@ -27185,6 +27198,9 @@ function memory_single_general_immediate_signed_postidx_memory_single_general_im
         }
     };
     let 'datasize = shl_int(8, scale);
+    let regsize = regsize;
+    let signed = signed;
+    assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
     memory_single_general_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
@@ -27253,10 +27269,10 @@ function memory_single_general_immediate_signed_pac_decode (Rt, Rn, W, imm9, S, 
     };
     let 't = UInt(Rt);
     let 'n = UInt(Rn);
-    let wback : bool = W == 0b1;
-    let use_key_a : bool = M == 0b0;
-    let S10 : vector(1 + 9, dec, bit) = S @ imm9;
-    let 'scale : {'n, 'n == 3. int('n)} = 3;
+    let wback = W == 0b1;
+    let use_key_a = M == 0b0;
+    let S10 = S @ imm9;
+    let 'scale = 3;
     let offset : bits(64) = LSL(SignExtend(S10, 64), scale);
     __PostDecode();
     memory_single_general_immediate_signed_pac(n, offset, t, use_key_a, wback)
@@ -27269,7 +27285,7 @@ val memory_single_general_immediate_signed_offset_unpriv : forall 'datasize 'n (
 function memory_single_general_immediate_signed_offset_unpriv (acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback__arg) = {
     wback : bool = wback__arg;
     if HaveMTEExt() then {
-        let is_load_store : bool = memop == MemOp_STORE | memop == MemOp_LOAD;
+        let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
         SetNotTagCheckedInstruction((is_load_store & n == 31) & ~(wback))
     };
     address : bits(64) = undefined : bits(64);
@@ -27388,7 +27404,7 @@ function memory_single_general_immediate_signed_offset_unpriv_memory_single_gene
     };
     memop : MemOp = undefined : MemOp;
     signed : bool = undefined : bool;
-    regsize : int = undefined : int;
+    regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
@@ -27406,6 +27422,9 @@ function memory_single_general_immediate_signed_offset_unpriv_memory_single_gene
         }
     };
     let 'datasize = shl_int(8, scale);
+    let regsize = regsize;
+    let signed = signed;
+    assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
     memory_single_general_immediate_signed_offset_unpriv(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
@@ -27418,7 +27437,7 @@ val memory_single_general_immediate_signed_offset_normal : forall 'datasize 'n (
 function memory_single_general_immediate_signed_offset_normal (acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback__arg) = {
     wback : bool = wback__arg;
     if HaveMTEExt() then {
-        let is_load_store : bool = memop == MemOp_STORE | memop == MemOp_LOAD;
+        let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
         SetNotTagCheckedInstruction((is_load_store & n == 31) & ~(wback))
     };
     address : bits(64) = undefined : bits(64);
@@ -27529,7 +27548,7 @@ function memory_single_general_immediate_signed_offset_normal_memory_single_gene
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
     signed : bool = undefined : bool;
-    regsize : int = undefined : int;
+    regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
@@ -27550,6 +27569,9 @@ function memory_single_general_immediate_signed_offset_normal_memory_single_gene
         }
     };
     let 'datasize = shl_int(8, scale);
+    let regsize = regsize;
+    let signed = signed;
+    assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
     memory_single_general_immediate_signed_offset_normal(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
@@ -27562,7 +27584,7 @@ val memory_single_general_immediate_signed_offset_lda_stl : forall 'datasize 'n 
 function memory_single_general_immediate_signed_offset_lda_stl (acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback__arg) = {
     wback : bool = wback__arg;
     if HaveMTEExt() then {
-        let is_load_store : bool = memop == MemOp_STORE | memop == MemOp_LOAD;
+        let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
         SetNotTagCheckedInstruction((is_load_store & n == 31) & ~(wback))
     };
     address : bits(64) = undefined : bits(64);
@@ -27673,7 +27695,7 @@ function memory_single_general_immediate_signed_offset_lda_stl_memory_single_gen
     let acctype : AccType = AccType_ORDERED;
     memop : MemOp = undefined : MemOp;
     signed : bool = undefined : bool;
-    regsize : int = undefined : int;
+    regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
@@ -27694,6 +27716,9 @@ function memory_single_general_immediate_signed_offset_lda_stl_memory_single_gen
         }
     };
     let 'datasize = shl_int(8, scale);
+    let regsize = regsize;
+    let signed = signed;
+    assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
     memory_single_general_immediate_signed_offset_lda_stl(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
@@ -27938,12 +27963,12 @@ function memory_pair_general_postidx (acctype, datasize, memop, n, offset, posti
     let 'dbytes : {'n, 'n == div('datasize, 8). int('n)} = datasize / 8;
     rt_unknown : bool = false;
     if HaveMTEExt() then {
-        let is_load_store : bool = memop == MemOp_STORE | memop == MemOp_LOAD;
+        let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
         SetNotTagCheckedInstruction((is_load_store & n == 31) & ~(wback))
     };
     wb_unknown : bool = false;
     if ((memop == MemOp_LOAD & wback) & (t == n | t2 == n)) & n != 31 then {
-        let c : Constraint = ConstrainUnpredictable(Unpredictable_WBOVERLAPLD);
+        let c = ConstrainUnpredictable(Unpredictable_WBOVERLAPLD);
         assert(c == Constraint_WBSUPPRESS | c == Constraint_UNKNOWN | c == Constraint_UNDEF | c == Constraint_NOP);
         match c {
           Constraint_WBSUPPRESS => {
@@ -27961,7 +27986,7 @@ function memory_pair_general_postidx (acctype, datasize, memop, n, offset, posti
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
-        let c : Constraint = ConstrainUnpredictable(Unpredictable_WBOVERLAPST);
+        let c = ConstrainUnpredictable(Unpredictable_WBOVERLAPST);
         assert(c == Constraint_NONE | c == Constraint_UNKNOWN | c == Constraint_UNDEF | c == Constraint_NOP);
         match c {
           Constraint_NONE => {
@@ -27979,7 +28004,7 @@ function memory_pair_general_postidx (acctype, datasize, memop, n, offset, posti
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
-        let c : Constraint = ConstrainUnpredictable(Unpredictable_LDPOVERLAP);
+        let c = ConstrainUnpredictable(Unpredictable_LDPOVERLAP);
         assert(c == Constraint_UNKNOWN | c == Constraint_UNDEF | c == Constraint_NOP);
         match c {
           Constraint_UNKNOWN => {
@@ -28129,11 +28154,11 @@ function memory_pair_general_noalloc (acctype, datasize, memop, n, offset, posti
     let 'dbytes : {'n, 'n == div('datasize, 8). int('n)} = datasize / 8;
     rt_unknown : bool = false;
     if HaveMTEExt() then {
-        let is_load_store : bool = memop == MemOp_STORE | memop == MemOp_LOAD;
+        let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
         SetNotTagCheckedInstruction((is_load_store & n == 31) & ~(wback))
     };
     if memop == MemOp_LOAD & t == t2 then {
-        let c : Constraint = ConstrainUnpredictable(Unpredictable_LDPOVERLAP);
+        let c = ConstrainUnpredictable(Unpredictable_LDPOVERLAP);
         assert(c == Constraint_UNKNOWN | c == Constraint_UNDEF | c == Constraint_NOP);
         match c {
           Constraint_UNKNOWN => {
@@ -28257,11 +28282,11 @@ function memory_ordered_decode (Rt, Rn, Rt2, o0, Rs, o1, L, o2, size) = {
     let 't = UInt(Rt);
     let 't2 = UInt(Rt2);
     let 's = UInt(Rs);
-    let acctype : AccType = if o0 == 0b0 then AccType_LIMITEDORDERED else AccType_ORDERED;
-    let memop : MemOp = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let acctype = if o0 == 0b0 then AccType_LIMITEDORDERED else AccType_ORDERED;
+    let memop = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'elsize = shl_int(8, UInt(size));
-    let 'regsize : {'n, 'n in {64, 32}. int('n)} = if elsize == 64 then 64 else 32;
-    let 'datasize : {'n, 'n == 'elsize. int('n)} = elsize;
+    let 'regsize = if elsize == 64 then 64 else 32;
+    let 'datasize = elsize;
     __PostDecode();
     memory_ordered(acctype, datasize, memop, n, regsize, t)
 }
@@ -28294,10 +28319,10 @@ function memory_orderedrcpc_decode (Rt, Rn, opc, o3, Rs, R, A, V, size) = {
     let 'n = UInt(Rn);
     let 't = UInt(Rt);
     let 's = UInt(Rs);
-    let acctype : AccType = AccType_ORDERED;
+    let acctype = AccType_ORDERED;
     let 'elsize = shl_int(8, UInt(size));
-    let 'regsize : {'n, 'n in {64, 32}. int('n)} = if elsize == 64 then 64 else 32;
-    let 'datasize : {'n, 'n == 'elsize. int('n)} = elsize;
+    let 'regsize = if elsize == 64 then 64 else 32;
+    let 'datasize = elsize;
     __PostDecode();
     memory_orderedrcpc(acctype, datasize, n, regsize, t)
 }
@@ -28307,7 +28332,7 @@ val memory_literal_simdfp : forall 'size 't,
   (bits(64), int('size), int('t)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_literal_simdfp (offset, size, t) = {
-    let address : vector(64, dec, bit) = PC() + offset;
+    let address = PC() + offset;
     data : bits(8 * 'size) = undefined : bits('size * 8);
     CheckFPAdvSIMDEnabled64();
     let data = Mem(address, size, AccType_VEC);
@@ -28389,6 +28414,7 @@ function memory_literal_general_decode (Rt, imm19, V, opc) = {
       }
     };
     let offset = SignExtend(imm19 @ 0b00, 64);
+    let size = size;
     __PostDecode();
     memory_literal_general(memop, offset, signed, size, t)
 }
@@ -28528,6 +28554,7 @@ function memory_exclusive_single (acctype, datasize, elsize, memop, n, pair, reg
           } else {
               assert(constraint('dbytes in {1, 2, 4, 8, 16}));
               data = aget_Mem(address, dbytes, acctype);
+              assert(regsize >= 'datasize);
               aset_X(t, ZeroExtend(data, regsize))
           }
       }
@@ -28542,12 +28569,12 @@ function memory_exclusive_single_decode (Rt, Rn, Rt2, o0, Rs, o1, L, o2, size) =
     let 't = UInt(Rt);
     let 't2 = UInt(Rt2);
     let 's = UInt(Rs);
-    let acctype : AccType = if o0 == 0b1 then AccType_ORDEREDATOMIC else AccType_ATOMIC;
-    let pair : bool(false) = false;
-    let memop : MemOp = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let acctype = if o0 == 0b1 then AccType_ORDEREDATOMIC else AccType_ATOMIC;
+    let pair = false;
+    let memop = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'elsize = shl_int(8, UInt(size));
-    let 'regsize : {'n, 'n in {64, 32}. int('n)} = if elsize == 64 then 64 else 32;
-    let 'datasize : {'n, ('n == 'elsize * 2 | 'n == 'elsize). int('n)} = if pair then elsize * 2 else elsize;
+    let 'regsize = if elsize == 64 then 64 else 32;
+    let 'datasize = if pair then elsize * 2 else elsize;
     __PostDecode();
     memory_exclusive_single(acctype, datasize, elsize, memop, n, pair, regsize, s, t, t2)
 }
@@ -28687,6 +28714,7 @@ function memory_exclusive_pair (acctype, datasize, elsize, memop, n, pair, regsi
           } else {
               assert(constraint('dbytes in {1, 2, 4, 8, 16}));
               data = aget_Mem(address, dbytes, acctype);
+              assert(regsize >= 'datasize);
               aset_X(t, ZeroExtend(data, regsize))
           }
       }
@@ -28701,12 +28729,12 @@ function memory_exclusive_pair_decode (Rt, Rn, Rt2, o0, Rs, o1, L, o2, sz) = {
     let 't = UInt(Rt);
     let 't2 = UInt(Rt2);
     let 's = UInt(Rs);
-    let acctype : AccType = if o0 == 0b1 then AccType_ORDEREDATOMIC else AccType_ATOMIC;
-    let pair : bool(true) = true;
-    let memop : MemOp = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
+    let acctype = if o0 == 0b1 then AccType_ORDEREDATOMIC else AccType_ATOMIC;
+    let pair = true;
+    let memop = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'elsize = shl_int(32, UInt(sz));
-    let 'regsize : {'n, 'n in {64, 32}. int('n)} = if elsize == 64 then 64 else 32;
-    let 'datasize : {'n, ('n == 'elsize * 2 | 'n == 'elsize). int('n)} = if pair then elsize * 2 else elsize;
+    let 'regsize = if elsize == 64 then 64 else 32;
+    let 'datasize = if pair then elsize * 2 else elsize;
     __PostDecode();
     memory_exclusive_pair(acctype, datasize, elsize, memop, n, pair, regsize, s, t, t2)
 }
@@ -28745,9 +28773,9 @@ function memory_atomicops_swp_decode (Rt, Rn, opc, o3, Rs, R, A, V, size) = {
     let 'n = UInt(Rn);
     let 's = UInt(Rs);
     let 'datasize = shl_int(8, UInt(size));
-    let 'regsize : {'n, 'n in {64, 32}. int('n)} = if datasize == 64 then 64 else 32;
-    let ldacctype : AccType = if A == 0b1 & Rt != 0b11111 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
-    let stacctype : AccType = if R == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
+    let 'regsize = if datasize == 64 then 64 else 32;
+    let ldacctype = if A == 0b1 & Rt != 0b11111 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
+    let stacctype = if R == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
     __PostDecode();
     memory_atomicops_swp(datasize, ldacctype, n, regsize, s, stacctype, t)
 }
@@ -28812,9 +28840,9 @@ function memory_atomicops_st_decode (Rt, Rn, opc, o3, Rs, R, A, V, size) = {
     let 'n = UInt(Rn);
     let 's = UInt(Rs);
     let 'datasize = shl_int(8, UInt(size));
-    let 'regsize : {'n, 'n in {64, 32}. int('n)} = if datasize == 64 then 64 else 32;
-    let ldacctype : AccType = AccType_ATOMICRW;
-    let stacctype : AccType = if R == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
+    let 'regsize = if datasize == 64 then 64 else 32;
+    let ldacctype = AccType_ATOMICRW;
+    let stacctype = if R == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
     op : MemAtomicOp = undefined : MemAtomicOp;
     match opc {
       0b000 => {
@@ -28911,9 +28939,9 @@ function memory_atomicops_ld_decode (Rt, Rn, opc, o3, Rs, R, A, V, size) = {
     let 'n = UInt(Rn);
     let 's = UInt(Rs);
     let 'datasize = shl_int(8, UInt(size));
-    let 'regsize : {'n, 'n in {64, 32}. int('n)} = if datasize == 64 then 64 else 32;
-    let ldacctype : AccType = if A == 0b1 & Rt != 0b11111 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
-    let stacctype : AccType = if R == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
+    let 'regsize = if datasize == 64 then 64 else 32;
+    let ldacctype = if A == 0b1 & Rt != 0b11111 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
+    let stacctype = if R == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
     op : MemAtomicOp = undefined : MemAtomicOp;
     match opc {
       0b000 => {
@@ -28984,9 +29012,9 @@ function memory_atomicops_cas_single_decode (Rt, Rn, Rt2, o0, Rs, o1, L, o2, siz
     let 't = UInt(Rt);
     let 's = UInt(Rs);
     let 'datasize = shl_int(8, UInt(size));
-    let 'regsize : {'n, 'n in {64, 32}. int('n)} = if datasize == 64 then 64 else 32;
-    let ldacctype : AccType = if L == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
-    let stacctype : AccType = if o0 == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
+    let 'regsize = if datasize == 64 then 64 else 32;
+    let ldacctype = if L == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
+    let stacctype = if o0 == 0b1 then AccType_ORDEREDATOMICRW else AccType_ATOMICRW;
     __PostDecode();
     memory_atomicops_cas_single(datasize, ldacctype, n, regsize, s, stacctype, t)
 }
@@ -29255,7 +29283,7 @@ function IC_IVAU val_name = {
     if PSTATE.EL == EL0 & ELUsingAArch32(PSTATE.EL) then {
         UndefinedFault()
     };
-    let iswrite : bool(false) = false;
+    let iswrite = false;
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
         memaddrdesc = AArch64_TranslateAddress(val_name, AccType_DC, iswrite, true, 4);
@@ -29325,7 +29353,7 @@ function DC_CVAU val_name = {
     } else {
         acctype = AccType_DC
     };
-    let iswrite : bool(false) = false;
+    let iswrite = false;
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
         memaddrdesc = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 4);
@@ -29354,7 +29382,7 @@ function DC_CVAC val_name = {
     } else {
         acctype = AccType_DC
     };
-    let iswrite : bool(false) = false;
+    let iswrite = false;
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
         memaddrdesc = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 4);
@@ -29405,7 +29433,7 @@ function DC_CIVAC val_name = {
     } else {
         acctype = AccType_DC
     };
-    let iswrite : bool(false) = false;
+    let iswrite = false;
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
         memaddrdesc = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 8);
@@ -30166,12 +30194,12 @@ function system_sysops_decode (Rt, op2, CRm, CRn, op1, op0, L) = {
     __unconditional = true;
     AArch64_CheckSystemAccess(0b01, op1, CRn, CRm, op2, Rt, L);
     let 't = UInt(Rt);
-    let 'sys_op0 : {'n, 'n == 1. int('n)} = 1;
+    let 'sys_op0 = 1;
     let 'sys_op1 = UInt(op1);
     let 'sys_op2 = UInt(op2);
     let 'sys_crn = UInt(CRn);
     let 'sys_crm = UInt(CRm);
-    let has_result : bool = L == 0b1;
+    let has_result = L == 0b1;
     __PostDecode();
     system_sysops(has_result, sys_crm, sys_crn, sys_op0, sys_op1, sys_op2, t)
 }

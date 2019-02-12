@@ -16,7 +16,7 @@ This currently requires the latest [Sail from github](https://github.com/rems-pr
 make aarch64
 ```
 
-will build an executable version of the model by compiling it to C. Due to the sizeo of the model this initial build can be *very* slow, especially as it has optimizations enabled. By default Sail will create a file `z3_problems` which caches queries to z3. This greatly improves the performance on subsequent builds.
+will build an executable version of the model by compiling it to C. Due to the size of the model this initial build can be *very* slow, especially as it has optimizations enabled. By default Sail will create a file `z3_problems` which caches queries to z3. This greatly improves the performance on subsequent builds.
 
 ## Booting Linux
 

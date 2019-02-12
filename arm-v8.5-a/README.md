@@ -10,7 +10,7 @@ an OS). The Sail version currently contains all 64-bit instructions.
 
 ## Building
 
-This currently requires the very latest [Sail from github](https://github.com/rems-project/sail). Some language features required for this model have not yet been merged into the main sail2 branch, so `git checkout asl_flow2` is required before building Sail.
+This currently requires the latest [Sail from github](https://github.com/rems-project/sail). Note that the default branch which should be used is called `sail2` not `master`.
 
 ```
 make aarch64

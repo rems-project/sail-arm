@@ -12,7 +12,7 @@ check: model/*.sail
 	sail -just_check -verbose 1 $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS)
 
 aarch64.c: model/*.sail
-	sail -c -O $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64.c.tmp
+	sail -c -O -Oconstant_fold $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64.c.tmp
 	mv aarch64.c.tmp aarch64.c
 
 aarch64: aarch64.c

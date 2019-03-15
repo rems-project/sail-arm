@@ -10,7 +10,7 @@ an OS). The Sail version currently contains all 64-bit instructions.
 
 ## Building
 
-This currently requires the latest [Sail from github](https://github.com/rems-project/sail). Note that the default branch which should be used is called `sail2` not `master`.
+This currently requires at least Sail 0.8 from our opam repository, see [here](https://github.com/rems-project/sail/wiki/OPAMInstall) for installation instructions. If building the latest Sail from github note that the default branch which should be used is called `sail2` not `master`.
 
 ```
 make aarch64

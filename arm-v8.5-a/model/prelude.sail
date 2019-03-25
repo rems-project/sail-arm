@@ -341,14 +341,14 @@ val quotient_real = {ocaml: "quotient_real", lem: "realDiv", c: "div_real"} : (r
 
 val quotient = {ocaml: "quotient", lem: "integerDiv", c: "tdiv_int"} : (int, int) -> int
 
-overload operator / = {quotient_nat, quotient, quotient_real}
+overload operator / = {ediv_int, quotient_nat, quotient, quotient_real}
 
 val modulus = {ocaml: "modulus", lem: "hardware_mod", c: "tmod_int" } :
   forall 'n, 'n >= 0. (int, int('n)) -> {'m, 0 <= 'm < 'n. int('m)}
 
 //val modulus = {ocaml: "modulus", lem: "hardware_mod", c: "tmod_int"} : (int, int) -> int
 
-overload operator % = {modulus}
+overload operator % = {emod_int, modulus}
 
 val Real = {ocaml: "to_real", lem: "realFromInteger", c: "to_real"} : int -> real
 

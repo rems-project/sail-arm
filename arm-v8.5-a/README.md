@@ -6,7 +6,7 @@ instruction-set architecture, based on the Arm XML release (version Arm v8.5 00b
 https://developer.arm.com/products/architecture/cpu-architecture/a-profile/exploration-tools
 
 (with additional glue code and system register material needed to boot
-an OS). The Sail version currently contains all 64-bit instructions.
+an OS). The Sail version currently contains all 32-bit and 64-bit instructions.
 
 ## Building
 

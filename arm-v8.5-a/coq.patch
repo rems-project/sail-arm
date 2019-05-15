@@ -1,0 +1,33 @@
+--- aarch64.v.plain	2019-05-07 15:14:12.000000001 +0100
++++ aarch64.v	2019-05-15 10:53:37.000000001 +0100
+@@ -13989,8 +14002,7 @@
+ (ipaddress : mword 52) (s1_nonsecure : mword 1) (vaddress : mword 64) (acctype : AccType)
+ (iswrite : bool) (secondstage : bool) (s2fs1walk : bool) (size : Z) (_reclimit : Z) 
+ (_acc : Acc (Zwf 0) _reclimit)
+-{struct _acc} : M (TLBRecord) :=
+-   
++{struct _acc} : M (TLBRecord). refine (
+    catch_early_return
+      (liftR (assert_exp' (Z.geb _reclimit 0) "recursion limit reached") >>= fun _ =>
+       (if sumbool_of_bool ((negb secondstage)) then
+@@ -15590,7 +15602,8 @@
+                 : MR (TLBRecord) _)
+              : MR (TLBRecord) _)
+           : MR (TLBRecord) _)
+-       : MR (TLBRecord) _).
++      : MR (TLBRecord) _)).
++Defined.
+ 
+ Definition AArch64_SecondStageTranslate
+ (_arg0 : AddressDescriptor) (_arg1 : mword 64) (_arg2 : AccType) (_arg3 : bool) (_arg4 : bool)
+@@ -23591,8 +23604,8 @@
+        (fun i _ unit_var =>
+          (if ((eq_vec (vec_of_bits [bitvector_access_A x i]  : mword 1)
+                  (vec_of_bits [B1]  : mword 1))) then
+-            (early_return (build_ex
+-            (projT1
++            (early_return ((*build_ex*)
++            ((*projT1*)
+             (build_ex
+             i
+              : {n : Z & ArithFact (-1 <= n /\ n <= (N - 1))}))))

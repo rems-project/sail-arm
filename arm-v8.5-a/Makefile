@@ -15,6 +15,9 @@ aarch64.c: model/*.sail
 	sail -c -O -Oconstant_fold $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64.c.tmp
 	mv aarch64.c.tmp aarch64.c
 
+aarch64.v: model/*.sail
+	sail -verbose 1 -coq -dcoq_undef_axioms -undefined_gen -coq_lib aarch64_extras -o aarch64 $(AARCH_FLAGS) $(AARCH_SRCS) coq_termination.sail
+
 aarch64: aarch64.c
 	gcc -O2 aarch64.c $(SAIL_DIR)/lib/*.c -lgmp -lz -I $(SAIL_DIR)/lib/ -o aarch64
 
@@ -27,4 +30,7 @@ clean:
 	-rm -f aarch64
 	-rm -f aarch64.lem
 	-rm -f aarch64_types.lem
-
+	-rm -f aarch64.v aarch64_types.v
+	-rm -f aarch64.vo aarch64_types.vo aarch64_extras.vo
+	-rm -f aarch64.glob aarch64_types.glob aarch64_extras.glob
+	-rm -f .aarch64.aux .aarch64_types.aux .aarch64_extras.aux

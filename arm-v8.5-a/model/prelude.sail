@@ -60,8 +60,6 @@ $include <trace.sail>
 
 type bits ('n : Int) = vector('n, dec, bit)
 
-val eq_bit = {ocaml: "(fun (x, y) -> x = y)", lem: "eq", interpreter: "eq_anything", c: "eq_bit"} : (bit, bit) -> bool
-
 val eq_vec = {ocaml: "eq_list", lem: "eq_vec", c: "eq_bits"} : forall 'n. (bits('n), bits('n)) -> bool
 
 val eq_string = {ocaml: "eq_string", lem: "eq", c: "eq_string"} : (string, string) -> bool

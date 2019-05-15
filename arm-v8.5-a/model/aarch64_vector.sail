@@ -7073,7 +7073,7 @@ function vector_arithmetic_binary_uniform_maxmin_fp_1985_decode (Rd, Rn, opcode,
 }
 
 val vector_arithmetic_binary_uniform_logical_bsleor : forall 'd 'datasize 'm 'n,
-  ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('m), int('n), VBitOp) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_arithmetic_binary_uniform_logical_bsleor (d, datasize, m, n, op) = {

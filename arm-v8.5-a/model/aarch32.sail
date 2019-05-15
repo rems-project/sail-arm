@@ -1793,7 +1793,7 @@ function aget_D n = {
 
 overload D = {aget_D}
 
-val UnsignedSat : forall ('N : Int) ('i : Int).
+val UnsignedSat : forall ('N : Int) ('i : Int), 'N >= 0.
   (int('i), int('N)) -> bits('N) effect {undef}
 
 function UnsignedSat (i, N) = {
@@ -1803,7 +1803,7 @@ function UnsignedSat (i, N) = {
     result
 }
 
-val SignedSat : forall ('N : Int) ('i : Int).
+val SignedSat : forall ('N : Int) ('i : Int), 'N >= 0.
   (int('i), int('N)) -> bits('N) effect {undef}
 
 function SignedSat (i, N) = {

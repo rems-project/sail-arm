@@ -2591,7 +2591,7 @@ function __WriteMemory (N, address, val_name) = {
     return()
 }
 
-val __ReadMemory : forall ('N : Int).
+val __ReadMemory : forall ('N : Int), 'N >= 0.
   (int('N), bits(56)) -> bits(8 * 'N) effect {rmem, rreg}
 
 function __ReadMemory (N, address) = {
@@ -2723,7 +2723,7 @@ function AArch32_ReportHypEntry exception = {
     return()
 }
 
-val Replicate : forall ('M : Int) ('N : Int), ('M >= 1 & mod('N, 'M) == 0).
+val Replicate : forall ('M : Int) ('N : Int), ('N >= 0 & 'M >= 1 & mod('N, 'M) == 0).
   (implicit('N), bits('M)) -> bits('N)
 
 function Replicate (N, x) = replicate_bits(x, N / 'M)
@@ -3084,7 +3084,7 @@ function ExceptionSyndrome typ = {
     r
 }
 
-val ConstrainUnpredictableBits : forall ('width : Int).
+val ConstrainUnpredictableBits : forall ('width : Int), 'width >= 0.
   (implicit('width), Unpredictable) -> (Constraint, bits('width)) effect {undef}
 
 function ConstrainUnpredictableBits (width, which) = {
@@ -3141,7 +3141,7 @@ function SignExtend__1 (N, x) = {
     SignExtend(x, 'N)
 }
 
-val Ones : forall ('N : Int). implicit('N) -> bits('N)
+val Ones : forall ('N : Int), 'N >= 0. implicit('N) -> bits('N)
 
 function Ones N = replicate_bits(0b1, N)
 
@@ -3395,7 +3395,7 @@ function GTESetupExtObs () = {
 
 val Align__0 : forall ('x : Int) ('y : Int). (int('x), int('y)) -> int
 
-val Align__1 : forall ('N : Int) ('y : Int). (bits('N), int('y)) -> bits('N)
+val Align__1 : forall ('N : Int) ('y : Int), 'N >= 0. (bits('N), int('y)) -> bits('N)
 
 overload Align = {Align__0, Align__1}
 

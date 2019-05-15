@@ -154,7 +154,7 @@ function FPAbs op = {
     0b0 @ slice(op, 0, 'N - 1)
 }
 
-val UnsignedSatQ : forall ('N : Int) ('i : Int).
+val UnsignedSatQ : forall ('N : Int) ('i : Int), 'N >= 0.
   (int('i), int('N)) -> (bits('N), bool) effect {undef}
 
 function UnsignedSatQ (i, N) = {
@@ -175,7 +175,7 @@ function UnsignedSatQ (i, N) = {
     return((__GetSlice_int(N, result, 0), saturated))
 }
 
-val SignedSatQ : forall ('N : Int) ('i : Int).
+val SignedSatQ : forall ('N : Int) ('i : Int), 'N >= 0.
   (int('i), int('N)) -> (bits('N), bool) effect {undef}
 
 function SignedSatQ (i, N) = {
@@ -196,7 +196,7 @@ function SignedSatQ (i, N) = {
     return((__GetSlice_int(N, result, 0), saturated))
 }
 
-val SatQ : forall ('N : Int) ('i : Int) ('unsigned : Bool).
+val SatQ : forall ('N : Int) ('i : Int) ('unsigned : Bool), 'N >= 0.
   (int('i), int('N), bool('unsigned)) -> (bits('N), bool) effect {undef}
 
 function SatQ (i, N, unsigned) = {
@@ -385,7 +385,7 @@ function FPProcessException (exception, fpcr) = {
     return()
 }
 
-val FPRoundBase : forall ('N : Int).
+val FPRoundBase : forall ('N : Int), 'N >= 0.
   (implicit('N), real, bits(32), FPRounding) -> bits('N) effect {escape, rreg, undef, wreg}
 
 function FPRoundBase (N, op, fpcr, rounding) = {
@@ -513,7 +513,7 @@ function FPRoundBase (N, op, fpcr, rounding) = {
     result
 }
 
-val FPRoundCV : forall ('N : Int).
+val FPRoundCV : forall ('N : Int), 'N >= 0.
   (implicit('N), real, bits(32), FPRounding) -> bits('N) effect {escape, rreg, undef, wreg}
 
 function FPRoundCV (N, op, fpcr, rounding) = {
@@ -521,10 +521,10 @@ function FPRoundCV (N, op, fpcr, rounding) = {
     FPRoundBase(op, fpcr, rounding)
 }
 
-val FPRound__0 : forall ('N : Int).
+val FPRound__0 : forall ('N : Int), 'N >= 0.
   (implicit('N), real, bits(32), FPRounding) -> bits('N) effect {escape, rreg, undef, wreg}
 
-val FPRound__1 : forall ('N : Int).
+val FPRound__1 : forall ('N : Int), 'N >= 0.
   (implicit('N), real, bits(32)) -> bits('N) effect {escape, rreg, undef, wreg}
 
 overload FPRound = {FPRound__0, FPRound__1}
@@ -538,7 +538,7 @@ function FPRound__1 (N, op, fpcr) = {
     FPRound(op, fpcr, FPRoundingMode(fpcr))
 }
 
-val FixedToFP : forall ('M : Int) ('N : Int) ('fbits : Int), 'M >= 0.
+val FixedToFP : forall ('M : Int) ('N : Int) ('fbits : Int), 'M >= 0 & 'N >= 0.
   (implicit('N), bits('M), int('fbits), bool, bits(32), FPRounding) -> bits('N) effect {escape, undef, wreg, rreg}
 
 function FixedToFP (N, op, fbits, unsigned, fpcr, rounding) = {

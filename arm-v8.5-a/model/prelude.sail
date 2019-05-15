@@ -207,7 +207,7 @@ val __raw_SetSlice_int : forall 'w. (atom('w), int, int, bits('w)) -> int
 
 val __raw_GetSlice_int = "get_slice_int" : forall 'w. (atom('w), int, int) -> bits('w)
 
-val __GetSlice_int : forall 'n. (atom('n), int, int) -> bits('n)
+val __GetSlice_int : forall 'n, 'n >= 0. (atom('n), int, int) -> bits('n)
 
 function __GetSlice_int (n, m, o) = __raw_GetSlice_int(n, m, o)
 
@@ -368,7 +368,7 @@ val print_bits = "print_bits" : forall 'n. (string, bits('n)) -> unit
 
 val prerr_bits = "prerr_bits" : forall 'n. (string, bits('n)) -> unit
 
-val replicate_bits = "replicate_bits" : forall 'n 'm. (bits('n), atom('m)) -> bits('n * 'm)
+val replicate_bits = "replicate_bits" : forall 'n 'm, 'm >= 0. (bits('n), atom('m)) -> bits('n * 'm)
 
 /*! We need `one_cast` and `zero_cast` for some of the AutoGen
 functions in the specification, but it's not very nice. */
@@ -430,9 +430,9 @@ function __tarmacEvent(str: string) -> unit = {
   ()
 }
 
-val sail_zeros = "zeros" : forall 'n. int('n) -> bits('n)
+val sail_zeros = "zeros" : forall 'n, 'n >= 0. int('n) -> bits('n)
 
-val cast zero_vector : forall 'n. (implicit('n), int(0)) -> bits('n)
+val cast zero_vector : forall 'n, 'n >= 0. (implicit('n), int(0)) -> bits('n)
 
 function zero_vector(n, _) = sail_zeros(n)
 

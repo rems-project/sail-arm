@@ -50,10 +50,10 @@ val __InitRAM : forall 'm. (atom('m), int, bits('m), bits(8)) -> unit
 
 function __InitRAM (_, _, _, _) = ()
 
-val ___ReadRAM = "read_ram" : forall 'n 'm.
+val ___ReadRAM = "read_ram" : forall 'n 'm, 'n >= 0.
   (atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
 
-val __ReadRAM : forall 'n 'm.
+val __ReadRAM : forall 'n 'm, 'n >= 0.
   (atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
 
 function __ReadRAM(addr_length, bytes, hex_ram, addr) =

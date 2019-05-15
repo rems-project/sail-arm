@@ -2509,7 +2509,7 @@ function set_DBGPRCR val_name = {
     return()
 }
 
-register DBGDTR_EL0 : bits(64)
+register DBGDTR_EL0_64 : bits(64)
 
 register DBGDTRTX_EL0 : bits(32)
 
@@ -22914,7 +22914,7 @@ function AArch64_AutoGen_SysRegWrite (el, op0, op1, CRn, op2, CRm, read, val_nam
                                 DBGDTRTX_EL0 = slice(val_name, 0, 32)
                             } else {
                                 if CRm == 0x4 then {
-                                    DBGDTR_EL0 = val_name
+                                    DBGDTR_EL0_64 = val_name
                                 }
                             }
                         } else {
@@ -26029,7 +26029,7 @@ function AArch64_AutoGen_SysRegRead (el, op0, op1, CRn, op2, CRm, read) = {
                                 return(ZeroExtend(DBGDTRRX_EL0))
                             } else {
                                 if CRm == 0x4 then {
-                                    return(DBGDTR_EL0)
+                                    return(DBGDTR_EL0_64)
                                 } else {
                                     if CRm == 0x1 then {
                                         return(ZeroExtend(MDCCSR_EL0))

@@ -14837,7 +14837,7 @@ function CheckVFPEnabled include_fpexc_check_name = {
 }
 
 val VSQRT_Op_A : forall 'd 'esize 'm,
-  ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
+  'esize in {16,32,64} & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (int('d), int('esize), int('m)) -> unit effect {escape, rreg, undef, wreg}
 
 function VSQRT_Op_A (d, esize, m) = {
@@ -14905,7 +14905,7 @@ function VSQRT_A1_A_decode (cond, D, Vd, size, M, Vm) = {
 }
 
 val VSEL_Op_A : forall 'd 'esize 'm 'n,
-  ('n >= 0 & 'n <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('n >= 0 & 'n <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('n >= 0 & 'n <= 31 | not('esize == 64)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
+  'esize in {16,32,64} & ('n >= 0 & 'n <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('n >= 0 & 'n <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('n >= 0 & 'n <= 31 | not('esize == 64)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (bits(4), int('d), int('esize), int('m), int('n)) -> unit effect {escape, rreg, undef, wreg}
 
 function VSEL_Op_A (cond, d, esize, m, n) = {
@@ -15009,7 +15009,7 @@ function VSEL_A1_A_decode (D, cc, Vn, Vd, size, N, M, Vm) = {
 }
 
 val VRINTZ_vfp_Op_A : forall 'd 'esize ('exact : Bool) 'm,
-  ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
+  'esize in {16,32,64} & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (int('d), int('esize), bool('exact), int('m), FPRounding) -> unit effect {escape, rreg, undef, wreg}
 
 function VRINTZ_vfp_Op_A (d, esize, exact, m, rounding) = {
@@ -15113,7 +15113,7 @@ function VRINTZ_vfp_A1_A_decode (cond, D, Vd, size, op, M, Vm) = {
 }
 
 val VRINTX_vfp_Op_A : forall 'd 'esize ('exact : Bool) 'm,
-  ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
+  'esize in {16,32,64} & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (int('d), int('esize), bool('exact), int('m)) -> unit effect {escape, rreg, undef, wreg}
 
 function VRINTX_vfp_Op_A (d, esize, exact, m) = {
@@ -15217,7 +15217,7 @@ function VRINTX_vfp_A1_A_decode (cond, D, Vd, size, M, Vm) = {
 }
 
 val VRINTA_vfp_Op_A : forall 'd 'esize ('exact : Bool) 'm,
-  ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
+  'esize in {16,32,64} & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (int('d), int('esize), bool('exact), int('m), FPRounding) -> unit effect {escape, rreg, undef, wreg}
 
 function VRINTA_vfp_Op_A (d, esize, exact, m, rounding) = {
@@ -15313,7 +15313,7 @@ function VRINTA_vfp_A1_A_decode (D, RM, Vd, size, M, Vm) = {
 }
 
 val VNMLA_Op_A : forall 'd 'esize 'm 'n,
-  ('n >= 0 & 'n <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('n >= 0 & 'n <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('n >= 0 & 'n <= 31 | not('esize == 64)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
+  'esize in {16,32,64} & ('n >= 0 & 'n <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('n >= 0 & 'n <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('n >= 0 & 'n <= 31 | not('esize == 64)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (int('d), int('esize), int('m), int('n), VFPNegMul) -> unit effect {escape, rreg, undef, wreg}
 
 function VNMLA_Op_A (d, esize, m, n, typ) = {
@@ -16118,7 +16118,7 @@ function VFNMA_A1_A_decode (cond, D, Vn, Vd, size, N, op, M, Vm) = {
 }
 
 val VDIV_Op_A : forall 'd 'esize 'm 'n,
-  ('n >= 0 & 'n <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('n >= 0 & 'n <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('n >= 0 & 'n <= 31 | not('esize == 64)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
+  'esize in {16,32,64} & ('n >= 0 & 'n <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('n >= 0 & 'n <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('n >= 0 & 'n <= 31 | not('esize == 64)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (int('d), int('esize), int('m), int('n)) -> unit effect {escape, rreg, undef, wreg}
 
 function VDIV_Op_A (d, esize, m, n) = {
@@ -16662,7 +16662,7 @@ function VCVTB_T1A1_A_decode__1 (D, op, Vd, sz, T, M, Vm) = {
 }
 
 val VCVTA_vfp_Op_A : forall 'd 'esize 'm ('unsigned : Bool),
-  ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
+  'esize in {16,32,64} & ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (int('d), int('esize), int('m), FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
 function VCVTA_vfp_Op_A (d, esize, m, rounding, unsigned) = {
@@ -16750,7 +16750,7 @@ function VCVTA_vfp_A1_A_decode (D, RM, Vd, size, op, M, Vm) = {
 }
 
 val VCMP_Op_A : forall 'd 'esize 'm ('quiet_nan_exc : Bool) ('with_zero : Bool),
-  ('m >= 0 & 'm <= 31 | not(not('with_zero)) | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not(not('with_zero)) | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not(not('with_zero)) | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
+  'esize in {16,32,64} & ('m >= 0 & 'm <= 31 | not(not('with_zero)) | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not(not('with_zero)) | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not(not('with_zero)) | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (int('d), int('esize), int('m), bool('quiet_nan_exc), bool('with_zero)) -> unit effect {escape, rreg, undef, wreg}
 
 function VCMP_Op_A (d, esize, m, quiet_nan_exc, with_zero) = {
@@ -39849,6 +39849,7 @@ function aset_MemA (address, size, value_name) = {
 overload MemA = {aset_MemA}
 
 val VSTR_Op_A : forall ('add : Bool) 'd 'esize 'n,
+  'esize in {16,32,64} & 
   ('n >= 0 & 'n <= 15 | not('add)) & ('n >= 0 & 'n <= 15 | not(not('add))) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (bool('add), int('d), int('esize), bits(32), int('n)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
@@ -39882,7 +39883,7 @@ function VSTR_T1_A_decode (U, D, Rn, Vd, size, imm8) = {
     if size == 0b01 & InITBlock() then {
         throw(Error_Unpredictable())
     };
-    let esize = shl_int(8, UInt(size));
+    let 'esize = shl_int(8, UInt(size));
     let add = U == 0b1;
     let imm32 : bits(32) = if esize == 16 then ZeroExtend(imm8 @ 0b0, 32) else ZeroExtend(imm8 @ 0b00, 32);
     d : int = undefined : int;
@@ -39899,6 +39900,7 @@ function VSTR_T1_A_decode (U, D, Rn, Vd, size, imm8) = {
     };
     let d = d;
     let n = UInt(Rn);
+    assert(constraint('esize in {16,32,64}));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 64))));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 32))));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 16))));
@@ -39922,7 +39924,7 @@ function VSTR_A1_A_decode (cond, U, D, Rn, Vd, size, imm8) = {
     if size == 0b01 & cond != 0xE then {
         throw(Error_Unpredictable())
     };
-    let esize = shl_int(8, UInt(size));
+    let 'esize = shl_int(8, UInt(size));
     let add = U == 0b1;
     let imm32 : bits(32) = if esize == 16 then ZeroExtend(imm8 @ 0b0, 32) else ZeroExtend(imm8 @ 0b00, 32);
     d : int = undefined : int;
@@ -39939,6 +39941,7 @@ function VSTR_A1_A_decode (cond, U, D, Rn, Vd, size, imm8) = {
     };
     let d = d;
     let n = UInt(Rn);
+    assert(constraint('esize in {16,32,64}));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 64))));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 32))));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 16))));
@@ -43394,6 +43397,7 @@ function aget_MemA (address, size) = {
 overload MemA = {aget_MemA}
 
 val VLDR_Op_A : forall ('add : Bool) 'd 'esize 'n,
+  'esize in {16,32,64} &
   ('n >= 0 & 'n <= 15 | not(not('n == 15))) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (bool('add), int('d), int('esize), bits(32), int('n)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
@@ -43432,7 +43436,7 @@ function VLDR_T1_A_decode (U, D, Rn, Vd, size, imm8) = {
     if size == 0b01 & InITBlock() then {
         throw(Error_Unpredictable())
     };
-    let esize = shl_int(8, UInt(size));
+    let 'esize = shl_int(8, UInt(size));
     let add = U == 0b1;
     let imm32 : bits(32) = if esize == 16 then ZeroExtend(imm8 @ 0b0, 32) else ZeroExtend(imm8 @ 0b00, 32);
     d : int = undefined : int;
@@ -43449,6 +43453,7 @@ function VLDR_T1_A_decode (U, D, Rn, Vd, size, imm8) = {
     };
     let d = d;
     let n = UInt(Rn);
+    assert(constraint('esize in {16,32,64}));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 64))));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 32))));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 16))));
@@ -43470,7 +43475,7 @@ function VLDR_A1_A_decode (cond, U, D, Rn, Vd, size, imm8) = {
     if size == 0b01 & cond != 0xE then {
         throw(Error_Unpredictable())
     };
-    let esize = shl_int(8, UInt(size));
+    let 'esize = shl_int(8, UInt(size));
     let add = U == 0b1;
     let imm32 : bits(32) = if esize == 16 then ZeroExtend(imm8 @ 0b0, 32) else ZeroExtend(imm8 @ 0b00, 32);
     d : int = undefined : int;
@@ -43487,6 +43492,7 @@ function VLDR_A1_A_decode (cond, U, D, Rn, Vd, size, imm8) = {
     };
     let d = d;
     let n = UInt(Rn);
+    assert(constraint('esize in {16,32,64}));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 64))));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 32))));
     assert(constraint(('_d >= 0 & '_d <= 31 | not('_esize == 16))));

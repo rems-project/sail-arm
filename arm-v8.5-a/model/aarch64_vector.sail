@@ -2294,7 +2294,7 @@ function vector_crypto_aes_mix_decode (Rd, Rn, D, size) = {
 }
 
 val vector_transfer_vector_table : forall 'd 'datasize 'elements ('is_tbl : Bool) 'm 'n 'regs,
-  (0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'd & 'd <= 31).
+  'datasize >= 0 & (0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'd & 'd <= 31).
   (int('d), int('datasize), int('elements), bool('is_tbl), int('m), int('n), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_transfer_vector_table (d, datasize, elements, is_tbl, m, n__arg, regs) = {
@@ -2335,7 +2335,7 @@ function vector_transfer_vector_table_decode (Rd, Rn, op, len, Rm, op2, Q) = {
 }
 
 val vector_transfer_vector_permute_zip : forall 'd 'datasize 'esize 'm 'n 'pairs 'part,
-  ('n >= 0 & 'n <= 31 & 'm >= 0 & 'm <= 31 & 'd >= 0 & 'd <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31 & 'm >= 0 & 'm <= 31 & 'd >= 0 & 'd <= 31).
   (int('d), int('datasize), int('esize), int('m), int('n), int('pairs), int('part)) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_transfer_vector_permute_zip (d, datasize, esize, m, n, pairs, part) = {
@@ -2372,7 +2372,7 @@ function vector_transfer_vector_permute_zip_decode (Rd, Rn, op, Rm, size, Q) = {
 }
 
 val vector_transfer_vector_permute_unzip : forall 'd 'datasize 'elements 'esize 'm 'n 'part,
-  ('n >= 0 & 'n <= 31 & 'm >= 0 & 'm <= 31 & 'd >= 0 & 'd <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31 & 'm >= 0 & 'm <= 31 & 'd >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), int('part)) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_transfer_vector_permute_unzip (d, datasize, elements, esize, m, n, part) = {
@@ -2724,7 +2724,7 @@ function vector_transfer_integer_dup_decode (Rd, Rn, imm4, imm5, op, Q) = {
 }
 
 val vector_shift_right_sisd : forall ('accumulate : Bool) 'd 'datasize 'elements 'esize 'n ('round : Bool) 'shift ('unsigned : Bool),
-  ('n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31).
   (bool('accumulate), int('d), int('datasize), int('elements), int('esize), int('n), bool('round), int('shift), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_shift_right_sisd (accumulate, d, datasize, elements, esize, n, round, shift, unsigned) = {
@@ -4247,7 +4247,7 @@ function vector_arithmetic_unary_shift_decode (Rd, Rn, opcode, size, U, Q) = {
 }
 
 val vector_arithmetic_unary_rev : forall 'containers 'd 'datasize 'elements_per_container 'esize 'n,
-  ('n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31).
   (int('containers), int('d), int('datasize), int('elements_per_container), int('esize), int('n)) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_arithmetic_unary_rev (containers, d, datasize, elements_per_container, esize, n) = {
@@ -7141,7 +7141,7 @@ function vector_arithmetic_binary_uniform_logical_bsleor_decode (Rd, Rn, opcode,
 }
 
 val vector_arithmetic_binary_uniform_logical_andorr : forall 'd 'datasize ('invert : Bool) 'm 'n,
-  ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), bool('invert), int('m), int('n), LogicalOp) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_arithmetic_binary_uniform_logical_andorr (d, datasize, invert, m, n, op) = {

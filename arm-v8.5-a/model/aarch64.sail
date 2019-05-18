@@ -26121,7 +26121,7 @@ function system_register_system_decode (Rt, op2, CRm, CRn, op1, o0, L) = {
 }
 
 val memory_vector_single_nowb : forall 'datasize 'esize 'index 'm 'n 'selem 't,
-  ('n >= 0 & 'n <= 31).
+  'esize >= 0 & ('n >= 0 & 'n <= 31).
   (int('datasize), int('esize), int('index), int('m), MemOp, int('n), bool, int('selem), int('t), bool) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_vector_single_nowb (datasize, esize, index, m, memop, n, replicate, selem, t__arg, wback) = {
@@ -26183,7 +26183,7 @@ function memory_vector_single_postinc_memory_vector_single_nowb__decode (Rt, Rn,
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
     let wback = true;
-    scale : int = UInt(slice(opcode, 1, 2));
+    scale : range(0,3) = UInt(slice(opcode, 1, 2));
     let 'selem = UInt([opcode[0]] @ R) + 1;
     replicate : bool = false;
     index : int = undefined : int;
@@ -26234,7 +26234,7 @@ function memory_vector_single_nowb_memory_vector_single_nowb__decode (Rt, Rn, si
     let 'n = UInt(Rn);
     let 'm = undefined : int;
     let wback = false;
-    scale : int = UInt(slice(opcode, 1, 2));
+    scale : range(0,3) = UInt(slice(opcode, 1, 2));
     let 'selem = UInt([opcode[0]] @ R) + 1;
     replicate : bool = false;
     index : int = undefined : int;
@@ -26278,7 +26278,7 @@ function memory_vector_single_nowb_memory_vector_single_nowb__decode (Rt, Rn, si
 }
 
 val memory_vector_multiple_nowb : forall 'datasize 'elements 'esize 'm 'n 'rpt 'selem 't,
-  ('n >= 0 & 'n <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31).
   (int('datasize), int('elements), int('esize), int('m), MemOp, int('n), int('rpt), int('selem), int('t), bool) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_vector_multiple_nowb (datasize, elements, esize, m, memop, n, rpt, selem, t, wback) = {
@@ -26442,7 +26442,7 @@ function memory_vector_multiple_nowb_memory_vector_multiple_nowb__decode (Rt, Rn
 }
 
 val memory_single_simdfp_register : forall 'datasize 'm 'n 'shift 't,
-  ('shift >= 0 & 'shift <= 4 & 'm >= 0 & 'm <= 31 & 'n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31).
+  'datasize >= 0 & ('shift >= 0 & 'shift <= 4 & 'm >= 0 & 'm <= 31 & 'n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31).
   (AccType, int('datasize), ExtendType, int('m), MemOp, int('n), bool, int('shift), int('t), bool) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_single_simdfp_register (acctype, datasize, extend_type, m, memop, n, postindex, shift, t, wback) = {
@@ -26509,12 +26509,13 @@ function memory_single_simdfp_register_memory_single_simdfp_register__decode (Rt
     let acctype : AccType = AccType_VEC;
     let memop : MemOp = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = shl_int(8, scale);
+    assert(constraint('datasize >= 0));
     __PostDecode();
     memory_single_simdfp_register(acctype, datasize, extend_type, m, memop, n, postindex, shift, t, wback)
 }
 
 val memory_single_simdfp_immediate_signed_postidx : forall 'datasize 'n 't,
-  ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31).
   (AccType, int('datasize), MemOp, int('n), bits(64), bool, int('t), bool) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_single_simdfp_immediate_signed_postidx (acctype, datasize, memop, n, offset, postindex, t, wback) = {
@@ -26574,6 +26575,7 @@ function memory_single_simdfp_immediate_unsigned_memory_single_simdfp_immediate_
     let acctype = AccType_VEC;
     let memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = shl_int(8, scale);
+    assert('datasize >= 0);
     __PostDecode();
     memory_single_simdfp_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, t, wback)
 }
@@ -26594,6 +26596,7 @@ function memory_single_simdfp_immediate_signed_preidx_memory_single_simdfp_immed
     let acctype = AccType_VEC;
     let memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = shl_int(8, scale);
+    assert('datasize >= 0);
     __PostDecode();
     memory_single_simdfp_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, t, wback)
 }
@@ -26614,12 +26617,13 @@ function memory_single_simdfp_immediate_signed_postidx_memory_single_simdfp_imme
     let acctype = AccType_VEC;
     let memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = shl_int(8, scale);
+    assert('datasize >= 0);
     __PostDecode();
     memory_single_simdfp_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, t, wback)
 }
 
 val memory_single_simdfp_immediate_signed_offset_normal : forall 'datasize 'n 't,
-  ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31).
   (AccType, int('datasize), MemOp, int('n), bits(64), bool, int('t), bool) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_single_simdfp_immediate_signed_offset_normal (acctype, datasize, memop, n, offset, postindex, t, wback) = {
@@ -26679,6 +26683,7 @@ function memory_single_simdfp_immediate_signed_offset_normal_memory_single_simdf
     let acctype = AccType_VEC;
     let memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = shl_int(8, scale);
+    assert('datasize >= 0);
     __PostDecode();
     memory_single_simdfp_immediate_signed_offset_normal(acctype, datasize, memop, n, offset, postindex, t, wback)
 }
@@ -28367,7 +28372,7 @@ function memory_literal_simdfp_decode (Rt, imm19, V, opc) = {
     memory_literal_simdfp(offset, size_fixed, t)
 }
 
-val memory_literal_general : forall ('size : Int) ('t : Int), (0 <= 't & 't <= 31).
+val memory_literal_general : forall ('size : Int) ('t : Int), 'size >= 0 & (0 <= 't & 't <= 31).
   (MemOp, bits(64), bool, int('size), int('t)) -> unit effect {escape, rmem, rreg, undef, wreg, wmem}
 
 function memory_literal_general (memop, offset, signed, size, t) = {
@@ -28396,7 +28401,7 @@ function memory_literal_general_decode (Rt, imm19, V, opc) = {
     let 't = UInt(Rt);
     memop : MemOp = MemOp_LOAD;
     signed : bool = false;
-    size : int = undefined : int;
+    size : range(4,8) = undefined : range(4,8);
     offset : bits(64) = undefined : bits(64);
     match opc {
       0b00 => {
@@ -28420,7 +28425,7 @@ function memory_literal_general_decode (Rt, imm19, V, opc) = {
 }
 
 val memory_exclusive_single : forall 'datasize 'elsize 'n 'regsize 's 't 't2,
-  ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31 & 't2 >= 0 & 't2 <= 31 & 's >= 0 & 's <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31 & 't2 >= 0 & 't2 <= 31 & 's >= 0 & 's <= 31).
   (AccType, int('datasize), int('elsize), MemOp, int('n), bool, int('regsize), int('s), int('t), int('t2)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_exclusive_single (acctype, datasize, elsize, memop, n, pair, regsize, s, t, t2) = {
@@ -28580,7 +28585,7 @@ function memory_exclusive_single_decode (Rt, Rn, Rt2, o0, Rs, o1, L, o2, size) =
 }
 
 val memory_exclusive_pair : forall 'datasize 'elsize 'n 'regsize 's 't 't2,
-  ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31 & 't2 >= 0 & 't2 <= 31 & 's >= 0 & 's <= 31).
+  'datasize >= 0 & ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31 & 't2 >= 0 & 't2 <= 31 & 's >= 0 & 's <= 31).
   (AccType, int('datasize), int('elsize), MemOp, int('n), bool, int('regsize), int('s), int('t), int('t2)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_exclusive_pair (acctype, datasize, elsize, memop, n, pair, regsize, s, t, t2) = {

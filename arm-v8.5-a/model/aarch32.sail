@@ -18045,7 +18045,7 @@ function VMOV_i_A2_A_decode (cond, D, imm4H, Vd, size, imm4L) = {
 }
 
 val VMLA_f_Op_A : forall ('add : Bool) ('advsimd : Bool) 'd 'elements 'esize 'm 'n 'regs,
-  (0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'd & 'd <= 31).
+  'esize >= 0 & (0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'd & 'd <= 31).
   (bool('add), bool('advsimd), int('d), int('elements), int('esize), int('m), int('n), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VMLA_f_Op_A (add, advsimd, d, elements, esize, m, n, regs) = {
@@ -18116,7 +18116,7 @@ function VMLA_f_T2A2pre_A_decode__0 (cond, D, Vn, Vd, size, N, op, M, Vm) = {
     let advsimd : bool(false) = false;
     let add : bool = op == 0b0;
     d : int = undefined : int;
-    esize : int = undefined : int;
+    esize : nat = undefined : nat;
     m : int = undefined : int;
     n : int = undefined : int;
     match size {
@@ -18165,7 +18165,7 @@ function VMLA_f_T2A2pre_A_decode__1 (D, Vn, Vd, size, N, op, M, Vm) = {
     let advsimd : bool(false) = false;
     let add : bool = op == 0b0;
     d : int = undefined : int;
-    esize : int = undefined : int;
+    esize : nat = undefined : nat;
     m : int = undefined : int;
     n : int = undefined : int;
     match size {
@@ -18213,7 +18213,7 @@ function VMLA_f_T1_A_decode (D, op, sz, Vn, Vd, N, Q, M, Vm) = {
     let advsimd = true;
     let add = op == 0b0;
     elements : int = undefined : int;
-    esize : int = undefined : int;
+    esize : nat = undefined : nat;
     match sz {
       0b0 => {
           esize = 32;
@@ -18247,7 +18247,7 @@ function VMLA_f_A1_A_decode (D, op, sz, Vn, Vd, N, Q, M, Vm) = {
     let advsimd = true;
     let add = op == 0b0;
     elements : int = undefined : int;
-    esize : int = undefined : int;
+    esize : nat = undefined : nat;
     match sz {
       0b0 => {
           esize = 32;
@@ -18269,7 +18269,7 @@ function VMLA_f_A1_A_decode (D, op, sz, Vn, Vd, N, Q, M, Vm) = {
 }
 
 val VMAXNM_Op_A : forall ('advsimd : Bool) 'd 'elements 'esize 'm ('maximum : Bool) 'n 'regs,
-  (0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'n & 'n <= 31).
+  'esize >= 0 & (0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'n & 'n <= 31).
   (bool('advsimd), int('d), int('elements), int('esize), int('m), bool('maximum), int('n), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VMAXNM_Op_A (advsimd, d, elements, esize, m, maximum, n, regs) = {
@@ -18335,7 +18335,7 @@ function VMAXNM_T2A2pre_A_decode (D, Vn, Vd, size, N, op, M, Vm) = {
     let advsimd : bool(false) = false;
     let maximum : bool = op == 0b0;
     d : int = undefined : int;
-    esize : int = undefined : int;
+    esize : nat = undefined : nat;
     m : int = undefined : int;
     n : int = undefined : int;
     match size {
@@ -18383,7 +18383,7 @@ function VMAXNM_T1_A_decode (D, op, sz, Vn, Vd, N, Q, M, Vm) = {
     let maximum = op == 0b0;
     let advsimd = true;
     elements : int = undefined : int;
-    esize : int = undefined : int;
+    esize : nat = undefined : nat;
     match sz {
       0b0 => {
           esize = 32;
@@ -18417,7 +18417,7 @@ function VMAXNM_A1_A_decode (D, op, sz, Vn, Vd, N, Q, M, Vm) = {
     let maximum = op == 0b0;
     let advsimd = true;
     elements : int = undefined : int;
-    esize : int = undefined : int;
+    esize : nat = undefined : nat;
     match sz {
       0b0 => {
           esize = 32;
@@ -21859,7 +21859,7 @@ function VQMOVN_T1A1_A_decode (D, size, Vd, op, M, Vm) = {
 }
 
 val VQDMULL_Op_A : forall 'd 'elements 'esize 'index 'm 'n ('scalar_form : Bool),
-  ('m >= 0 & 'm <= 31 & ('index >= 0 & 'esize >= 0 & ('index + 1) * 'esize <= 64 | not('scalar_form)) & 'n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31).
+  'esize >= 0 & ('m >= 0 & 'm <= 31 & ('index >= 0 & 'esize >= 0 & ('index + 1) * 'esize <= 64 | not('scalar_form)) & 'n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31).
   (int('d), int('elements), int('esize), int('index), int('m), int('n), bool('scalar_form)) -> unit effect {escape, rreg, undef, wreg}
 
 function VQDMULL_Op_A (d, elements, esize, index, m, n, scalar_form) = {
@@ -22043,7 +22043,7 @@ function VQDMULH_T1A1pre_A_decode (D, size, Vn, Vd, N, Q, M, Vm) = {
 }
 
 val VQDMLAL_Op_A : forall ('add : Bool) 'd 'elements 'esize 'index 'm 'n ('scalar_form : Bool),
-  ('m >= 0 & 'm <= 31 & ('index >= 0 & 'esize >= 0 & ('index + 1) * 'esize <= 64 | not('scalar_form)) & 'n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31).
+  'esize >= 0 & ('m >= 0 & 'm <= 31 & ('index >= 0 & 'esize >= 0 & ('index + 1) * 'esize <= 64 | not('scalar_form)) & 'n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31).
   (bool('add), int('d), int('elements), int('esize), int('index), int('m), int('n), bool('scalar_form)) -> unit effect {escape, rreg, undef, wreg}
 
 function VQDMLAL_Op_A (add, d, elements, esize, index, m, n, scalar_form) = {
@@ -22951,7 +22951,7 @@ function VMUL_s_A1_A_decode (Q, D, size, Vn, Vd, F, N, M, Vm) = {
 }
 
 val VMUL_i_Op_A : forall 'd 'elements 'esize ('long_destination : Bool) 'm 'n ('polynomial : Bool) 'regs ('unsigned : Bool),
-  (0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'n & 'n <= 31).
+  'esize >= 0 & (0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'n & 'n <= 31).
   (int('d), int('elements), int('esize), bool('long_destination), int('m), int('n), bool('polynomial), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
 function VMUL_i_Op_A (d, elements, esize, long_destination, m, n, polynomial, regs, unsigned) = {
@@ -22997,7 +22997,7 @@ function VMUL_i_T2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     let unsigned = U == 0b1;
     let polynomial = op == 0b1;
     let long_destination = true;
-    esize : int = undefined : int;
+    esize : nat = undefined : nat;
     esize = shl_int(8, UInt(size));
     elements : int = undefined : int;
     elements = 64 / esize;
@@ -23060,7 +23060,7 @@ function VMUL_i_A2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     let unsigned = U == 0b1;
     let polynomial = op == 0b1;
     let long_destination = true;
-    esize : int = undefined : int;
+    esize : nat = undefined : nat;
     esize = shl_int(8, UInt(size));
     elements : int = undefined : int;
     elements = 64 / esize;
@@ -25991,7 +25991,7 @@ function VACGE_A1_A_decode (D, op, sz, Vn, Vd, N, Q, M, Vm) = {
 }
 
 val VABD_i_Op_A : forall 'd 'elements 'esize ('long_destination : Bool) 'm 'n 'regs ('unsigned : Bool),
-  (0 <= 'n & 'n <= 31 & 0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31).
+  'esize >= 0 & (0 <= 'n & 'n <= 31 & 0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31).
   (int('d), int('elements), int('esize), bool('long_destination), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
 function VABD_i_Op_A (d, elements, esize, long_destination, m, n, regs, unsigned) = {
@@ -26155,7 +26155,7 @@ function VABD_f_A1_A_decode (D, sz, Vn, Vd, N, Q, M, Vm) = {
 }
 
 val VABA_Op_A : forall 'd 'elements 'esize ('long_destination : Bool) 'm 'n 'regs ('unsigned : Bool),
-  (0 <= 'd & 'd <= 31 & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31).
+  'esize >= 0 & (0 <= 'd & 'd <= 31 & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31).
   (int('d), int('elements), int('esize), bool('long_destination), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
 function VABA_Op_A (d, elements, esize, long_destination, m, n, regs, unsigned) = {

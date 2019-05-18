@@ -189,10 +189,15 @@ val UInt = {
   c: "sail_unsigned"
 } : forall 'n. bits('n) -> {'m, 0 <= 'm <= 2 ^ 'n - 1. int('m)}
 
-val SInt = {
+val SInt_gt0 = {
   c: "sail_signed",
   _: "sint"
-} : forall 'n. bits('n) -> {'m, (- (2 ^ ('n - 1)) <= 'm <= 2 ^ ('n - 1) - 1). int('m)}
+} : forall 'n, 'n > 0. bits('n) -> {'m, (- (2 ^ ('n - 1)) <= 'm <= 2 ^ ('n - 1) - 1). int('m)}
+val SInt_ge0 = {
+  c: "sail_signed",
+  _: "sint0"
+} : forall 'n, 'n >= 0. bits('n) -> int
+overload SInt = {SInt_gt0, SInt_ge0}
 
 val hex_slice = "hex_slice" : forall 'n 'm. (string, atom('n), atom('m)) -> bits('n - 'm) effect {escape}
 

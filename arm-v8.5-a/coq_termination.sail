@@ -1,4 +1,5 @@
 termination_measure BigEndianReverse(x) = 'width
+termination_measure Reduce(op,input,esize) = 'N
 
 /* This is a cheat - it's a plain upper bound to break the cycle */
 termination_measure TakeUnmaskedPhysicalSErrorInterrupts(_) = 10

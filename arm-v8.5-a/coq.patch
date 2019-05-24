@@ -20,14 +20,3 @@
  
  Definition AArch64_SecondStageTranslate
  (_arg0 : AddressDescriptor) (_arg1 : mword 64) (_arg2 : AccType) (_arg3 : bool) (_arg4 : bool)
-@@ -23591,8 +23604,8 @@
-        (fun i _ unit_var =>
-          (if ((eq_vec (vec_of_bits [bitvector_access_A x i]  : mword 1)
-                  (vec_of_bits [B1]  : mword 1))) then
--            (early_return (build_ex
--            (projT1
-+            (early_return ((*build_ex*)
-+            ((*projT1*)
-             (build_ex
-             i
-              : {n : Z & ArithFact (-1 <= n /\ n <= (N - 1))}))))

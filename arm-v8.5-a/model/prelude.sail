@@ -64,7 +64,7 @@ val eq_vec = {ocaml: "eq_list", lem: "eq_vec", c: "eq_bits"} : forall 'n. (bits(
 
 val eq_string = {ocaml: "eq_string", lem: "eq", c: "eq_string"} : (string, string) -> bool
 
-val eq_real = {ocaml: "eq_real", lem: "eq", c: "eq_real"} : (real, real) -> bool
+val eq_real = {ocaml: "eq_real", lem: "eq", c: "eq_real", coq: "eq_real"} : (real, real) -> bool
 
 val eq_anything = {
   ocaml: "(fun (x, y) -> x = y)",
@@ -288,7 +288,7 @@ val add_vec_int = {
   c: "add_bits_int"
 } : forall 'n. (bits('n), int) -> bits('n)
 
-val add_real = {ocaml: "add_real", lem: "realAdd", c: "add_real"} : (real, real) -> real
+val add_real = {ocaml: "add_real", lem: "realAdd", c: "add_real", coq: "add_real"} : (real, real) -> real
 
 overload operator + = {add_vec, add_vec_int, add_real}
 
@@ -300,39 +300,39 @@ val sub_vec_int = {
   c: "sub_bits_int"
 } : forall 'n. (bits('n), int) -> bits('n)
 
-val sub_real = {ocaml: "sub_real", lem: "realMinus", c: "sub_real"} : (real, real) -> real
+val sub_real = {ocaml: "sub_real", lem: "realMinus", c: "sub_real", coq: "sub_real"} : (real, real) -> real
 
-val negate_real = {ocaml: "negate_real", lem: "realNegate", c: "neg_real"} : real -> real
+val negate_real = {ocaml: "negate_real", lem: "realNegate", c: "neg_real", coq: "neg_real"} : real -> real
 
 overload operator - = {sub_vec, sub_vec_int, sub_real}
 
 overload negate = {negate_real}
 
-val mult_real = {ocaml: "mult_real", lem: "realMult", c: "mult_real"} : (real, real) -> real
+val mult_real = {ocaml: "mult_real", lem: "realMult", c: "mult_real", coq: "mult_real"} : (real, real) -> real
 
 overload operator * = {mult_real}
 
-val Sqrt = {ocaml: "sqrt_real", lem: "realSqrt", c: "sqrt_real"} : real -> real
+val Sqrt = {ocaml: "sqrt_real", lem: "realSqrt", c: "sqrt_real", coq: "sqrt_real"} : real -> real
 
-val gteq_real = {ocaml: "gteq_real", lem: "gteq", c: "gteq_real"} : (real, real) -> bool
+val gteq_real = {ocaml: "gteq_real", lem: "gteq", c: "gteq_real", coq: "gteq_real"} : (real, real) -> bool
 
 overload operator >= = {gteq_real}
 
-val lteq_real = {ocaml: "lteq_real", lem: "lteq", c: "lteq_real"} : (real, real) -> bool
+val lteq_real = {ocaml: "lteq_real", lem: "lteq", c: "lteq_real", coq: "lteq_real"} : (real, real) -> bool
 
 overload operator <= = {lteq_real}
 
-val gt_real = {ocaml: "gt_real", lem: "gt", c: "gt_real"} : (real, real) -> bool
+val gt_real = {ocaml: "gt_real", lem: "gt", c: "gt_real", coq: "gt_real"} : (real, real) -> bool
 
 overload operator > = {gt_real}
 
-val lt_real = {ocaml: "lt_real", lem: "lt", c: "lt_real"} : (real, real) -> bool
+val lt_real = {ocaml: "lt_real", lem: "lt", c: "lt_real", coq: "lt_real"} : (real, real) -> bool
 
 overload operator < = {lt_real}
 
-val RoundDown = {ocaml: "round_down", lem: "realFloor", c: "round_down"} : real -> int
+val RoundDown = {ocaml: "round_down", lem: "realFloor", c: "round_down", coq: "round_down"} : real -> int
 
-val RoundUp = {ocaml: "round_up", lem: "realCeiling", c: "round_up"} : real -> int
+val RoundUp = {ocaml: "round_up", lem: "realCeiling", c: "round_up", coq: "round_up"} : real -> int
 
 val abs_real = "abs_real" : real -> real
 
@@ -340,7 +340,7 @@ overload abs = {abs_int, abs_real}
 
 val quotient_nat = {ocaml: "quotient", lem: "integerDiv", c: "tdiv_int"} : (nat, nat) -> nat
 
-val quotient_real = {ocaml: "quotient_real", lem: "realDiv", c: "div_real"} : (real, real) -> real
+val quotient_real = {ocaml: "quotient_real", lem: "realDiv", c: "div_real", coq: "div_real"} : (real, real) -> real
 
 val quotient = {ocaml: "quotient", lem: "integerDiv", c: "tdiv_int"} : (int, int) -> int
 
@@ -353,7 +353,7 @@ val modulus = {ocaml: "modulus", lem: "hardware_mod", c: "tmod_int" } :
 
 overload operator % = {emod_int, modulus}
 
-val Real = {ocaml: "to_real", lem: "realFromInteger", c: "to_real"} : int -> real
+val Real = {ocaml: "to_real", lem: "realFromInteger", c: "to_real", coq: "to_real"} : int -> real
 
 val min_nat = {ocaml: "min_int", lem: "min", c: "min_int"} : (nat, nat) -> nat
 

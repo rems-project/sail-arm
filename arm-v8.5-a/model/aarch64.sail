@@ -879,7 +879,7 @@ function __UNKNOWN_MemAtomicOp () = {
     MemAtomicOp_ADD
 }
 
-val MarkExclusiveGlobal : forall ('processorid : Int) ('size : Int).
+val MarkExclusiveGlobal : forall ('processorid 'size : Int).
   (FullAddress, int('processorid), int('size)) -> unit
 
 function MarkExclusiveGlobal (paddress, processorid, size) = {
@@ -1078,18 +1078,18 @@ register LOREA_EL1 : bits(64)
 
 register LORC_EL1 : bits(32)
 
-val IsExclusiveGlobal : forall ('processorid : Int) ('size : Int).
+val IsExclusiveGlobal : forall ('processorid 'size : Int).
   (FullAddress, int('processorid), int('size)) -> bool
 
 function IsExclusiveGlobal (paddress, processorid, size) = {
     true
 }
 
-val asl_Int : forall ('N : Int) ('unsigned : Bool), 'N >= 0.
+val asl_Int : forall ('N : Int)('unsigned : Bool), 'N >= 0.
   (bits('N), bool('unsigned)) -> int
 
-function asl_Int (x, unsigned) = {
-    let result = if unsigned then UInt(x) else SInt(x);
+function asl_Int (x, val_unsigned) = {
+    let result = if val_unsigned then UInt(x) else SInt(x);
     result
 }
 
@@ -3001,14 +3001,14 @@ function AArch64_ReportDeferredSError syndrome = {
     target
 }
 
-val AArch64_MarkExclusiveVA : forall ('processorid : Int) ('size : Int).
+val AArch64_MarkExclusiveVA : forall ('processorid 'size : Int).
   (bits(64), int('processorid), int('size)) -> unit
 
 function AArch64_MarkExclusiveVA (address, processorid, size) = {
     return()
 }
 
-val AArch64_IsExclusiveVA : forall ('processorid : Int) ('size : Int).
+val AArch64_IsExclusiveVA : forall ('processorid 'size : Int).
   (bits(64), int('processorid), int('size)) -> bool
 
 function AArch64_IsExclusiveVA (address, processorid, size) = {
@@ -3270,7 +3270,7 @@ function AArch32_ResetSIMDFPRegisters () = {
     return()
 }
 
-val aget_V : forall ('width : Int) ('n : Int), ('n >= 0 & 'n <= 31).
+val aget_V : forall ('width 'n : Int), ('n >= 0 & 'n <= 31).
   (implicit('width), int('n)) -> bits('width) effect {escape, rreg}
 
 function aget_V (width, n) = {
@@ -3303,7 +3303,7 @@ function BitReverse data = {
     result
 }
 
-val Hint_Prefetch : forall ('target : Int) ('stream : Bool).
+val Hint_Prefetch : forall ('target : Int)('stream : Bool).
   (bits(64), PrefetchHint, int('target), bool('stream)) -> unit effect {undef}
 
 function Hint_Prefetch (address, hint, target, stream) = {
@@ -3341,7 +3341,7 @@ function CountLeadingZeroBits x = {
 
 val CountLeadingSignBits : forall ('N : Int), 'N >= 1. bits('N) -> int
 
-function CountLeadingSignBits x = CountLeadingZeroBits(slice(x, 1, 'N - 1) ^ slice(x, 0, 'N - 1))
+function CountLeadingSignBits x = return(CountLeadingZeroBits(sail_shiftright(x, 1) ^ (x & slice_mask(0, 'N))))
 
 val RotCell : forall ('amount : Int).
   (bits(4), int('amount)) -> bits(4) effect {undef}
@@ -3897,7 +3897,7 @@ function TLBI_ALLE1 () = {
     _TLB_Invalidate()
 }
 
-val aset_V : forall ('width : Int) ('n : Int), ('n >= 0 & 'n <= 31).
+val aset_V : forall ('width 'n : Int), ('n >= 0 & 'n <= 31).
   (int('n), bits('width)) -> unit effect {escape, wreg}
 
 function aset_V (n, value_name) = {
@@ -3957,33 +3957,34 @@ function aset__MemTag (desc, value_name) = {
 
 overload _MemTag = {aset__MemTag}
 
-val Poly32Mod2 : forall ('N : Int), 'N >= 0.
+val Poly32Mod2 : forall ('N : Int), 'N >= 32.
   (bits('N), bits(32)) -> bits(32) effect {escape}
 
 function Poly32Mod2 (data__arg, poly) = {
     data = data__arg;
     assert('N > 32);
-    foreach (i from ('N - 1) to 32 by 1 in dec) {
-        if [data[i]] == 0b1 then {
-            data = __SetSlice_bits('N, i, data, 0, slice(data, 0, i) ^ (poly @ Zeros(i - 32)))
-        }
+    let poly' : bits('N) = sail_zero_extend(poly, length(data)) in foreach (i
+    from ('N - 1)
+    to 32
+    by 1
+    in dec) {
+        if [data[i]] == 0b1 then data = data | sail_shiftleft(poly', i - 32)
+        else ()
     };
-    slice(data, 0, 32)
+    return(slice(data, 0, 32))
 }
 
-val LSL_C : forall ('N : Int) ('shift : Int), 'N >= 0.
+val LSL_C : forall ('N 'shift : Int), 'N >= 0.
   (bits('N), int('shift)) -> (bits('N), bits(1)) effect {escape}
 
 function LSL_C (x, shift) = {
     assert(shift > 0);
-    let (shift as 'S) : {'n, (0 <= 'n & 'n <= 'N). int('n)} = if shift > 'N then 'N else shift;
-    let extended_x : bits('N + 'S) = x @ Zeros(shift);
-    let result : bits('N) = slice(extended_x, 0, 'N);
-    let carry_out : bits(1) = [extended_x['N]];
+    result : bits('N) = sail_shiftleft(x, shift);
+    carry_out : bits(1) = if shift > 'N then 0b0 else [x['N - shift]];
     return((result, carry_out))
 }
 
-val LSL : forall ('N : Int) ('shift : Int), ('shift >= 0 & 'N >= 0).
+val LSL : forall ('N 'shift : Int), ('shift >= 0 & 'N >= 0).
   (bits('N), int('shift)) -> bits('N) effect {escape, undef}
 
 function LSL (x, shift) = {
@@ -4036,7 +4037,7 @@ function GetExclusiveBlockAddress address = {
     slice(address, a, negate(a) + 52) @ Zeros(a)
 }
 
-val MarkExclusiveLocal : forall ('processorid : Int) ('size : Int).
+val MarkExclusiveLocal : forall ('processorid 'size : Int).
   (FullAddress, int('processorid), int('size)) -> unit effect {wreg}
 
 function MarkExclusiveLocal (paddress, processorid, size) = {
@@ -4044,14 +4045,14 @@ function MarkExclusiveLocal (paddress, processorid, size) = {
     return()
 }
 
-val IsExclusiveLocal : forall ('processorid : Int) ('size : Int).
+val IsExclusiveLocal : forall ('processorid 'size : Int).
   (FullAddress, int('processorid), int('size)) -> bool effect {rreg}
 
 function IsExclusiveLocal (paddress, processorid, size) = {
     __exclusive_block_address == GetExclusiveBlockAddress(paddress.address)
 }
 
-val ClearExclusiveByAddress : forall ('processorid : Int) ('size : Int).
+val ClearExclusiveByAddress : forall ('processorid 'size : Int).
   (FullAddress, int('processorid), int('size)) -> unit effect {rreg, undef, wreg}
 
 function ClearExclusiveByAddress (paddress, processorid, size) = {
@@ -4061,33 +4062,31 @@ function ClearExclusiveByAddress (paddress, processorid, size) = {
     return()
 }
 
-val Extend__0 : forall ('M : Int) ('N : Int), 'M >= 0.
-  (bits('M), int('N), bool) -> bits('N) effect {escape}
+val Extend__0 : forall ('M 'N : Int), ('M >= 0 & 'N >= 0).
+  (bits('M), int('N), bool) -> bits('N)
 
-val Extend__1 : forall ('M : Int) ('N : Int), 'M >= 0.
-  (implicit('N), bits('M), bool) -> bits('N) effect {escape}
+val Extend__1 : forall ('M 'N : Int), ('M >= 0 & 'N >= 0).
+  (implicit('N), bits('M), bool) -> bits('N)
 
 overload Extend = {Extend__0, Extend__1}
 
-function Extend__0 (x, N, unsigned) = {
-    if unsigned then ZeroExtend(x, N) else SignExtend(x, N)
+function Extend__0 (x, N, is_unsigned) = {
+    if is_unsigned then ZeroExtend(x, N) else SignExtend(x, N)
 }
 
-function Extend__1 (N, x, unsigned) = Extend__0(x, 'N, unsigned)
+function Extend__1 (N, x, is_unsigned) = Extend__0(x, 'N, is_unsigned)
 
-val ASR_C : forall ('N : Int) ('shift : Int), 'N >= 0.
+val ASR_C : forall ('N 'shift : Int), 'N >= 0.
   (bits('N), int('shift)) -> (bits('N), bits(1)) effect {escape}
 
 function ASR_C (x, shift) = {
     assert(shift > 0);
-    let (shift as 'S) : {'n, (0 <= 'n & 'n <= 'N). int('n)} = if shift > 'N then 'N else shift;
-    let extended_x : bits('S + 'N) = SignExtend(x, shift + 'N);
-    let result : bits('N) = slice(extended_x, shift, 'N);
-    let carry_out : bits(1) = [extended_x[shift - 1]];
+    result : bits('N) = sail_arith_shiftright(x, shift);
+    carry_out : bits(1) = if shift > 'N then [x['N - 1]] else [x[shift - 1]];
     return((result, carry_out))
 }
 
-val ASR : forall ('N : Int) ('shift : Int), ('shift >= 0 & 'N >= 0).
+val ASR : forall ('N 'shift : Int), ('shift >= 0 & 'N >= 0).
   (bits('N), int('shift)) -> bits('N) effect {escape, undef}
 
 function ASR (x, shift) = {
@@ -4428,7 +4427,7 @@ function __Reset cold = {
     return()
 }
 
-val ImpDefTagArrayStartAndCount : bits(64) -> (bits(64), int) effect {escape, rreg}
+val ImpDefTagArrayStartAndCount : bits(64) -> (bits(64), int) effect {rreg}
 
 function ImpDefTagArrayStartAndCount address__arg = {
     address = address__arg;
@@ -4445,7 +4444,7 @@ function ImpDefTagArrayStartAndCount address__arg = {
     }
 }
 
-val aset_X : forall ('width : Int) ('n : Int), ('n >= 0 & 'n <= 31).
+val aset_X : forall ('width 'n : Int), ('n >= 0 & 'n <= 31).
   (int('n), bits('width)) -> unit effect {escape, wreg}
 
 function aset_X (n, value_name) = {
@@ -4541,7 +4540,7 @@ function integer_insext_extract_immediate (d, datasize, lsb, m, n) = {
 }
 
 val integer_flags_setf : forall 'msb 'n,
-  ('n >= 0 & 'n <= 31) & 'msb + 1 >= 0.
+  ('n >= 0 & 'n <= 31) & 0 <= 'msb + 1.
   (int('msb), int('n)) -> unit effect {rreg, wreg}
 
 function integer_flags_setf (msb, n) = {
@@ -4551,7 +4550,7 @@ function integer_flags_setf (msb, n) = {
     PSTATE.V = [tmpreg[msb + 1]] ^ [tmpreg[msb]]
 }
 
-val integer_flags_rmif : forall ('lsb : Int) ('n : Int), ('n >= 0 & 'n <= 31).
+val integer_flags_rmif : forall ('lsb 'n : Int), ('n >= 0 & 'n <= 31).
   (int('lsb), bits(4), int('n)) -> unit effect {rreg, undef, wreg}
 
 function integer_flags_rmif (lsb, mask, n) = {
@@ -4662,10 +4661,10 @@ val integer_arithmetic_mul_widening_64128hi : forall 'd 'datasize 'm 'n ('unsign
   ('n >= 0 & 'n <= 31 & 'datasize in {8, 16, 32, 64}) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, wreg}
 
-function integer_arithmetic_mul_widening_64128hi (d, datasize, m, n, unsigned) = {
+function integer_arithmetic_mul_widening_64128hi (d, datasize, m, n, val_unsigned) = {
     let operand1 : bits('datasize) = X(n);
     let operand2 : bits('datasize) = X(m);
-    let result : int = asl_Int(operand1, unsigned) * asl_Int(operand2, unsigned);
+    let result : int = asl_Int(operand1, val_unsigned) * asl_Int(operand2, val_unsigned);
     X(d) = __GetSlice_int(64, result, 64)
 }
 
@@ -4673,15 +4672,15 @@ val integer_arithmetic_mul_widening_3264 : forall 'a 'd 'datasize 'destsize 'm '
   ('n >= 0 & 'n <= 31 & 'datasize in {8, 16, 32, 64}) & ('m >= 0 & 'm <= 31) & ('a >= 0 & 'a <= 31 & 'destsize in {8, 16, 32, 64}) & ('d >= 0 & 'd <= 31).
   (int('a), int('d), int('datasize), int('destsize), int('m), int('n), bool('sub_op), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function integer_arithmetic_mul_widening_3264 (a, d, datasize, destsize, m, n, sub_op, unsigned) = {
+function integer_arithmetic_mul_widening_3264 (a, d, datasize, destsize, m, n, sub_op, val_unsigned) = {
     let operand1 : bits('datasize) = X(n);
     let operand2 : bits('datasize) = X(m);
     let operand3 : bits('destsize) = X(a);
     result : int = undefined : int;
     if sub_op then {
-        result = asl_Int(operand3, unsigned) - asl_Int(operand1, unsigned) * asl_Int(operand2, unsigned)
+        result = asl_Int(operand3, val_unsigned) - asl_Int(operand1, val_unsigned) * asl_Int(operand2, val_unsigned)
     } else {
-        result = asl_Int(operand3, unsigned) + asl_Int(operand1, unsigned) * asl_Int(operand2, unsigned)
+        result = asl_Int(operand3, val_unsigned) + asl_Int(operand1, val_unsigned) * asl_Int(operand2, val_unsigned)
     };
     X(d) = __GetSlice_int(64, result, 0)
 }
@@ -4707,14 +4706,14 @@ val integer_arithmetic_div : forall 'd 'datasize 'm 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31 & 'datasize in {8, 16, 32, 64}) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function integer_arithmetic_div (d, datasize, m, n, unsigned) = {
+function integer_arithmetic_div (d, datasize, m, n, val_unsigned) = {
     let operand1 : bits('datasize) = X(n);
     let operand2 : bits('datasize) = X(m);
     result : int = undefined : int;
     if IsZero(operand2) then {
         result = 0
     } else {
-        result = RoundTowardsZero(Real(asl_Int(operand1, unsigned)) / Real(asl_Int(operand2, unsigned)))
+        result = RoundTowardsZero(Real(asl_Int(operand1, val_unsigned)) / Real(asl_Int(operand2, val_unsigned)))
     };
     X(d) = __GetSlice_int(datasize, result, 0)
 }
@@ -4760,47 +4759,47 @@ val ExtendReg : forall 'N 'reg 'shift,
 function ExtendReg (N, reg, typ, shift) = {
     assert(shift >= 0 & shift <= 4);
     let val_name : bits('N) = X(reg);
-    unsigned : bool = undefined : bool;
+    val_unsigned : bool = undefined : bool;
     len : int = undefined : int;
     match typ {
       ExtendType_SXTB => {
-          unsigned = false;
+          val_unsigned = false;
           len = 8
       },
       ExtendType_SXTH => {
-          unsigned = false;
+          val_unsigned = false;
           len = 16
       },
       ExtendType_SXTW => {
-          unsigned = false;
+          val_unsigned = false;
           len = 32
       },
       ExtendType_SXTX => {
-          unsigned = false;
+          val_unsigned = false;
           len = 64
       },
       ExtendType_UXTB => {
-          unsigned = true;
+          val_unsigned = true;
           len = 8
       },
       ExtendType_UXTH => {
-          unsigned = true;
+          val_unsigned = true;
           len = 16
       },
       ExtendType_UXTW => {
-          unsigned = true;
+          val_unsigned = true;
           len = 32
       },
       ExtendType_UXTX => {
-          unsigned = true;
+          val_unsigned = true;
           len = 64
       }
     };
     let len = len;
-    let unsigned = unsigned;
+    let val_unsigned = val_unsigned;
     let len = min(len, 'N - shift);
-    assert(constraint('_len >= 0));
-    Extend(slice(val_name, 0, len) @ Zeros(shift), 'N, unsigned)
+    assert(constraint(0 <= '_len));
+    Extend(slice(val_name, 0, len) @ Zeros(shift), 'N, val_unsigned)
 }
 
 val aget_ELR__0 : bits(2) -> bits(64) effect {escape, rreg, undef}
@@ -4835,7 +4834,7 @@ function aget_ELR__1 () = {
     ELR(PSTATE.EL)
 }
 
-val ROR_C : forall ('N : Int) ('shift : Int), 'N >= 0.
+val ROR_C : forall ('N 'shift : Int), 'N >= 0.
   (bits('N), int('shift)) -> (bits('N), bits(1)) effect {escape, undef}
 
 function ROR_C (x, shift) = {
@@ -4846,7 +4845,7 @@ function ROR_C (x, shift) = {
     return((result, carry_out))
 }
 
-val ROR : forall ('N : Int) ('shift : Int), ('N >= 0 & 'shift >= 0).
+val ROR : forall ('N 'shift : Int), ('N >= 0 & 'shift >= 0).
   (bits('N), int('shift)) -> bits('N) effect {escape, undef}
 
 function ROR (x, shift) = {
@@ -12203,7 +12202,7 @@ function Strip (A, data) = {
     }
 }
 
-val integer_pac_strip_dp_1src : forall ('d : Int) ('data : Bool), ('d >= 0 & 'd <= 31).
+val integer_pac_strip_dp_1src : forall ('d : Int)('data : Bool), ('d >= 0 & 'd <= 31).
   (int('d), bool('data)) -> unit effect {escape, rreg, undef, wreg}
 
 function integer_pac_strip_dp_1src (d, data) = {
@@ -13041,7 +13040,7 @@ function AArch64_CheckForSMCUndefOrTrap imm = {
     }
 }
 
-val AArch64_CheckForERetTrap : forall ('eret_with_pac : Bool) ('pac_uses_key_a : Bool).
+val AArch64_CheckForERetTrap : forall ('eret_with_pac 'pac_uses_key_a : Bool).
   (bool('eret_with_pac), bool('pac_uses_key_a)) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch64_CheckForERetTrap (eret_with_pac, pac_uses_key_a) = {
@@ -13174,7 +13173,7 @@ function system_exceptions_runtime_hvc imm = {
     }
 }
 
-val AArch64_CheckAlignment : forall ('alignment : Int) ('iswrite : Bool).
+val AArch64_CheckAlignment : forall ('alignment : Int)('iswrite : Bool).
   (bits(64), int('alignment), AccType, bool('iswrite)) -> bool effect {escape, rreg, undef, wreg}
 
 function AArch64_CheckAlignment (address, alignment, acctype, iswrite) = {
@@ -14297,9 +14296,9 @@ function integer_arithmetic_mul_widening_64128hi_decode (Rd, Rn, Ra, o0, Rm, U, 
     let 'a = UInt(Ra);
     let 'destsize = 64;
     let 'datasize = destsize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    integer_arithmetic_mul_widening_64128hi(d, datasize, m, n, unsigned)
+    integer_arithmetic_mul_widening_64128hi(d, datasize, m, n, val_unsigned)
 }
 
 val integer_arithmetic_mul_widening_3264_decode : (bits(5), bits(5), bits(5), bits(1), bits(5), bits(1), bits(2), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -14313,9 +14312,9 @@ function integer_arithmetic_mul_widening_3264_decode (Rd, Rn, Ra, o0, Rm, U, op5
     let 'destsize = 64;
     let 'datasize = 32;
     let sub_op = o0 == 0b1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    integer_arithmetic_mul_widening_3264(a, d, datasize, destsize, m, n, sub_op, unsigned)
+    integer_arithmetic_mul_widening_3264(a, d, datasize, destsize, m, n, sub_op, val_unsigned)
 }
 
 val integer_arithmetic_mul_uniform_addsub_decode : (bits(5), bits(5), bits(5), bits(1), bits(5), bits(3), bits(2), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -14341,9 +14340,9 @@ function integer_arithmetic_div_decode (Rd, Rn, o1, opcode2_5_1_, Rm, S, op, sf)
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
     let 'datasize = if sf == 0b1 then 64 else 32;
-    let unsigned = o1 == 0b0;
+    let val_unsigned = o1 == 0b0;
     __PostDecode();
-    integer_arithmetic_div(d, datasize, m, n, unsigned)
+    integer_arithmetic_div(d, datasize, m, n, val_unsigned)
 }
 
 val integer_arithmetic_cnt_decode : (bits(5), bits(5), bits(1), bits(5), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -20359,7 +20358,7 @@ function AArch64_ExceptionReturn (new_pc__arg, spsr) = {
     }
 }
 
-val branch_unconditional_eret : forall ('pac : Bool) ('use_key_a : Bool).
+val branch_unconditional_eret : forall ('pac 'use_key_a : Bool).
   (bool('pac), bool('use_key_a)) -> unit effect {escape, rreg, undef, wreg}
 
 function branch_unconditional_eret (pac, use_key_a) = {
@@ -22982,6 +22981,13 @@ function AArch64_SysRegWrite (op0, op1, crn, crm, op2, val_name) = {
     return()
 }
 
+val aset_Mem_Zero : forall ('size : Int), 'size in {1, 2, 4, 8, 16}.
+  (bits(64), int('size)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
+
+function aset_Mem_Zero (address, size) = {
+    aset_Mem(address, size, AccType_NORMAL, Zeros(size * 8))
+}
+
 val integer_tags_mcsettagpre : forall ('n : Int), ('n >= 0 & 'n <= 31).
   (int('n), bits(64), bool, bool, bool) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
@@ -22997,11 +23003,7 @@ function integer_tags_mcsettagpre (n, offset, postindex, writeback, zero_data) =
     if ~(postindex) then {
         address = address + offset
     };
-    if zero_data then {
-        let 'tag_granule = TAG_GRANULE;
-        assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(tag_granule * 8))
-    };
+    if zero_data then aset_Mem_Zero(address, TAG_GRANULE);
     aset_MemTag(address, AllocationTagFromAddress(address));
     if writeback then {
         if postindex then {
@@ -23045,11 +23047,7 @@ function integer_tags_mcsettagpost (n, offset, postindex, writeback, zero_data) 
     if ~(postindex) then {
         address = address + offset
     };
-    if zero_data then {
-        let 'tag_granule = TAG_GRANULE;
-        assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(tag_granule * 8))
-    };
+    if zero_data then aset_Mem_Zero(address, TAG_GRANULE);
     aset_MemTag(address, AllocationTagFromAddress(address));
     if writeback then {
         if postindex then {
@@ -23085,8 +23083,6 @@ function integer_tags_mcsettagpairpre (n, offset, postindex, writeback, zero_dat
     address : bits(64) = undefined : bits(64);
     tag : bits(4) = undefined : bits(4);
     SetNotTagCheckedInstruction(true);
-    let 'tag_granule = TAG_GRANULE;
-    assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
     if n == 31 then {
         CheckSPAlignment();
         address = aget_SP()
@@ -23097,12 +23093,12 @@ function integer_tags_mcsettagpairpre (n, offset, postindex, writeback, zero_dat
         address = address + offset
     };
     if zero_data then {
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule));
-        aset_Mem(address + tag_granule, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule))
+        aset_Mem_Zero(address, TAG_GRANULE);
+        aset_Mem_Zero(address + TAG_GRANULE, TAG_GRANULE)
     };
     let tag = AllocationTagFromAddress(address);
     aset_MemTag(address, tag);
-    aset_MemTag(address + tag_granule, tag);
+    aset_MemTag(address + TAG_GRANULE, tag);
     if writeback then {
         if postindex then {
             address = address + offset
@@ -23137,8 +23133,6 @@ function integer_tags_mcsettagpairpost (n, offset, postindex, writeback, zero_da
     address : bits(64) = undefined : bits(64);
     tag : bits(4) = undefined : bits(4);
     SetNotTagCheckedInstruction(true);
-    let 'tag_granule = TAG_GRANULE;
-    assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
     if n == 31 then {
         CheckSPAlignment();
         address = aget_SP()
@@ -23149,12 +23143,12 @@ function integer_tags_mcsettagpairpost (n, offset, postindex, writeback, zero_da
         address = address + offset
     };
     if zero_data then {
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule));
-        aset_Mem(address + tag_granule, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule))
+        aset_Mem_Zero(address, TAG_GRANULE);
+        aset_Mem_Zero(address + TAG_GRANULE, TAG_GRANULE)
     };
     let tag = AllocationTagFromAddress(address);
     aset_MemTag(address, tag);
-    aset_MemTag(address + tag_granule, tag);
+    aset_MemTag(address + TAG_GRANULE, tag);
     if writeback then {
         if postindex then {
             address = address + offset
@@ -23189,8 +23183,6 @@ function integer_tags_mcsettagpairandzerodatapre (n, offset, postindex, writebac
     address : bits(64) = undefined : bits(64);
     tag : bits(4) = undefined : bits(4);
     SetNotTagCheckedInstruction(true);
-    let 'tag_granule = TAG_GRANULE;
-    assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
     if n == 31 then {
         CheckSPAlignment();
         address = aget_SP()
@@ -23201,12 +23193,12 @@ function integer_tags_mcsettagpairandzerodatapre (n, offset, postindex, writebac
         address = address + offset
     };
     if zero_data then {
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule));
-        aset_Mem(address + tag_granule, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule))
+        aset_Mem_Zero(address, TAG_GRANULE);
+        aset_Mem_Zero(address + TAG_GRANULE, TAG_GRANULE)
     };
     let tag = AllocationTagFromAddress(address);
     aset_MemTag(address, tag);
-    aset_MemTag(address + tag_granule, tag);
+    aset_MemTag(address + TAG_GRANULE, tag);
     if writeback then {
         if postindex then {
             address = address + offset
@@ -23241,8 +23233,6 @@ function integer_tags_mcsettagpairandzerodatapost (n, offset, postindex, writeba
     address : bits(64) = undefined : bits(64);
     tag : bits(4) = undefined : bits(4);
     SetNotTagCheckedInstruction(true);
-    let 'tag_granule = TAG_GRANULE;
-    assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
     if n == 31 then {
         CheckSPAlignment();
         address = aget_SP()
@@ -23253,12 +23243,12 @@ function integer_tags_mcsettagpairandzerodatapost (n, offset, postindex, writeba
         address = address + offset
     };
     if zero_data then {
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule));
-        aset_Mem(address + tag_granule, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule))
+        aset_Mem_Zero(address, TAG_GRANULE);
+        aset_Mem_Zero(address + TAG_GRANULE, TAG_GRANULE)
     };
     let tag = AllocationTagFromAddress(address);
     aset_MemTag(address, tag);
-    aset_MemTag(address + tag_granule, tag);
+    aset_MemTag(address + TAG_GRANULE, tag);
     if writeback then {
         if postindex then {
             address = address + offset
@@ -23293,8 +23283,6 @@ function integer_tags_mcsettagpairandzerodata (n, offset, postindex, writeback, 
     address : bits(64) = undefined : bits(64);
     tag : bits(4) = undefined : bits(4);
     SetNotTagCheckedInstruction(true);
-    let 'tag_granule = TAG_GRANULE;
-    assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
     if n == 31 then {
         CheckSPAlignment();
         address = aget_SP()
@@ -23305,12 +23293,12 @@ function integer_tags_mcsettagpairandzerodata (n, offset, postindex, writeback, 
         address = address + offset
     };
     if zero_data then {
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule));
-        aset_Mem(address + tag_granule, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule))
+        aset_Mem_Zero(address, TAG_GRANULE);
+        aset_Mem_Zero(address + TAG_GRANULE, TAG_GRANULE)
     };
     let tag = AllocationTagFromAddress(address);
     aset_MemTag(address, tag);
-    aset_MemTag(address + tag_granule, tag);
+    aset_MemTag(address + TAG_GRANULE, tag);
     if writeback then {
         if postindex then {
             address = address + offset
@@ -23345,8 +23333,6 @@ function integer_tags_mcsettagpair (n, offset, postindex, writeback, zero_data) 
     address : bits(64) = undefined : bits(64);
     tag : bits(4) = undefined : bits(4);
     SetNotTagCheckedInstruction(true);
-    let 'tag_granule = TAG_GRANULE;
-    assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
     if n == 31 then {
         CheckSPAlignment();
         address = aget_SP()
@@ -23357,12 +23343,12 @@ function integer_tags_mcsettagpair (n, offset, postindex, writeback, zero_data) 
         address = address + offset
     };
     if zero_data then {
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule));
-        aset_Mem(address + tag_granule, tag_granule, AccType_NORMAL, Zeros(8 * tag_granule))
+        aset_Mem_Zero(address, TAG_GRANULE);
+        aset_Mem_Zero(address + TAG_GRANULE, TAG_GRANULE)
     };
     let tag = AllocationTagFromAddress(address);
     aset_MemTag(address, tag);
-    aset_MemTag(address + tag_granule, tag);
+    aset_MemTag(address + TAG_GRANULE, tag);
     if writeback then {
         if postindex then {
             address = address + offset
@@ -23407,9 +23393,7 @@ function integer_tags_mcsettagandzerodatapre (n, offset, postindex, writeback, z
     if ~(postindex) then {
         address = address + offset
     };
-    if zero_data then {
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(tag_granule * 8))
-    };
+    if zero_data then aset_Mem_Zero(address, TAG_GRANULE);
     aset_MemTag(address, AllocationTagFromAddress(address));
     if writeback then {
         if postindex then {
@@ -23453,11 +23437,7 @@ function integer_tags_mcsettagandzerodatapost (n, offset, postindex, writeback, 
     if ~(postindex) then {
         address = address + offset
     };
-    if zero_data then {
-        let 'tag_granule = TAG_GRANULE;
-        assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(tag_granule * 8))
-    };
+    if zero_data then aset_Mem_Zero(address, TAG_GRANULE);
     aset_MemTag(address, AllocationTagFromAddress(address));
     if writeback then {
         if postindex then {
@@ -23501,11 +23481,7 @@ function integer_tags_mcsettagandzerodata (n, offset, postindex, writeback, zero
     if ~(postindex) then {
         address = address + offset
     };
-    if zero_data then {
-        let 'tag_granule = TAG_GRANULE;
-        assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(tag_granule * 8))
-    };
+    if zero_data then aset_Mem_Zero(address, TAG_GRANULE);
     aset_MemTag(address, AllocationTagFromAddress(address));
     if writeback then {
         if postindex then {
@@ -23696,11 +23672,7 @@ function integer_tags_mcsettag (n, offset, postindex, writeback, zero_data) = {
     if ~(postindex) then {
         address = address + offset
     };
-    if zero_data then {
-        let 'tag_granule = TAG_GRANULE;
-        assert(constraint('tag_granule in {1, 2, 4, 8, 16}));
-        aset_Mem(address, tag_granule, AccType_NORMAL, Zeros(tag_granule * 8))
-    };
+    if zero_data then aset_Mem_Zero(address, TAG_GRANULE);
     aset_MemTag(address, AllocationTagFromAddress(address));
     if writeback then {
         if postindex then {
@@ -26121,11 +26093,11 @@ function system_register_system_decode (Rt, op2, CRm, CRn, op1, o0, L) = {
 }
 
 val memory_vector_single_nowb : forall 'datasize 'esize 'index 'm 'n 'selem 't,
-  ('n >= 0 & 'n <= 31).
+  ('n >= 0 & 'n <= 31 & 0 <= 't & 't <= 31 & mod('datasize, 'esize) == 0) & ('m >= 0 & 'm <= 31 | not('m != 31)).
   (int('datasize), int('esize), int('index), int('m), MemOp, int('n), bool, int('selem), int('t), bool) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_vector_single_nowb (datasize, esize, index, m, memop, n, replicate, selem, t__arg, wback) = {
-    t : int = t__arg;
+    t : range(0, 31) = t__arg;
     if HaveMTEExt() then {
         SetNotTagCheckedInstruction(~(wback) & n == 31)
     };
@@ -26135,7 +26107,7 @@ function memory_vector_single_nowb (datasize, esize, index, m, memop, n, replica
     rval : bits(128) = undefined : bits(128);
     element : bits('esize) = undefined : bits('esize);
     let 'ebytes : {'n, 'n == div('esize, 8). int('n)} = esize / 8;
-    assert(constraint(('ebytes in {1, 2, 4, 8, 16} & 'ebytes == 8 * 'esize)));
+    assert(constraint(('ebytes in {1, 2, 4, 8, 16} & 'esize == 8 * 'ebytes)));
     if n == 31 then {
         CheckSPAlignment();
         address = aget_SP()
@@ -26146,7 +26118,7 @@ function memory_vector_single_nowb (datasize, esize, index, m, memop, n, replica
     if replicate then {
         foreach (s from 0 to (selem - 1) by 1 in inc) {
             element = aget_Mem(address + offs, ebytes, AccType_VEC);
-            aset_V(t, replicate_bits(element, datasize / esize));
+            aset_V(t, replicate_bits(element, datasize / esize) : bits('datasize));
             offs = offs + ebytes;
             t = (t + 1) % 32
         }
@@ -26222,6 +26194,8 @@ function memory_vector_single_postinc_memory_vector_single_nowb__decode (Rt, Rn,
     let memop = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'esize = shl_int(8, scale);
+    assert(constraint(('_m >= 0 & '_m <= 31 | not('_m != 31))));
+    assert(constraint(('_n >= 0 & '_n <= 31 & 0 <= '_t & '_t <= 31 & mod('_datasize, '_esize) == 0)));
     __PostDecode();
     memory_vector_single_nowb(datasize, esize, index, m, memop, n, replicate, selem, t, wback)
 }
@@ -26273,12 +26247,14 @@ function memory_vector_single_nowb_memory_vector_single_nowb__decode (Rt, Rn, si
     let memop = if L == 0b1 then MemOp_LOAD else MemOp_STORE;
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'esize = shl_int(8, scale);
+    assert(constraint(('_m >= 0 & '_m <= 31 | not('_m != 31))));
+    assert(constraint(('_n >= 0 & '_n <= 31 & 0 <= '_t & '_t <= 31 & mod('_datasize, '_esize) == 0)));
     __PostDecode();
     memory_vector_single_nowb(datasize, esize, index, m, memop, n, replicate, selem, t, wback)
 }
 
 val memory_vector_multiple_nowb : forall 'datasize 'elements 'esize 'm 'n 'rpt 'selem 't,
-  ('n >= 0 & 'n <= 31).
+  ('n >= 0 & 'n <= 31) & ('datasize >= 0 & 'esize >= 0) & ('m >= 0 & 'm <= 31 | not('m != 31)).
   (int('datasize), int('elements), int('esize), int('m), MemOp, int('n), int('rpt), int('selem), int('t), bool) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_vector_multiple_nowb (datasize, elements, esize, m, memop, n, rpt, selem, t, wback) = {
@@ -26288,7 +26264,7 @@ function memory_vector_multiple_nowb (datasize, elements, esize, m, memop, n, rp
     rval : bits('datasize) = undefined : bits('datasize);
     tt : int = undefined : int;
     let 'ebytes : {'n, 'n == div('esize, 8). int('n)} = esize / 8;
-    assert(constraint(('ebytes in {1, 2, 4, 8, 16} & 'ebytes == 'esize * 8)));
+    assert(constraint(('ebytes in {1, 2, 4, 8, 16} & 'esize == 'ebytes * 8)));
     if HaveMTEExt() then {
         SetNotTagCheckedInstruction(~(wback) & n == 31)
     };
@@ -26434,6 +26410,9 @@ function memory_vector_multiple_nowb_memory_vector_multiple_nowb__decode (Rt, Rn
     };
     let selem = selem;
     let rpt = rpt;
+    assert(constraint(('_m >= 0 & '_m <= 31 | not('_m != 31))));
+    assert(constraint(('_datasize >= 0 & '_esize >= 0)));
+    assert(constraint(('_n >= 0 & '_n <= 31)));
     if (size @ Q) == 0b110 & selem != 1 then {
         throw(Error_Undefined())
     };
@@ -26684,10 +26663,10 @@ function memory_single_simdfp_immediate_signed_offset_normal_memory_single_simdf
 }
 
 val memory_single_general_register : forall 'datasize 'm 'n ('postindex : Bool) 'regsize 'shift ('signed : Bool) 't ('wback : Bool),
-  ('shift >= 0 & 'shift <= 4 & 'm >= 0 & 'm <= 31 & 'n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31 & 'shift >= 0 & 'shift <= 4 & 'datasize in {8, 16, 32, 64}).
+  ('shift >= 0 & 'shift <= 4 & 'm >= 0 & 'm <= 31 & 'n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31 & 'shift >= 0 & 'shift <= 4 & 'datasize in {8, 16, 32, 64}) & ('regsize >= 0 | not('signed)) & ('regsize >= 0 | not(not('signed))).
   (AccType, int('datasize), ExtendType, int('m), MemOp, int('n), bool('postindex), int('regsize), int('shift), bool('signed), int('t), bool('wback)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
-function memory_single_general_register (acctype, datasize, extend_type, m, memop, n, postindex, regsize, shift, signed, t, wback__arg) = {
+function memory_single_general_register (acctype, datasize, extend_type, m, memop, n, postindex, regsize, shift, val_signed, t, wback__arg) = {
     wback : bool = wback__arg;
     let offset : bits(64) = ExtendReg(m, extend_type, shift);
     if HaveMTEExt() then {
@@ -26760,10 +26739,10 @@ function memory_single_general_register (acctype, datasize, extend_type, m, memo
       },
       MemOp_LOAD => {
           if ~(wback) then {
-              AArch64_SetLSInstructionSyndrome(datasize / 8, signed, t, regsize == 64, false)
+              AArch64_SetLSInstructionSyndrome(datasize / 8, val_signed, t, regsize == 64, false)
           };
           data = aget_Mem(address, datasize / 8, acctype);
-          if signed then {
+          if val_signed then {
               aset_X(t, SignExtend(data, regsize))
           } else {
               aset_X(t, ZeroExtend(data, regsize))
@@ -26807,12 +26786,12 @@ function memory_single_general_register_memory_single_general_register__decode (
     let 'm = UInt(Rm);
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
-    signed : bool = undefined : bool;
+    val_signed : bool = undefined : bool;
     regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
-        signed = false
+        val_signed = false
     } else {
         if size == 0b11 then {
             memop = MemOp_PREFETCH;
@@ -26825,23 +26804,23 @@ function memory_single_general_register_memory_single_general_register__decode (
                 throw(Error_Undefined())
             };
             regsize = if [opc[0]] == 0b1 then 32 else 64;
-            signed = true
+            val_signed = true
         }
     };
     let 'datasize = shl_int(8, scale);
     let 'regsize = regsize;
-    let signed = signed;
+    let val_signed = val_signed;
     assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
-    memory_single_general_register(acctype, datasize, extend_type, m, memop, n, postindex, regsize, shift, signed, t, wback)
+    memory_single_general_register(acctype, datasize, extend_type, m, memop, n, postindex, regsize, shift, val_signed, t, wback)
 }
 
 val memory_single_general_immediate_unsigned : forall 'datasize 'n ('postindex : Bool) 'regsize ('signed : Bool) 't ('wback : Bool),
-  (0 <= 'n & 'n <= 31 & 0 <= 't & 't <= 31 & 'datasize in {8, 16, 32, 64}).
+  (0 <= 'n & 'n <= 31 & 0 <= 't & 't <= 31 & 'datasize in {8, 16, 32, 64}) & ('regsize >= 0 | not('signed)) & ('regsize >= 0 | not(not('signed))).
   (AccType, int('datasize), MemOp, int('n), bits(64), bool('postindex), int('regsize), bool('signed), int('t), bool('wback)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
-function memory_single_general_immediate_unsigned (acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback__arg) = {
+function memory_single_general_immediate_unsigned (acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback__arg) = {
     wback : bool = wback__arg;
     if HaveMTEExt() then {
         let is_load_store : bool = memop == MemOp_STORE | memop == MemOp_LOAD;
@@ -26913,10 +26892,10 @@ function memory_single_general_immediate_unsigned (acctype, datasize, memop, n, 
       },
       MemOp_LOAD => {
           if ~(wback) then {
-              AArch64_SetLSInstructionSyndrome(datasize / 8, signed, t, regsize == 64, false)
+              AArch64_SetLSInstructionSyndrome(datasize / 8, val_signed, t, regsize == 64, false)
           };
           data = aget_Mem(address, datasize / 8, acctype);
-          if signed then {
+          if val_signed then {
               aset_X(t, SignExtend(data, regsize))
           } else {
               aset_X(t, ZeroExtend(data, regsize))
@@ -26954,12 +26933,12 @@ function memory_single_general_immediate_unsigned_memory_single_general_immediat
     let 't = UInt(Rt);
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
-    signed : bool = undefined : bool;
+    val_signed : bool = undefined : bool;
     regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
-        signed = false
+        val_signed = false
     } else {
         if size == 0b11 then {
             memop = MemOp_PREFETCH;
@@ -26972,23 +26951,23 @@ function memory_single_general_immediate_unsigned_memory_single_general_immediat
                 throw(Error_Undefined())
             };
             regsize = if [opc[0]] == 0b1 then 32 else 64;
-            signed = true
+            val_signed = true
         }
     };
     let 'datasize = shl_int(8, scale);
     let regsize = regsize;
-    let signed = signed;
+    let val_signed = val_signed;
     assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
-    memory_single_general_immediate_unsigned(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
+    memory_single_general_immediate_unsigned(acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback)
 }
 
 val memory_single_general_immediate_signed_postidx : forall 'datasize 'n ('postindex : Bool) 'regsize ('signed : Bool) 't ('wback : Bool),
-  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}).
+  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}) & ('regsize >= 0 | not('signed)) & ('regsize >= 0 | not(not('signed))).
   (AccType, int('datasize), MemOp, int('n), bits(64), bool('postindex), int('regsize), bool('signed), int('t), bool('wback)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
-function memory_single_general_immediate_signed_postidx (acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback__arg) = {
+function memory_single_general_immediate_signed_postidx (acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback__arg) = {
     wback : bool = wback__arg;
     if HaveMTEExt() then {
         let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
@@ -27060,10 +27039,10 @@ function memory_single_general_immediate_signed_postidx (acctype, datasize, memo
       },
       MemOp_LOAD => {
           if ~(wback) then {
-              AArch64_SetLSInstructionSyndrome(datasize / 8, signed, t, regsize == 64, false)
+              AArch64_SetLSInstructionSyndrome(datasize / 8, val_signed, t, regsize == 64, false)
           };
           data = Mem(address, datasize / 8, acctype);
-          if signed then {
+          if val_signed then {
               X(t) = SignExtend(data, regsize)
           } else {
               X(t) = ZeroExtend(data, regsize)
@@ -27101,12 +27080,12 @@ function memory_single_general_immediate_unsigned_memory_single_general_immediat
     let 't = UInt(Rt);
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
-    signed : bool = undefined : bool;
+    val_signed : bool = undefined : bool;
     regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
-        signed = false
+        val_signed = false
     } else {
         if size == 0b11 then {
             throw(Error_Undefined())
@@ -27116,16 +27095,16 @@ function memory_single_general_immediate_unsigned_memory_single_general_immediat
                 throw(Error_Undefined())
             };
             regsize = if [opc[0]] == 0b1 then 32 else 64;
-            signed = true
+            val_signed = true
         }
     };
     let 'datasize = shl_int(8, scale);
     let regsize = regsize;
-    let signed = signed;
+    let val_signed = val_signed;
     assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
-    memory_single_general_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
+    memory_single_general_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback)
 }
 
 val memory_single_general_immediate_signed_preidx_memory_single_general_immediate_signed_postidx__decode : (bits(5), bits(5), bits(9), bits(2), bits(1), bits(2)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
@@ -27140,12 +27119,12 @@ function memory_single_general_immediate_signed_preidx_memory_single_general_imm
     let 't = UInt(Rt);
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
-    signed : bool = undefined : bool;
+    val_signed : bool = undefined : bool;
     regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
-        signed = false
+        val_signed = false
     } else {
         if size == 0b11 then {
             throw(Error_Undefined())
@@ -27155,16 +27134,16 @@ function memory_single_general_immediate_signed_preidx_memory_single_general_imm
                 throw(Error_Undefined())
             };
             regsize = if [opc[0]] == 0b1 then 32 else 64;
-            signed = true
+            val_signed = true
         }
     };
     let 'datasize = shl_int(8, scale);
     let regsize = regsize;
-    let signed = signed;
+    let val_signed = val_signed;
     assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
-    memory_single_general_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
+    memory_single_general_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback)
 }
 
 val memory_single_general_immediate_signed_postidx_memory_single_general_immediate_signed_postidx__decode : (bits(5), bits(5), bits(9), bits(2), bits(1), bits(2)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
@@ -27179,12 +27158,12 @@ function memory_single_general_immediate_signed_postidx_memory_single_general_im
     let 't = UInt(Rt);
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
-    signed : bool = undefined : bool;
+    val_signed : bool = undefined : bool;
     regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
-        signed = false
+        val_signed = false
     } else {
         if size == 0b11 then {
             throw(Error_Undefined())
@@ -27194,16 +27173,16 @@ function memory_single_general_immediate_signed_postidx_memory_single_general_im
                 throw(Error_Undefined())
             };
             regsize = if [opc[0]] == 0b1 then 32 else 64;
-            signed = true
+            val_signed = true
         }
     };
     let 'datasize = shl_int(8, scale);
     let regsize = regsize;
-    let signed = signed;
+    let val_signed = val_signed;
     assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
-    memory_single_general_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
+    memory_single_general_immediate_signed_postidx(acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback)
 }
 
 val memory_single_general_immediate_signed_pac : forall 'n 't ('use_key_a : Bool) ('wback : Bool),
@@ -27279,10 +27258,10 @@ function memory_single_general_immediate_signed_pac_decode (Rt, Rn, W, imm9, S, 
 }
 
 val memory_single_general_immediate_signed_offset_unpriv : forall 'datasize 'n ('postindex : Bool) 'regsize ('signed : Bool) 't ('wback : Bool),
-  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}).
+  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}) & ('regsize >= 0 | not('signed)) & ('regsize >= 0 | not(not('signed))).
   (AccType, int('datasize), MemOp, int('n), bits(64), bool('postindex), int('regsize), bool('signed), int('t), bool('wback)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
-function memory_single_general_immediate_signed_offset_unpriv (acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback__arg) = {
+function memory_single_general_immediate_signed_offset_unpriv (acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback__arg) = {
     wback : bool = wback__arg;
     if HaveMTEExt() then {
         let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
@@ -27354,10 +27333,10 @@ function memory_single_general_immediate_signed_offset_unpriv (acctype, datasize
       },
       MemOp_LOAD => {
           if ~(wback) then {
-              AArch64_SetLSInstructionSyndrome(datasize / 8, signed, t, regsize == 64, false)
+              AArch64_SetLSInstructionSyndrome(datasize / 8, val_signed, t, regsize == 64, false)
           };
           data = Mem(address, datasize / 8, acctype);
-          if signed then {
+          if val_signed then {
               X(t) = SignExtend(data, regsize)
           } else {
               X(t) = ZeroExtend(data, regsize)
@@ -27403,12 +27382,12 @@ function memory_single_general_immediate_signed_offset_unpriv_memory_single_gene
         acctype = AccType_NORMAL
     };
     memop : MemOp = undefined : MemOp;
-    signed : bool = undefined : bool;
+    val_signed : bool = undefined : bool;
     regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
-        signed = false
+        val_signed = false
     } else {
         if size == 0b11 then {
             throw(Error_Undefined())
@@ -27418,23 +27397,23 @@ function memory_single_general_immediate_signed_offset_unpriv_memory_single_gene
                 throw(Error_Undefined())
             };
             regsize = if [opc[0]] == 0b1 then 32 else 64;
-            signed = true
+            val_signed = true
         }
     };
     let 'datasize = shl_int(8, scale);
     let regsize = regsize;
-    let signed = signed;
+    let val_signed = val_signed;
     assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
-    memory_single_general_immediate_signed_offset_unpriv(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
+    memory_single_general_immediate_signed_offset_unpriv(acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback)
 }
 
 val memory_single_general_immediate_signed_offset_normal : forall 'datasize 'n ('postindex : Bool) 'regsize ('signed : Bool) 't ('wback : Bool),
-  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}).
+  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}) & ('regsize >= 0 | not('signed)) & ('regsize >= 0 | not(not('signed))).
   (AccType, int('datasize), MemOp, int('n), bits(64), bool('postindex), int('regsize), bool('signed), int('t), bool('wback)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
-function memory_single_general_immediate_signed_offset_normal (acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback__arg) = {
+function memory_single_general_immediate_signed_offset_normal (acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback__arg) = {
     wback : bool = wback__arg;
     if HaveMTEExt() then {
         let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
@@ -27506,10 +27485,10 @@ function memory_single_general_immediate_signed_offset_normal (acctype, datasize
       },
       MemOp_LOAD => {
           if ~(wback) then {
-              AArch64_SetLSInstructionSyndrome(datasize / 8, signed, t, regsize == 64, false)
+              AArch64_SetLSInstructionSyndrome(datasize / 8, val_signed, t, regsize == 64, false)
           };
           data = Mem(address, datasize / 8, acctype);
-          if signed then {
+          if val_signed then {
               X(t) = SignExtend(data, regsize)
           } else {
               X(t) = ZeroExtend(data, regsize)
@@ -27547,12 +27526,12 @@ function memory_single_general_immediate_signed_offset_normal_memory_single_gene
     let 't = UInt(Rt);
     let acctype : AccType = AccType_NORMAL;
     memop : MemOp = undefined : MemOp;
-    signed : bool = undefined : bool;
+    val_signed : bool = undefined : bool;
     regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
-        signed = false
+        val_signed = false
     } else {
         if size == 0b11 then {
             memop = MemOp_PREFETCH;
@@ -27565,23 +27544,23 @@ function memory_single_general_immediate_signed_offset_normal_memory_single_gene
                 throw(Error_Undefined())
             };
             regsize = if [opc[0]] == 0b1 then 32 else 64;
-            signed = true
+            val_signed = true
         }
     };
     let 'datasize = shl_int(8, scale);
     let regsize = regsize;
-    let signed = signed;
+    let val_signed = val_signed;
     assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
-    memory_single_general_immediate_signed_offset_normal(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
+    memory_single_general_immediate_signed_offset_normal(acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback)
 }
 
 val memory_single_general_immediate_signed_offset_lda_stl : forall 'datasize 'n ('postindex : Bool) 'regsize ('signed : Bool) 't ('wback : Bool),
-  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}).
+  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}) & ('regsize >= 0 | not('signed)) & ('regsize >= 0 | not(not('signed))).
   (AccType, int('datasize), MemOp, int('n), bits(64), bool('postindex), int('regsize), bool('signed), int('t), bool('wback)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
-function memory_single_general_immediate_signed_offset_lda_stl (acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback__arg) = {
+function memory_single_general_immediate_signed_offset_lda_stl (acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback__arg) = {
     wback : bool = wback__arg;
     if HaveMTEExt() then {
         let is_load_store = memop == MemOp_STORE | memop == MemOp_LOAD;
@@ -27653,10 +27632,10 @@ function memory_single_general_immediate_signed_offset_lda_stl (acctype, datasiz
       },
       MemOp_LOAD => {
           if ~(wback) then {
-              AArch64_SetLSInstructionSyndrome(datasize / 8, signed, t, regsize == 64, false)
+              AArch64_SetLSInstructionSyndrome(datasize / 8, val_signed, t, regsize == 64, false)
           };
           data = Mem(address, datasize / 8, acctype);
-          if signed then {
+          if val_signed then {
               X(t) = SignExtend(data, regsize)
           } else {
               X(t) = ZeroExtend(data, regsize)
@@ -27694,12 +27673,12 @@ function memory_single_general_immediate_signed_offset_lda_stl_memory_single_gen
     let 't = UInt(Rt);
     let acctype : AccType = AccType_ORDERED;
     memop : MemOp = undefined : MemOp;
-    signed : bool = undefined : bool;
+    val_signed : bool = undefined : bool;
     regsize : int = 64;
     if [opc[1]] == 0b0 then {
         memop = if [opc[0]] == 0b1 then MemOp_LOAD else MemOp_STORE;
         regsize = if size == 0b11 then 64 else 32;
-        signed = false
+        val_signed = false
     } else {
         if size == 0b11 then {
             memop = MemOp_PREFETCH;
@@ -27712,16 +27691,16 @@ function memory_single_general_immediate_signed_offset_lda_stl_memory_single_gen
                 throw(Error_Undefined())
             };
             regsize = if [opc[0]] == 0b1 then 32 else 64;
-            signed = true
+            val_signed = true
         }
     };
     let 'datasize = shl_int(8, scale);
     let regsize = regsize;
-    let signed = signed;
+    let val_signed = val_signed;
     assert(regsize >= datasize);
     assert(constraint('datasize in {8, 16, 32, 64}));
     __PostDecode();
-    memory_single_general_immediate_signed_offset_lda_stl(acctype, datasize, memop, n, offset, postindex, regsize, signed, t, wback)
+    memory_single_general_immediate_signed_offset_lda_stl(acctype, datasize, memop, n, offset, postindex, regsize, val_signed, t, wback)
 }
 
 val memory_pair_simdfp_postidx : forall 'datasize 'n 't 't2,
@@ -27955,7 +27934,7 @@ val memory_pair_general_postidx : forall 'datasize 'n ('postindex : Bool) ('sign
   ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}) & ('t2 >= 0 & 't2 <= 31).
   (AccType, int('datasize), MemOp, int('n), bits(64), bool('postindex), bool('signed), int('t), int('t2), bool('wback)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
-function memory_pair_general_postidx (acctype, datasize, memop, n, offset, postindex, signed, t, t2, wback__arg) = {
+function memory_pair_general_postidx (acctype, datasize, memop, n, offset, postindex, val_signed, t, t2, wback__arg) = {
     wback : bool = wback__arg;
     address : bits(64) = undefined : bits(64);
     data1 : bits('datasize) = undefined : bits('datasize);
@@ -28049,7 +28028,7 @@ function memory_pair_general_postidx (acctype, datasize, memop, n, offset, posti
               data1 = undefined : bits('datasize);
               data2 = undefined : bits('datasize)
           };
-          if signed then {
+          if val_signed then {
               X(t) = SignExtend(data1, 64);
               X(t2) = SignExtend(data2, 64)
           } else {
@@ -28088,13 +28067,13 @@ function memory_pair_general_preidx_memory_pair_general_postidx__decode (Rt, Rn,
     if (L @ [opc[0]]) == 0b01 | opc == 0b11 then {
         throw(Error_Undefined())
     };
-    let signed : bool = [opc[0]] != 0b0;
+    let val_signed : bool = [opc[0]] != 0b0;
     let 'scale = 2 + UInt([opc[1]]);
     let 'datasize = shl_int(8, scale);
     assert(constraint('datasize in {8, 16, 32, 64}));
     let offset : bits(64) = LSL(SignExtend(imm7, 64), scale);
     __PostDecode();
-    memory_pair_general_postidx(acctype, datasize, memop, n, offset, postindex, signed, t, t2, wback)
+    memory_pair_general_postidx(acctype, datasize, memop, n, offset, postindex, val_signed, t, t2, wback)
 }
 
 val memory_pair_general_postidx_memory_pair_general_postidx__decode : (bits(5), bits(5), bits(5), bits(7), bits(1), bits(1), bits(2)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
@@ -28111,13 +28090,13 @@ function memory_pair_general_postidx_memory_pair_general_postidx__decode (Rt, Rn
     if (L @ [opc[0]]) == 0b01 | opc == 0b11 then {
         throw(Error_Undefined())
     };
-    let signed : bool = [opc[0]] != 0b0;
+    let val_signed : bool = [opc[0]] != 0b0;
     let 'scale = 2 + UInt([opc[1]]);
     let 'datasize = shl_int(8, scale);
     assert(constraint('datasize in {8, 16, 32, 64}));
     let offset : bits(64) = LSL(SignExtend(imm7, 64), scale);
     __PostDecode();
-    memory_pair_general_postidx(acctype, datasize, memop, n, offset, postindex, signed, t, t2, wback)
+    memory_pair_general_postidx(acctype, datasize, memop, n, offset, postindex, val_signed, t, t2, wback)
 }
 
 val memory_pair_general_offset_memory_pair_general_postidx__decode : (bits(5), bits(5), bits(5), bits(7), bits(1), bits(1), bits(2)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
@@ -28134,13 +28113,13 @@ function memory_pair_general_offset_memory_pair_general_postidx__decode (Rt, Rn,
     if (L @ [opc[0]]) == 0b01 | opc == 0b11 then {
         throw(Error_Undefined())
     };
-    let signed : bool = [opc[0]] != 0b0;
+    let val_signed : bool = [opc[0]] != 0b0;
     let 'scale = 2 + UInt([opc[1]]);
     let 'datasize = shl_int(8, scale);
     assert(constraint('datasize in {8, 16, 32, 64}));
     let offset : bits(64) = LSL(SignExtend(imm7, 64), scale);
     __PostDecode();
-    memory_pair_general_postidx(acctype, datasize, memop, n, offset, postindex, signed, t, t2, wback)
+    memory_pair_general_postidx(acctype, datasize, memop, n, offset, postindex, val_signed, t, t2, wback)
 }
 
 val memory_pair_general_noalloc : forall 'datasize 'n ('postindex : Bool) 't 't2 ('wback : Bool),
@@ -28242,7 +28221,7 @@ function memory_pair_general_noalloc_memory_pair_general_noalloc__decode (Rt, Rn
 }
 
 val memory_ordered : forall 'datasize 'n 'regsize 't,
-  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}).
+  ('n >= 0 & 'n <= 31 | not(not('n == 31))) & ('t >= 0 & 't <= 31 & 'datasize in {8, 16, 32, 64}) & 'regsize >= 0.
   (AccType, int('datasize), MemOp, int('n), int('regsize), int('t)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_ordered (acctype, datasize, memop, n, regsize, t) = {
@@ -28309,6 +28288,7 @@ function memory_orderedrcpc (acctype, datasize, n, regsize, t) = {
         address = aget_X(n)
     };
     let data = aget_Mem(address, dbytes, acctype);
+    assert(constraint((8 * '_dbytes >= 0 & 'regsize >= 0)));
     aset_X(t, ZeroExtend(data, regsize))
 }
 
@@ -28367,17 +28347,17 @@ function memory_literal_simdfp_decode (Rt, imm19, V, opc) = {
     memory_literal_simdfp(offset, size_fixed, t)
 }
 
-val memory_literal_general : forall ('size : Int) ('t : Int), (0 <= 't & 't <= 31).
+val memory_literal_general : forall ('size 't : Int), (0 <= 't & 't <= 31).
   (MemOp, bits(64), bool, int('size), int('t)) -> unit effect {escape, rmem, rreg, undef, wreg, wmem}
 
-function memory_literal_general (memop, offset, signed, size, t) = {
+function memory_literal_general (memop, offset, val_signed, size, t) = {
     let address : bits(64) = aget_PC() + offset;
+    assert(constraint('size in {1, 2, 4, 8, 16}));
     data : bits(8 * 'size) = undefined : bits('size * 8);
     match memop {
       MemOp_LOAD => {
-          assert(constraint('size in {1, 2, 4, 8, 16}));
           data = aget_Mem(address, size, AccType_NORMAL);
-          if signed then {
+          if val_signed then {
               aset_X(t, SignExtend(data, 64))
           } else {
               aset_X(t, data)
@@ -28395,7 +28375,7 @@ function memory_literal_general_decode (Rt, imm19, V, opc) = {
     __unconditional = true;
     let 't = UInt(Rt);
     memop : MemOp = MemOp_LOAD;
-    signed : bool = false;
+    val_signed : bool = false;
     size : int = undefined : int;
     offset : bits(64) = undefined : bits(64);
     match opc {
@@ -28407,7 +28387,7 @@ function memory_literal_general_decode (Rt, imm19, V, opc) = {
       },
       0b10 => {
           size = 4;
-          signed = true
+          val_signed = true
       },
       0b11 => {
           memop = MemOp_PREFETCH
@@ -28416,7 +28396,7 @@ function memory_literal_general_decode (Rt, imm19, V, opc) = {
     let offset = SignExtend(imm19 @ 0b00, 64);
     let size = size;
     __PostDecode();
-    memory_literal_general(memop, offset, signed, size, t)
+    memory_literal_general(memop, offset, val_signed, size, t)
 }
 
 val memory_exclusive_single : forall 'datasize 'elsize 'n 'regsize 's 't 't2,
@@ -28425,6 +28405,7 @@ val memory_exclusive_single : forall 'datasize 'elsize 'n 'regsize 's 't 't2,
 
 function memory_exclusive_single (acctype, datasize, elsize, memop, n, pair, regsize, s, t, t2) = {
     address : bits(64) = undefined : bits(64);
+    assert(constraint('datasize in {8, 16, 32, 64, 128}));
     data : bits('datasize) = undefined : bits('datasize);
     let 'dbytes : {'n, 'n == div('datasize, 8). int('n)} = datasize / 8;
     assert(constraint('dbytes * 8 == 'datasize));
@@ -28506,7 +28487,7 @@ function memory_exclusive_single (acctype, datasize, elsize, memop, n, pair, reg
           } else {
               if pair then {
                   let 'd2 = 'datasize / 2;
-                  assert(constraint('datasize in {16, 32, 64, 128}));
+                  assert(constraint(('d2 in {8, 16, 32, 64} | not('datasize in {8, 16, 32, 64, 128}))));
                   assert(constraint('d2 * 2 == 'datasize));
                   let el1 : bits('d2) = aget_X(t);
                   let el2 : bits('d2) = aget_X(t2);
@@ -28527,12 +28508,12 @@ function memory_exclusive_single (acctype, datasize, elsize, memop, n, pair, reg
       MemOp_LOAD => {
           AArch64_SetExclusiveMonitors(address, dbytes);
           if pair then {
+              assert(constraint('datasize == 2 * 'elsize));
               if rt_unknown then {
                   aset_X(t, undefined : bits('datasize))
               } else {
                   if elsize == 32 then {
                       assert(constraint('dbytes in {1, 2, 4, 8, 16}));
-                      assert(constraint(- 'elsize + 'datasize >= 0));
                       data = aget_Mem(address, dbytes, acctype);
                       if BigEndian() then {
                           aset_X(t, slice(data, elsize, negate(elsize) + datasize));
@@ -28585,6 +28566,7 @@ val memory_exclusive_pair : forall 'datasize 'elsize 'n 'regsize 's 't 't2,
 
 function memory_exclusive_pair (acctype, datasize, elsize, memop, n, pair, regsize, s, t, t2) = {
     address : bits(64) = undefined : bits(64);
+    assert(constraint('datasize in {32, 64, 128}));
     data : bits('datasize) = undefined : bits('datasize);
     let 'dbytes : {'n, 'n == div('datasize, 8). int('n)} = datasize / 8;
     assert(constraint('dbytes * 8 == 'datasize));
@@ -28666,7 +28648,6 @@ function memory_exclusive_pair (acctype, datasize, elsize, memop, n, pair, regsi
           } else {
               if pair then {
                   let 'd2 = 'datasize / 2;
-                  assert(constraint('datasize in {16, 32, 64, 128}));
                   assert(constraint('d2 * 2 == 'datasize));
                   let el1 : bits('d2) = aget_X(t);
                   let el2 : bits('d2) = aget_X(t2);
@@ -28687,12 +28668,12 @@ function memory_exclusive_pair (acctype, datasize, elsize, memop, n, pair, regsi
       MemOp_LOAD => {
           AArch64_SetExclusiveMonitors(address, dbytes);
           if pair then {
+              assert(constraint('datasize == 2 * 'elsize));
               if rt_unknown then {
                   aset_X(t, undefined : bits('datasize))
               } else {
                   if elsize == 32 then {
                       assert(constraint('dbytes in {1, 2, 4, 8, 16}));
-                      assert(constraint(- 'elsize + 'datasize >= 0));
                       data = aget_Mem(address, dbytes, acctype);
                       if BigEndian() then {
                           aset_X(t, slice(data, elsize, negate(elsize) + datasize));
@@ -28740,7 +28721,7 @@ function memory_exclusive_pair_decode (Rt, Rn, Rt2, o0, Rs, o1, L, o2, sz) = {
 }
 
 val memory_atomicops_swp : forall 'datasize 'n 'regsize 's 't,
-  ('n >= 0 & 'n <= 31 & 'datasize in {8, 16, 32, 64} & 's >= 0 & 's <= 31 & 't >= 0 & 't <= 31).
+  ('n >= 0 & 'n <= 31 & 'datasize in {8, 16, 32, 64} & 's >= 0 & 's <= 31 & 't >= 0 & 't <= 31) & 'regsize >= 0.
   (int('datasize), AccType, int('n), int('regsize), int('s), AccType, int('t)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_atomicops_swp (datasize, ldacctype, n, regsize, s, stacctype, t) = {
@@ -28876,7 +28857,7 @@ function memory_atomicops_st_decode (Rt, Rn, opc, o3, Rs, R, A, V, size) = {
 }
 
 val memory_atomicops_ld : forall 'datasize 'n 'regsize 's 't,
-  ('s >= 0 & 's <= 31 & 'datasize in {8, 16, 32, 64} & 'n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31).
+  ('s >= 0 & 's <= 31 & 'datasize in {8, 16, 32, 64} & 'n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31) & ('regsize >= 0 | not('t != 31)).
   (int('datasize), AccType, int('n), MemAtomicOp, int('regsize), int('s), AccType, int('t)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_atomicops_ld (datasize, ldacctype, n, op, regsize, s, stacctype, t) = {
@@ -28975,7 +28956,7 @@ function memory_atomicops_ld_decode (Rt, Rn, opc, o3, Rs, R, A, V, size) = {
 }
 
 val memory_atomicops_cas_single : forall 'datasize 'n 'regsize 's 't,
-  ('s >= 0 & 's <= 31 & 'datasize in {8, 16, 32, 64} & 'n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31).
+  ('s >= 0 & 's <= 31 & 'datasize in {8, 16, 32, 64} & 'n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31) & 'regsize >= 0.
   (int('datasize), AccType, int('n), int('regsize), int('s), AccType, int('t)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_atomicops_cas_single (datasize, ldacctype, n, regsize, s, stacctype, t) = {
@@ -29020,7 +29001,7 @@ function memory_atomicops_cas_single_decode (Rt, Rn, Rt2, o0, Rs, o1, L, o2, siz
 }
 
 val memory_atomicops_cas_pair : forall 'datasize 'n 'regsize 's 't,
-  ('s >= 0 & 's <= 31 & 'datasize in {8, 16, 32, 64}) & 's + 1 <= 31 & ('t >= 0 & 't <= 31) & 't + 1 <= 31 & ('n >= 0 & 'n <= 31 | not(not('n == 31))).
+  ('s >= 0 & 's <= 31 & 'datasize in {8, 16, 32, 64}) & 's + 1 <= 31 & ('t >= 0 & 't <= 31) & 't + 1 <= 31 & ('n >= 0 & 'n <= 31 | not(not('n == 31))) & 'regsize >= 0.
   (int('datasize), AccType, int('n), int('regsize), int('s), AccType, int('t)) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_atomicops_cas_pair (datasize, ldacctype, n, regsize, s, stacctype, t) = {
@@ -29227,7 +29208,7 @@ function AT_S12E0R val_name = {
     AArch64_AT_S12Ex(val_name, EL0, false)
 }
 
-val check_access : forall ('iswrite : Bool) ('a64nb : Int).
+val check_access : forall ('iswrite : Bool)('a64nb : Int).
   (bits(64), bool('iswrite), int('a64nb)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function check_access (val_name, iswrite, a64nb) = {

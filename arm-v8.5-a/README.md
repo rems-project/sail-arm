@@ -39,7 +39,7 @@ init function that loads the device tree blob, kernel, and bootloader
 in the model's memory. To do this the model must be compiled as
 
 ```
-make DEVICES=devices.sail MAIN=mail.sail aarch64
+make DEVICES=devices.sail MAIN=main.sail aarch64
 ```
 
 Otherwise, the model is configured to load and run elf binaries. The

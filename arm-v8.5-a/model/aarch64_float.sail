@@ -154,7 +154,7 @@ function FPAbs op = {
     0b0 @ slice(op, 0, 'N - 1)
 }
 
-val UnsignedSatQ : forall ('N : Int) ('i : Int).
+val UnsignedSatQ : forall ('N 'i : Int).
   (int('i), int('N)) -> (bits('N), bool) effect {undef}
 
 function UnsignedSatQ (i, N) = {
@@ -175,7 +175,7 @@ function UnsignedSatQ (i, N) = {
     return((__GetSlice_int(N, result, 0), saturated))
 }
 
-val SignedSatQ : forall ('N : Int) ('i : Int).
+val SignedSatQ : forall ('N 'i : Int).
   (int('i), int('N)) -> (bits('N), bool) effect {undef}
 
 function SignedSatQ (i, N) = {
@@ -196,13 +196,13 @@ function SignedSatQ (i, N) = {
     return((__GetSlice_int(N, result, 0), saturated))
 }
 
-val SatQ : forall ('N : Int) ('i : Int) ('unsigned : Bool).
+val SatQ : forall ('N 'i : Int)('unsigned : Bool).
   (int('i), int('N), bool('unsigned)) -> (bits('N), bool) effect {undef}
 
-function SatQ (i, N, unsigned) = {
+function SatQ (i, N, val_unsigned) = {
     result : bits('N) = undefined : bits('N);
     sat : bool = undefined : bool;
-    (result, sat) = if unsigned then UnsignedSatQ(i, N) else SignedSatQ(i, N);
+    (result, sat) = if val_unsigned then UnsignedSatQ(i, N) else SignedSatQ(i, N);
     return((result, sat))
 }
 
@@ -311,7 +311,7 @@ function FPDefaultNaN N = {
     (sign @ exp) @ frac
 }
 
-val FPConvertNaN : forall ('N : Int) ('M : Int), 'N >= 0.
+val FPConvertNaN : forall ('N 'M : Int), 'N >= 0.
   (implicit('M), bits('N)) -> bits('M) effect {escape, undef}
 
 function FPConvertNaN (M, op) = {
@@ -538,16 +538,16 @@ function FPRound__1 (N, op, fpcr) = {
     FPRound(op, fpcr, FPRoundingMode(fpcr))
 }
 
-val FixedToFP : forall ('M : Int) ('N : Int) ('fbits : Int), 'M >= 0.
+val FixedToFP : forall ('M 'N 'fbits : Int), 'M >= 0.
   (implicit('N), bits('M), int('fbits), bool, bits(32), FPRounding) -> bits('N) effect {escape, undef, wreg, rreg}
 
-function FixedToFP (N, op, fbits, unsigned, fpcr, rounding) = {
+function FixedToFP (N, op, fbits, val_unsigned, fpcr, rounding) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     assert('M == 16 | 'M == 32 | 'M == 64);
     result : bits('N) = undefined : bits('N);
     assert(fbits >= 0);
     assert(rounding != FPRounding_ODD);
-    let int_operand : int = asl_Int(op, unsigned);
+    let int_operand : int = asl_Int(op, val_unsigned);
     let real_operand : real = Real(int_operand) / 2.0 ^ fbits;
     if real_operand == 0.0 then {
         result = FPZero(0b0)
@@ -781,10 +781,10 @@ function FPUnpackCV (fpval, fpcr) = {
     return((fp_type, sign, value_name))
 }
 
-val FPConvert__0 : forall ('N : Int) ('M : Int), 'N >= 0.
+val FPConvert__0 : forall ('N 'M : Int), 'N >= 0.
   (implicit('M), bits('N), bits(32), FPRounding) -> bits('M) effect {escape, rreg, undef, wreg}
 
-val FPConvert__1 : forall ('N : Int) ('M : Int), 'N >= 0.
+val FPConvert__1 : forall ('N 'M : Int), 'N >= 0.
   (implicit('M), bits('N), bits(32)) -> bits('M) effect {escape, rreg, undef, wreg}
 
 overload FPConvert = {FPConvert__0, FPConvert__1}
@@ -846,7 +846,7 @@ function FPUnpack (fpval, fpcr) = {
     return((fp_type, sign, value_name))
 }
 
-val FPToFixedJS : forall ('M : Int) ('N : Int) ('Is64 : Bool), 'M >= 0.
+val FPToFixedJS : forall ('M 'N : Int)('Is64 : Bool), 'M >= 0.
   (implicit('N), bits('M), bits(32), bool('Is64)) -> bits('N) effect {escape, rreg, undef, wreg}
 
 function FPToFixedJS (N, op, fpcr, Is64) = {
@@ -901,7 +901,7 @@ val FPToFixed : forall 'N 'M 'fbits ('unsigned : Bool),
   ('N >= 0 & 'fbits >= 0).
   (implicit('M), bits('N), int('fbits), bool('unsigned), bits(32), FPRounding) -> bits('M) effect {escape, rreg, undef, wreg}
 
-function FPToFixed (M, op, fbits, unsigned, fpcr, rounding) = {
+function FPToFixed (M, op, fbits, val_unsigned, fpcr, rounding) = {
     assert('N == 16 | 'N == 32 | 'N == 64);
     assert('M == 16 | 'M == 32 | 'M == 64);
     assert(fbits >= 0);
@@ -941,7 +941,7 @@ function FPToFixed (M, op, fbits, unsigned, fpcr, rounding) = {
     };
     overflow : bool = undefined : bool;
     result : bits('M) = undefined : bits('M);
-    (result, overflow) = SatQ(int_result, 'M, unsigned);
+    (result, overflow) = SatQ(int_result, 'M, val_unsigned);
     if overflow then {
         FPProcessException(FPExc_InvalidOp, fpcr)
     } else {
@@ -1064,7 +1064,7 @@ function FPRoundIntN (op, fpcr, rounding, intsize) = {
     result
 }
 
-val FPRoundInt : forall ('N : Int) ('exact : Bool), 'N >= 0.
+val FPRoundInt : forall ('N : Int)('exact : Bool), 'N >= 0.
   (bits('N), bits(32), FPRounding, bool('exact)) -> bits('N) effect {escape, rreg, undef, wreg}
 
 function FPRoundInt (op, fpcr, rounding, exact) = {
@@ -1596,6 +1596,7 @@ function float_move_fp_select_decode (Rd, Rn, cond, Rm, typ, S, M) = {
     };
     let condition = cond;
     __PostDecode();
+    let 'datasize = datasize;
     float_move_fp_select(condition, d, datasize, m, n)
 }
 
@@ -1643,19 +1644,19 @@ val float_convert_int : forall 'd 'fltsize 'intsize 'n 'part ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & 'fltsize >= 0 & ('d >= 0 & 'd <= 31) & 'intsize in {8, 16, 32, 64} & 'part in {0, 1}.
   (int('d), int('fltsize), int('intsize), int('n), FPConvOp, int('part), FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function float_convert_int (d, fltsize, intsize, n, op, part, rounding, unsigned) = {
+function float_convert_int (d, fltsize, intsize, n, op, part, rounding, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     fltval : bits('fltsize) = undefined : bits('fltsize);
     intval : bits('intsize) = undefined : bits('intsize);
     match op {
       FPConvOp_CVT_FtoI => {
           fltval = V(n);
-          intval = FPToFixed(fltval, 0, unsigned, FPCR, rounding);
+          intval = FPToFixed(fltval, 0, val_unsigned, FPCR, rounding);
           X(d) = intval
       },
       FPConvOp_CVT_ItoF => {
           intval = X(n);
-          fltval = FixedToFP(intval, 0, unsigned, FPCR, rounding);
+          fltval = FixedToFP(intval, 0, val_unsigned, FPCR, rounding);
           V(d) = fltval
       },
       FPConvOp_MOV_FtoI => {
@@ -1679,6 +1680,22 @@ function float_convert_int (d, fltsize, intsize, n, op, part, rounding, unsigned
     ()
 }
 
+val float_convert_int_split : forall 'd 'n 'part ('unsigned : Bool),
+  ('n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31 & 'part in {0, 1}).
+  (int('d), int, int, int('n), FPConvOp, int('part), FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
+
+function float_convert_int_split (d, fltsize, intsize, n, op, part, rounding, val_unsigned) = {
+    let fltsize : {|16, 32, 64, 128|} = match fltsize {
+      16 => 16,
+      32 => 32,
+      64 => 64,
+      128 => 128
+    } in let intsize : {|32, 64|} = match intsize {
+      32 => 32,
+      64 => 64
+    } in float_convert_int(d, fltsize, intsize, n, op, part, rounding, val_unsigned)
+}
+
 val float_convert_int_decode : (bits(5), bits(5), bits(3), bits(2), bits(2), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
 
 function float_convert_int_decode (Rd, Rn, opcode, rmode, typ, S, sf) = {
@@ -1689,7 +1706,7 @@ function float_convert_int_decode (Rd, Rn, opcode, rmode, typ, S, sf) = {
     fltsize : int = undefined : int;
     op : FPConvOp = undefined : FPConvOp;
     rounding : FPRounding = undefined : FPRounding;
-    unsigned : bool = undefined : bool;
+    val_unsigned : bool = undefined : bool;
     part : int = undefined : int;
     match typ {
       0b00 => {
@@ -1715,17 +1732,17 @@ function float_convert_int_decode (Rd, Rn, opcode, rmode, typ, S, sf) = {
     match slice(opcode, 1, 2) @ rmode {
       [bitzero] @ [bitzero] @ _ : bits(1) @ _ : bits(1) => {
           rounding = FPDecodeRounding(rmode);
-          unsigned = [opcode[0]] == 0b1;
+          val_unsigned = [opcode[0]] == 0b1;
           op = FPConvOp_CVT_FtoI
       },
       0x4 => {
           rounding = FPRoundingMode(FPCR);
-          unsigned = [opcode[0]] == 0b1;
+          val_unsigned = [opcode[0]] == 0b1;
           op = FPConvOp_CVT_ItoF
       },
       0x8 => {
           rounding = FPRounding_TIEAWAY;
-          unsigned = [opcode[0]] == 0b1;
+          val_unsigned = [opcode[0]] == 0b1;
           op = FPConvOp_CVT_FtoI
       },
       0xC => {
@@ -1748,7 +1765,7 @@ function float_convert_int_decode (Rd, Rn, opcode, rmode, typ, S, sf) = {
               throw(Error_Undefined())
           };
           rounding = FPRounding_ZERO;
-          unsigned = [opcode[0]] == 0b1;
+          val_unsigned = [opcode[0]] == 0b1;
           op = FPConvOp_CVT_FtoI_JS
       },
       _ => {
@@ -1759,7 +1776,7 @@ function float_convert_int_decode (Rd, Rn, opcode, rmode, typ, S, sf) = {
     let 'fltsize = fltsize;
     let 'part = part;
     assert(constraint(('part in {0, 1} & 'fltsize >= 0)));
-    float_convert_int(d, fltsize, intsize, n, op, part, rounding, unsigned)
+    float_convert_int_split(d, fltsize, intsize, n, op, part, rounding, val_unsigned)
 }
 
 val float_convert_fp : forall 'd 'dstsize 'n 'srcsize,
@@ -1823,19 +1840,19 @@ val float_convert_fix : forall 'd 'fltsize 'fracbits 'intsize 'n ('unsigned : Bo
   ('n >= 0 & 'n <= 31) & ('fltsize >= 0 & 'fracbits >= 0) & ('d >= 0 & 'd <= 31) & 'intsize in {8, 16, 32, 64}.
   (int('d), int('fltsize), int('fracbits), int('intsize), int('n), FPConvOp, FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function float_convert_fix (d, fltsize, fracbits, intsize, n, op, rounding, unsigned) = {
+function float_convert_fix (d, fltsize, fracbits, intsize, n, op, rounding, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     fltval : bits('fltsize) = undefined : bits('fltsize);
     intval : bits('intsize) = undefined : bits('intsize);
     match op {
       FPConvOp_CVT_FtoI => {
           fltval = V(n);
-          intval = FPToFixed(fltval, fracbits, unsigned, FPCR, rounding);
+          intval = FPToFixed(fltval, fracbits, val_unsigned, FPCR, rounding);
           X(d) = intval
       },
       FPConvOp_CVT_ItoF => {
           intval = X(n);
-          fltval = FixedToFP(intval, fracbits, unsigned, FPCR, rounding);
+          fltval = FixedToFP(intval, fracbits, val_unsigned, FPCR, rounding);
           V(d) = fltval
       }
     };
@@ -1854,7 +1871,7 @@ function float_convert_fix_decode (Rd, Rn, scale, opcode, rmode, typ, S, sf) = {
     fltsize : int = undefined : int;
     op : FPConvOp = undefined : FPConvOp;
     rounding : FPRounding = undefined : FPRounding;
-    unsigned : bool = undefined : bool;
+    val_unsigned : bool = undefined : bool;
     match typ {
       0b00 => {
           fltsize = 32
@@ -1880,12 +1897,12 @@ function float_convert_fix_decode (Rd, Rn, scale, opcode, rmode, typ, S, sf) = {
     match slice(opcode, 1, 2) @ rmode {
       0x3 => {
           rounding = FPRounding_ZERO;
-          unsigned = [opcode[0]] == 0b1;
+          val_unsigned = [opcode[0]] == 0b1;
           op = FPConvOp_CVT_FtoI
       },
       0x4 => {
           rounding = FPRoundingMode(FPCR);
-          unsigned = [opcode[0]] == 0b1;
+          val_unsigned = [opcode[0]] == 0b1;
           op = FPConvOp_CVT_ItoF
       },
       _ => {
@@ -1895,7 +1912,7 @@ function float_convert_fix_decode (Rd, Rn, scale, opcode, rmode, typ, S, sf) = {
     __PostDecode();
     let 'fltsize = fltsize;
     assert(constraint('fltsize in {16, 32, 64}));
-    float_convert_fix(d, fltsize, fracbits, intsize, n, op, rounding, unsigned)
+    float_convert_fix(d, fltsize, fracbits, intsize, n, op, rounding, val_unsigned)
 }
 
 val float_compare_uncond : forall ('cmp_with_zero : Bool) 'datasize 'm 'n ('signal_all_nans : Bool),

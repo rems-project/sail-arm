@@ -45,6 +45,8 @@
 
 val TakePendingInterrupts : InterruptReq -> bool effect {undef, escape, rreg, wreg}
 
+val TakeSError : bool -> unit effect {escape, rreg, undef, wreg}
+
 val AArch64_TranslationTableWalk : forall ('size : Int).
   (bits(52), bits(1), bits(64), AccType, bool, bool, bool, int('size)) -> TLBRecord effect {escape, undef, rmem, rreg, wreg, wmem}
 
@@ -801,7 +803,7 @@ register LR_mon : bits(32)
 
 let LOG2_TAG_GRANULE_DEFAULT : int(4) = 4
 
-register configuration LOG2_TAG_GRANULE : int = LOG2_TAG_GRANULE_DEFAULT
+register configuration LOG2_TAG_GRANULE : {|0, 1, 2, 3, 4|} = LOG2_TAG_GRANULE_DEFAULT
 
 val IsPhysicalSErrorPending : unit -> bool effect {rreg}
 
@@ -1055,16 +1057,7 @@ val TakeUnmaskedPhysicalSErrorInterrupts : forall ('iesb_req : Bool).
   bool('iesb_req) -> unit effect {escape, rreg, undef, wreg}
 
 function TakeUnmaskedPhysicalSErrorInterrupts iesb_req = {
-    interrupt_req : InterruptReq = undefined : InterruptReq;
-    interrupt_req.take_SE = false;
-    interrupt_req.take_vSE = false;
-    interrupt_req.take_FIQ = false;
-    interrupt_req.take_vFIQ = false;
-    interrupt_req.take_IRQ = false;
-    interrupt_req.take_vIRQ = false;
-    interrupt_req.iesb_req = false;
-    interrupt_req.take_SE = true;
-    interrupt_req.iesb_req = iesb_req;
+    let interrupt_req : InterruptReq = struct { take_SE = true, take_vSE = false, take_IRQ = false, take_vIRQ = false, take_FIQ = false, take_vFIQ = false, iesb_req = iesb_req };
     let interrupt_taken : bool = TakePendingInterrupts(interrupt_req);
     return()
 }
@@ -1611,7 +1604,7 @@ function AArch64_DebugFault (acctype, iswrite) = {
     AArch64_CreateFaultRecord(Fault_Debug, ipaddress, undefined : bits(1), level, acctype, iswrite, extflag, errortype, secondstage, s2fs1walk)
 }
 
-val AArch64_AlignmentFault : forall ('iswrite : Bool) ('secondstage : Bool).
+val AArch64_AlignmentFault : forall ('iswrite 'secondstage : Bool).
   (AccType, bool('iswrite), bool('secondstage)) -> FaultRecord effect {undef}
 
 function AArch64_AlignmentFault (acctype, iswrite, secondstage) = {
@@ -2152,7 +2145,7 @@ function EncodeSDFSC (typ, level) = {
     result
 }
 
-val ConstrainUnpredictableInteger : forall ('low : Int) ('high : Int).
+val ConstrainUnpredictableInteger : forall ('low 'high : Int).
   (int('low), int('high), Unpredictable) -> (Constraint, int) effect {undef}
 
 function ConstrainUnpredictableInteger (low, high, which) = {
@@ -2424,7 +2417,7 @@ function GTEAllocExtObs () = {
     negate(1)
 }
 
-register configuration TAG_GRANULE : int = shl_int(1, LOG2_TAG_GRANULE_DEFAULT)
+register configuration TAG_GRANULE : {|1, 2, 4, 8, 16|} = 16
 
 val GTESetPPURegion : unit -> unit effect {rreg, undef, wreg}
 
@@ -2575,11 +2568,9 @@ val BigEndianReverse : forall ('width : Int), 'width >= 0.
 
 function BigEndianReverse value_name = {
     assert('width == 8 | 'width == 16 | 'width == 32 | 'width == 64 | 'width == 128);
-    let 'half = 'width / 2;
-    if 'width == 8 then {
-        return(value_name)
-    };
-    BigEndianReverse(slice(value_name, 0, half)) @ BigEndianReverse(slice(value_name, half, 'width - half))
+    result : bits('width) = replicate_bits(0b0, 'width);
+    foreach (i from 0 to ('width - 8) by 8 in inc) result[i + 7 .. i] = value_name['width - i - 1 .. 'width - i - 8] : bits(8);
+    return(result)
 }
 
 val __WriteMemory : forall ('N : Int).
@@ -2723,13 +2714,12 @@ function AArch32_ReportHypEntry exception = {
     return()
 }
 
-val Replicate : forall ('M : Int) ('N : Int), ('M >= 1 & mod('N, 'M) == 0).
+val Replicate : forall ('M 'N : Int), ('M >= 1 & mod('N, 'M) == 0).
   (implicit('N), bits('M)) -> bits('N)
 
 function Replicate (N, x) = replicate_bits(x, N / 'M)
 
-val Zeros = {ocaml: "zeros", lem: "zeros", smt: "zeros", interpreter: "zeros", c: "zeros"}: forall ('N : Int).
-  implicit('N) -> bits('N)
+val Zeros = {_: "zeros"}: forall ('N : Int). implicit('N) -> bits('N)
 
 val set_ClearIRQ : bits(32) -> unit effect {rreg, wreg}
 
@@ -2909,18 +2899,13 @@ val __IMPDEF_bits : forall ('N : Int), 'N >= 0.
 
 function __IMPDEF_bits (N, x) = __IMPDEF_bits_map(N, x)
 
-val ZeroExtend__0 : forall ('M : Int) ('N : Int), 'M >= 0.
-  (bits('M), int('N)) -> bits('N) effect {escape}
+val ZeroExtend__0 = {_: "zero_extend"}: forall ('M 'N : Int), ('M >= 0 & 'N >= 0).
+  (bits('M), int('N)) -> bits('N)
 
-val ZeroExtend__1 : forall ('M : Int) ('N : Int), 'M >= 0.
-  (implicit('N), bits('M)) -> bits('N) effect {escape}
+val ZeroExtend__1 : forall ('M 'N : Int), ('M >= 0 & 'N >= 0).
+  (implicit('N), bits('M)) -> bits('N)
 
 overload ZeroExtend = {ZeroExtend__0, ZeroExtend__1}
-
-function ZeroExtend__0 (x, N) = {
-    assert(N >= 'M);
-    Zeros(N - 'M) @ x
-}
 
 function ZeroExtend__1 (N, x) = ZeroExtend__0(x, N)
 
@@ -3011,19 +2996,17 @@ val TransformTag : bits(64) -> bits(4) effect {escape}
 
 function TransformTag vaddr = let vtag : bits(4) = slice(vaddr, 56, 4) in let tagdelta : bits(4) = ZeroExtend([vaddr[55]]) in let ptag : bits(4) = vtag + tagdelta in ptag
 
-val LSR_C : forall ('N : Int) ('shift : Int), 'N >= 0.
+val LSR_C : forall ('N 'shift : Int), 'N >= 0.
   (bits('N), int('shift)) -> (bits('N), bits(1)) effect {escape}
 
 function LSR_C (x, shift) = {
     assert(shift > 0);
-    let (shift as 'S) : {'n, (0 <= 'n & 'n <= 'N). int('n)} = if shift > 'N then 'N else shift;
-    let extended_x : bits('S + 'N) = ZeroExtend(x, shift + 'N);
-    let result : bits('N) = slice(extended_x, shift, 'N);
-    let carry_out : bits(1) = [extended_x[shift - 1]];
+    result : bits('N) = sail_shiftright(x, shift);
+    carry_out : bits(1) = if shift > 'N then 0b0 else [x[shift - 1]];
     return((result, carry_out))
 }
 
-val LSR : forall ('N : Int) ('shift : Int), ('shift >= 0 & 'N >= 0).
+val LSR : forall ('N 'shift : Int), ('shift >= 0 & 'N >= 0).
   (bits('N), int('shift)) -> bits('N) effect {escape, undef}
 
 function LSR (x, shift) = {
@@ -3124,21 +3107,16 @@ function AArch64_PhysicalSErrorSyndrome implicit_esb = {
     syndrome
 }
 
-val SignExtend__0 : forall ('M : Int) ('N : Int), 'M >= 0.
-  (bits('M), int('N)) -> bits('N) effect {escape}
+val SignExtend__0 = {_: "sign_extend"}: forall ('M 'N : Int), ('M >= 0 & 'N >= 0).
+  (bits('M), int('N)) -> bits('N)
 
-val SignExtend__1 : forall ('M : Int) ('N : Int), 'M >= 0.
-  (implicit('N), bits('M)) -> bits('N) effect {escape}
+val SignExtend__1 : forall ('M 'N : Int), ('M >= 0 & 'N >= 0).
+  (implicit('N), bits('M)) -> bits('N)
 
 overload SignExtend = {SignExtend__0, SignExtend__1}
 
-function SignExtend__0 (x, N) = {
-    assert(N >= 'M);
-    replicate_bits([x['M - 1]], N - 'M) @ x
-}
-
 function SignExtend__1 (N, x) = {
-    SignExtend(x, 'N)
+    SignExtend(x, N)
 }
 
 val Ones : forall ('N : Int). implicit('N) -> bits('N)
@@ -3393,9 +3371,9 @@ function GTESetupExtObs () = {
     return()
 }
 
-val Align__0 : forall ('x : Int) ('y : Int). (int('x), int('y)) -> int
+val Align__0 : forall ('x 'y : Int). (int('x), int('y)) -> int
 
-val Align__1 : forall ('N : Int) ('y : Int). (bits('N), int('y)) -> bits('N)
+val Align__1 : forall ('N 'y : Int). (bits('N), int('y)) -> bits('N)
 
 overload Align = {Align__0, Align__1}
 
@@ -5555,7 +5533,7 @@ function EL2Enabled () = {
     IsSecureEL2Enabled() | HaveEL(EL2) & ~(IsSecure())
 }
 
-val getMPAM_PMG : forall ('MPAMn : Int) ('InD : Bool).
+val getMPAM_PMG : forall ('MPAMn : Int)('InD : Bool).
   (int('MPAMn), bool('InD)) -> bits(8) effect {escape, rreg, undef}
 
 function getMPAM_PMG (MPAMn, InD) = {
@@ -5601,7 +5579,7 @@ function getMPAM_PMG (MPAMn, InD) = {
     pmg
 }
 
-val genPMG : forall ('el : Int) ('InD : Bool) ('partid_err : Bool).
+val genPMG : forall ('el : Int)('InD 'partid_err : Bool).
   (int('el), bool('InD), bool('partid_err)) -> bits(8) effect {escape, rreg, undef}
 
 function genPMG (el, InD, partid_err) = {
@@ -5616,7 +5594,7 @@ function genPMG (el, InD, partid_err) = {
     DefaultPMG
 }
 
-val getMPAM_PARTID : forall ('MPAMn : Int) ('InD : Bool).
+val getMPAM_PARTID : forall ('MPAMn : Int)('InD : Bool).
   (int('MPAMn), bool('InD)) -> bits(16) effect {escape, rreg, undef}
 
 function getMPAM_PARTID (MPAMn, InD) = {
@@ -5669,7 +5647,7 @@ function MPAMisVirtual el = {
     ([MPAMIDR_EL1[17]] == 0b1 & EL2Enabled()) & (el == 0 & [MPAMHCR_EL2[0]] == 0b1 | el == 1 & [MPAMHCR_EL2[1]] == 0b1)
 }
 
-val genPARTID : forall ('el : Int) ('InD : Bool).
+val genPARTID : forall ('el : Int)('InD : Bool).
   (int('el), bool('InD)) -> (bits(16), bool) effect {escape, rreg, undef}
 
 function genPARTID (el, InD) = {
@@ -5685,7 +5663,7 @@ function genPARTID (el, InD) = {
     }
 }
 
-val genMPAM : forall ('el : Int) ('InD : Bool) ('secure : Bool).
+val genMPAM : forall ('el : Int)('InD 'secure : Bool).
   (int('el), bool('InD), bool('secure)) -> MPAMinfo effect {escape, rreg, undef}
 
 function genMPAM (el, InD, secure) = {
@@ -7137,7 +7115,7 @@ function AArch64_WatchpointMatch (n, vaddress, size, ispriv, acctype, iswrite) =
     ((value_match_name & state_match) & ls_match) & enabled
 }
 
-val AArch64_BreakpointMatch : forall ('n : Int) ('size : Int).
+val AArch64_BreakpointMatch : forall ('n 'size : Int).
   (int('n), bits(64), AccType, int('size)) -> bool effect {escape, rreg, undef}
 
 function AArch64_BreakpointMatch (n, vaddress, acctype, size) = {
@@ -7693,7 +7671,7 @@ function AArch64_Abort (vaddress, fault) = {
     }
 }
 
-val AArch32_EnterMode : forall ('lr_offset : Int) ('vect_offset : Int).
+val AArch32_EnterMode : forall ('lr_offset 'vect_offset : Int).
   (bits(5), bits(32), int('lr_offset), int('vect_offset)) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch32_EnterMode (target_mode, preferred_exception_return, lr_offset, vect_offset) = {
@@ -7779,7 +7757,7 @@ function AArch64_CheckWatchpoint (vaddress, acctype, iswrite, size) = {
     }
 }
 
-val AArch64_CheckDebug : forall ('iswrite : Bool) ('size : Int).
+val AArch64_CheckDebug : forall ('iswrite : Bool)('size : Int).
   (bits(64), AccType, bool('iswrite), int('size)) -> FaultRecord effect {escape, rreg, undef, wreg}
 
 function AArch64_CheckDebug (vaddress, acctype, iswrite, size) = {
@@ -7797,7 +7775,7 @@ function AArch64_CheckDebug (vaddress, acctype, iswrite, size) = {
     fault
 }
 
-val AArch64_CheckPermission : forall ('level : Int) ('iswrite : Bool).
+val AArch64_CheckPermission : forall ('level : Int)('iswrite : Bool).
   (Permissions, bits(64), int('level), bits(1), AccType, bool('iswrite)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch64_CheckPermission (perms, vaddress, level, NS, acctype, iswrite) = {
@@ -8451,7 +8429,7 @@ function AArch32_ExecutingATS1xPInstr () = {
     }
 }
 
-val AArch32_EnterMonitorMode : forall ('lr_offset : Int) ('vect_offset : Int).
+val AArch32_EnterMonitorMode : forall ('lr_offset 'vect_offset : Int).
   (bits(32), int('lr_offset), int('vect_offset)) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch32_EnterMonitorMode (preferred_exception_return, lr_offset, vect_offset) = {
@@ -8988,7 +8966,7 @@ function AArch32_TranslateAddressS1Off (vaddress, acctype, iswrite) = {
     result
 }
 
-val AArch32_DomainFault : forall ('level : Int) ('iswrite : Bool).
+val AArch32_DomainFault : forall ('level : Int)('iswrite : Bool).
   (bits(4), int('level), AccType, bool('iswrite)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_DomainFault (domain, level, acctype, iswrite) = {
@@ -9001,7 +8979,7 @@ function AArch32_DomainFault (domain, level, acctype, iswrite) = {
     AArch32_CreateFaultRecord(Fault_Domain, ipaddress, domain, level, acctype, iswrite, extflag, debugmoe, errortype, secondstage, s2fs1walk)
 }
 
-val AArch32_CheckDomain : forall ('level : Int) ('iswrite : Bool).
+val AArch32_CheckDomain : forall ('level : Int)('iswrite : Bool).
   (bits(4), bits(32), int('level), AccType, bool('iswrite)) -> (bool, FaultRecord) effect {escape, rreg, undef}
 
 function AArch32_CheckDomain (domain, vaddress, level, acctype, iswrite) = {
@@ -9086,7 +9064,7 @@ function AArch32_TakeVirtualSErrorException (extflag, errortype, impdef_syndrome
     AArch32_EnterMode(M32_Abort, preferred_exception_return, lr_offset, vect_offset)
 }
 
-val AArch32_TakePhysicalSErrorException : forall ('parity : Bool) ('impdef_syndrome : Bool).
+val AArch32_TakePhysicalSErrorException : forall ('parity 'impdef_syndrome : Bool).
   (bool('parity), bits(1), bits(2), bool('impdef_syndrome), bits(24)) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch32_TakePhysicalSErrorException (parity, extflag, errortype, impdef_syndrome, full_syndrome) = {
@@ -9183,9 +9161,7 @@ function TakePendingInterrupts interrupt_req = {
                             AArch32_TakePhysicalIRQException()
                         } else {
                             if AA then {
-                                syndrome32 = AArch32_PhysicalSErrorSyndrome();
-                                syndrome64 = AArch64_PhysicalSErrorSyndrome(interrupt_req.iesb_req);
-                                AArch32_TakePhysicalSErrorException(false, syndrome32.ExT, syndrome32.AET, [syndrome64[24]] == 0b1, slice(syndrome64, 0, 24))
+                                throw(Error_SError(interrupt_req.iesb_req))
                             }
                         }
                     }
@@ -9234,8 +9210,7 @@ function TakePendingInterrupts interrupt_req = {
                             AArch64_TakePhysicalIRQException()
                         } else {
                             if SE then {
-                                syndrome = AArch64_PhysicalSErrorSyndrome(interrupt_req.iesb_req);
-                                AArch64_TakePhysicalSErrorException([syndrome[24]] == 0b1, slice(syndrome, 0, 24))
+                                throw(Error_SError(interrupt_req.iesb_req))
                             }
                         }
                     }
@@ -9246,7 +9221,18 @@ function TakePendingInterrupts interrupt_req = {
     interrupt_taken
 }
 
-val AArch32_AlignmentFault : forall ('iswrite : Bool) ('secondstage : Bool).
+function TakeSError iesb_req = {
+    if UsingAArch32() then {
+        let syndrome32 : AArch32_SErrorSyndrome = AArch32_PhysicalSErrorSyndrome();
+        let syndrome64 = AArch64_PhysicalSErrorSyndrome(iesb_req);
+        AArch32_TakePhysicalSErrorException(false, syndrome32.ExT, syndrome32.AET, [syndrome64[24]] == 0b1, slice(syndrome64, 0, 24))
+    } else {
+        let syndrome = AArch64_PhysicalSErrorSyndrome(iesb_req);
+        AArch64_TakePhysicalSErrorException([syndrome[24]] == 0b1, slice(syndrome, 0, 24))
+    }
+}
+
+val AArch32_AlignmentFault : forall ('iswrite 'secondstage : Bool).
   (AccType, bool('iswrite), bool('secondstage)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_AlignmentFault (acctype, iswrite, secondstage) = {
@@ -9409,7 +9395,7 @@ function AArch32_SecondStageTranslate (S1, vaddress, acctype, iswrite, wasaligne
     result
 }
 
-val AArch32_SecondStageWalk : forall ('iswrite : Bool) ('size : Int).
+val AArch32_SecondStageWalk : forall ('iswrite : Bool)('size : Int).
   (AddressDescriptor, bits(32), AccType, bool('iswrite), int('size)) -> AddressDescriptor effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch32_SecondStageWalk (S1, vaddress, acctype, iswrite, size) = {
@@ -9419,7 +9405,7 @@ function AArch32_SecondStageWalk (S1, vaddress, acctype, iswrite, size) = {
     AArch32_SecondStageTranslate(S1, vaddress, acctype, iswrite, wasaligned, s2fs1walk, size)
 }
 
-val AArch32_CheckPermission : forall ('level : Int) ('iswrite : Bool).
+val AArch32_CheckPermission : forall ('level : Int)('iswrite : Bool).
   (Permissions, bits(32), int('level), bits(4), bits(1), AccType, bool('iswrite)) -> FaultRecord effect {escape, rreg, undef}
 
 function AArch32_CheckPermission (perms, vaddress, level, domain, NS, acctype, iswrite) = {
@@ -9739,7 +9725,7 @@ function AArch32_CheckWatchpoint (vaddress, acctype, iswrite, size) = {
     }
 }
 
-val AArch32_BreakpointMatch : forall ('n : Int) ('size : Int).
+val AArch32_BreakpointMatch : forall ('n 'size : Int).
   (int('n), bits(32), int('size)) -> (bool, bool) effect {escape, rreg, undef}
 
 function AArch32_BreakpointMatch (n, vaddress, size) = {
@@ -9815,7 +9801,7 @@ function AArch32_CheckBreakpoint (vaddress, size) = {
     }
 }
 
-val AArch32_CheckDebug : forall ('iswrite : Bool) ('size : Int).
+val AArch32_CheckDebug : forall ('iswrite : Bool)('size : Int).
   (bits(32), AccType, bool('iswrite), int('size)) -> FaultRecord effect {escape, rreg, undef, wreg}
 
 function AArch32_CheckDebug (vaddress, acctype, iswrite, size) = {
@@ -9967,7 +9953,7 @@ function aset__Mem (desc, size, accdesc, value_name) = {
 overload _Mem = {aset__Mem}
 
 val aget__Mem : forall 'size,
-  (8 * 'size >= 0 | not(not('size in {8, 16}))).
+  (0 <= 8 * 'size | not(not('size in {8, 16}))).
   (AddressDescriptor, int('size), AccessDescriptor) -> bits(8 * 'size) effect {escape, rmem, rreg, undef, wreg}
 
 function aget__Mem (desc, size, accdesc) = {
@@ -10072,11 +10058,6 @@ function IsZero_slice (xs, i, 'l) = {
 function IsOnes_slice (xs, i, 'l) = {
     assert(constraint('l >= 0));
     IsOnes(slice(xs, i, l))
-}
-
-function ZeroExtend_slice_append (o, xs, i, 'l, ys) = {
-    assert(l >= 0 & 'm >= 0 & length(ys) + l <= o);
-    ZeroExtend(slice(xs, i, l) @ ys)
 }
 
 function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctype, iswrite, secondstage, s2fs1walk, size) = {
@@ -10439,14 +10420,15 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
         result.addrdesc = __tc3;
         return(result)
     };
-    let baselowerbound : int = 3 + inputsize - ((3 - level) * stride + grainsize);
+    let 'baselowerbound = 3 + inputsize - ((3 - level) * stride + grainsize);
     baseaddress : bits(52) = undefined : bits(52);
     if outputsize == 52 then {
         let 'z : int = if baselowerbound < 6 then 6 else baselowerbound;
-        assert(constraint(- 'z + 48 >= 0));
+        assert(constraint('z <= 48));
         baseaddress = (slice(baseregister, 2, 4) @ slice(baseregister, z, negate(z) + 48)) @ Zeros(z)
     } else {
-        baseaddress = ZeroExtend_slice_append(baseregister, baselowerbound, negate(baselowerbound) + 48, Zeros(baselowerbound))
+        assert(constraint('baselowerbound <= 48));
+        baseaddress = ZeroExtend(slice(baseregister, baselowerbound, negate(baselowerbound) + 48) @ Zeros(baselowerbound))
     };
     ns_table : bits(1) = undefined : bits(1);
     ns_table = if lookupsecure then 0b0 else 0b1;
@@ -10467,7 +10449,10 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
     hwupdatewalk : bool = undefined : bool;
     repeat {
         addrselectbottom = (3 - level) * stride + grainsize;
-        let index : bits(52) = ZeroExtend_slice_append(inputaddr, addrselectbottom, addrselecttop - addrselectbottom + 1, 0b000);
+        let 'asb = addrselectbottom;
+        let 'ast = addrselecttop;
+        assert(constraint('ast - 'asb + 1 >= 0));
+        let index : bits(52) = ZeroExtend(slice(inputaddr, asb, ast - asb + 1) @ Zeros(3));
         __tc4 : FullAddress = descaddr.paddress;
         __tc4.address = baseaddress | index;
         descaddr.paddress = __tc4;
@@ -10507,12 +10492,12 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
                 result.addrdesc = __tc8;
                 return(result)
             };
+            let 'g = grainsize;
+            assert(constraint('g <= 48));
             if outputsize == 52 then {
-                let 'g = grainsize;
-                assert(constraint(- 'g + 48 >= 0));
                 baseaddress = (slice(desc, 12, 4) @ slice(desc, g, negate(g) + 48)) @ Zeros(g)
             } else {
-                baseaddress = ZeroExtend_slice_append(desc, grainsize, negate(grainsize) + 48, Zeros(grainsize))
+                baseaddress = ZeroExtend(slice(desc, g, negate(g) + 48) @ Zeros(g))
             };
             if ~(secondstage) then {
                 ns_table = ns_table | [desc[63]]
@@ -10569,12 +10554,12 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
     outputaddress : bits(52) = undefined : bits(52);
     if outputsize == 52 then {
         let 'asb = addrselectbottom;
-        assert(constraint((- 'asb + 48 >= 0 & 'asb >= 0)));
+        assert(constraint((0 <= 'asb & 'asb <= 48)));
         outputaddress = (slice(desc, 12, 4) @ slice(desc, asb, negate(asb) + 48)) @ slice(inputaddr, 0, asb)
     } else {
         let 'asb = addrselectbottom;
-        assert(constraint((- 'asb + 48 >= 0 & 'asb >= 0)));
-        outputaddress = ZeroExtend_slice_append(desc, asb, negate(asb) + 48, slice(inputaddr, 0, asb))
+        assert(constraint((0 <= 'asb & 'asb <= 48)));
+        outputaddress = ZeroExtend(slice(desc, asb, negate(asb) + 48) @ slice(inputaddr, 0, asb))
     };
     if [desc[10]] == 0b0 then {
         if ~(update_AF) then {
@@ -11270,7 +11255,10 @@ function AArch32_TranslationTableWalk (ipaddress, vaddress, acctype, iswrite, se
     descaddr2 : AddressDescriptor = undefined : AddressDescriptor;
     repeat {
         addrselectbottom = (3 - level) * stride + grainsize;
-        let index : bits(40) = ZeroExtend_slice_append(inputaddr, addrselectbottom, addrselecttop - addrselectbottom + 1, 0b000);
+        let 'asb = addrselectbottom;
+        let 'ast = addrselecttop;
+        assert(constraint('ast - 'asb + 1 >= 0));
+        let index : bits(40) = ZeroExtend(slice(inputaddr, asb, ast - asb + 1) @ Zeros(3));
         __tc4 : FullAddress = descaddr.paddress;
         __tc4.address = ZeroExtend(baseaddress | index);
         descaddr.paddress = __tc4;

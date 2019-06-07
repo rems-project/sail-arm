@@ -1166,14 +1166,14 @@ function get_ACTLR2_NS () = {
 
 register ACTLR2_S : bits(32)
 
-val AArch32_MarkExclusiveVA : forall ('processorid : Int) ('size : Int).
+val AArch32_MarkExclusiveVA : forall ('processorid 'size : Int).
   (bits(32), int('processorid), int('size)) -> unit
 
 function AArch32_MarkExclusiveVA (address, processorid, size) = {
     return()
 }
 
-val AArch32_IsExclusiveVA : forall ('processorid : Int) ('size : Int).
+val AArch32_IsExclusiveVA : forall ('processorid 'size : Int).
   (bits(32), int('processorid), int('size)) -> bool
 
 function AArch32_IsExclusiveVA (address, processorid, size) = {
@@ -1229,7 +1229,7 @@ function __getISET () = {
     }
 }
 
-val __PreExecute : forall ('pc : Int) ('len : Int).
+val __PreExecute : forall ('pc 'len : Int).
   (int('pc), int('len), bits(32)) -> bool effect {rreg, wreg}
 
 function __PreExecute (pc, len, instr) = {
@@ -1713,7 +1713,7 @@ function StandardFPSCRValue () = {
     (((0b00000 @ [FPSCR[26]]) @ 0b110000) @ [FPSCR[19]]) @ 0b0000000000000000000
 }
 
-val RRX_C : forall ('N : Int), ('N >= 0 & 'N - 1 >= 0).
+val RRX_C : forall ('N : Int), ('N >= 0 & 0 <= 'N - 1).
   (bits('N), bits(1)) -> (bits('N), bits(1))
 
 function RRX_C (x, carry_in) = {
@@ -1793,7 +1793,7 @@ function aget_D n = {
 
 overload D = {aget_D}
 
-val UnsignedSat : forall ('N : Int) ('i : Int).
+val UnsignedSat : forall ('N 'i : Int).
   (int('i), int('N)) -> bits('N) effect {undef}
 
 function UnsignedSat (i, N) = {
@@ -1803,7 +1803,7 @@ function UnsignedSat (i, N) = {
     result
 }
 
-val SignedSat : forall ('N : Int) ('i : Int).
+val SignedSat : forall ('N 'i : Int).
   (int('i), int('N)) -> bits('N) effect {undef}
 
 function SignedSat (i, N) = {
@@ -2038,7 +2038,8 @@ function __CycleEnd () = {
     __EndCycle()
 }
 
-val __SetConfig : (string, int) -> unit effect {configuration, rreg, wreg}
+val __SetConfig : forall ('value : Int).
+  (string, int('value)) -> unit effect {configuration, rreg, wreg, escape}
 
 function __SetConfig (arg, value_name) = {
     match () {
@@ -2301,9 +2302,11 @@ function __SetConfig (arg, value_name) = {
           __mpam_vpmr_max = __raw_GetSlice_int(3, value_name, 0)
       },
       () if arg == "LOG2_TAG_GRANULE" => {
+          assert(constraint('value in {0, 1, 2, 3, 4}));
           LOG2_TAG_GRANULE = value_name
       },
       () if arg == "TAG_GRANULE" => {
+          assert(constraint('value in {1, 2, 4, 8, 16}));
           TAG_GRANULE = value_name
       },
       () if arg == "TAG_STORE_AREA" => {
@@ -2504,7 +2507,7 @@ function AArch32_SysRegReadCanWriteAPSR (cp_num, instr) = {
 }
 
 val Shift_C : forall 'N 'amount,
-  'N >= 0 & ('N - 1 >= 0 | not(not('amount == 0))).
+  'N >= 0 & (0 <= 'N - 1 | not(not('amount == 0))).
   (bits('N), SRType, int('amount), bits(1)) -> (bits('N), bits(1)) effect {escape, undef}
 
 function Shift_C (value_name, typ, amount, carry_in) = {
@@ -2536,7 +2539,7 @@ function Shift_C (value_name, typ, amount, carry_in) = {
 }
 
 val Shift : forall 'N 'amount,
-  'N >= 0 & ('N - 1 >= 0 | not(not('amount == 0))).
+  'N >= 0 & (0 <= 'N - 1 | not(not('amount == 0))).
   (bits('N), SRType, int('amount), bits(1)) -> bits('N) effect {escape, undef}
 
 function Shift (value_name, typ, amount, carry_in) = {
@@ -2991,7 +2994,7 @@ function aget_CNTKCTL () = {
 
 overload CNTKCTL = {aget_CNTKCTL}
 
-val __PostExecute : forall ('pc : Int) ('len : Int) ('ok : Bool).
+val __PostExecute : forall ('pc 'len : Int)('ok : Bool).
   (int('pc), int('len), bits(32), bool('ok)) -> bool effect {escape, rreg, undef, wreg}
 
 function __PostExecute (pc, len, instr, ok) = {
@@ -4161,7 +4164,7 @@ function UDIV_Op_A (d, m, n) = {
 }
 
 val UBFX_Op_A : forall 'd 'lsbit 'n 'widthminus1,
-  ('n >= 0 & 'n <= 15 | not('lsbit + 'widthminus1 <= 31)) & ('lsbit + 'widthminus1 - 'lsbit + 1 >= 0 | not('lsbit + 'widthminus1 <= 31)) & ('d >= 0 & 'd <= 14 | not('lsbit + 'widthminus1 <= 31)).
+  ('n >= 0 & 'n <= 15 | not('lsbit + 'widthminus1 <= 31)) & (0 <= 'lsbit + 'widthminus1 - 'lsbit + 1 | not('lsbit + 'widthminus1 <= 31)) & ('d >= 0 & 'd <= 14 | not('lsbit + 'widthminus1 <= 31)).
   (int('d), int('lsbit), int('n), int('widthminus1)) -> unit effect {escape, rreg, undef, wreg}
 
 function UBFX_Op_A (d, lsbit, n, widthminus1) = {
@@ -5040,7 +5043,7 @@ function SDIV_Op_A (d, m, n) = {
 }
 
 val SBFX_Op_A : forall 'd 'lsbit 'n 'widthminus1,
-  ('n >= 0 & 'n <= 15 | not('lsbit + 'widthminus1 <= 31)) & ('lsbit + 'widthminus1 - 'lsbit + 1 >= 0 | not('lsbit + 'widthminus1 <= 31)) & ('d >= 0 & 'd <= 14 | not('lsbit + 'widthminus1 <= 31)).
+  ('n >= 0 & 'n <= 15 | not('lsbit + 'widthminus1 <= 31)) & (0 <= 'lsbit + 'widthminus1 - 'lsbit + 1 | not('lsbit + 'widthminus1 <= 31)) & ('d >= 0 & 'd <= 14 | not('lsbit + 'widthminus1 <= 31)).
   (int('d), int('lsbit), int('n), int('widthminus1)) -> unit effect {escape, rreg, undef, wreg}
 
 function SBFX_Op_A (d, lsbit, n, widthminus1) = {
@@ -5789,7 +5792,7 @@ function EOR_rr_Op_A (d, m, n, s, setflags, shift_t) = {
 }
 
 val CRC32_Op_A : forall ('crc32c : Bool) 'd 'm 'n 'size,
-  ('n >= 0 & 'n <= 15) & ('m >= 0 & 'm <= 15) & 'size >= 0 & ('d >= 0 & 'd <= 14).
+  ('n >= 0 & 'n <= 15) & ('m >= 0 & 'm <= 15) & 0 <= 'size & ('d >= 0 & 'd <= 14).
   (bool('crc32c), int('d), int('m), int('n), int('size)) -> unit effect {escape, rreg, undef, wreg}
 
 function CRC32_Op_A (crc32c, d, m, n, size) = {
@@ -6081,7 +6084,7 @@ function AArch32_SysRegRead64 (cp_num, instr) = {
     AArch32_AutoGen_SysRegRead64(el, __GetSlice_int(4, cp_num, 0), opc1, CRm, 0b1)
 }
 
-val AArch64_CheckCP15InstrCoarseTraps : forall ('CRn : Int) ('nreg : Int) ('CRm : Int).
+val AArch64_CheckCP15InstrCoarseTraps : forall ('CRn 'nreg 'CRm : Int).
   (int('CRn), int('nreg), int('CRm)) -> bool effect {escape, rreg, undef}
 
 function AArch64_CheckCP15InstrCoarseTraps (CRn, nreg, CRm) = {
@@ -14746,7 +14749,7 @@ function AArch32_CheckFPAdvSIMDTrap advsimd = {
     return()
 }
 
-val AArch32_CheckCP15InstrCoarseTraps : forall ('CRn : Int) ('nreg : Int) ('CRm : Int).
+val AArch32_CheckCP15InstrCoarseTraps : forall ('CRn 'nreg 'CRm : Int).
   (int('CRn), int('nreg), int('CRm)) -> bool effect {escape, rreg, undef}
 
 function AArch32_CheckCP15InstrCoarseTraps (CRn, nreg, CRm) = {
@@ -14766,7 +14769,7 @@ function AArch32_CheckCP15InstrCoarseTraps (CRn, nreg, CRm) = {
     false
 }
 
-val AArch32_CheckAdvSIMDOrFPEnabled : forall ('fpexc_check : Bool) ('advsimd : Bool).
+val AArch32_CheckAdvSIMDOrFPEnabled : forall ('fpexc_check 'advsimd : Bool).
   (bool('fpexc_check), bool('advsimd)) -> unit effect {escape, rreg, undef, wreg}
 
 function AArch32_CheckAdvSIMDOrFPEnabled (fpexc_check, advsimd) = {
@@ -16237,23 +16240,23 @@ val VCVT_xv_Op_A : forall 'd 'fp_size 'frac_bits 'size ('to_fixed : Bool) ('unsi
   ('d >= 0 & 'd <= 31 & 'frac_bits >= 0 & 'size >= 0).
   (int('d), int('fp_size), int('frac_bits), int('size), bool('to_fixed), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VCVT_xv_Op_A (d, fp_size, frac_bits, size, to_fixed, unsigned) = {
+function VCVT_xv_Op_A (d, fp_size, frac_bits, size, to_fixed, val_unsigned) = {
     if ConditionPassed() then {
         CheckVFPEnabled(true);
         if to_fixed then {
             result : bits('size) = undefined : bits('size);
             match fp_size {
               16 => {
-                  result = FPToFixed(slice(aget_S(d), 0, 16), frac_bits, unsigned, FPSCR, FPRounding_ZERO);
-                  aset_S(d, Extend(result, 32, unsigned))
+                  result = FPToFixed(slice(aget_S(d), 0, 16), frac_bits, val_unsigned, FPSCR, FPRounding_ZERO);
+                  aset_S(d, Extend(result, 32, val_unsigned))
               },
               32 => {
-                  result = FPToFixed(aget_S(d), frac_bits, unsigned, FPSCR, FPRounding_ZERO);
-                  aset_S(d, Extend(result, 32, unsigned))
+                  result = FPToFixed(aget_S(d), frac_bits, val_unsigned, FPSCR, FPRounding_ZERO);
+                  aset_S(d, Extend(result, 32, val_unsigned))
               },
               64 => {
-                  result = FPToFixed(aget_D(d), frac_bits, unsigned, FPSCR, FPRounding_ZERO);
-                  aset_D(d, Extend(result, 64, unsigned))
+                  result = FPToFixed(aget_D(d), frac_bits, val_unsigned, FPSCR, FPRounding_ZERO);
+                  aset_D(d, Extend(result, 64, val_unsigned))
               }
             };
             let result = result;
@@ -16261,14 +16264,14 @@ function VCVT_xv_Op_A (d, fp_size, frac_bits, size, to_fixed, unsigned) = {
         } else {
             match fp_size {
               16 => {
-                  let fp16 : bits(16) = FixedToFP(slice(aget_S(d), 0, size), frac_bits, unsigned, FPSCR, FPRounding_TIEEVEN);
+                  let fp16 : bits(16) = FixedToFP(slice(aget_S(d), 0, size), frac_bits, val_unsigned, FPSCR, FPRounding_TIEEVEN);
                   aset_S(d, Zeros(16) @ fp16)
               },
               32 => {
-                  aset_S(d, FixedToFP(slice(aget_S(d), 0, size), frac_bits, unsigned, FPSCR, FPRounding_TIEEVEN))
+                  aset_S(d, FixedToFP(slice(aget_S(d), 0, size), frac_bits, val_unsigned, FPSCR, FPRounding_TIEEVEN))
               },
               64 => {
-                  aset_D(d, FixedToFP(slice(aget_D(d), 0, size), frac_bits, unsigned, FPSCR, FPRounding_TIEEVEN))
+                  aset_D(d, FixedToFP(slice(aget_D(d), 0, size), frac_bits, val_unsigned, FPSCR, FPRounding_TIEEVEN))
               }
             }
         }
@@ -16286,7 +16289,7 @@ function VCVT_xv_T1_A_decode (D, op, U, Vd, sf, sx, i, imm4) = {
         throw(Error_Unpredictable())
     };
     let to_fixed : bool = op == 0b1;
-    let unsigned : bool = U == 0b1;
+    let val_unsigned : bool = U == 0b1;
     let size : {|16, 32|} = if sx == 0b0 then 16 else 32;
     let frac_bits : int = size - UInt(imm4 @ i);
     d : int = undefined : int;
@@ -16312,7 +16315,7 @@ function VCVT_xv_T1_A_decode (D, op, U, Vd, sf, sx, i, imm4) = {
     let 'd = d;
     assert(constraint(('fp_size in {16, 32, 64} & 0 <= 'd & 'd <= 31)));
     __PostDecode();
-    VCVT_xv_Op_A(d, fp_size, frac_bits, size, to_fixed, unsigned)
+    VCVT_xv_Op_A(d, fp_size, frac_bits, size, to_fixed, val_unsigned)
 }
 
 val VCVT_xv_A1_A_decode : (bits(4), bits(1), bits(1), bits(1), bits(4), bits(2), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -16329,7 +16332,7 @@ function VCVT_xv_A1_A_decode (cond, D, op, U, Vd, sf, sx, i, imm4) = {
         throw(Error_Unpredictable())
     };
     let to_fixed : bool = op == 0b1;
-    let unsigned : bool = U == 0b1;
+    let val_unsigned : bool = U == 0b1;
     let size : {|16, 32|} = if sx == 0b0 then 16 else 32;
     let frac_bits : int = size - UInt(imm4 @ i);
     d : int = undefined : int;
@@ -16355,39 +16358,39 @@ function VCVT_xv_A1_A_decode (cond, D, op, U, Vd, sf, sx, i, imm4) = {
     let 'd = d;
     assert(constraint(('fp_size in {16, 32, 64} & 0 <= 'd & 'd <= 31)));
     __PostDecode();
-    VCVT_xv_Op_A(d, fp_size, frac_bits, size, to_fixed, unsigned)
+    VCVT_xv_Op_A(d, fp_size, frac_bits, size, to_fixed, val_unsigned)
 }
 
 val VCVT_iv_Op_A : forall 'd 'esize 'm ('to_integer : Bool) ('unsigned : Bool),
   ('m >= 0 & 'm <= 31 & 'd >= 0 & 'd <= 31).
   (int('d), int('esize), int('m), FPRounding, bool('to_integer), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VCVT_iv_Op_A (d, esize, m, rounding, to_integer, unsigned) = {
+function VCVT_iv_Op_A (d, esize, m, rounding, to_integer, val_unsigned) = {
     if ConditionPassed() then {
         CheckVFPEnabled(true);
         if to_integer then {
             match esize {
               16 => {
-                  aset_S(d, FPToFixed(slice(aget_S(m), 0, 16), 0, unsigned, FPSCR, rounding))
+                  aset_S(d, FPToFixed(slice(aget_S(m), 0, 16), 0, val_unsigned, FPSCR, rounding))
               },
               32 => {
-                  aset_S(d, FPToFixed(aget_S(m), 0, unsigned, FPSCR, rounding))
+                  aset_S(d, FPToFixed(aget_S(m), 0, val_unsigned, FPSCR, rounding))
               },
               64 => {
-                  aset_S(d, FPToFixed(aget_D(m), 0, unsigned, FPSCR, rounding))
+                  aset_S(d, FPToFixed(aget_D(m), 0, val_unsigned, FPSCR, rounding))
               }
             }
         } else {
             match esize {
               16 => {
-                  let fp16 : bits(16) = FixedToFP(aget_S(m), 0, unsigned, FPSCR, rounding);
+                  let fp16 : bits(16) = FixedToFP(aget_S(m), 0, val_unsigned, FPSCR, rounding);
                   aset_S(d, Zeros(16) @ fp16)
               },
               32 => {
-                  aset_S(d, FixedToFP(aget_S(m), 0, unsigned, FPSCR, rounding))
+                  aset_S(d, FixedToFP(aget_S(m), 0, val_unsigned, FPSCR, rounding))
               },
               64 => {
-                  aset_D(d, FixedToFP(aget_S(m), 0, unsigned, FPSCR, rounding))
+                  aset_D(d, FixedToFP(aget_S(m), 0, val_unsigned, FPSCR, rounding))
               }
             }
         }
@@ -16412,9 +16415,9 @@ function VCVT_iv_T1_A_decode (D, opc2, Vd, size, op, M, Vm) = {
     esize : int = undefined : int;
     m : int = undefined : int;
     rounding : FPRounding = undefined : FPRounding;
-    unsigned : bool = undefined : bool;
+    val_unsigned : bool = undefined : bool;
     if to_integer then {
-        unsigned = [opc2[0]] == 0b0;
+        val_unsigned = [opc2[0]] == 0b0;
         rounding = if op == 0b1 then FPRounding_ZERO else FPRoundingMode(FPSCR);
         d = UInt(Vd @ D);
         match size {
@@ -16432,7 +16435,7 @@ function VCVT_iv_T1_A_decode (D, opc2, Vd, size, op, M, Vm) = {
           }
         }
     } else {
-        unsigned = op == 0b0;
+        val_unsigned = op == 0b0;
         rounding = FPRoundingMode(FPSCR);
         m = UInt(Vm @ M);
         match size {
@@ -16455,7 +16458,7 @@ function VCVT_iv_T1_A_decode (D, opc2, Vd, size, op, M, Vm) = {
     let 'm = m;
     assert(constraint(('esize in {16, 32, 64} & 0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31)));
     __PostDecode();
-    VCVT_iv_Op_A(d, esize, m, rounding, to_integer, unsigned)
+    VCVT_iv_Op_A(d, esize, m, rounding, to_integer, val_unsigned)
 }
 
 val VCVT_iv_A1_A_decode : (bits(4), bits(1), bits(3), bits(4), bits(2), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -16479,9 +16482,9 @@ function VCVT_iv_A1_A_decode (cond, D, opc2, Vd, size, op, M, Vm) = {
     esize : int = undefined : int;
     m : int = undefined : int;
     rounding : FPRounding = undefined : FPRounding;
-    unsigned : bool = undefined : bool;
+    val_unsigned : bool = undefined : bool;
     if to_integer then {
-        unsigned = [opc2[0]] == 0b0;
+        val_unsigned = [opc2[0]] == 0b0;
         rounding = if op == 0b1 then FPRounding_ZERO else FPRoundingMode(FPSCR);
         d = UInt(Vd @ D);
         match size {
@@ -16499,7 +16502,7 @@ function VCVT_iv_A1_A_decode (cond, D, opc2, Vd, size, op, M, Vm) = {
           }
         }
     } else {
-        unsigned = op == 0b0;
+        val_unsigned = op == 0b0;
         rounding = FPRoundingMode(FPSCR);
         m = UInt(Vm @ M);
         match size {
@@ -16522,7 +16525,7 @@ function VCVT_iv_A1_A_decode (cond, D, opc2, Vd, size, op, M, Vm) = {
     let 'm = m;
     assert(constraint(('esize in {16, 32, 64} & 0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31)));
     __PostDecode();
-    VCVT_iv_Op_A(d, esize, m, rounding, to_integer, unsigned)
+    VCVT_iv_Op_A(d, esize, m, rounding, to_integer, val_unsigned)
 }
 
 val VCVT_ds_Op_A : forall 'd ('double_to_single : Bool) 'm,
@@ -16665,17 +16668,17 @@ val VCVTA_vfp_Op_A : forall 'd 'esize 'm ('unsigned : Bool),
   ('m >= 0 & 'm <= 31 | not('esize == 16)) & ('d >= 0 & 'd <= 31 | not('esize == 16)) & ('m >= 0 & 'm <= 31 | not('esize == 32)) & ('d >= 0 & 'd <= 31 | not('esize == 32)) & ('m >= 0 & 'm <= 31 | not('esize == 64)) & ('d >= 0 & 'd <= 31 | not('esize == 64)).
   (int('d), int('esize), int('m), FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VCVTA_vfp_Op_A (d, esize, m, rounding, unsigned) = {
+function VCVTA_vfp_Op_A (d, esize, m, rounding, val_unsigned) = {
     CheckVFPEnabled(true);
     match esize {
       16 => {
-          S(d) = FPToFixed(slice(S(m), 0, 16), 0, unsigned, FPSCR, rounding)
+          S(d) = FPToFixed(slice(S(m), 0, 16), 0, val_unsigned, FPSCR, rounding)
       },
       32 => {
-          S(d) = FPToFixed(S(m), 0, unsigned, FPSCR, rounding)
+          S(d) = FPToFixed(S(m), 0, val_unsigned, FPSCR, rounding)
       },
       64 => {
-          S(d) = FPToFixed(D(m), 0, unsigned, FPSCR, rounding)
+          S(d) = FPToFixed(D(m), 0, val_unsigned, FPSCR, rounding)
       }
     }
 }
@@ -16691,7 +16694,7 @@ function VCVTA_vfp_T1_A_decode (D, RM, Vd, size, op, M, Vm) = {
         throw(Error_Undefined())
     };
     let rounding : FPRounding = FPDecodeRM(RM);
-    let unsigned : bool = op == 0b0;
+    let val_unsigned : bool = op == 0b0;
     let d = UInt(Vd @ D);
     esize : int = undefined : int;
     m : int = undefined : int;
@@ -16713,7 +16716,7 @@ function VCVTA_vfp_T1_A_decode (D, RM, Vd, size, op, M, Vm) = {
     let 'm = m;
     assert(constraint(('esize in {16, 32, 64} & 0 <= 'm & 'm <= 31)));
     __PostDecode();
-    VCVTA_vfp_Op_A(d, esize, m, rounding, unsigned)
+    VCVTA_vfp_Op_A(d, esize, m, rounding, val_unsigned)
 }
 
 val VCVTA_vfp_A1_A_decode : (bits(1), bits(2), bits(4), bits(2), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -16724,7 +16727,7 @@ function VCVTA_vfp_A1_A_decode (D, RM, Vd, size, op, M, Vm) = {
         throw(Error_Undefined())
     };
     let rounding : FPRounding = FPDecodeRM(RM);
-    let unsigned : bool = op == 0b0;
+    let val_unsigned : bool = op == 0b0;
     let d = UInt(Vd @ D);
     esize : int = undefined : int;
     m : int = undefined : int;
@@ -16746,7 +16749,7 @@ function VCVTA_vfp_A1_A_decode (D, RM, Vd, size, op, M, Vm) = {
     let 'm = m;
     assert(constraint(('esize in {16, 32, 64} & 0 <= 'm & 'm <= 31)));
     __PostDecode();
-    VCVTA_vfp_Op_A(d, esize, m, rounding, unsigned)
+    VCVTA_vfp_Op_A(d, esize, m, rounding, val_unsigned)
 }
 
 val VCMP_Op_A : forall 'd 'esize 'm ('quiet_nan_exc : Bool) ('with_zero : Bool),
@@ -16938,7 +16941,7 @@ function VCMP_A1_A_decode (cond, D, Vd, size, E, M, Vm) = {
     VCMP_Op_A(d, esize, m, quiet_nan_exc, with_zero)
 }
 
-val CheckAdvSIMDOrVFPEnabled : forall ('include_fpexc_check : Bool) ('advsimd : Bool).
+val CheckAdvSIMDOrVFPEnabled : forall ('include_fpexc_check 'advsimd : Bool).
   (bool('include_fpexc_check), bool('advsimd)) -> unit effect {escape, rreg, undef, wreg}
 
 function CheckAdvSIMDOrVFPEnabled (include_fpexc_check_name, advsimd) = {
@@ -17556,10 +17559,10 @@ val VMOV_sr_Op_A : forall ('advsimd : Bool) 'esize 'index 'n 't ('unsigned : Boo
   ('n >= 0 & 'n <= 31 | not('unsigned)) & ('esize >= 0 | not('unsigned)) & ('t >= 0 & 't <= 14 | not('unsigned)) & ('n >= 0 & 'n <= 31 | not(not('unsigned))) & ('esize >= 0 | not(not('unsigned))) & ('t >= 0 & 't <= 14 | not(not('unsigned))).
   (bool('advsimd), int('esize), int('index), int('n), int('t), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VMOV_sr_Op_A (advsimd, esize, index, n, t, unsigned) = {
+function VMOV_sr_Op_A (advsimd, esize, index, n, t, val_unsigned) = {
     if ConditionPassed() then {
         CheckAdvSIMDOrVFPEnabled(true, advsimd);
-        if unsigned then {
+        if val_unsigned then {
             R(t) = ZeroExtend(aget_Elem(D(n), index, esize), 32)
         } else {
             R(t) = SignExtend(aget_Elem(D(n), index, esize), 32)
@@ -17612,13 +17615,13 @@ function VMOV_sr_T1A1_A_decode__0 (cond, U, opc1, Vn, Rt, N, opc2) = {
     let advsimd = advsimd;
     let t = UInt(Rt);
     let n = UInt(N @ Vn);
-    let unsigned : bool = U == 0b1;
+    let val_unsigned : bool = U == 0b1;
     if t == 15 then {
         throw(Error_Unpredictable())
     };
     __PostDecode();
     assert(index >= 0 & esize <= 32 & esize >= 0 & (index + 1) * esize <= 64);
-    VMOV_sr_Op_A(advsimd, esize, index, n, t, unsigned)
+    VMOV_sr_Op_A(advsimd, esize, index, n, t, val_unsigned)
 }
 
 function VMOV_sr_T1A1_A_decode__1 (U, opc1, Vn, Rt, N, opc2) = {
@@ -17654,17 +17657,17 @@ function VMOV_sr_T1A1_A_decode__1 (U, opc1, Vn, Rt, N, opc2) = {
     let advsimd = advsimd;
     let t = UInt(Rt);
     let n = UInt(N @ Vn);
-    let unsigned : bool = U == 0b1;
+    let val_unsigned : bool = U == 0b1;
     if t == 15 then {
         throw(Error_Unpredictable())
     };
     __PostDecode();
     assert(index >= 0 & esize <= 32 & esize >= 0 & (index + 1) * esize <= 64);
-    VMOV_sr_Op_A(advsimd, esize, index, n, t, unsigned)
+    VMOV_sr_Op_A(advsimd, esize, index, n, t, val_unsigned)
 }
 
 val VMOV_rs_Op_A : forall ('advsimd : Bool) 'd 'esize 'index 't,
-  ('d >= 0 & 'd <= 31) & ('t >= 0 & 't <= 15) & 'esize >= 0.
+  ('d >= 0 & 'd <= 31) & ('t >= 0 & 't <= 15) & 0 <= 'esize.
   (bool('advsimd), int('d), int('esize), int('index), int('t)) -> unit effect {escape, rreg, undef, wreg}
 
 function VMOV_rs_Op_A (advsimd, d, esize, index, t) = {
@@ -17716,7 +17719,7 @@ function VMOV_rs_T1A1_A_decode__0 (cond, opc1, Vd, Rt, D, opc2) = {
     let advsimd = advsimd;
     let d = UInt(D @ Vd);
     let t = UInt(Rt);
-    assert(constraint('_esize >= 0));
+    assert(constraint(0 <= '_esize));
     assert(constraint(('_t >= 0 & '_t <= 15)));
     assert(constraint(('_d >= 0 & '_d <= 31)));
     if t == 15 then {
@@ -17756,7 +17759,7 @@ function VMOV_rs_T1A1_A_decode__1 (opc1, Vd, Rt, D, opc2) = {
     let advsimd = advsimd;
     let d = UInt(D @ Vd);
     let t = UInt(Rt);
-    assert(constraint('_esize >= 0));
+    assert(constraint(0 <= '_esize));
     assert(constraint(('_t >= 0 & '_t <= 15)));
     assert(constraint(('_d >= 0 & '_d <= 31)));
     if t == 15 then {
@@ -19313,7 +19316,7 @@ function VTBL_T1A1_A_decode (D, Vn, Vd, len, N, op, M, Vm) = {
     VTBL_Op_A(d, is_vtbl, length, m, n)
 }
 
-val VSWP_Op_A : forall ('d : Int) ('m : Int) ('regs : Int).
+val VSWP_Op_A : forall ('d 'm 'regs : Int).
   (int('d), int('m), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VSWP_Op_A (d, m, regs) = {
@@ -19389,7 +19392,7 @@ val VSUBL_Op_A : forall 'd 'elements 'esize ('is_vsubw : Bool) 'm 'n ('unsigned 
   (0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'd & 'd <= 31).
   (int('d), int('elements), int('esize), bool('is_vsubw), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VSUBL_Op_A (d, elements, esize, is_vsubw, m, n, unsigned) = {
+function VSUBL_Op_A (d, elements, esize, is_vsubw, m, n, val_unsigned) = {
     if ConditionPassed() then {
         op1 : int = undefined : int;
         CheckAdvSIMDEnabled();
@@ -19397,11 +19400,11 @@ function VSUBL_Op_A (d, elements, esize, is_vsubw, m, n, unsigned) = {
             assert(e >= 0 & esize >= 0 & (e + 1) * esize <= 64);
             if is_vsubw then {
                 assert((e + 1) * (2 * esize) <= 128);
-                op1 = asl_Int(aget_Elem(Qin(shr_int(n, 1)), e, 2 * esize), unsigned)
+                op1 = asl_Int(aget_Elem(Qin(shr_int(n, 1)), e, 2 * esize), val_unsigned)
             } else {
-                op1 = asl_Int(aget_Elem(Din(n), e, esize), unsigned)
+                op1 = asl_Int(aget_Elem(Din(n), e, esize), val_unsigned)
             };
-            let result = op1 - asl_Int(aget_Elem(Din(m), e, esize), unsigned);
+            let result = op1 - asl_Int(aget_Elem(Din(m), e, esize), val_unsigned);
             Q(shr_int(d, 1)) = aset_Elem(Q(shr_int(d, 1)), e, 2 * esize, __GetSlice_int(2 * esize, result, 0))
         }
     }
@@ -19417,7 +19420,7 @@ function VSUBL_T1A1_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     if [Vd[0]] == 0b1 | op == 0b1 & [Vn[0]] == 0b1 then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let is_vsubw = op == 0b1;
@@ -19425,7 +19428,7 @@ function VSUBL_T1A1_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     let n = UInt(N @ Vn);
     let m = UInt(M @ Vm);
     __PostDecode();
-    VSUBL_Op_A(d, elements, esize, is_vsubw, m, n, unsigned)
+    VSUBL_Op_A(d, elements, esize, is_vsubw, m, n, val_unsigned)
 }
 
 val VSUBHN_Op_A : forall 'd 'elements 'esize 'm 'n,
@@ -19533,7 +19536,7 @@ val VSRA_Op_A : forall 'd 'elements 'esize 'm 'regs 'shift_amount ('unsigned : B
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('regs), int('shift_amount), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VSRA_Op_A (d, elements, esize, m, regs, shift_amount, unsigned) = {
+function VSRA_Op_A (d, elements, esize, m, regs, shift_amount, val_unsigned) = {
     if ConditionPassed() then {
         result : int = undefined : int;
         CheckAdvSIMDEnabled();
@@ -19541,7 +19544,7 @@ function VSRA_Op_A (d, elements, esize, m, regs, shift_amount, unsigned) = {
             foreach (e from 0 to (elements - 1) by 1 in inc) {
                 assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
-                result = shr_int(asl_Int(aget_Elem(D(m + r), e, esize), unsigned), shift_amount);
+                result = shr_int(asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned), shift_amount);
                 D(d + r) = aset_Elem(D(d + r), e, esize, aget_Elem(D(d + r), e, esize) + result)
             }
         }
@@ -19586,13 +19589,13 @@ function VSRA_T1A1_A_decode (U, D, imm6, Vd, L, Q, M, Vm) = {
     let shift_amount = shift_amount;
     let esize = esize;
     let elements = elements;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     assert(constraint('_esize >= 0));
     __PostDecode();
-    VSRA_Op_A(d, elements, esize, m, regs, shift_amount, unsigned)
+    VSRA_Op_A(d, elements, esize, m, regs, shift_amount, val_unsigned)
 }
 
 val VSLI_Op_A : forall 'd 'elements 'esize 'm 'regs 'shift_amount,
@@ -19722,7 +19725,7 @@ val VSHR_Op_A : forall 'd 'elements 'esize 'm 'regs 'shift_amount ('unsigned : B
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('regs), int('shift_amount), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VSHR_Op_A (d, elements, esize, m, regs, shift_amount, unsigned) = {
+function VSHR_Op_A (d, elements, esize, m, regs, shift_amount, val_unsigned) = {
     if ConditionPassed() then {
         result : int = undefined : int;
         CheckAdvSIMDEnabled();
@@ -19730,7 +19733,7 @@ function VSHR_Op_A (d, elements, esize, m, regs, shift_amount, unsigned) = {
             foreach (e from 0 to (elements - 1) by 1 in inc) {
                 assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
-                result = shr_int(asl_Int(aget_Elem(D(m + r), e, esize), unsigned), shift_amount);
+                result = shr_int(asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned), shift_amount);
                 D(d + r) = aset_Elem(D(d + r), e, esize, __GetSlice_int(esize, result, 0))
             }
         }
@@ -19775,20 +19778,20 @@ function VSHR_T1A1_A_decode (U, D, imm6, Vd, L, Q, M, Vm) = {
     let shift_amount = shift_amount;
     let esize = esize;
     let elements = elements;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     assert(constraint('_esize >= 0));
     __PostDecode();
-    VSHR_Op_A(d, elements, esize, m, regs, shift_amount, unsigned)
+    VSHR_Op_A(d, elements, esize, m, regs, shift_amount, val_unsigned)
 }
 
 val VSHL_r_Op_A : forall 'd 'elements 'esize 'm 'n 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VSHL_r_Op_A (d, elements, esize, m, n, regs, unsigned) = {
+function VSHL_r_Op_A (d, elements, esize, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         result : int = undefined : int;
         shift : int = undefined : int;
@@ -19799,7 +19802,7 @@ function VSHL_r_Op_A (d, elements, esize, m, n, regs, unsigned) = {
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
                 shift = SInt(slice(aget_Elem(D(n + r), e, esize), 0, 8));
-                result = shl_int(asl_Int(aget_Elem(D(m + r), e, esize), unsigned), shift);
+                result = shl_int(asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned), shift);
                 D(d + r) = aset_Elem(D(d + r), e, esize, __GetSlice_int(esize, result, 0))
             }
         }
@@ -19813,7 +19816,7 @@ function VSHL_r_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vm[0]] == 0b1) | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -19821,7 +19824,7 @@ function VSHL_r_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     let n = UInt(N @ Vn);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VSHL_r_Op_A(d, elements, esize, m, n, regs, unsigned)
+    VSHL_r_Op_A(d, elements, esize, m, n, regs, val_unsigned)
 }
 
 val VSHL_i_Op_A : forall 'd 'elements 'esize 'm 'regs 'shift_amount,
@@ -19891,13 +19894,13 @@ val VSHLL_Op_A : forall 'd 'elements 'esize 'm 'shift_amount ('unsigned : Bool),
   ('m >= 0 & 'm <= 31 & 'esize >= 0 & 0 <= 'd & 'd <= 31).
   (int('d), int('elements), int('esize), int('m), int('shift_amount), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VSHLL_Op_A (d, elements, esize, m, shift_amount, unsigned) = {
+function VSHLL_Op_A (d, elements, esize, m, shift_amount, val_unsigned) = {
     if ConditionPassed() then {
         result : int = undefined : int;
         CheckAdvSIMDEnabled();
         foreach (e from 0 to (elements - 1) by 1 in inc) {
             assert(e >= 0 & (e + 1) * esize <= 64);
-            result = shl_int(asl_Int(aget_Elem(Din(m), e, esize), unsigned), shift_amount);
+            result = shl_int(asl_Int(aget_Elem(Din(m), e, esize), val_unsigned), shift_amount);
             Q(shr_int(d, 1)) = aset_Elem(Q(shr_int(d, 1)), e, 2 * esize, __GetSlice_int(2 * esize, result, 0))
         }
     }
@@ -19913,11 +19916,11 @@ function VSHLL_T2A2_A_decode (D, size, Vd, M, Vm) = {
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let shift_amount : int = esize;
-    let unsigned = false;
+    let val_unsigned = false;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     __PostDecode();
-    VSHLL_Op_A(d, elements, esize, m, shift_amount, unsigned)
+    VSHLL_Op_A(d, elements, esize, m, shift_amount, val_unsigned)
 }
 
 val VSHLL_T1A1_A_decode : (bits(1), bits(1), bits(6), bits(4), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -19956,12 +19959,12 @@ function VSHLL_T1A1_A_decode (U, D, imm6, Vd, M, Vm) = {
     if shift_amount == 0 then {
         throw(Error_See("VMOVL"))
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     assert(constraint(('_m >= 0 & '_m <= 31 & '_esize >= 0 & 0 <= '_d & '_d <= 31)));
     __PostDecode();
-    VSHLL_Op_A(d, elements, esize, m, shift_amount, unsigned)
+    VSHLL_Op_A(d, elements, esize, m, shift_amount, val_unsigned)
 }
 
 val VRSUBHN_Op_A : forall 'd 'elements 'esize 'm 'n,
@@ -20005,7 +20008,7 @@ val VRSRA_Op_A : forall 'd 'elements 'esize 'm 'regs 'shift_amount ('unsigned : 
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('regs), int('shift_amount), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VRSRA_Op_A (d, elements, esize, m, regs, shift_amount, unsigned) = {
+function VRSRA_Op_A (d, elements, esize, m, regs, shift_amount, val_unsigned) = {
     if ConditionPassed() then {
         result : int = undefined : int;
         round_const : int = undefined : int;
@@ -20015,7 +20018,7 @@ function VRSRA_Op_A (d, elements, esize, m, regs, shift_amount, unsigned) = {
             foreach (e from 0 to (elements - 1) by 1 in inc) {
                 assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
-                result = shr_int(asl_Int(aget_Elem(D(m + r), e, esize), unsigned) + round_const, shift_amount);
+                result = shr_int(asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned) + round_const, shift_amount);
                 D(d + r) = aset_Elem(D(d + r), e, esize, aget_Elem(D(d + r), e, esize) + result)
             }
         }
@@ -20060,13 +20063,13 @@ function VRSRA_T1A1_A_decode (U, D, imm6, Vd, L, Q, M, Vm) = {
     let shift_amount = shift_amount;
     let esize = esize;
     let elements = elements;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     assert(constraint('_esize >= 0));
     __PostDecode();
-    VRSRA_Op_A(d, elements, esize, m, regs, shift_amount, unsigned)
+    VRSRA_Op_A(d, elements, esize, m, regs, shift_amount, val_unsigned)
 }
 
 val VRSQRTS_Op_A : forall 'd 'elements 'esize 'm 'n 'regs,
@@ -20308,7 +20311,7 @@ val VRSHR_Op_A : forall 'd 'elements 'esize 'm 'regs 'shift_amount ('unsigned : 
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('regs), int('shift_amount), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VRSHR_Op_A (d, elements, esize, m, regs, shift_amount, unsigned) = {
+function VRSHR_Op_A (d, elements, esize, m, regs, shift_amount, val_unsigned) = {
     if ConditionPassed() then {
         result : int = undefined : int;
         round_const : int = undefined : int;
@@ -20318,7 +20321,7 @@ function VRSHR_Op_A (d, elements, esize, m, regs, shift_amount, unsigned) = {
             foreach (e from 0 to (elements - 1) by 1 in inc) {
                 assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
-                result = shr_int(asl_Int(aget_Elem(D(m + r), e, esize), unsigned) + round_const, shift_amount);
+                result = shr_int(asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned) + round_const, shift_amount);
                 D(d + r) = aset_Elem(D(d + r), e, esize, __GetSlice_int(esize, result, 0))
             }
         }
@@ -20363,20 +20366,20 @@ function VRSHR_T1A1_A_decode (U, D, imm6, Vd, L, Q, M, Vm) = {
     let shift_amount = shift_amount;
     let esize = esize;
     let elements = elements;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     assert(constraint('_esize >= 0));
     __PostDecode();
-    VRSHR_Op_A(d, elements, esize, m, regs, shift_amount, unsigned)
+    VRSHR_Op_A(d, elements, esize, m, regs, shift_amount, val_unsigned)
 }
 
 val VRSHL_Op_A : forall 'd 'elements 'esize 'm 'n 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VRSHL_Op_A (d, elements, esize, m, n, regs, unsigned) = {
+function VRSHL_Op_A (d, elements, esize, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         result : int = undefined : int;
         round_const : int = undefined : int;
@@ -20389,7 +20392,7 @@ function VRSHL_Op_A (d, elements, esize, m, n, regs, unsigned) = {
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
                 shift = SInt(slice(aget_Elem(D(n + r), e, esize), 0, 8));
                 round_const = shl_int(1, negate(shift) - 1);
-                result = shl_int(asl_Int(aget_Elem(D(m + r), e, esize), unsigned) + round_const, shift);
+                result = shl_int(asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned) + round_const, shift);
                 D(d + r) = aset_Elem(D(d + r), e, esize, __GetSlice_int(esize, result, 0))
             }
         }
@@ -20403,7 +20406,7 @@ function VRSHL_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vm[0]] == 0b1) | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -20411,7 +20414,7 @@ function VRSHL_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     let n = UInt(N @ Vn);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VRSHL_Op_A(d, elements, esize, m, n, regs, unsigned)
+    VRSHL_Op_A(d, elements, esize, m, n, regs, val_unsigned)
 }
 
 val VRINTZ_asimd_Op_A : forall 'd 'elements 'esize ('exact : Bool) 'm 'regs,
@@ -20694,7 +20697,7 @@ val VRHADD_Op_A : forall 'd 'elements 'esize 'm 'n 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VRHADD_Op_A (d, elements, esize, m, n, regs, unsigned) = {
+function VRHADD_Op_A (d, elements, esize, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         op1 : int = undefined : int;
         op2 : int = undefined : int;
@@ -20705,8 +20708,8 @@ function VRHADD_Op_A (d, elements, esize, m, n, regs, unsigned) = {
                 assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
-                op1 = asl_Int(aget_Elem(D(n + r), e, esize), unsigned);
-                op2 = asl_Int(aget_Elem(D(m + r), e, esize), unsigned);
+                op1 = asl_Int(aget_Elem(D(n + r), e, esize), val_unsigned);
+                op2 = asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned);
                 result = op1 + op2 + 1;
                 D(d + r) = aset_Elem(D(d + r), e, esize, __GetSlice_int(esize, result, 1))
             }
@@ -20724,7 +20727,7 @@ function VRHADD_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     if size == 0b11 then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -20732,7 +20735,7 @@ function VRHADD_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VRHADD_Op_A(d, elements, esize, m, n, regs, unsigned)
+    VRHADD_Op_A(d, elements, esize, m, n, regs, val_unsigned)
 }
 
 val VREV16_Op_A : forall 'containers 'd 'elements_per_container 'esize 'm 'regs,
@@ -21018,7 +21021,7 @@ val VQSUB_Op_A : forall 'd 'elements 'esize 'm 'n 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VQSUB_Op_A (d, elements, esize, m, n, regs, unsigned) = {
+function VQSUB_Op_A (d, elements, esize, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         diff : int = undefined : int;
         sat : bool = undefined : bool;
@@ -21028,9 +21031,9 @@ function VQSUB_Op_A (d, elements, esize, m, n, regs, unsigned) = {
                 assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
-                diff = asl_Int(aget_Elem(D(n + r), e, esize), unsigned) - asl_Int(aget_Elem(D(m + r), e, esize), unsigned);
+                diff = asl_Int(aget_Elem(D(n + r), e, esize), val_unsigned) - asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned);
                 __tc1 : bits('esize) = undefined : bits('esize);
-                (__tc1, sat) = SatQ(diff, esize, unsigned);
+                (__tc1, sat) = SatQ(diff, esize, val_unsigned);
                 D(d + r) = aset_Elem(D(d + r), e, esize, __tc1);
                 if sat then {
                     FPSCR = __SetSlice_bits(32, 1, FPSCR, 27, 0b1)
@@ -21047,7 +21050,7 @@ function VQSUB_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vn[0]] == 0b1) | [Vm[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -21055,7 +21058,7 @@ function VQSUB_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VQSUB_Op_A(d, elements, esize, m, n, regs, unsigned)
+    VQSUB_Op_A(d, elements, esize, m, n, regs, val_unsigned)
 }
 
 val VQSHRN_Op_A : forall 'd ('dest_unsigned : Bool) 'elements 'esize 'm 'shift_amount ('src_unsigned : Bool),
@@ -21129,7 +21132,7 @@ val VQSHL_r_Op_A : forall 'd 'elements 'esize 'm 'n 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VQSHL_r_Op_A (d, elements, esize, m, n, regs, unsigned) = {
+function VQSHL_r_Op_A (d, elements, esize, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         operand : int = undefined : int;
         result : bits('esize) = undefined : bits('esize);
@@ -21142,8 +21145,8 @@ function VQSHL_r_Op_A (d, elements, esize, m, n, regs, unsigned) = {
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
                 shift = SInt(slice(aget_Elem(D(n + r), e, esize), 0, 8));
-                operand = asl_Int(aget_Elem(D(m + r), e, esize), unsigned);
-                (result, sat) = SatQ(shl_int(operand, shift), esize, unsigned);
+                operand = asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned);
+                (result, sat) = SatQ(shl_int(operand, shift), esize, val_unsigned);
                 D(d + r) = aset_Elem(D(d + r), e, esize, result);
                 if sat then {
                     FPSCR = __SetSlice_bits(32, 1, FPSCR, 27, 0b1)
@@ -21160,7 +21163,7 @@ function VQSHL_r_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vm[0]] == 0b1) | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -21168,7 +21171,7 @@ function VQSHL_r_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     let n = UInt(N @ Vn);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VQSHL_r_Op_A(d, elements, esize, m, n, regs, unsigned)
+    VQSHL_r_Op_A(d, elements, esize, m, n, regs, val_unsigned)
 }
 
 val VQSHL_i_Op_A : forall 'd ('dest_unsigned : Bool) 'elements 'esize 'm 'regs 'shift_amount ('src_unsigned : Bool),
@@ -21319,7 +21322,7 @@ val VQRSHL_Op_A : forall 'd 'elements 'esize 'm 'n 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VQRSHL_Op_A (d, elements, esize, m, n, regs, unsigned) = {
+function VQRSHL_Op_A (d, elements, esize, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         operand : int = undefined : int;
         result : bits('esize) = undefined : bits('esize);
@@ -21334,8 +21337,8 @@ function VQRSHL_Op_A (d, elements, esize, m, n, regs, unsigned) = {
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
                 shift = SInt(slice(aget_Elem(D(n + r), e, esize), 0, 8));
                 round_const = shl_int(1, negate(1) - shift);
-                operand = asl_Int(aget_Elem(D(m + r), e, esize), unsigned);
-                (result, sat) = SatQ(shl_int(operand + round_const, shift), esize, unsigned);
+                operand = asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned);
+                (result, sat) = SatQ(shl_int(operand + round_const, shift), esize, val_unsigned);
                 D(d + r) = aset_Elem(D(d + r), e, esize, result);
                 if sat then {
                     FPSCR = __SetSlice_bits(32, 1, FPSCR, 27, 0b1)
@@ -21352,7 +21355,7 @@ function VQRSHL_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vm[0]] == 0b1) | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -21360,7 +21363,7 @@ function VQRSHL_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     let n = UInt(N @ Vn);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VQRSHL_Op_A(d, elements, esize, m, n, regs, unsigned)
+    VQRSHL_Op_A(d, elements, esize, m, n, regs, val_unsigned)
 }
 
 val VQRDMULH_Op_A : forall 'd 'elements 'esize 'index 'm 'n 'regs ('scalar_form : Bool),
@@ -22145,7 +22148,7 @@ val VQADD_Op_A : forall 'd 'elements 'esize 'm 'n 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VQADD_Op_A (d, elements, esize, m, n, regs, unsigned) = {
+function VQADD_Op_A (d, elements, esize, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         sat : bool = undefined : bool;
         sum : int = undefined : int;
@@ -22155,9 +22158,9 @@ function VQADD_Op_A (d, elements, esize, m, n, regs, unsigned) = {
                 assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
-                sum = asl_Int(aget_Elem(D(n + r), e, esize), unsigned) + asl_Int(aget_Elem(D(m + r), e, esize), unsigned);
+                sum = asl_Int(aget_Elem(D(n + r), e, esize), val_unsigned) + asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned);
                 __tc1 : bits('esize) = undefined : bits('esize);
-                (__tc1, sat) = SatQ(sum, esize, unsigned);
+                (__tc1, sat) = SatQ(sum, esize, val_unsigned);
                 D(d + r) = aset_Elem(D(d + r), e, esize, __tc1);
                 if sat then {
                     FPSCR = __SetSlice_bits(32, 1, FPSCR, 27, 0b1)
@@ -22174,7 +22177,7 @@ function VQADD_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vn[0]] == 0b1) | [Vm[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -22182,7 +22185,7 @@ function VQADD_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VQADD_Op_A(d, elements, esize, m, n, regs, unsigned)
+    VQADD_Op_A(d, elements, esize, m, n, regs, val_unsigned)
 }
 
 val VQABS_Op_A : forall 'd 'elements 'esize 'm 'regs,
@@ -22233,7 +22236,7 @@ val VPMAX_i_Op_A : forall 'd 'elements 'esize 'm ('maximum : Bool) 'n ('unsigned
   ('n >= 0 & 'n <= 31) & 'esize >= 0 & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31).
   (int('d), int('elements), int('esize), int('m), bool('maximum), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VPMAX_i_Op_A (d, elements, esize, m, maximum, n, unsigned) = {
+function VPMAX_i_Op_A (d, elements, esize, m, maximum, n, val_unsigned) = {
     if ConditionPassed() then {
         h : int = undefined : int;
         op1 : int = undefined : int;
@@ -22243,12 +22246,12 @@ function VPMAX_i_Op_A (d, elements, esize, m, maximum, n, unsigned) = {
         dest : bits(64) = undefined : bits(64);
         h = elements / 2;
         foreach (e from 0 to (h - 1) by 1 in inc) {
-            op1 = asl_Int(aget_Elem(D(n), 2 * e, esize), unsigned);
-            op2 = asl_Int(aget_Elem(D(n), 2 * e + 1, esize), unsigned);
+            op1 = asl_Int(aget_Elem(D(n), 2 * e, esize), val_unsigned);
+            op2 = asl_Int(aget_Elem(D(n), 2 * e + 1, esize), val_unsigned);
             result = if maximum then max(op1, op2) else min(op1, op2);
             dest = aset_Elem(dest, e, esize, __GetSlice_int(esize, result, 0));
-            op1 = asl_Int(aget_Elem(D(m), 2 * e, esize), unsigned);
-            op2 = asl_Int(aget_Elem(D(m), 2 * e + 1, esize), unsigned);
+            op1 = asl_Int(aget_Elem(D(m), 2 * e, esize), val_unsigned);
+            op2 = asl_Int(aget_Elem(D(m), 2 * e + 1, esize), val_unsigned);
             result = if maximum then max(op1, op2) else min(op1, op2);
             dest = aset_Elem(dest, e + h, esize, __GetSlice_int(esize, result, 0))
         };
@@ -22264,14 +22267,14 @@ function VPMAX_i_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, op, Vm) = {
         throw(Error_Undefined())
     };
     let maximum = op == 0b0;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
     let n = UInt(N @ Vn);
     let m = UInt(M @ Vm);
     __PostDecode();
-    VPMAX_i_Op_A(d, elements, esize, m, maximum, n, unsigned)
+    VPMAX_i_Op_A(d, elements, esize, m, maximum, n, val_unsigned)
 }
 
 val VPMAX_f_Op_A : forall 'd 'elements 'esize 'm ('maximum : Bool) 'n,
@@ -22498,7 +22501,7 @@ val VPADDL_Op_A : forall 'd 'elements 'esize 'm 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VPADDL_Op_A (d, elements, esize, m, regs, unsigned) = {
+function VPADDL_Op_A (d, elements, esize, m, regs, val_unsigned) = {
     if ConditionPassed() then {
         h : int = undefined : int;
         op1 : bits('esize) = undefined : bits('esize);
@@ -22512,7 +22515,7 @@ function VPADDL_Op_A (d, elements, esize, m, regs, unsigned) = {
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 op1 = aget_Elem(D(m + r), 2 * e, esize);
                 op2 = aget_Elem(D(m + r), 2 * e + 1, esize);
-                result = asl_Int(op1, unsigned) + asl_Int(op2, unsigned);
+                result = asl_Int(op1, val_unsigned) + asl_Int(op2, val_unsigned);
                 D(d + r) = aset_Elem(D(d + r), e, 2 * esize, __GetSlice_int(2 * esize, result, 0))
             }
         }
@@ -22529,21 +22532,21 @@ function VPADDL_T1A1_A_decode (D, size, Vd, op, Q, M, Vm) = {
     if Q == 0b1 & ([Vd[0]] == 0b1 | [Vm[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = op == 0b1;
+    let val_unsigned = op == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VPADDL_Op_A(d, elements, esize, m, regs, unsigned)
+    VPADDL_Op_A(d, elements, esize, m, regs, val_unsigned)
 }
 
 val VPADAL_Op_A : forall 'd 'elements 'esize 'm 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VPADAL_Op_A (d, elements, esize, m, regs, unsigned) = {
+function VPADAL_Op_A (d, elements, esize, m, regs, val_unsigned) = {
     if ConditionPassed() then {
         h : int = undefined : int;
         op1 : bits('esize) = undefined : bits('esize);
@@ -22557,7 +22560,7 @@ function VPADAL_Op_A (d, elements, esize, m, regs, unsigned) = {
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 op1 = aget_Elem(D(m + r), 2 * e, esize);
                 op2 = aget_Elem(D(m + r), 2 * e + 1, esize);
-                result = asl_Int(op1, unsigned) + asl_Int(op2, unsigned);
+                result = asl_Int(op1, val_unsigned) + asl_Int(op2, val_unsigned);
                 D(d + r) = aset_Elem(D(d + r), e, 2 * esize, aget_Elem(D(d + r), e, 2 * esize) + result)
             }
         }
@@ -22574,17 +22577,17 @@ function VPADAL_T1A1_A_decode (D, size, Vd, op, Q, M, Vm) = {
     if Q == 0b1 & ([Vd[0]] == 0b1 | [Vm[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = op == 0b1;
+    let val_unsigned = op == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VPADAL_Op_A(d, elements, esize, m, regs, unsigned)
+    VPADAL_Op_A(d, elements, esize, m, regs, val_unsigned)
 }
 
-val VORR_r_Op_A : forall ('d : Int) ('m : Int) ('n : Int) ('regs : Int).
+val VORR_r_Op_A : forall ('d 'm 'n 'regs : Int).
   (int('d), int('m), int('n), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VORR_r_Op_A (d, m, n, regs) = {
@@ -22614,7 +22617,7 @@ function VORR_r_T1A1_A_decode (D, Vn, Vd, N, Q, M, Vm) = {
     VORR_r_Op_A(d, m, n, regs)
 }
 
-val VORR_i_Op_A : forall ('d : Int) ('regs : Int).
+val VORR_i_Op_A : forall ('d 'regs : Int).
   (int('d), bits(64), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VORR_i_Op_A (d, imm64, regs) = {
@@ -22661,7 +22664,7 @@ function VORR_i_T1A1_A_decode (i, D, imm3, Vd, cmode, Q, imm4) = {
     VORR_i_Op_A(d, imm64, regs)
 }
 
-val VORN_r_Op_A : forall ('d : Int) ('m : Int) ('n : Int) ('regs : Int).
+val VORN_r_Op_A : forall ('d 'm 'n 'regs : Int).
   (int('d), int('m), int('n), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VORN_r_Op_A (d, m, n, regs) = {
@@ -22691,7 +22694,7 @@ function VORN_r_T1A1_A_decode (D, Vn, Vd, N, Q, M, Vm) = {
     VORN_r_Op_A(d, m, n, regs)
 }
 
-val VMVN_r_Op_A : forall ('d : Int) ('m : Int) ('regs : Int).
+val VMVN_r_Op_A : forall ('d 'm 'regs : Int).
   (int('d), int('m), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VMVN_r_Op_A (d, m, regs) = {
@@ -22722,7 +22725,7 @@ function VMVN_r_T1A1_A_decode (D, size, Vd, Q, M, Vm) = {
     VMVN_r_Op_A(d, m, regs)
 }
 
-val VMVN_i_Op_A : forall ('d : Int) ('regs : Int).
+val VMVN_i_Op_A : forall ('d 'regs : Int).
   (int('d), bits(64), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VMVN_i_Op_A (d, imm64, regs) = {
@@ -22790,7 +22793,7 @@ val VMUL_s_Op_A : forall 'd 'elements 'esize ('floating_point : Bool) 'index ('l
   ('m >= 0 & 'm <= 31 & 'index >= 0 & 'esize >= 0 & ('index + 1) * 'esize <= 64 & 0 <= 'd & 'd <= 31).
   (int('d), int('elements), int('esize), bool('floating_point), int('index), bool('long_destination), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VMUL_s_Op_A (d, elements, esize, floating_point, index, long_destination, m, n, regs, unsigned) = {
+function VMUL_s_Op_A (d, elements, esize, floating_point, index, long_destination, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         op1 : bits('esize) = undefined : bits('esize);
         op1val : int = undefined : int;
@@ -22798,13 +22801,13 @@ function VMUL_s_Op_A (d, elements, esize, floating_point, index, long_destinatio
         op2val : int = undefined : int;
         CheckAdvSIMDEnabled();
         op2 = aget_Elem(Din(m), index, esize);
-        op2val = asl_Int(op2, unsigned);
+        op2val = asl_Int(op2, val_unsigned);
         foreach (r from 0 to (regs - 1) by 1 in inc) {
             foreach (e from 0 to (elements - 1) by 1 in inc) {
                 assert(constraint(('loop_e >= 0 & ('loop_e + 1) * 'esize <= 64)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
                 op1 = aget_Elem(Din(n + r), e, esize);
-                op1val = asl_Int(op1, unsigned);
+                op1val = asl_Int(op1, val_unsigned);
                 if floating_point then {
                     assert(d + r >= 0 & d + r <= 31 | ~(floating_point));
                     D(d + r) = aset_Elem(D(d + r), e, esize, FPMul(op1, op2, StandardFPSCRValue()))
@@ -22831,7 +22834,7 @@ function VMUL_s_T2A2_A_decode (U, D, size, Vn, Vd, N, M, Vm) = {
     if size == 0b00 | [Vd[0]] == 0b1 then {
         throw(Error_Undefined())
     };
-    let unsigned : bool = U == 0b1;
+    let val_unsigned : bool = U == 0b1;
     let long_destination : bool(true) = true;
     let floating_point : bool(false) = false;
     let d = UInt(D @ Vd);
@@ -22858,7 +22861,7 @@ function VMUL_s_T2A2_A_decode (U, D, size, Vn, Vd, N, M, Vm) = {
     let esize = esize;
     let index = index;
     assert(m >= 0 & m <= 31 & index >= 0 & esize >= 0 & (index + 1) * esize <= 64 & 0 <= d & d <= 31);
-    VMUL_s_Op_A(d, elements, esize, floating_point, index, long_destination, m, n, regs, unsigned)
+    VMUL_s_Op_A(d, elements, esize, floating_point, index, long_destination, m, n, regs, val_unsigned)
 }
 
 val VMUL_s_T1_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -22877,7 +22880,7 @@ function VMUL_s_T1_A_decode (Q, D, size, Vn, Vd, F, N, M, Vm) = {
     if Q == 0b1 & ([Vd[0]] == 0b1 | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned : bool(false) = false;
+    let val_unsigned : bool(false) = false;
     let floating_point : bool = F == 0b1;
     let long_destination : bool(false) = false;
     let d = UInt(D @ Vd);
@@ -22904,7 +22907,7 @@ function VMUL_s_T1_A_decode (Q, D, size, Vn, Vd, F, N, M, Vm) = {
     let esize = esize;
     let index = index;
     assert(m >= 0 & m <= 31 & index >= 0 & esize >= 0 & (index + 1) * esize <= 64 & 0 <= d & d <= 31);
-    VMUL_s_Op_A(d, elements, esize, floating_point, index, long_destination, m, n, regs, unsigned)
+    VMUL_s_Op_A(d, elements, esize, floating_point, index, long_destination, m, n, regs, val_unsigned)
 }
 
 val VMUL_s_A1_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -22920,7 +22923,7 @@ function VMUL_s_A1_A_decode (Q, D, size, Vn, Vd, F, N, M, Vm) = {
     if Q == 0b1 & ([Vd[0]] == 0b1 | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned : bool(false) = false;
+    let val_unsigned : bool(false) = false;
     let floating_point : bool = F == 0b1;
     let long_destination : bool(false) = false;
     let d = UInt(D @ Vd);
@@ -22947,14 +22950,14 @@ function VMUL_s_A1_A_decode (Q, D, size, Vn, Vd, F, N, M, Vm) = {
     let esize = esize;
     let index = index;
     assert(m >= 0 & m <= 31 & index >= 0 & esize >= 0 & (index + 1) * esize <= 64 & 0 <= d & d <= 31);
-    VMUL_s_Op_A(d, elements, esize, floating_point, index, long_destination, m, n, regs, unsigned)
+    VMUL_s_Op_A(d, elements, esize, floating_point, index, long_destination, m, n, regs, val_unsigned)
 }
 
 val VMUL_i_Op_A : forall 'd 'elements 'esize ('long_destination : Bool) 'm 'n ('polynomial : Bool) 'regs ('unsigned : Bool),
   (0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'n & 'n <= 31).
   (int('d), int('elements), int('esize), bool('long_destination), int('m), int('n), bool('polynomial), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VMUL_i_Op_A (d, elements, esize, long_destination, m, n, polynomial, regs, unsigned) = {
+function VMUL_i_Op_A (d, elements, esize, long_destination, m, n, polynomial, regs, val_unsigned) = {
     if ConditionPassed() then {
         op1 : bits('esize) = undefined : bits('esize);
         op1val : int = undefined : int;
@@ -22968,9 +22971,9 @@ function VMUL_i_Op_A (d, elements, esize, long_destination, m, n, polynomial, re
                 assert(constraint(('loop_e >= 0 & 'esize >= 0 & ('loop_e + 1) * 'esize <= 64)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
                 op1 = aget_Elem(Din(n + r), e, esize);
-                op1val = asl_Int(op1, unsigned);
+                op1val = asl_Int(op1, val_unsigned);
                 op2 = aget_Elem(Din(m + r), e, esize);
-                op2val = asl_Int(op2, unsigned);
+                op2val = asl_Int(op2, val_unsigned);
                 if polynomial then {
                     product = PolynomialMult(op1, op2)
                 } else {
@@ -22994,7 +22997,7 @@ function VMUL_i_T2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     if size == 0b11 then {
         throw(Error_See("Related encodings"))
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let polynomial = op == 0b1;
     let long_destination = true;
     esize : int = undefined : int;
@@ -23024,7 +23027,7 @@ function VMUL_i_T2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = 1;
     __PostDecode();
-    VMUL_i_Op_A(d, elements, esize, long_destination, m, n, polynomial, regs, unsigned)
+    VMUL_i_Op_A(d, elements, esize, long_destination, m, n, polynomial, regs, val_unsigned)
 }
 
 val VMUL_i_T1A1_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -23037,7 +23040,7 @@ function VMUL_i_T1A1_A_decode (op, D, size, Vn, Vd, N, Q, M, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vn[0]] == 0b1) | [Vm[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = false;
+    let val_unsigned = false;
     let polynomial = op == 0b1;
     let long_destination = false;
     let esize = shl_int(8, UInt(size));
@@ -23047,7 +23050,7 @@ function VMUL_i_T1A1_A_decode (op, D, size, Vn, Vd, N, Q, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VMUL_i_Op_A(d, elements, esize, long_destination, m, n, polynomial, regs, unsigned)
+    VMUL_i_Op_A(d, elements, esize, long_destination, m, n, polynomial, regs, val_unsigned)
 }
 
 val VMUL_i_A2_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -23057,7 +23060,7 @@ function VMUL_i_A2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     if size == 0b11 then {
         throw(Error_See("Related encodings"))
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let polynomial = op == 0b1;
     let long_destination = true;
     esize : int = undefined : int;
@@ -23084,7 +23087,7 @@ function VMUL_i_A2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = 1;
     __PostDecode();
-    VMUL_i_Op_A(d, elements, esize, long_destination, m, n, polynomial, regs, unsigned)
+    VMUL_i_Op_A(d, elements, esize, long_destination, m, n, polynomial, regs, val_unsigned)
 }
 
 val VMOVN_Op_A : forall 'd 'elements 'esize 'm,
@@ -23123,13 +23126,13 @@ val VMOVL_Op_A : forall 'd 'elements 'esize 'm ('unsigned : Bool),
   ('m >= 0 & 'm <= 31 & 0 <= 'd & 'd <= 31 & 'esize >= 0).
   (int('d), int('elements), int('esize), int('m), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VMOVL_Op_A (d, elements, esize, m, unsigned) = {
+function VMOVL_Op_A (d, elements, esize, m, val_unsigned) = {
     if ConditionPassed() then {
         result : int = undefined : int;
         CheckAdvSIMDEnabled();
         foreach (e from 0 to (elements - 1) by 1 in inc) {
             assert(e >= 0 & (e + 1) * esize <= 64);
-            result = asl_Int(aget_Elem(Din(m), e, esize), unsigned);
+            result = asl_Int(aget_Elem(Din(m), e, esize), val_unsigned);
             Q(shr_int(d, 1)) = aset_Elem(Q(shr_int(d, 1)), e, 2 * esize, __GetSlice_int(2 * esize, result, 0))
         }
     }
@@ -23153,12 +23156,12 @@ function VMOVL_T1A1_A_decode__0 (U, D, imm3H, Vd, M, Vm) = {
         throw(Error_Undefined())
     };
     let esize = 8 * UInt(imm3H);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     __PostDecode();
-    VMOVL_Op_A(d, elements, esize, m, unsigned)
+    VMOVL_Op_A(d, elements, esize, m, val_unsigned)
 }
 
 function VMOVL_T1A1_A_decode__1 (U, D, imm3H, Vd, L, M, Vm) = {
@@ -23173,19 +23176,19 @@ function VMOVL_T1A1_A_decode__1 (U, D, imm3H, Vd, L, M, Vm) = {
         throw(Error_Undefined())
     };
     let esize = 8 * UInt(imm3H);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
     let m = UInt(M @ Vm);
     __PostDecode();
-    VMOVL_Op_A(d, elements, esize, m, unsigned)
+    VMOVL_Op_A(d, elements, esize, m, val_unsigned)
 }
 
 val VMLA_s_Op_A : forall ('add : Bool) 'd 'elements 'esize ('floating_point : Bool) 'index ('long_destination : Bool) 'm 'n 'regs ('unsigned : Bool),
   ('m >= 0 & 'm <= 31 & 'index >= 0 & 'esize >= 0 & ('index + 1) * 'esize <= 64 & 0 <= 'd & 'd <= 31).
   (bool('add), int('d), int('elements), int('esize), bool('floating_point), int('index), bool('long_destination), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VMLA_s_Op_A (add, d, elements, esize, floating_point, index, long_destination, m, n, regs, unsigned) = {
+function VMLA_s_Op_A (add, d, elements, esize, floating_point, index, long_destination, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         addend : int = undefined : int;
         fp_addend : bits('esize) = undefined : bits('esize);
@@ -23195,13 +23198,13 @@ function VMLA_s_Op_A (add, d, elements, esize, floating_point, index, long_desti
         op2val : int = undefined : int;
         CheckAdvSIMDEnabled();
         op2 = aget_Elem(Din(m), index, esize);
-        op2val = asl_Int(op2, unsigned);
+        op2val = asl_Int(op2, val_unsigned);
         foreach (r from 0 to (regs - 1) by 1 in inc) {
             foreach (e from 0 to (elements - 1) by 1 in inc) {
                 assert(constraint(('loop_e >= 0 & ('loop_e + 1) * 'esize <= 64)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
                 op1 = aget_Elem(Din(n + r), e, esize);
-                op1val = asl_Int(op1, unsigned);
+                op1val = asl_Int(op1, val_unsigned);
                 if floating_point then {
                     assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31 | not('floating_point))));
                     fp_addend = if add then FPMul(op1, op2, StandardFPSCRValue()) else FPNeg(FPMul(op1, op2, StandardFPSCRValue()));
@@ -23230,7 +23233,7 @@ function VMLA_s_T2A2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     if size == 0b00 | [Vd[0]] == 0b1 then {
         throw(Error_Undefined())
     };
-    let unsigned : bool = U == 0b1;
+    let val_unsigned : bool = U == 0b1;
     let add : bool = op == 0b0;
     let floating_point : bool(false) = false;
     let long_destination : bool(true) = true;
@@ -23258,7 +23261,7 @@ function VMLA_s_T2A2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     let m = m;
     let index = index;
     assert(m >= 0 & m <= 31 & index >= 0 & esize >= 0 & (index + 1) * esize <= 64 & 0 <= d & d <= 31);
-    VMLA_s_Op_A(add, d, elements, esize, floating_point, index, long_destination, m, n, regs, unsigned)
+    VMLA_s_Op_A(add, d, elements, esize, floating_point, index, long_destination, m, n, regs, val_unsigned)
 }
 
 val VMLA_s_T1_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -23277,7 +23280,7 @@ function VMLA_s_T1_A_decode (Q, D, size, Vn, Vd, op, F, N, M, Vm) = {
     if Q == 0b1 & ([Vd[0]] == 0b1 | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned : bool(false) = false;
+    let val_unsigned : bool(false) = false;
     let add : bool = op == 0b0;
     let floating_point : bool = F == 0b1;
     let long_destination : bool(false) = false;
@@ -23305,7 +23308,7 @@ function VMLA_s_T1_A_decode (Q, D, size, Vn, Vd, op, F, N, M, Vm) = {
     let index = index;
     let m = m;
     assert(m >= 0 & m <= 31 & index >= 0 & esize >= 0 & (index + 1) * esize <= 64 & 0 <= d & d <= 31);
-    VMLA_s_Op_A(add, d, elements, esize, floating_point, index, long_destination, m, n, regs, unsigned)
+    VMLA_s_Op_A(add, d, elements, esize, floating_point, index, long_destination, m, n, regs, val_unsigned)
 }
 
 val VMLA_s_A1_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -23321,7 +23324,7 @@ function VMLA_s_A1_A_decode (Q, D, size, Vn, Vd, op, F, N, M, Vm) = {
     if Q == 0b1 & ([Vd[0]] == 0b1 | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned : bool(false) = false;
+    let val_unsigned : bool(false) = false;
     let add : bool = op == 0b0;
     let floating_point : bool = F == 0b1;
     let long_destination : bool(false) = false;
@@ -23349,14 +23352,14 @@ function VMLA_s_A1_A_decode (Q, D, size, Vn, Vd, op, F, N, M, Vm) = {
     let index = index;
     let m = m;
     assert(m >= 0 & m <= 31 & index >= 0 & esize >= 0 & (index + 1) * esize <= 64 & 0 <= d & d <= 31);
-    VMLA_s_Op_A(add, d, elements, esize, floating_point, index, long_destination, m, n, regs, unsigned)
+    VMLA_s_Op_A(add, d, elements, esize, floating_point, index, long_destination, m, n, regs, val_unsigned)
 }
 
 val VMLA_i_Op_A : forall ('add : Bool) 'd 'elements 'esize ('long_destination : Bool) 'm 'n 'regs ('unsigned : Bool),
   (0 <= 'd & 'd <= 31 & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31).
   (bool('add), int('d), int('elements), int('esize), bool('long_destination), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VMLA_i_Op_A (add, d, elements, esize, long_destination, m, n, regs, unsigned) = {
+function VMLA_i_Op_A (add, d, elements, esize, long_destination, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         addend : int = undefined : int;
         product : int = undefined : int;
@@ -23366,7 +23369,7 @@ function VMLA_i_Op_A (add, d, elements, esize, long_destination, m, n, regs, uns
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 assert(constraint(('loop_e >= 0 & 'esize >= 0 & ('loop_e + 1) * 'esize <= 64)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
-                product = asl_Int(aget_Elem(Din(n + r), e, esize), unsigned) * asl_Int(aget_Elem(Din(m + r), e, esize), unsigned);
+                product = asl_Int(aget_Elem(Din(n + r), e, esize), val_unsigned) * asl_Int(aget_Elem(Din(m + r), e, esize), val_unsigned);
                 addend = if add then product else negate(product);
                 if long_destination then {
                     Q(shr_int(d, 1)) = aset_Elem(Q(shr_int(d, 1)), e, 2 * esize, aget_Elem(Qin(shr_int(d, 1)), e, 2 * esize) + addend)
@@ -23391,7 +23394,7 @@ function VMLA_i_T2A2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     };
     let add = op == 0b0;
     let long_destination = true;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -23399,7 +23402,7 @@ function VMLA_i_T2A2_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = 1;
     __PostDecode();
-    VMLA_i_Op_A(add, d, elements, esize, long_destination, m, n, regs, unsigned)
+    VMLA_i_Op_A(add, d, elements, esize, long_destination, m, n, regs, val_unsigned)
 }
 
 val VMLA_i_T1A1_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -23414,7 +23417,7 @@ function VMLA_i_T1A1_A_decode (op, D, size, Vn, Vd, N, Q, M, Vm) = {
     };
     let add = op == 0b0;
     let long_destination = false;
-    let unsigned = false;
+    let val_unsigned = false;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -23422,14 +23425,14 @@ function VMLA_i_T1A1_A_decode (op, D, size, Vn, Vd, N, Q, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VMLA_i_Op_A(add, d, elements, esize, long_destination, m, n, regs, unsigned)
+    VMLA_i_Op_A(add, d, elements, esize, long_destination, m, n, regs, val_unsigned)
 }
 
 val VMAX_i_Op_A : forall 'd 'elements 'esize 'm ('maximum : Bool) 'n 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), bool('maximum), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VMAX_i_Op_A (d, elements, esize, m, maximum, n, regs, unsigned) = {
+function VMAX_i_Op_A (d, elements, esize, m, maximum, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         op1 : int = undefined : int;
         op2 : int = undefined : int;
@@ -23440,8 +23443,8 @@ function VMAX_i_Op_A (d, elements, esize, m, maximum, n, regs, unsigned) = {
                 assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
-                op1 = asl_Int(aget_Elem(D(n + r), e, esize), unsigned);
-                op2 = asl_Int(aget_Elem(D(m + r), e, esize), unsigned);
+                op1 = asl_Int(aget_Elem(D(n + r), e, esize), val_unsigned);
+                op2 = asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned);
                 result = if maximum then max(op1, op2) else min(op1, op2);
                 D(d + r) = aset_Elem(D(d + r), e, esize, __GetSlice_int(esize, result, 0))
             }
@@ -23460,7 +23463,7 @@ function VMAX_i_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, op, Vm) = {
         throw(Error_Undefined())
     };
     let maximum = op == 0b0;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -23468,7 +23471,7 @@ function VMAX_i_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, op, Vm) = {
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VMAX_i_Op_A(d, elements, esize, m, maximum, n, regs, unsigned)
+    VMAX_i_Op_A(d, elements, esize, m, maximum, n, regs, val_unsigned)
 }
 
 val VMAX_f_Op_A : forall 'd 'elements 'esize 'm ('maximum : Bool) 'n 'regs,
@@ -23573,7 +23576,7 @@ val VHADD_Op_A : forall ('add : Bool) 'd 'elements 'esize 'm 'n 'regs ('unsigned
   'esize >= 0.
   (bool('add), int('d), int('elements), int('esize), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VHADD_Op_A (add, d, elements, esize, m, n, regs, unsigned) = {
+function VHADD_Op_A (add, d, elements, esize, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         op1 : int = undefined : int;
         op2 : int = undefined : int;
@@ -23584,8 +23587,8 @@ function VHADD_Op_A (add, d, elements, esize, m, n, regs, unsigned) = {
                 assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
-                op1 = asl_Int(aget_Elem(D(n + r), e, esize), unsigned);
-                op2 = asl_Int(aget_Elem(D(m + r), e, esize), unsigned);
+                op1 = asl_Int(aget_Elem(D(n + r), e, esize), val_unsigned);
+                op2 = asl_Int(aget_Elem(D(m + r), e, esize), val_unsigned);
                 result = if add then op1 + op2 else op1 - op2;
                 D(d + r) = aset_Elem(D(d + r), e, esize, __GetSlice_int(esize, result, 1))
             }
@@ -23604,7 +23607,7 @@ function VHADD_T1A1_A_decode (U, D, size, Vn, Vd, op, N, Q, M, Vm) = {
         throw(Error_Undefined())
     };
     let add = op == 0b0;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let d = UInt(D @ Vd);
@@ -23612,11 +23615,11 @@ function VHADD_T1A1_A_decode (U, D, size, Vn, Vd, op, N, Q, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VHADD_Op_A(add, d, elements, esize, m, n, regs, unsigned)
+    VHADD_Op_A(add, d, elements, esize, m, n, regs, val_unsigned)
 }
 
 val VFMAL_i_Op_A : forall 'd 'datasize 'esize 'index 'm 'n 'regs ('sub_op : Bool),
-  ('n >= 0 & 'n <= 31) & 'datasize >= 0 & ('m >= 0 & 'm <= 31) & div('esize, 2) >= 0.
+  ('n >= 0 & 'n <= 31) & 0 <= 'datasize & ('m >= 0 & 'm <= 31) & div('esize, 2) >= 0.
   (bits(1), int('d), int('datasize), int('esize), int('index), int('m), int('n), int('regs), bool('sub_op)) -> unit effect {escape, rreg, undef, wreg}
 
 function VFMAL_i_Op_A (Q, d, datasize, esize, index, m, n, regs, sub_op) = {
@@ -23671,7 +23674,7 @@ function VFMAL_i_T1_A_decode (D, S, Vn, Vd, N, Q, M, Vm) = {
     let 'datasize = if Q == 0b1 then 64 else 32;
     let sub_op = S == 0b1;
     assert(constraint(('_m >= 0 & '_m <= 31)));
-    assert(constraint('_datasize >= 0));
+    assert(constraint(0 <= '_datasize));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
     VFMAL_i_Op_A(Q, d, datasize, esize, index, m, n, regs, sub_op)
@@ -23696,14 +23699,14 @@ function VFMAL_i_A1_A_decode (D, S, Vn, Vd, N, Q, M, Vm) = {
     let 'datasize = if Q == 0b1 then 64 else 32;
     let sub_op = S == 0b1;
     assert(constraint(('_m >= 0 & '_m <= 31)));
-    assert(constraint('_datasize >= 0));
+    assert(constraint(0 <= '_datasize));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
     VFMAL_i_Op_A(Q, d, datasize, esize, index, m, n, regs, sub_op)
 }
 
 val VFMAL_Op_A : forall 'd 'datasize 'esize 'm 'n 'regs ('sub_op : Bool),
-  ('n >= 0 & 'n <= 31) & 'datasize >= 0 & ('m >= 0 & 'm <= 31) & div('esize, 2) >= 0.
+  ('n >= 0 & 'n <= 31) & 0 <= 'datasize & ('m >= 0 & 'm <= 31) & div('esize, 2) >= 0.
   (bits(1), int('d), int('datasize), int('esize), int('m), int('n), int('regs), bool('sub_op)) -> unit effect {escape, rreg, undef, wreg}
 
 function VFMAL_Op_A (Q, d, datasize, esize, m, n, regs, sub_op) = {
@@ -23757,7 +23760,7 @@ function VFMAL_T1_A_decode (S, D, Vn, Vd, N, Q, M, Vm) = {
     let 'datasize = if Q == 0b1 then 64 else 32;
     let sub_op = S == 0b1;
     assert(constraint(('_m >= 0 & '_m <= 31)));
-    assert(constraint('_datasize >= 0));
+    assert(constraint(0 <= '_datasize));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
     VFMAL_Op_A(Q, d, datasize, esize, m, n, regs, sub_op)
@@ -23781,7 +23784,7 @@ function VFMAL_A1_A_decode (S, D, Vn, Vd, N, Q, M, Vm) = {
     let 'datasize = if Q == 0b1 then 64 else 32;
     let sub_op = S == 0b1;
     assert(constraint(('_m >= 0 & '_m <= 31)));
-    assert(constraint('_datasize >= 0));
+    assert(constraint(0 <= '_datasize));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
     VFMAL_Op_A(Q, d, datasize, esize, m, n, regs, sub_op)
@@ -23821,7 +23824,8 @@ function VEXT_T1A1_A_decode (D, Vn, Vd, imm4, N, Q, M, Vm) = {
     VEXT_Op_A(d, m, n, position, quadword_operation)
 }
 
-val VEOR_Op_A : forall ('d : Int) ('m : Int) ('n : Int) ('regs : Int).
+val VEOR_Op_A : forall 'd 'm 'n 'regs,
+  (0 <= 'n & 'n <= 32 - 'regs & 0 <= 'm & 'm <= 32 - 'regs & 0 <= 'regs & 'regs <= 32).
   (int('d), int('m), int('n), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VEOR_Op_A (d, m, n, regs) = {
@@ -23829,8 +23833,6 @@ function VEOR_Op_A (d, m, n, regs) = {
         CheckAdvSIMDEnabled();
         foreach (r from 0 to (regs - 1) by 1 in inc) {
             assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
-            assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
-            assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
             D(d + r) = D(n + r) ^ D(m + r)
         }
     }
@@ -23847,6 +23849,7 @@ function VEOR_T1A1_A_decode (D, Vn, Vd, N, Q, M, Vm) = {
     let n = UInt(N @ Vn);
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
+    assert(constraint((0 <= '_n & '_n <= 32 - '_regs & 0 <= '_m & '_m <= 32 - '_regs & 0 <= '_regs & '_regs <= 32)));
     __PostDecode();
     VEOR_Op_A(d, m, n, regs)
 }
@@ -23911,7 +23914,7 @@ function VDUP_s_T1A1_A_decode (D, imm4, Vd, Q, M, Vm) = {
 }
 
 val VDUP_r_Op_A : forall 'd 'elements 'esize 'regs 't,
-  ('t >= 0 & 't <= 15) & 'esize >= 0.
+  ('t >= 0 & 't <= 15) & 0 <= 'esize.
   (int('d), int('elements), int('esize), int('regs), int('t)) -> unit effect {escape, rreg, undef, wreg}
 
 function VDUP_r_Op_A (d, elements, esize, regs, t) = {
@@ -23969,7 +23972,7 @@ function VDUP_r_T1A1_A_decode__0 (cond, B, Q, Vd, Rt, D, E) = {
     };
     let esize = esize;
     let elements = elements;
-    assert(constraint('_esize >= 0));
+    assert(constraint(0 <= '_esize));
     assert(constraint(('_t >= 0 & '_t <= 15)));
     if t == 15 then {
         throw(Error_Unpredictable())
@@ -24007,7 +24010,7 @@ function VDUP_r_T1A1_A_decode__1 (B, Q, Vd, Rt, D, E) = {
     };
     let esize = esize;
     let elements = elements;
-    assert(constraint('_esize >= 0));
+    assert(constraint(0 <= '_esize));
     assert(constraint(('_t >= 0 & '_t <= 15)));
     if t == 15 then {
         throw(Error_Unpredictable())
@@ -24020,7 +24023,7 @@ val VDOT_s_Op_A : forall 'd 'esize 'index 'm 'n 'regs ('signed : Bool),
   ('m >= 0 & 'm <= 31) & (div('esize, 4) >= 0 | not('signed)) & (div('esize, 4) >= 0 | not(not('signed))).
   (int('d), int('esize), int('index), int('m), int('n), int('regs), bool('signed)) -> unit effect {escape, rreg, undef, wreg}
 
-function VDOT_s_Op_A (d, esize, index, m, n, regs, signed) = {
+function VDOT_s_Op_A (d, esize, index, m, n, regs, val_signed) = {
     operand1 : bits(64) = undefined : bits(64);
     let operand2 : bits(64) = D(m);
     result : bits(64) = undefined : bits(64);
@@ -24035,7 +24038,7 @@ function VDOT_s_Op_A (d, esize, index, m, n, regs, signed) = {
         foreach (e from 0 to 1 by 1 in inc) {
             res : int = 0;
             foreach (i from 0 to 3 by 1 in inc) {
-                if signed then {
+                if val_signed then {
                     element1 = SInt(aget_Elem(operand1, 4 * e + i, esize / 4));
                     element2 = SInt(aget_Elem(operand2, 4 * index + i, esize / 4))
                 } else {
@@ -24063,7 +24066,7 @@ function VDOT_s_T1_A_decode (op1, D, op2, Vn, Vd, N, Q, M, U, Vm) = {
     if Q == 0b1 & ([Vd[0]] == 0b1 | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let signed = U == 0b0;
+    let val_signed = U == 0b0;
     let 'd = UInt(D @ Vd);
     let 'n = UInt(N @ Vn);
     let 'm = UInt(slice(Vm, 0, 4));
@@ -24071,7 +24074,7 @@ function VDOT_s_T1_A_decode (op1, D, op2, Vn, Vd, N, Q, M, U, Vm) = {
     let 'esize = 32;
     let 'regs = if Q == 0b1 then 2 else 1;
     __PostDecode();
-    VDOT_s_Op_A(d, esize, index, m, n, regs, signed)
+    VDOT_s_Op_A(d, esize, index, m, n, regs, val_signed)
 }
 
 val VDOT_s_A1_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -24084,7 +24087,7 @@ function VDOT_s_A1_A_decode (op1, D, op2, Vn, Vd, N, Q, M, U, Vm) = {
     if Q == 0b1 & ([Vd[0]] == 0b1 | [Vn[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let signed = U == 0b0;
+    let val_signed = U == 0b0;
     let 'd = UInt(D @ Vd);
     let 'n = UInt(N @ Vn);
     let 'm = UInt(slice(Vm, 0, 4));
@@ -24092,14 +24095,14 @@ function VDOT_s_A1_A_decode (op1, D, op2, Vn, Vd, N, Q, M, U, Vm) = {
     let 'esize = 32;
     let 'regs = if Q == 0b1 then 2 else 1;
     __PostDecode();
-    VDOT_s_Op_A(d, esize, index, m, n, regs, signed)
+    VDOT_s_Op_A(d, esize, index, m, n, regs, val_signed)
 }
 
 val VDOT_Op_A : forall 'd 'esize 'm 'n 'regs ('signed : Bool),
   (div('esize, 4) >= 0 | not('signed)) & (div('esize, 4) >= 0 | not(not('signed))).
   (int('d), int('esize), int('m), int('n), int('regs), bool('signed)) -> unit effect {escape, rreg, undef, wreg}
 
-function VDOT_Op_A (d, esize, m, n, regs, signed) = {
+function VDOT_Op_A (d, esize, m, n, regs, val_signed) = {
     operand1 : bits(64) = undefined : bits(64);
     operand2 : bits(64) = undefined : bits(64);
     result : bits(64) = undefined : bits(64);
@@ -24116,7 +24119,7 @@ function VDOT_Op_A (d, esize, m, n, regs, signed) = {
         foreach (e from 0 to 1 by 1 in inc) {
             res : int = 0;
             foreach (i from 0 to 3 by 1 in inc) {
-                if signed then {
+                if val_signed then {
                     element1 = SInt(aget_Elem(operand1, 4 * e + i, esize / 4));
                     element2 = SInt(aget_Elem(operand2, 4 * e + i, esize / 4))
                 } else {
@@ -24144,14 +24147,14 @@ function VDOT_T1_A_decode (D, Vn, Vd, N, Q, M, U, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vn[0]] == 0b1) | [Vm[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let signed = U == 0b0;
+    let val_signed = U == 0b0;
     let 'd = UInt(D @ Vd);
     let 'n = UInt(N @ Vn);
     let 'm = UInt(M @ Vm);
     let 'esize = 32;
     let 'regs = if Q == 0b1 then 2 else 1;
     __PostDecode();
-    VDOT_Op_A(d, esize, m, n, regs, signed)
+    VDOT_Op_A(d, esize, m, n, regs, val_signed)
 }
 
 val VDOT_A1_A_decode : (bits(1), bits(4), bits(4), bits(1), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -24164,21 +24167,21 @@ function VDOT_A1_A_decode (D, Vn, Vd, N, Q, M, U, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vn[0]] == 0b1) | [Vm[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let signed = U == 0b0;
+    let val_signed = U == 0b0;
     let 'd = UInt(D @ Vd);
     let 'n = UInt(N @ Vn);
     let 'm = UInt(M @ Vm);
     let 'esize = 32;
     let 'regs = if Q == 0b1 then 2 else 1;
     __PostDecode();
-    VDOT_Op_A(d, esize, m, n, regs, signed)
+    VDOT_Op_A(d, esize, m, n, regs, val_signed)
 }
 
 val VCVT_xs_Op_A : forall 'd 'elements 'esize 'frac_bits 'm 'regs ('to_fixed : Bool) ('unsigned : Bool),
   'esize >= 0 & ('frac_bits >= 0 | not('to_fixed)).
   (int('d), int('elements), int('esize), int('frac_bits), int('m), int('regs), bool('to_fixed), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VCVT_xs_Op_A (d, elements, esize, frac_bits, m, regs, to_fixed, unsigned) = {
+function VCVT_xs_Op_A (d, elements, esize, frac_bits, m, regs, to_fixed, val_unsigned) = {
     if ConditionPassed() then {
         op1 : bits('esize) = undefined : bits('esize);
         CheckAdvSIMDEnabled();
@@ -24189,9 +24192,9 @@ function VCVT_xs_Op_A (d, elements, esize, frac_bits, m, regs, to_fixed, unsigne
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 op1 = aget_Elem(D(m + r), e, esize);
                 if to_fixed then {
-                    result = FPToFixed(op1, frac_bits, unsigned, StandardFPSCRValue(), FPRounding_ZERO)
+                    result = FPToFixed(op1, frac_bits, val_unsigned, StandardFPSCRValue(), FPRounding_ZERO)
                 } else {
-                    result = FixedToFP(op1, frac_bits, unsigned, StandardFPSCRValue(), FPRounding_TIEEVEN)
+                    result = FixedToFP(op1, frac_bits, val_unsigned, StandardFPSCRValue(), FPRounding_TIEEVEN)
                 };
                 D(d + r) = aset_Elem(D(d + r), e, esize, result)
             }
@@ -24220,7 +24223,7 @@ function VCVT_xs_T1_A_decode (U, D, imm6, Vd, op, Q, M, Vm) = {
     };
     let to_fixed = [op[0]] == 0b1;
     let frac_bits : {'n, (0 <= 'n & 'n <= 2 ^ 6 - 1). int(64 - 'n)} = 64 - UInt(imm6);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     elements : int = undefined : int;
     esize : int = undefined : int;
     match [op[1]] {
@@ -24240,7 +24243,7 @@ function VCVT_xs_T1_A_decode (U, D, imm6, Vd, op, Q, M, Vm) = {
     let regs : {|1, 2|} = if Q == 0b0 then 1 else 2;
     __PostDecode();
     assert(esize >= 0);
-    VCVT_xs_Op_A(d, elements, esize, frac_bits, m, regs, to_fixed, unsigned)
+    VCVT_xs_Op_A(d, elements, esize, frac_bits, m, regs, to_fixed, val_unsigned)
 }
 
 val VCVT_xs_A1_A_decode : (bits(1), bits(1), bits(6), bits(4), bits(2), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -24264,7 +24267,7 @@ function VCVT_xs_A1_A_decode (U, D, imm6, Vd, op, Q, M, Vm) = {
     };
     let to_fixed : bool = [op[0]] == 0b1;
     let frac_bits : {'n, (0 <= 'n & 'n <= 2 ^ 6 - 1). int(64 - 'n)} = 64 - UInt(imm6);
-    let unsigned : bool = U == 0b1;
+    let val_unsigned : bool = U == 0b1;
     elements : int = undefined : int;
     esize : int = undefined : int;
     match [op[1]] {
@@ -24284,14 +24287,14 @@ function VCVT_xs_A1_A_decode (U, D, imm6, Vd, op, Q, M, Vm) = {
     let regs : {|1, 2|} = if Q == 0b0 then 1 else 2;
     __PostDecode();
     assert(esize >= 0);
-    VCVT_xs_Op_A(d, elements, esize, frac_bits, m, regs, to_fixed, unsigned)
+    VCVT_xs_Op_A(d, elements, esize, frac_bits, m, regs, to_fixed, val_unsigned)
 }
 
 val VCVT_is_Op_A : forall 'd 'elements 'esize 'm 'regs ('to_integer : Bool) ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('regs), bool('to_integer), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VCVT_is_Op_A (d, elements, esize, m, regs, to_integer, unsigned) = {
+function VCVT_is_Op_A (d, elements, esize, m, regs, to_integer, val_unsigned) = {
     if ConditionPassed() then {
         op1 : bits('esize) = undefined : bits('esize);
         CheckAdvSIMDEnabled();
@@ -24302,9 +24305,9 @@ function VCVT_is_Op_A (d, elements, esize, m, regs, to_integer, unsigned) = {
                 assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
                 op1 = aget_Elem(D(m + r), e, esize);
                 if to_integer then {
-                    result = FPToFixed(op1, 0, unsigned, StandardFPSCRValue(), FPRounding_ZERO)
+                    result = FPToFixed(op1, 0, val_unsigned, StandardFPSCRValue(), FPRounding_ZERO)
                 } else {
-                    result = FixedToFP(op1, 0, unsigned, StandardFPSCRValue(), FPRounding_TIEEVEN)
+                    result = FixedToFP(op1, 0, val_unsigned, StandardFPSCRValue(), FPRounding_TIEEVEN)
                 };
                 D(d + r) = aset_Elem(D(d + r), e, esize, result)
             }
@@ -24326,7 +24329,7 @@ function VCVT_is_T1_A_decode (D, size, Vd, op, Q, M, Vm) = {
         throw(Error_Unpredictable())
     };
     let to_integer = [op[1]] == 0b1;
-    let unsigned = [op[0]] == 0b1;
+    let val_unsigned = [op[0]] == 0b1;
     elements : int = undefined : int;
     esize : int = undefined : int;
     match size {
@@ -24346,7 +24349,7 @@ function VCVT_is_T1_A_decode (D, size, Vd, op, Q, M, Vm) = {
     let regs = if Q == 0b0 then 1 else 2;
     assert(constraint('_esize >= 0));
     __PostDecode();
-    VCVT_is_Op_A(d, elements, esize, m, regs, to_integer, unsigned)
+    VCVT_is_Op_A(d, elements, esize, m, regs, to_integer, val_unsigned)
 }
 
 val VCVT_is_A1_A_decode : (bits(1), bits(2), bits(4), bits(2), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -24360,7 +24363,7 @@ function VCVT_is_A1_A_decode (D, size, Vd, op, Q, M, Vm) = {
         throw(Error_Undefined())
     };
     let to_integer = [op[1]] == 0b1;
-    let unsigned = [op[0]] == 0b1;
+    let val_unsigned = [op[0]] == 0b1;
     elements : int = undefined : int;
     esize : int = undefined : int;
     match size {
@@ -24380,7 +24383,7 @@ function VCVT_is_A1_A_decode (D, size, Vd, op, Q, M, Vm) = {
     let regs = if Q == 0b0 then 1 else 2;
     assert(constraint('_esize >= 0));
     __PostDecode();
-    VCVT_is_Op_A(d, elements, esize, m, regs, to_integer, unsigned)
+    VCVT_is_Op_A(d, elements, esize, m, regs, to_integer, val_unsigned)
 }
 
 val VCVT_hs_Op_A : forall 'd 'elements ('half_to_single : Bool) 'm,
@@ -24428,14 +24431,14 @@ val VCVTA_asimd_Op_A : forall 'd 'elements 'esize 'm 'regs ('unsigned : Bool),
   'esize >= 0.
   (int('d), int('elements), int('esize), int('m), int('regs), FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VCVTA_asimd_Op_A (d, elements, esize, m, regs, rounding, unsigned) = {
+function VCVTA_asimd_Op_A (d, elements, esize, m, regs, rounding, val_unsigned) = {
     CheckAdvSIMDEnabled();
     let result = undefined : bits('esize);
     foreach (r from 0 to (regs - 1) by 1 in inc) {
         foreach (e from 0 to (elements - 1) by 1 in inc) {
             assert(constraint(('m + 'loop_r >= 0 & 'm + 'loop_r <= 31)));
             assert(constraint(('d + 'loop_r >= 0 & 'd + 'loop_r <= 31)));
-            D(d + r) = aset_Elem(D(d + r), e, esize, FPToFixed(aget_Elem(D(m + r), e, esize), 0, unsigned, StandardFPSCRValue(), rounding))
+            D(d + r) = aset_Elem(D(d + r), e, esize, FPToFixed(aget_Elem(D(m + r), e, esize), 0, val_unsigned, StandardFPSCRValue(), rounding))
         }
     }
 }
@@ -24454,7 +24457,7 @@ function VCVTA_asimd_T1_A_decode (D, size, Vd, RM, op, Q, M, Vm) = {
         throw(Error_Undefined())
     };
     let rounding = FPDecodeRM(RM);
-    let unsigned = op == 0b1;
+    let val_unsigned = op == 0b1;
     elements : int = undefined : int;
     esize : int = undefined : int;
     match size {
@@ -24474,7 +24477,7 @@ function VCVTA_asimd_T1_A_decode (D, size, Vd, RM, op, Q, M, Vm) = {
     let regs = if Q == 0b0 then 1 else 2;
     assert(constraint('_esize >= 0));
     __PostDecode();
-    VCVTA_asimd_Op_A(d, elements, esize, m, regs, rounding, unsigned)
+    VCVTA_asimd_Op_A(d, elements, esize, m, regs, rounding, val_unsigned)
 }
 
 val VCVTA_asimd_A1_A_decode : (bits(1), bits(2), bits(2), bits(4), bits(2), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -24488,7 +24491,7 @@ function VCVTA_asimd_A1_A_decode (D, size, OP, Vd, RM, op, Q, M, Vm) = {
         throw(Error_Undefined())
     };
     let rounding = FPDecodeRM(RM);
-    let unsigned = op == 0b1;
+    let val_unsigned = op == 0b1;
     elements : int = undefined : int;
     esize : int = undefined : int;
     match size {
@@ -24508,7 +24511,7 @@ function VCVTA_asimd_A1_A_decode (D, size, OP, Vd, RM, op, Q, M, Vm) = {
     let regs = if Q == 0b0 then 1 else 2;
     assert(constraint('_esize >= 0));
     __PostDecode();
-    VCVTA_asimd_Op_A(d, elements, esize, m, regs, rounding, unsigned)
+    VCVTA_asimd_Op_A(d, elements, esize, m, regs, rounding, val_unsigned)
 }
 
 val VCNT_Op_A : forall 'd 'elements 'esize 'm 'regs,
@@ -25670,7 +25673,7 @@ function VCADD_A1_A_decode (rot, D, S, Vn, Vd, N, Q, M, Vm) = {
     VCADD_Op_A(d, elements, esize, m, n, regs, rot)
 }
 
-val VBIC_r_Op_A : forall ('d : Int) ('m : Int) ('n : Int) ('regs : Int).
+val VBIC_r_Op_A : forall ('d 'm 'n 'regs : Int).
   (int('d), int('m), int('n), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VBIC_r_Op_A (d, m, n, regs) = {
@@ -25700,7 +25703,7 @@ function VBIC_r_T1A1_A_decode (D, Vn, Vd, N, Q, M, Vm) = {
     VBIC_r_Op_A(d, m, n, regs)
 }
 
-val VBIC_i_Op_A : forall ('d : Int) ('regs : Int).
+val VBIC_i_Op_A : forall ('d 'regs : Int).
   (int('d), bits(64), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VBIC_i_Op_A (d, imm64, regs) = {
@@ -25747,7 +25750,7 @@ function VBIC_i_T1A1_A_decode (i, D, imm3, Vd, cmode, Q, imm4) = {
     VBIC_i_Op_A(d, imm64, regs)
 }
 
-val VAND_r_Op_A : forall ('d : Int) ('m : Int) ('n : Int) ('regs : Int).
+val VAND_r_Op_A : forall ('d 'm 'n 'regs : Int).
   (int('d), int('m), int('n), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function VAND_r_Op_A (d, m, n, regs) = {
@@ -25816,7 +25819,7 @@ val VADDL_Op_A : forall 'd 'elements 'esize ('is_vaddw : Bool) 'm 'n ('unsigned 
   (0 <= 'd & 'd <= 31 & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 'esize >= 0).
   (int('d), int('elements), int('esize), bool('is_vaddw), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VADDL_Op_A (d, elements, esize, is_vaddw, m, n, unsigned) = {
+function VADDL_Op_A (d, elements, esize, is_vaddw, m, n, val_unsigned) = {
     if ConditionPassed() then {
         op1 : int = undefined : int;
         CheckAdvSIMDEnabled();
@@ -25824,12 +25827,12 @@ function VADDL_Op_A (d, elements, esize, is_vaddw, m, n, unsigned) = {
             assert(e >= 0 & (e + 1) * esize <= 64);
             if is_vaddw then {
                 assert((e + 1) * (2 * esize) <= 128);
-                op1 = asl_Int(aget_Elem(Qin(shr_int(n, 1)), e, 2 * esize), unsigned)
+                op1 = asl_Int(aget_Elem(Qin(shr_int(n, 1)), e, 2 * esize), val_unsigned)
             } else {
                 assert((e + 1) * esize <= 64);
-                op1 = asl_Int(aget_Elem(Din(n), e, esize), unsigned)
+                op1 = asl_Int(aget_Elem(Din(n), e, esize), val_unsigned)
             };
-            let result = op1 + asl_Int(aget_Elem(Din(m), e, esize), unsigned);
+            let result = op1 + asl_Int(aget_Elem(Din(m), e, esize), val_unsigned);
             Q(shr_int(d, 1)) = aset_Elem(Q(shr_int(d, 1)), e, 2 * esize, __GetSlice_int(2 * esize, result, 0))
         }
     }
@@ -25845,7 +25848,7 @@ function VADDL_T1A1_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     if [Vd[0]] == 0b1 | op == 0b1 & [Vn[0]] == 0b1 then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
     let is_vaddw = op == 0b1;
@@ -25853,7 +25856,7 @@ function VADDL_T1A1_A_decode (U, D, size, Vn, Vd, op, N, M, Vm) = {
     let n = UInt(N @ Vn);
     let m = UInt(M @ Vm);
     __PostDecode();
-    VADDL_Op_A(d, elements, esize, is_vaddw, m, n, unsigned)
+    VADDL_Op_A(d, elements, esize, is_vaddw, m, n, val_unsigned)
 }
 
 val VADDHN_Op_A : forall 'd 'elements 'esize 'm 'n,
@@ -25994,7 +25997,7 @@ val VABD_i_Op_A : forall 'd 'elements 'esize ('long_destination : Bool) 'm 'n 'r
   (0 <= 'n & 'n <= 31 & 0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31).
   (int('d), int('elements), int('esize), bool('long_destination), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VABD_i_Op_A (d, elements, esize, long_destination, m, n, regs, unsigned) = {
+function VABD_i_Op_A (d, elements, esize, long_destination, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         absdiff : int = undefined : int;
         op1 : bits('esize) = undefined : bits('esize);
@@ -26007,7 +26010,7 @@ function VABD_i_Op_A (d, elements, esize, long_destination, m, n, regs, unsigned
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
                 op1 = aget_Elem(Din(n + r), e, esize);
                 op2 = aget_Elem(Din(m + r), e, esize);
-                absdiff = abs(asl_Int(op1, unsigned) - asl_Int(op2, unsigned));
+                absdiff = abs(asl_Int(op1, val_unsigned) - asl_Int(op2, val_unsigned));
                 if long_destination then {
                     Q(shr_int(d, 1)) = aset_Elem(Q(shr_int(d, 1)), e, 2 * esize, __GetSlice_int(2 * esize, absdiff, 0))
                 } else {
@@ -26029,7 +26032,7 @@ function VABD_i_T2A2_A_decode (U, D, size, Vn, Vd, N, M, Vm) = {
     if [Vd[0]] == 0b1 then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let long_destination = true;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
@@ -26038,7 +26041,7 @@ function VABD_i_T2A2_A_decode (U, D, size, Vn, Vd, N, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = 1;
     __PostDecode();
-    VABD_i_Op_A(d, elements, esize, long_destination, m, n, regs, unsigned)
+    VABD_i_Op_A(d, elements, esize, long_destination, m, n, regs, val_unsigned)
 }
 
 val VABD_i_T1A1_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -26051,7 +26054,7 @@ function VABD_i_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vn[0]] == 0b1) | [Vm[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let long_destination = false;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
@@ -26060,7 +26063,7 @@ function VABD_i_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VABD_i_Op_A(d, elements, esize, long_destination, m, n, regs, unsigned)
+    VABD_i_Op_A(d, elements, esize, long_destination, m, n, regs, val_unsigned)
 }
 
 val VABD_f_Op_A : forall 'd 'elements 'esize 'm 'n 'regs,
@@ -26158,7 +26161,7 @@ val VABA_Op_A : forall 'd 'elements 'esize ('long_destination : Bool) 'm 'n 'reg
   (0 <= 'd & 'd <= 31 & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31).
   (int('d), int('elements), int('esize), bool('long_destination), int('m), int('n), int('regs), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function VABA_Op_A (d, elements, esize, long_destination, m, n, regs, unsigned) = {
+function VABA_Op_A (d, elements, esize, long_destination, m, n, regs, val_unsigned) = {
     if ConditionPassed() then {
         absdiff : int = undefined : int;
         op1 : bits('esize) = undefined : bits('esize);
@@ -26171,7 +26174,7 @@ function VABA_Op_A (d, elements, esize, long_destination, m, n, regs, unsigned) 
                 assert(constraint(('n + 'loop_r >= 0 & 'n + 'loop_r <= 31)));
                 op1 = aget_Elem(Din(n + r), e, esize);
                 op2 = aget_Elem(Din(m + r), e, esize);
-                absdiff = abs(asl_Int(op1, unsigned) - asl_Int(op2, unsigned));
+                absdiff = abs(asl_Int(op1, val_unsigned) - asl_Int(op2, val_unsigned));
                 if long_destination then {
                     Q(shr_int(d, 1)) = aset_Elem(Q(shr_int(d, 1)), e, 2 * esize, aget_Elem(Qin(shr_int(d, 1)), e, 2 * esize) + absdiff)
                 } else {
@@ -26193,7 +26196,7 @@ function VABA_T2A2_A_decode (U, D, size, Vn, Vd, N, M, Vm) = {
     if [Vd[0]] == 0b1 then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let long_destination = true;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
@@ -26202,7 +26205,7 @@ function VABA_T2A2_A_decode (U, D, size, Vn, Vd, N, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = 1;
     __PostDecode();
-    VABA_Op_A(d, elements, esize, long_destination, m, n, regs, unsigned)
+    VABA_Op_A(d, elements, esize, long_destination, m, n, regs, val_unsigned)
 }
 
 val VABA_T1A1_A_decode : (bits(1), bits(1), bits(2), bits(4), bits(4), bits(1), bits(1), bits(1), bits(4)) -> unit effect {escape, rreg, undef, wreg}
@@ -26215,7 +26218,7 @@ function VABA_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     if Q == 0b1 & (([Vd[0]] == 0b1 | [Vn[0]] == 0b1) | [Vm[0]] == 0b1) then {
         throw(Error_Undefined())
     };
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let long_destination = false;
     let esize = shl_int(8, UInt(size));
     let elements : int = 64 / esize;
@@ -26224,7 +26227,7 @@ function VABA_T1A1_A_decode (U, D, size, Vn, Vd, N, Q, M, Vm) = {
     let m = UInt(M @ Vm);
     let regs = if Q == 0b0 then 1 else 2;
     __PostDecode();
-    VABA_Op_A(d, elements, esize, long_destination, m, n, regs, unsigned)
+    VABA_Op_A(d, elements, esize, long_destination, m, n, regs, val_unsigned)
 }
 
 val CheckCryptoEnabled32 : unit -> unit effect {escape, rreg, undef, wreg}
@@ -36705,7 +36708,7 @@ function ATS1HR val_name = {
     ATS1Hx(val_name, false)
 }
 
-val ATS1Cxx : forall ('pl0regime : Bool) ('iswrite : Bool).
+val ATS1Cxx : forall ('pl0regime 'iswrite : Bool).
   (bits(32), bool('pl0regime), bool('iswrite)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function ATS1Cxx (val_name, pl0regime, iswrite) = {
@@ -36783,7 +36786,7 @@ function ATS1CPR val_name = {
     ATS1Cxx(val_name, false, false)
 }
 
-val ATS12NSOxx : forall ('pl0regime : Bool) ('iswrite : Bool).
+val ATS12NSOxx : forall ('pl0regime 'iswrite : Bool).
   (bits(32), bool('pl0regime), bool('iswrite)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function ATS12NSOxx (val_name, pl0regime, iswrite) = {
@@ -38324,7 +38327,7 @@ function AArch32_ExclusiveMonitorsPass (address, size) = {
     passed
 }
 
-val AArch32_CheckAlignment : forall ('alignment : Int) ('iswrite : Bool).
+val AArch32_CheckAlignment : forall ('alignment : Int)('iswrite : Bool).
   (bits(32), int('alignment), AccType, bool('iswrite)) -> bool effect {escape, rreg, undef, wreg}
 
 function AArch32_CheckAlignment (address, alignment, acctype, iswrite) = {
@@ -46652,7 +46655,7 @@ function MCRR_T1A1_A_decode__1 (Rt2, Rt, coproc, opc1, CRm) = {
     MCRR_Op_A(cp, t, t2)
 }
 
-val MCR_Op_A : forall ('cp : Int) ('t : Int), ('t >= 0 & 't <= 15).
+val MCR_Op_A : forall ('cp 't : Int), ('t >= 0 & 't <= 15).
   (int('cp), int('t)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function MCR_Op_A (cp, t) = {
@@ -46693,7 +46696,7 @@ function MCR_T1A1_A_decode__1 (cond, opc1, CRn, Rt, coproc, opc2, CRm) = {
     MCR_Op_A(cp, t)
 }
 
-val LDC_l_Op_A : forall ('add : Bool) ('cp : Int) ('index : Bool).
+val LDC_l_Op_A : forall ('add : Bool)('cp : Int)('index : Bool).
   (bool('add), int('cp), bits(32), bool('index)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function LDC_l_Op_A (add, cp, imm32, index) = {

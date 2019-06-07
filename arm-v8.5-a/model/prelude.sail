@@ -57,10 +57,7 @@ $include <smt.sail>
 $include <flow.sail>
 $include <arith.sail>
 $include <trace.sail>
-
-type bits ('n : Int) = vector('n, dec, bit)
-
-val eq_bit = {ocaml: "(fun (x, y) -> x = y)", lem: "eq", interpreter: "eq_anything", c: "eq_bit"} : (bit, bit) -> bool
+$include <vector_dec.sail>
 
 val eq_vec = {ocaml: "eq_list", lem: "eq_vec", c: "eq_bits"} : forall 'n. (bits('n), bits('n)) -> bool
 
@@ -75,11 +72,9 @@ val eq_anything = {
   c: "eq_anything"
 } : forall ('a : Type). ('a, 'a) -> bool
 
-val bitvector_length = "length" : forall 'n. bits('n) -> atom('n)
-val vector_length = {ocaml: "length", lem: "length_list", c: "length"} : forall 'n ('a : Type). vector('n, dec, 'a) -> atom('n)
 val list_length = {ocaml: "length", lem: "length_list", c: "length"} : forall ('a : Type). list('a) -> int
 
-overload length = {bitvector_length, vector_length, list_length}
+overload length = {list_length}
 
 overload operator == = {eq_unit, eq_bit, eq_vec, eq_string, eq_real, eq_anything}
 
@@ -133,28 +128,13 @@ val vector_update_B = {ocaml: "update", lem: "update_list_dec", c: "vector_updat
 
 overload vector_update = {bitvector_update_B, vector_update_B}
 
-val vector_update_subrange = {
-  ocaml: "update_subrange",
-  lem: "update_subrange_vec_dec",
-  c: "vector_update_subrange"
-} : forall 'n 'm 'o. (bits('n), atom('m), atom('o), bits('m - ('o - 1))) -> bits('n)
-
 val vcons : forall ('n : Int) ('a : Type).
   ('a, vector('n, dec, 'a)) -> vector('n + 1, dec, 'a)
-
-val bitvector_concat = {ocaml: "append", lem: "concat_vec", c: "append"} : forall ('n : Int) ('m : Int).
-  (bits('n), bits('m)) -> bits('n + 'm)
 
 val vector_concat = {ocaml: "append", lem: "append_list"} : forall ('n : Int) ('m : Int) ('a : Type).
   (vector('n, dec, 'a), vector('m, dec, 'a)) -> vector('n + 'm, dec, 'a)
 
 overload append = {bitvector_concat, vector_concat}
-
-val not_vec = {
-  ocaml: "not_vec",
-  lem: "not_vec",
-  c: "not_bits"
-} : forall 'n. bits('n) -> bits('n)
 
 overload ~ = {not_bool, not_vec}
 
@@ -167,22 +147,6 @@ val neq_anything = {lem: "neq"} : forall ('a : Type). ('a, 'a) -> bool
 function neq_anything (x, y) = not_bool(x == y)
 
 overload operator != = {neq_vec, neq_anything}
-
-val builtin_and_vec = {ocaml: "and_vec", c: "and_bits"} : forall 'n. (bits('n), bits('n)) -> bits('n)
-
-val and_vec = {lem: "and_vec", c: "and_bits"} : forall 'n. (bits('n), bits('n)) -> bits('n)
-
-function and_vec (xs, ys) = builtin_and_vec(xs, ys)
-
-overload operator & = {and_vec}
-
-val builtin_or_vec = {ocaml: "or_vec", c: "or_bits"} : forall 'n. (bits('n), bits('n)) -> bits('n)
-
-val or_vec = {lem: "or_vec", c: "or_bits"}: forall 'n. (bits('n), bits('n)) -> bits('n)
-
-function or_vec (xs, ys) = builtin_or_vec(xs, ys)
-
-overload operator | = {or_vec}
 
 val UInt = {
   ocaml: "uint",
@@ -364,11 +328,9 @@ overload min = {min_nat, min_int}
 
 overload max = {max_nat, max_int}
 
-val print_bits = "print_bits" : forall 'n. (string, bits('n)) -> unit
+val cast zero_vector : forall 'n, 'n >= 0. (implicit('n), int(0)) -> bits('n)
 
-val prerr_bits = "prerr_bits" : forall 'n. (string, bits('n)) -> unit
-
-val replicate_bits = "replicate_bits" : forall 'n 'm. (bits('n), atom('m)) -> bits('n * 'm)
+function zero_vector(n, _) = sail_zeros(n)
 
 /*! We need `one_cast` and `zero_cast` for some of the AutoGen
 functions in the specification, but it's not very nice. */
@@ -390,9 +352,6 @@ function coerce_int_nat 'x = {
 }
 */
 
-val slice = "slice" : forall ('n : Int) ('m : Int), 'm >= 0 & 'n >= 0.
-  (bits('m), int, atom('n)) -> bits('n)
-
 val pow2_atom = "pow2" : forall 'n. atom('n) -> atom(2 ^ 'n)
 val pow2_int = "pow2" : int -> int
 
@@ -408,7 +367,8 @@ union exception = {
   Error_Implementation_Defined : string,
   Error_ReservedEncoding : unit,
   Error_ExceptionTaken : unit,
-  Error_Unpredictable : unit
+  Error_Unpredictable : unit,
+  Error_SError : bool
 }
 
 val append_str = {ocaml: "concat_str", lem: "stringAppend", c: "concat_str" } :
@@ -430,12 +390,6 @@ function __tarmacEvent(str: string) -> unit = {
   ()
 }
 
-val sail_zeros = "zeros" : forall 'n. int('n) -> bits('n)
-
-val cast zero_vector : forall 'n. (implicit('n), int(0)) -> bits('n)
-
-function zero_vector(n, _) = sail_zeros(n)
-
 val __SleepRequest = {ocaml: "sleep_request", lem: "sleep_request", smt: "sleep_request", interpreter: "sleep_request", c: "sleep_request"}: unit -> unit effect {rreg, undef}
 
 val __WakeupRequest = {ocaml: "wakeup_request", lem: "wakeup_request", smt: "wakeup_request", interpreter: "wakeup_request", c: "wakeup_request"}: unit -> unit effect {rreg, undef}
@@ -446,9 +400,6 @@ val __GetVerbosity = {c: "sail_get_verbosity"}: unit -> bits(64) effect {rreg, u
 
 val get_cycle_count = { c: "get_cycle_count" } : unit -> int effect {undef, wreg, rreg, rmem, wmem}
 
-
-/* Used for creating long bitvector literals in the C backend. */
-val "append_64" : forall 'n. (bits('n), bits(64)) -> bits('n + 64)
 
 //constraint Reg('n) = 0 <= 'n <= 31
 

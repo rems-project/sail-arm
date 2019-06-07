@@ -190,7 +190,7 @@ function Sbox sboxin = {
     sboxout
 }
 
-val PolynomialMult : forall ('M : Int) ('N : Int), ('M >= 0 & 'N >= 0).
+val PolynomialMult : forall ('M 'N : Int), ('M >= 0 & 'N >= 0).
   (bits('M), bits('N)) -> bits('N + 'M) effect {escape, undef}
 
 function PolynomialMult (op1, op2) = {
@@ -306,7 +306,7 @@ function SHAhashSIGMA0 x = {
     (ROR(x, 2) ^ ROR(x, 13)) ^ ROR(x, 22)
 }
 
-val ROL : forall ('N : Int) ('shift : Int), 'N >= 0.
+val ROL : forall ('N 'shift : Int), 'N >= 0.
   (bits('N), int('shift)) -> bits('N) effect {escape, undef}
 
 function ROL (x, shift) = {
@@ -2476,7 +2476,7 @@ function vector_transfer_vector_insert_decode (Rd, Rn, imm4, imm5, op, Q) = {
 }
 
 val vector_transfer_vector_extract : forall 'd 'datasize 'm 'n 'position,
-  ('m >= 0 & 'm <= 31) & ('n >= 0 & 'n <= 31) & (2 * 'datasize >= 0 & 'datasize >= 0) & ('d >= 0 & 'd <= 31).
+  ('m >= 0 & 'm <= 31) & ('n >= 0 & 'n <= 31) & (0 <= 2 * 'datasize & 0 <= 'datasize) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('m), int('n), int('position)) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_transfer_vector_extract (d, datasize, m, n, position) = {
@@ -2568,7 +2568,7 @@ function vector_transfer_vector_cpydup_simd_decode (Rd, Rn, imm4, imm5, op, Q) =
 }
 
 val vector_transfer_integer_move_unsigned : forall 'd 'datasize 'esize 'idxdsize 'index 'n,
-  ('n >= 0 & 'n <= 31) & ('idxdsize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
+  ('n >= 0 & 'n <= 31) & ('idxdsize >= 0 & 'esize >= 0) & 'datasize >= 0 & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('esize), int('idxdsize), int('index), int('n)) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_transfer_integer_move_unsigned (d, datasize, esize, idxdsize, index, n) = {
@@ -2613,7 +2613,7 @@ function vector_transfer_integer_move_unsigned_decode (Rd, Rn, imm4_0_, imm4_1_,
 }
 
 val vector_transfer_integer_move_signed : forall 'd 'datasize 'esize 'idxdsize 'index 'n,
-  ('n >= 0 & 'n <= 31) & ('idxdsize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
+  ('n >= 0 & 'n <= 31) & ('idxdsize >= 0 & 'esize >= 0) & 'datasize >= 0 & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('esize), int('idxdsize), int('index), int('n)) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_transfer_integer_move_signed (d, datasize, esize, idxdsize, index, n) = {
@@ -2727,7 +2727,7 @@ val vector_shift_right_sisd : forall ('accumulate : Bool) 'd 'datasize 'elements
   ('n >= 0 & 'n <= 31 & 'd >= 0 & 'd <= 31).
   (bool('accumulate), int('d), int('datasize), int('elements), int('esize), int('n), bool('round), int('shift), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_shift_right_sisd (accumulate, d, datasize, elements, esize, n, round, shift, unsigned) = {
+function vector_shift_right_sisd (accumulate, d, datasize, elements, esize, n, round, shift, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = aget_V(n);
     result : bits('datasize) = undefined : bits('datasize);
@@ -2736,7 +2736,7 @@ function vector_shift_right_sisd (accumulate, d, datasize, elements, esize, n, r
     let operand2 : bits('datasize) = if accumulate then aget_V(d) else Zeros();
     foreach (e from 0 to (elements - 1) by 1 in inc) {
         assert(constraint(('loop_e >= 0 & 'esize >= 0 & ('loop_e + 1) * 'esize <= 'datasize)));
-        element = shr_int(asl_Int(aget_Elem(operand, e, esize), unsigned) + round_const, shift);
+        element = shr_int(asl_Int(aget_Elem(operand, e, esize), val_unsigned) + round_const, shift);
         result = aset_Elem(result, e, esize, aget_Elem(operand2, e, esize) + __GetSlice_int(esize, element, 0))
     };
     aset_V(d, result)
@@ -2755,11 +2755,11 @@ function vector_shift_right_sisd_decode (Rd, Rn, o0, o1, immb, immh, U) = {
     let 'datasize = esize;
     let 'elements = 1;
     let 'shift = esize * 2 - UInt(immh @ immb);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let round = o1 == 0b1;
     let accumulate = o0 == 0b1;
     __PostDecode();
-    vector_shift_right_sisd(accumulate, d, datasize, elements, esize, n, round, shift, unsigned)
+    vector_shift_right_sisd(accumulate, d, datasize, elements, esize, n, round, shift, val_unsigned)
 }
 
 val vector_shift_right_simd_decode : (bits(5), bits(5), bits(1), bits(1), bits(3), bits(4), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -2778,18 +2778,18 @@ function vector_shift_right_simd_decode (Rd, Rn, o0, o1, immb, immh, U, Q) = {
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     let 'shift = esize * 2 - UInt(immh @ immb);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let round = o1 == 0b1;
     let accumulate = o0 == 0b1;
     __PostDecode();
-    vector_shift_right_sisd(accumulate, d, datasize, elements, esize, n, round, shift, unsigned)
+    vector_shift_right_sisd(accumulate, d, datasize, elements, esize, n, round, shift, val_unsigned)
 }
 
 val vector_shift_rightnarrow_uniform_sisd : forall 'd 'datasize 'elements 'esize 'n 'part ('round : Bool) 'shift ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & (2 * 'datasize >= 0 & 2 * 'esize >= 0) & ('d >= 0 & 'd <= 31 & 'part in {0, 1}).
   (int('d), int('datasize), int('elements), int('esize), int('n), int('part), bool('round), int('shift), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_shift_rightnarrow_uniform_sisd (d, datasize, elements, esize, n, part, round, shift, unsigned) = {
+function vector_shift_rightnarrow_uniform_sisd (d, datasize, elements, esize, n, part, round, shift, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits(2 * 'datasize) = V(n);
     result : bits('datasize) = undefined : bits('datasize);
@@ -2797,9 +2797,9 @@ function vector_shift_rightnarrow_uniform_sisd (d, datasize, elements, esize, n,
     element : int = undefined : int;
     sat : bool = undefined : bool;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element = shr_int(asl_Int(aget_Elem(operand, e, 2 * esize), unsigned) + round_const, shift);
+        element = shr_int(asl_Int(aget_Elem(operand, e, 2 * esize), val_unsigned) + round_const, shift);
         __tc1 : bits('esize) = undefined : bits('esize);
-        (__tc1, sat) = SatQ(element, esize, unsigned);
+        (__tc1, sat) = SatQ(element, esize, val_unsigned);
         result = aset_Elem(result, e, esize, __tc1);
         if sat then {
             FPSR = __SetSlice_bits(32, 1, FPSR, 27, 0b1)
@@ -2826,12 +2826,12 @@ function vector_shift_rightnarrow_uniform_sisd_decode (Rd, Rn, op, immb, immh, U
     let 'part = 0;
     let 'shift = 2 * esize - UInt(immh @ immb);
     let round = op == 0b1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     assert(constraint(('_d >= 0 & '_d <= 31)));
     assert(constraint((2 * '_esize >= 0 & 2 * '_esize >= 0)));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
-    vector_shift_rightnarrow_uniform_sisd(d, datasize, elements, esize, n, part, round, shift, unsigned)
+    vector_shift_rightnarrow_uniform_sisd(d, datasize, elements, esize, n, part, round, shift, val_unsigned)
 }
 
 val vector_shift_rightnarrow_uniform_simd_decode : (bits(5), bits(5), bits(1), bits(3), bits(4), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -2852,12 +2852,12 @@ function vector_shift_rightnarrow_uniform_simd_decode (Rd, Rn, op, immb, immh, U
     let 'elements = datasize / esize;
     let 'shift = 2 * esize - UInt(immh @ immb);
     let round = op == 0b1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     assert(constraint(('_d >= 0 & '_d <= 31 & '_part in {0, 1})));
     assert(constraint(2 * '_esize >= 0));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
-    vector_shift_rightnarrow_uniform_sisd(d, datasize, elements, esize, n, part, round, shift, unsigned)
+    vector_shift_rightnarrow_uniform_sisd(d, datasize, elements, esize, n, part, round, shift, val_unsigned)
 }
 
 val vector_shift_rightnarrow_nonuniform_sisd : forall 'd 'datasize 'elements 'esize 'n 'part ('round : Bool) 'shift,
@@ -3208,13 +3208,13 @@ val vector_shift_leftlong : forall 'd 'datasize 'elements 'esize 'n 'part 'shift
   ('n >= 0 & 'n <= 31 & 'part in {0, 1}) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('n), int('part), int('shift), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_shift_leftlong (d, datasize, elements, esize, n, part, shift, unsigned) = {
+function vector_shift_leftlong (d, datasize, elements, esize, n, part, shift, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = Vpart(n, part);
     result : bits(2 * 'datasize) = undefined : bits('datasize * 2);
     element : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element = shl_int(asl_Int(aget_Elem(operand, e, esize), unsigned), shift);
+        element = shl_int(asl_Int(aget_Elem(operand, e, esize), val_unsigned), shift);
         result = aset_Elem(result, e, 2 * esize, __GetSlice_int(2 * esize, element, 0))
     };
     V(d) = result
@@ -3237,12 +3237,12 @@ function vector_shift_leftlong_decode (Rd, Rn, opcode, immb, immh, U, Q) = {
     let 'part = UInt(Q);
     let 'elements = datasize / esize;
     let 'shift = UInt(immh @ immb) - esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     assert(constraint(('_d >= 0 & '_d <= 31)));
     assert(constraint('_esize >= 0));
     assert(constraint(('_n >= 0 & '_n <= 31 & '_part in {0, 1})));
     __PostDecode();
-    vector_shift_leftlong(d, datasize, elements, esize, n, part, shift, unsigned)
+    vector_shift_leftlong(d, datasize, elements, esize, n, part, shift, val_unsigned)
 }
 
 val vector_shift_leftinsert_sisd : forall 'd 'datasize 'elements 'esize 'n 'shift,
@@ -3312,14 +3312,14 @@ val vector_shift_conv_int_sisd : forall 'd 'datasize 'elements 'esize 'fracbits 
   ('n >= 0 & 'n <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('fracbits), int('n), FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_shift_conv_int_sisd (d, datasize, elements, esize, fracbits, n, rounding, unsigned) = {
+function vector_shift_conv_int_sisd (d, datasize, elements, esize, fracbits, n, rounding, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = V(n);
     result : bits('datasize) = undefined : bits('datasize);
     element : bits('esize) = undefined : bits('esize);
     foreach (e from 0 to (elements - 1) by 1 in inc) {
         element = aget_Elem(operand, e, esize);
-        result = aset_Elem(result, e, esize, FixedToFP(element, fracbits, unsigned, FPCR, rounding))
+        result = aset_Elem(result, e, esize, FixedToFP(element, fracbits, val_unsigned, FPCR, rounding))
     };
     V(d) = result
 }
@@ -3337,10 +3337,10 @@ function vector_shift_conv_int_sisd_decode (Rd, Rn, opcode, immb, immh, U) = {
     let 'datasize = esize;
     let 'elements = 1;
     let 'fracbits = esize * 2 - UInt(immh @ immb);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let rounding = FPRoundingMode(FPCR);
     __PostDecode();
-    vector_shift_conv_int_sisd(d, datasize, elements, esize, fracbits, n, rounding, unsigned)
+    vector_shift_conv_int_sisd(d, datasize, elements, esize, fracbits, n, rounding, val_unsigned)
 }
 
 val vector_shift_conv_int_simd_decode : (bits(5), bits(5), bits(5), bits(3), bits(4), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -3362,24 +3362,24 @@ function vector_shift_conv_int_simd_decode (Rd, Rn, opcode, immb, immh, U, Q) = 
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     let 'fracbits = esize * 2 - UInt(immh @ immb);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let rounding = FPRoundingMode(FPCR);
     __PostDecode();
-    vector_shift_conv_int_sisd(d, datasize, elements, esize, fracbits, n, rounding, unsigned)
+    vector_shift_conv_int_sisd(d, datasize, elements, esize, fracbits, n, rounding, val_unsigned)
 }
 
 val vector_shift_conv_float_sisd : forall 'd 'datasize 'elements 'esize 'fracbits 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('datasize >= 0 & 'esize >= 0) & 'fracbits >= 0 & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('fracbits), int('n), FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_shift_conv_float_sisd (d, datasize, elements, esize, fracbits, n, rounding, unsigned) = {
+function vector_shift_conv_float_sisd (d, datasize, elements, esize, fracbits, n, rounding, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = V(n);
     result : bits('datasize) = undefined : bits('datasize);
     element : bits('esize) = undefined : bits('esize);
     foreach (e from 0 to (elements - 1) by 1 in inc) {
         element = aget_Elem(operand, e, esize);
-        result = aset_Elem(result, e, esize, FPToFixed(element, fracbits, unsigned, FPCR, rounding))
+        result = aset_Elem(result, e, esize, FPToFixed(element, fracbits, val_unsigned, FPCR, rounding))
     };
     V(d) = result
 }
@@ -3397,14 +3397,14 @@ function vector_shift_conv_float_sisd_decode (Rd, Rn, opcode, immb, immh, U) = {
     let 'datasize = esize;
     let 'elements = 1;
     let 'fracbits = esize * 2 - UInt(immh @ immb);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let rounding = FPRounding_ZERO;
     assert(constraint(('_d >= 0 & '_d <= 31)));
     assert(constraint('_esize * 2 - '_fracbits >= 0));
     assert(constraint(('_esize >= 0 & '_esize >= 0)));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
-    vector_shift_conv_float_sisd(d, datasize, elements, esize, fracbits, n, rounding, unsigned)
+    vector_shift_conv_float_sisd(d, datasize, elements, esize, fracbits, n, rounding, val_unsigned)
 }
 
 val vector_shift_conv_float_simd_decode : (bits(5), bits(5), bits(5), bits(3), bits(4), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -3426,28 +3426,28 @@ function vector_shift_conv_float_simd_decode (Rd, Rn, opcode, immb, immh, U, Q) 
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     let 'fracbits = esize * 2 - UInt(immh @ immb);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let rounding = FPRounding_ZERO;
     assert(constraint(('_d >= 0 & '_d <= 31)));
     assert(constraint('_esize * 2 - '_fracbits >= 0));
     assert(constraint(('_datasize >= 0 & '_esize >= 0)));
     assert(constraint(('_n >= 0 & '_n <= 31)));
     __PostDecode();
-    vector_shift_conv_float_sisd(d, datasize, elements, esize, fracbits, n, rounding, unsigned)
+    vector_shift_conv_float_sisd(d, datasize, elements, esize, fracbits, n, rounding, val_unsigned)
 }
 
 val vector_reduce_intmax : forall 'd 'datasize 'elements 'esize ('min : Bool) 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), bool('min), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_reduce_intmax (d, datasize, elements, esize, min, n, unsigned) = {
+function vector_reduce_intmax (d, datasize, elements, esize, min, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = V(n);
     maxmin : int = undefined : int;
     element : int = undefined : int;
-    maxmin = asl_Int(aget_Elem(operand, 0, esize), unsigned);
+    maxmin = asl_Int(aget_Elem(operand, 0, esize), val_unsigned);
     foreach (e from 1 to (elements - 1) by 1 in inc) {
-        element = asl_Int(aget_Elem(operand, e, esize), unsigned);
+        element = asl_Int(aget_Elem(operand, e, esize), val_unsigned);
         maxmin = if min then min(maxmin, element) else max(maxmin, element)
     };
     V(d) = __GetSlice_int(esize, maxmin, 0)
@@ -3468,10 +3468,10 @@ function vector_reduce_intmax_decode (Rd, Rn, op, size, U, Q) = {
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let min = op == 0b1;
     __PostDecode();
-    vector_reduce_intmax(d, datasize, elements, esize, min, n, unsigned)
+    vector_reduce_intmax(d, datasize, elements, esize, min, n, val_unsigned)
 }
 
 val vector_reduce_fp16maxnm_sisd : forall 'd 'datasize 'esize 'n,
@@ -3755,13 +3755,13 @@ val vector_reduce_addlong : forall 'd 'datasize 'elements 'esize 'n ('unsigned :
   ('n >= 0 & 'n <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_reduce_addlong (d, datasize, elements, esize, n, unsigned) = {
+function vector_reduce_addlong (d, datasize, elements, esize, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = V(n);
     sum : int = undefined : int;
-    sum = asl_Int(aget_Elem(operand, 0, esize), unsigned);
+    sum = asl_Int(aget_Elem(operand, 0, esize), val_unsigned);
     foreach (e from 1 to (elements - 1) by 1 in inc) {
-        sum = sum + asl_Int(aget_Elem(operand, e, esize), unsigned)
+        sum = sum + asl_Int(aget_Elem(operand, e, esize), val_unsigned)
     };
     V(d) = __GetSlice_int(2 * esize, sum, 0)
 }
@@ -3781,9 +3781,9 @@ function vector_reduce_addlong_decode (Rd, Rn, opcode, size, U, Q) = {
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_reduce_addlong(d, datasize, elements, esize, n, unsigned)
+    vector_reduce_addlong(d, datasize, elements, esize, n, val_unsigned)
 }
 
 val vector_logical : forall 'datasize 'rd,
@@ -4215,13 +4215,13 @@ val vector_arithmetic_unary_shift : forall 'd 'datasize 'elements 'esize 'n 'par
   ('n >= 0 & 'n <= 31 & 'part in {0, 1}) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('n), int('part), int('shift), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_unary_shift (d, datasize, elements, esize, n, part, shift, unsigned) = {
+function vector_arithmetic_unary_shift (d, datasize, elements, esize, n, part, shift, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = Vpart(n, part);
     result : bits(2 * 'datasize) = undefined : bits(2 * 'datasize);
     element : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element = shl_int(asl_Int(aget_Elem(operand, e, esize), unsigned), shift);
+        element = shl_int(asl_Int(aget_Elem(operand, e, esize), val_unsigned), shift);
         result = aset_Elem(result, e, 2 * esize, __GetSlice_int(2 * esize, element, 0))
     };
     V(d) = result
@@ -4241,9 +4241,9 @@ function vector_arithmetic_unary_shift_decode (Rd, Rn, opcode, size, U, Q) = {
     let 'part = UInt(Q);
     let 'elements = datasize / esize;
     let 'shift = esize;
-    let unsigned = false;
+    let val_unsigned = false;
     __PostDecode();
-    vector_arithmetic_unary_shift(d, datasize, elements, esize, n, part, shift, unsigned)
+    vector_arithmetic_unary_shift(d, datasize, elements, esize, n, part, shift, val_unsigned)
 }
 
 val vector_arithmetic_unary_rev : forall 'containers 'd 'datasize 'elements_per_container 'esize 'n,
@@ -4458,7 +4458,7 @@ val vector_arithmetic_unary_fp16_conv_int_sisd : forall 'd 'datasize 'elements '
   ('n >= 0 & 'n <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_unary_fp16_conv_int_sisd (d, datasize, elements, esize, n, unsigned) = {
+function vector_arithmetic_unary_fp16_conv_int_sisd (d, datasize, elements, esize, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = V(n);
     result : bits('datasize) = undefined : bits('datasize);
@@ -4466,7 +4466,7 @@ function vector_arithmetic_unary_fp16_conv_int_sisd (d, datasize, elements, esiz
     element : bits('esize) = undefined : bits('esize);
     foreach (e from 0 to (elements - 1) by 1 in inc) {
         element = aget_Elem(operand, e, esize);
-        result = aset_Elem(result, e, esize, FixedToFP(element, 0, unsigned, FPCR, rounding))
+        result = aset_Elem(result, e, esize, FixedToFP(element, 0, val_unsigned, FPCR, rounding))
     };
     V(d) = result
 }
@@ -4483,9 +4483,9 @@ function vector_arithmetic_unary_fp16_conv_int_sisd_decode (Rd, Rn, opcode, a, U
     let 'esize = 16;
     let 'datasize = esize;
     let 'elements = 1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_int_sisd(d, datasize, elements, esize, n, unsigned)
+    vector_arithmetic_unary_fp16_conv_int_sisd(d, datasize, elements, esize, n, val_unsigned)
 }
 
 val vector_arithmetic_unary_fp16_conv_int_simd_decode : (bits(5), bits(5), bits(5), bits(1), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4500,9 +4500,9 @@ function vector_arithmetic_unary_fp16_conv_int_simd_decode (Rd, Rn, opcode, a, U
     let 'esize = 16;
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_int_sisd(d, datasize, elements, esize, n, unsigned)
+    vector_arithmetic_unary_fp16_conv_int_sisd(d, datasize, elements, esize, n, val_unsigned)
 }
 
 val vector_arithmetic_unary_float_conv_int_sisd_decode : (bits(5), bits(5), bits(5), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4514,9 +4514,9 @@ function vector_arithmetic_unary_float_conv_int_sisd_decode (Rd, Rn, opcode, sz,
     let 'esize = shl_int(32, UInt(sz));
     let 'datasize = esize;
     let 'elements = 1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_int_sisd(d, datasize, elements, esize, n, unsigned)
+    vector_arithmetic_unary_fp16_conv_int_sisd(d, datasize, elements, esize, n, val_unsigned)
 }
 
 val vector_arithmetic_unary_float_conv_int_simd_decode : (bits(5), bits(5), bits(5), bits(1), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4531,23 +4531,23 @@ function vector_arithmetic_unary_float_conv_int_simd_decode (Rd, Rn, opcode, sz,
     let 'esize = shl_int(32, UInt(sz));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_int_sisd(d, datasize, elements, esize, n, unsigned)
+    vector_arithmetic_unary_fp16_conv_int_sisd(d, datasize, elements, esize, n, val_unsigned)
 }
 
 val vector_arithmetic_unary_fp16_conv_float_tieaway_sisd : forall 'd 'datasize 'elements 'esize 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('n), FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_unary_fp16_conv_float_tieaway_sisd (d, datasize, elements, esize, n, rounding, unsigned) = {
+function vector_arithmetic_unary_fp16_conv_float_tieaway_sisd (d, datasize, elements, esize, n, rounding, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = V(n);
     result : bits('datasize) = undefined : bits('datasize);
     element : bits('esize) = undefined : bits('esize);
     foreach (e from 0 to (elements - 1) by 1 in inc) {
         element = aget_Elem(operand, e, esize);
-        result = aset_Elem(result, e, esize, FPToFixed(element, 0, unsigned, FPCR, rounding))
+        result = aset_Elem(result, e, esize, FPToFixed(element, 0, val_unsigned, FPCR, rounding))
     };
     V(d) = result
 }
@@ -4565,9 +4565,9 @@ function vector_arithmetic_unary_fp16_conv_float_tieaway_sisd_decode (Rd, Rn, op
     let 'datasize = esize;
     let 'elements = 1;
     let rounding = FPRounding_TIEAWAY;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_float_tieaway_sisd(d, datasize, elements, esize, n, rounding, unsigned)
+    vector_arithmetic_unary_fp16_conv_float_tieaway_sisd(d, datasize, elements, esize, n, rounding, val_unsigned)
 }
 
 val vector_arithmetic_unary_fp16_conv_float_tieaway_simd_decode : (bits(5), bits(5), bits(5), bits(1), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4583,9 +4583,9 @@ function vector_arithmetic_unary_fp16_conv_float_tieaway_simd_decode (Rd, Rn, op
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     let rounding = FPRounding_TIEAWAY;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_float_tieaway_sisd(d, datasize, elements, esize, n, rounding, unsigned)
+    vector_arithmetic_unary_fp16_conv_float_tieaway_sisd(d, datasize, elements, esize, n, rounding, val_unsigned)
 }
 
 val vector_arithmetic_unary_float_conv_float_tieaway_sisd_decode : (bits(5), bits(5), bits(5), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4598,9 +4598,9 @@ function vector_arithmetic_unary_float_conv_float_tieaway_sisd_decode (Rd, Rn, o
     let 'datasize = esize;
     let 'elements = 1;
     let rounding = FPRounding_TIEAWAY;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_float_tieaway_sisd(d, datasize, elements, esize, n, rounding, unsigned)
+    vector_arithmetic_unary_fp16_conv_float_tieaway_sisd(d, datasize, elements, esize, n, rounding, val_unsigned)
 }
 
 val vector_arithmetic_unary_float_conv_float_tieaway_simd_decode : (bits(5), bits(5), bits(5), bits(1), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4616,23 +4616,23 @@ function vector_arithmetic_unary_float_conv_float_tieaway_simd_decode (Rd, Rn, o
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     let rounding = FPRounding_TIEAWAY;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_float_tieaway_sisd(d, datasize, elements, esize, n, rounding, unsigned)
+    vector_arithmetic_unary_fp16_conv_float_tieaway_sisd(d, datasize, elements, esize, n, rounding, val_unsigned)
 }
 
 val vector_arithmetic_unary_fp16_conv_float_bulk_sisd : forall 'd 'datasize 'elements 'esize 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('n), FPRounding, bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_unary_fp16_conv_float_bulk_sisd (d, datasize, elements, esize, n, rounding, unsigned) = {
+function vector_arithmetic_unary_fp16_conv_float_bulk_sisd (d, datasize, elements, esize, n, rounding, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = V(n);
     result : bits('datasize) = undefined : bits('datasize);
     element : bits('esize) = undefined : bits('esize);
     foreach (e from 0 to (elements - 1) by 1 in inc) {
         element = aget_Elem(operand, e, esize);
-        result = aset_Elem(result, e, esize, FPToFixed(element, 0, unsigned, FPCR, rounding))
+        result = aset_Elem(result, e, esize, FPToFixed(element, 0, val_unsigned, FPCR, rounding))
     };
     V(d) = result
 }
@@ -4650,9 +4650,9 @@ function vector_arithmetic_unary_fp16_conv_float_bulk_sisd_decode (Rd, Rn, o1, o
     let 'datasize = esize;
     let 'elements = 1;
     let rounding = FPDecodeRounding(o1 @ o2);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_float_bulk_sisd(d, datasize, elements, esize, n, rounding, unsigned)
+    vector_arithmetic_unary_fp16_conv_float_bulk_sisd(d, datasize, elements, esize, n, rounding, val_unsigned)
 }
 
 val vector_arithmetic_unary_fp16_conv_float_bulk_simd_decode : (bits(5), bits(5), bits(1), bits(1), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4668,9 +4668,9 @@ function vector_arithmetic_unary_fp16_conv_float_bulk_simd_decode (Rd, Rn, o1, o
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     let rounding = FPDecodeRounding(o1 @ o2);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_float_bulk_sisd(d, datasize, elements, esize, n, rounding, unsigned)
+    vector_arithmetic_unary_fp16_conv_float_bulk_sisd(d, datasize, elements, esize, n, rounding, val_unsigned)
 }
 
 val vector_arithmetic_unary_float_conv_float_bulk_sisd_decode : (bits(5), bits(5), bits(1), bits(1), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4683,9 +4683,9 @@ function vector_arithmetic_unary_float_conv_float_bulk_sisd_decode (Rd, Rn, o1, 
     let 'datasize = esize;
     let 'elements = 1;
     let rounding = FPDecodeRounding(o1 @ o2);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_float_bulk_sisd(d, datasize, elements, esize, n, rounding, unsigned)
+    vector_arithmetic_unary_fp16_conv_float_bulk_sisd(d, datasize, elements, esize, n, rounding, val_unsigned)
 }
 
 val vector_arithmetic_unary_float_conv_float_bulk_simd_decode : (bits(5), bits(5), bits(1), bits(1), bits(1), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4701,9 +4701,9 @@ function vector_arithmetic_unary_float_conv_float_bulk_simd_decode (Rd, Rn, o1, 
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     let rounding = FPDecodeRounding(o1 @ o2);
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_fp16_conv_float_bulk_sisd(d, datasize, elements, esize, n, rounding, unsigned)
+    vector_arithmetic_unary_fp16_conv_float_bulk_sisd(d, datasize, elements, esize, n, rounding, val_unsigned)
 }
 
 val vector_arithmetic_unary_float_xtn_sisd : forall 'd 'datasize 'elements 'esize 'n 'part,
@@ -4913,7 +4913,7 @@ val vector_arithmetic_unary_extract_sat_sisd : forall 'd 'datasize 'elements 'es
   ('n >= 0 & 'n <= 31) & (2 * 'datasize >= 0 & 2 * 'esize >= 0) & ('d >= 0 & 'd <= 31 & 'part in {0, 1}).
   (int('d), int('datasize), int('elements), int('esize), int('n), int('part), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_unary_extract_sat_sisd (d, datasize, elements, esize, n, part, unsigned) = {
+function vector_arithmetic_unary_extract_sat_sisd (d, datasize, elements, esize, n, part, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits(2 * 'datasize) = V(n);
     result : bits('datasize) = undefined : bits('datasize);
@@ -4922,7 +4922,7 @@ function vector_arithmetic_unary_extract_sat_sisd (d, datasize, elements, esize,
     foreach (e from 0 to (elements - 1) by 1 in inc) {
         element = aget_Elem(operand, e, 2 * esize);
         __tc1 : bits('esize) = undefined : bits('esize);
-        (__tc1, sat) = SatQ(asl_Int(element, unsigned), esize, unsigned);
+        (__tc1, sat) = SatQ(asl_Int(element, val_unsigned), esize, val_unsigned);
         result = aset_Elem(result, e, esize, __tc1);
         if sat then {
             FPSR = __SetSlice_bits(32, 1, FPSR, 27, 0b1)
@@ -4944,9 +4944,9 @@ function vector_arithmetic_unary_extract_sat_sisd_decode (Rd, Rn, opcode, size, 
     let 'datasize = esize;
     let 'part = 0;
     let 'elements = 1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_extract_sat_sisd(d, datasize, elements, esize, n, part, unsigned)
+    vector_arithmetic_unary_extract_sat_sisd(d, datasize, elements, esize, n, part, val_unsigned)
 }
 
 val vector_arithmetic_unary_extract_sat_simd_decode : (bits(5), bits(5), bits(5), bits(2), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -4962,9 +4962,9 @@ function vector_arithmetic_unary_extract_sat_simd_decode (Rd, Rn, opcode, size, 
     let 'datasize = 64;
     let 'part = UInt(Q);
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_extract_sat_sisd(d, datasize, elements, esize, n, part, unsigned)
+    vector_arithmetic_unary_extract_sat_sisd(d, datasize, elements, esize, n, part, val_unsigned)
 }
 
 val vector_arithmetic_unary_extract_nosat : forall 'd 'datasize 'elements 'esize 'n 'part,
@@ -5667,7 +5667,7 @@ val vector_arithmetic_unary_add_saturating_sisd : forall 'd 'datasize 'elements 
   ('n >= 0 & 'n <= 31) & ('d >= 0 & 'd <= 31) & ('datasize >= 0 & 'esize >= 0).
   (int('d), int('datasize), int('elements), int('esize), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_unary_add_saturating_sisd (d, datasize, elements, esize, n, unsigned) = {
+function vector_arithmetic_unary_add_saturating_sisd (d, datasize, elements, esize, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = V(n);
     result : bits('datasize) = undefined : bits('datasize);
@@ -5676,10 +5676,10 @@ function vector_arithmetic_unary_add_saturating_sisd (d, datasize, elements, esi
     op2 : int = undefined : int;
     sat : bool = undefined : bool;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        op1 = asl_Int(aget_Elem(operand, e, esize), ~(unsigned));
-        op2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        op1 = asl_Int(aget_Elem(operand, e, esize), ~(val_unsigned));
+        op2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         __tc1 : bits('esize) = undefined : bits('esize);
-        (__tc1, sat) = SatQ(op1 + op2, esize, unsigned);
+        (__tc1, sat) = SatQ(op1 + op2, esize, val_unsigned);
         result = aset_Elem(result, e, esize, __tc1);
         if sat then {
             FPSR = __SetSlice_bits(32, 1, FPSR, 27, 0b1)
@@ -5697,9 +5697,9 @@ function vector_arithmetic_unary_add_saturating_sisd_decode (Rd, Rn, opcode, siz
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = esize;
     let 'elements = 1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_add_saturating_sisd(d, datasize, elements, esize, n, unsigned)
+    vector_arithmetic_unary_add_saturating_sisd(d, datasize, elements, esize, n, val_unsigned)
 }
 
 val vector_arithmetic_unary_add_saturating_simd_decode : (bits(5), bits(5), bits(5), bits(2), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -5714,16 +5714,16 @@ function vector_arithmetic_unary_add_saturating_simd_decode (Rd, Rn, opcode, siz
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_add_saturating_sisd(d, datasize, elements, esize, n, unsigned)
+    vector_arithmetic_unary_add_saturating_sisd(d, datasize, elements, esize, n, val_unsigned)
 }
 
 val vector_arithmetic_unary_add_pairwise : forall ('acc : Bool) 'd 'datasize 'elements 'esize 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('d >= 0 & 'd <= 31 | not('acc)) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (bool('acc), int('d), int('datasize), int('elements), int('esize), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_unary_add_pairwise (acc, d, datasize, elements, esize, n, unsigned) = {
+function vector_arithmetic_unary_add_pairwise (acc, d, datasize, elements, esize, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand : bits('datasize) = V(n);
     result : bits('datasize) = undefined : bits('datasize);
@@ -5732,8 +5732,8 @@ function vector_arithmetic_unary_add_pairwise (acc, d, datasize, elements, esize
     op2 : int = undefined : int;
     result = if acc then V(d) else Zeros();
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        op1 = asl_Int(aget_Elem(operand, 2 * e + 0, esize), unsigned);
-        op2 = asl_Int(aget_Elem(operand, 2 * e + 1, esize), unsigned);
+        op1 = asl_Int(aget_Elem(operand, 2 * e + 0, esize), val_unsigned);
+        op2 = asl_Int(aget_Elem(operand, 2 * e + 1, esize), val_unsigned);
         sum = __GetSlice_int(2 * esize, op1 + op2, 0);
         result = aset_Elem(result, e, 2 * esize, aget_Elem(result, e, 2 * esize) + sum)
     };
@@ -5753,16 +5753,16 @@ function vector_arithmetic_unary_add_pairwise_decode (Rd, Rn, op, size, U, Q) = 
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / (2 * esize);
     let acc = op == 0b1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_unary_add_pairwise(acc, d, datasize, elements, esize, n, unsigned)
+    vector_arithmetic_unary_add_pairwise(acc, d, datasize, elements, esize, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_sub_saturating_sisd : forall 'd 'datasize 'elements 'esize 'm 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_sub_saturating_sisd (d, datasize, elements, esize, m, n, unsigned) = {
+function vector_arithmetic_binary_uniform_sub_saturating_sisd (d, datasize, elements, esize, m, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -5772,11 +5772,11 @@ function vector_arithmetic_binary_uniform_sub_saturating_sisd (d, datasize, elem
     diff : int = undefined : int;
     sat : bool = undefined : bool;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         diff = element1 - element2;
         __tc1 : bits('esize) = undefined : bits('esize);
-        (__tc1, sat) = SatQ(diff, esize, unsigned);
+        (__tc1, sat) = SatQ(diff, esize, val_unsigned);
         result = aset_Elem(result, e, esize, __tc1);
         if sat then {
             FPSR = __SetSlice_bits(32, 1, FPSR, 27, 0b1)
@@ -5795,9 +5795,9 @@ function vector_arithmetic_binary_uniform_sub_saturating_sisd_decode (Rd, Rn, op
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = esize;
     let 'elements = 1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_sub_saturating_sisd(d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_sub_saturating_sisd(d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_sub_saturating_simd_decode : (bits(5), bits(5), bits(5), bits(5), bits(2), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -5813,16 +5813,16 @@ function vector_arithmetic_binary_uniform_sub_saturating_simd_decode (Rd, Rn, op
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_sub_saturating_sisd(d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_sub_saturating_sisd(d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_sub_int : forall 'd 'datasize 'elements 'esize 'm 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_sub_int (d, datasize, elements, esize, m, n, unsigned) = {
+function vector_arithmetic_binary_uniform_sub_int (d, datasize, elements, esize, m, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -5831,8 +5831,8 @@ function vector_arithmetic_binary_uniform_sub_int (d, datasize, elements, esize,
     element2 : int = undefined : int;
     diff : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         diff = element1 - element2;
         result = aset_Elem(result, e, esize, __GetSlice_int(esize, diff, 1))
     };
@@ -5852,9 +5852,9 @@ function vector_arithmetic_binary_uniform_sub_int_decode (Rd, Rn, opcode, Rm, si
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_sub_int(d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_sub_int(d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_sub_fp16_sisd : forall ('abs : Bool) 'd 'datasize 'elements 'esize 'm 'n,
@@ -5951,7 +5951,7 @@ val vector_arithmetic_binary_uniform_shift_sisd : forall 'd 'datasize 'elements 
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), bool('rounding), bool('saturating), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_shift_sisd (d, datasize, elements, esize, m, n, rounding, saturating, unsigned) = {
+function vector_arithmetic_binary_uniform_shift_sisd (d, datasize, elements, esize, m, n, rounding, saturating, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -5965,10 +5965,10 @@ function vector_arithmetic_binary_uniform_shift_sisd (d, datasize, elements, esi
         if rounding then {
             round_const = shl_int(1, negate(shift) - 1)
         };
-        element = shl_int(asl_Int(aget_Elem(operand1, e, esize), unsigned) + round_const, shift);
+        element = shl_int(asl_Int(aget_Elem(operand1, e, esize), val_unsigned) + round_const, shift);
         if saturating then {
             __tc1 : bits('esize) = undefined : bits('esize);
-            (__tc1, sat) = SatQ(element, esize, unsigned);
+            (__tc1, sat) = SatQ(element, esize, val_unsigned);
             result = aset_Elem(result, e, esize, __tc1);
             if sat then {
                 FPSR = __SetSlice_bits(32, 1, FPSR, 27, 0b1)
@@ -5990,14 +5990,14 @@ function vector_arithmetic_binary_uniform_shift_sisd_decode (Rd, Rn, S, R, Rm, s
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = esize;
     let 'elements = 1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let rounding = R == 0b1;
     let saturating = S == 0b1;
     if S == 0b0 & size != 0b11 then {
         throw(Error_Undefined())
     };
     __PostDecode();
-    vector_arithmetic_binary_uniform_shift_sisd(d, datasize, elements, esize, m, n, rounding, saturating, unsigned)
+    vector_arithmetic_binary_uniform_shift_sisd(d, datasize, elements, esize, m, n, rounding, saturating, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_shift_simd_decode : (bits(5), bits(5), bits(1), bits(1), bits(5), bits(2), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -6013,11 +6013,11 @@ function vector_arithmetic_binary_uniform_shift_simd_decode (Rd, Rn, S, R, Rm, s
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let rounding = R == 0b1;
     let saturating = S == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_shift_sisd(d, datasize, elements, esize, m, n, rounding, saturating, unsigned)
+    vector_arithmetic_binary_uniform_shift_sisd(d, datasize, elements, esize, m, n, rounding, saturating, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_rsqrtsfp16_sisd : forall 'd 'datasize 'elements 'esize 'm 'n,
@@ -6382,7 +6382,7 @@ val vector_arithmetic_binary_uniform_mul_int_dotp : forall 'd 'datasize 'element
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31) & ('datasize >= 0 & div('esize, 4) >= 0 | not('signed)) & ('datasize >= 0 & div('esize, 4) >= 0 | not(not('signed))).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), bool('signed)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_mul_int_dotp (d, datasize, elements, esize, m, n, signed) = {
+function vector_arithmetic_binary_uniform_mul_int_dotp (d, datasize, elements, esize, m, n, val_signed) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -6393,7 +6393,7 @@ function vector_arithmetic_binary_uniform_mul_int_dotp (d, datasize, elements, e
         element1 : int = undefined : int;
         element2 : int = undefined : int;
         foreach (i from 0 to 3 by 1 in inc) {
-            if signed then {
+            if val_signed then {
                 element1 = SInt(aget_Elem(operand1, 4 * e + i, esize / 4));
                 element2 = SInt(aget_Elem(operand2, 4 * e + i, esize / 4))
             } else {
@@ -6424,7 +6424,7 @@ function vector_arithmetic_binary_uniform_mul_int_dotp_decode__0 (Rd, Rn, opcode
     if size != 0b10 then {
         throw(Error_Undefined())
     };
-    let signed = U == 0b0;
+    let val_signed = U == 0b0;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
@@ -6432,7 +6432,7 @@ function vector_arithmetic_binary_uniform_mul_int_dotp_decode__0 (Rd, Rn, opcode
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     __PostDecode();
-    vector_arithmetic_binary_uniform_mul_int_dotp(d, datasize, elements, esize, m, n, signed)
+    vector_arithmetic_binary_uniform_mul_int_dotp(d, datasize, elements, esize, m, n, val_signed)
 }
 
 function vector_arithmetic_binary_uniform_mul_int_dotp_decode__1 (Rd, Rn, Rm, size, U, Q) = {
@@ -6443,7 +6443,7 @@ function vector_arithmetic_binary_uniform_mul_int_dotp_decode__1 (Rd, Rn, Rm, si
     if size != 0b10 then {
         throw(Error_Undefined())
     };
-    let signed = U == 0b0;
+    let val_signed = U == 0b0;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(Rm);
@@ -6451,7 +6451,7 @@ function vector_arithmetic_binary_uniform_mul_int_dotp_decode__1 (Rd, Rn, Rm, si
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     __PostDecode();
-    vector_arithmetic_binary_uniform_mul_int_dotp(d, datasize, elements, esize, m, n, signed)
+    vector_arithmetic_binary_uniform_mul_int_dotp(d, datasize, elements, esize, m, n, val_signed)
 }
 
 val vector_arithmetic_binary_uniform_mul_int_accum : forall 'd 'datasize 'elements 'esize 'm 'n ('sub_op : Bool),
@@ -6861,7 +6861,7 @@ val vector_arithmetic_binary_uniform_maxmin_single : forall 'd 'datasize 'elemen
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), bool('minimum), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_maxmin_single (d, datasize, elements, esize, m, minimum, n, unsigned) = {
+function vector_arithmetic_binary_uniform_maxmin_single (d, datasize, elements, esize, m, minimum, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -6870,8 +6870,8 @@ function vector_arithmetic_binary_uniform_maxmin_single (d, datasize, elements, 
     element2 : int = undefined : int;
     maxmin : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         maxmin = if minimum then min(element1, element2) else max(element1, element2);
         result = aset_Elem(result, e, esize, __GetSlice_int(esize, maxmin, 0))
     };
@@ -6891,17 +6891,17 @@ function vector_arithmetic_binary_uniform_maxmin_single_decode (Rd, Rn, o1, Rm, 
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let minimum = o1 == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_maxmin_single(d, datasize, elements, esize, m, minimum, n, unsigned)
+    vector_arithmetic_binary_uniform_maxmin_single(d, datasize, elements, esize, m, minimum, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_maxmin_pair : forall 'd 'datasize 'elements 'esize 'm ('minimum : Bool) 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & (2 * 'datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), bool('minimum), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_maxmin_pair (d, datasize, elements, esize, m, minimum, n, unsigned) = {
+function vector_arithmetic_binary_uniform_maxmin_pair (d, datasize, elements, esize, m, minimum, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -6911,8 +6911,8 @@ function vector_arithmetic_binary_uniform_maxmin_pair (d, datasize, elements, es
     element2 : int = undefined : int;
     maxmin : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(concat, 2 * e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(concat, 2 * e + 1, esize), unsigned);
+        element1 = asl_Int(aget_Elem(concat, 2 * e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(concat, 2 * e + 1, esize), val_unsigned);
         maxmin = if minimum then min(element1, element2) else max(element1, element2);
         result = aset_Elem(result, e, esize, __GetSlice_int(esize, maxmin, 0))
     };
@@ -6932,10 +6932,10 @@ function vector_arithmetic_binary_uniform_maxmin_pair_decode (Rd, Rn, o1, Rm, si
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let minimum = o1 == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_maxmin_pair(d, datasize, elements, esize, m, minimum, n, unsigned)
+    vector_arithmetic_binary_uniform_maxmin_pair(d, datasize, elements, esize, m, minimum, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_maxmin_fp16_2008 : forall 'd 'datasize 'elements 'esize 'm ('minimum : Bool) 'n ('pair : Bool),
@@ -7237,7 +7237,7 @@ val vector_arithmetic_binary_uniform_diff : forall ('accumulate : Bool) 'd 'data
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31 | not('accumulate)) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (bool('accumulate), int('d), int('datasize), int('elements), int('esize), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_diff (accumulate, d, datasize, elements, esize, m, n, unsigned) = {
+function vector_arithmetic_binary_uniform_diff (accumulate, d, datasize, elements, esize, m, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -7247,8 +7247,8 @@ function vector_arithmetic_binary_uniform_diff (accumulate, d, datasize, element
     absdiff : bits('esize) = undefined : bits('esize);
     result = if accumulate then V(d) else Zeros();
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         absdiff = __GetSlice_int(esize, abs(element1 - element2), 0);
         result = aset_Elem(result, e, esize, aget_Elem(result, e, esize) + absdiff)
     };
@@ -7268,17 +7268,17 @@ function vector_arithmetic_binary_uniform_diff_decode (Rd, Rn, ac, Rm, size, U, 
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let accumulate = ac == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_diff(accumulate, d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_diff(accumulate, d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_cmp_int_sisd : forall ('cmp_eq : Bool) 'd 'datasize 'elements 'esize 'm 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (bool('cmp_eq), int('d), int('datasize), int('elements), int('esize), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_cmp_int_sisd (cmp_eq, d, datasize, elements, esize, m, n, unsigned) = {
+function vector_arithmetic_binary_uniform_cmp_int_sisd (cmp_eq, d, datasize, elements, esize, m, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -7287,8 +7287,8 @@ function vector_arithmetic_binary_uniform_cmp_int_sisd (cmp_eq, d, datasize, ele
     element2 : int = undefined : int;
     test_passed : bool = undefined : bool;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         test_passed = if cmp_eq then element1 >= element2 else element1 > element2;
         result = aset_Elem(result, e, esize, if test_passed then Ones() else Zeros())
     };
@@ -7308,10 +7308,10 @@ function vector_arithmetic_binary_uniform_cmp_int_sisd_decode (Rd, Rn, eq, Rm, s
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = esize;
     let 'elements = 1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let cmp_eq = eq == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_cmp_int_sisd(cmp_eq, d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_cmp_int_sisd(cmp_eq, d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_cmp_int_simd_decode : (bits(5), bits(5), bits(1), bits(5), bits(2), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -7327,10 +7327,10 @@ function vector_arithmetic_binary_uniform_cmp_int_simd_decode (Rd, Rn, eq, Rm, s
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     let cmp_eq = eq == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_cmp_int_sisd(cmp_eq, d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_cmp_int_sisd(cmp_eq, d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_cmp_fp16_sisd : forall ('abs : Bool) 'd 'datasize 'elements 'esize 'm 'n,
@@ -7710,7 +7710,7 @@ val vector_arithmetic_binary_uniform_add_saturating_sisd : forall 'd 'datasize '
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_add_saturating_sisd (d, datasize, elements, esize, m, n, unsigned) = {
+function vector_arithmetic_binary_uniform_add_saturating_sisd (d, datasize, elements, esize, m, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -7720,11 +7720,11 @@ function vector_arithmetic_binary_uniform_add_saturating_sisd (d, datasize, elem
     sum : int = undefined : int;
     sat : bool = undefined : bool;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         sum = element1 + element2;
         __tc1 : bits('esize) = undefined : bits('esize);
-        (__tc1, sat) = SatQ(sum, esize, unsigned);
+        (__tc1, sat) = SatQ(sum, esize, val_unsigned);
         result = aset_Elem(result, e, esize, __tc1);
         if sat then {
             FPSR = __SetSlice_bits(32, 1, FPSR, 27, 0b1)
@@ -7743,9 +7743,9 @@ function vector_arithmetic_binary_uniform_add_saturating_sisd_decode (Rd, Rn, op
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = esize;
     let 'elements = 1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_add_saturating_sisd(d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_add_saturating_sisd(d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_add_saturating_simd_decode : (bits(5), bits(5), bits(5), bits(5), bits(2), bits(1), bits(1)) -> unit effect {escape, rreg, undef, wreg}
@@ -7761,16 +7761,16 @@ function vector_arithmetic_binary_uniform_add_saturating_simd_decode (Rd, Rn, op
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_add_saturating_sisd(d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_add_saturating_sisd(d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_add_halving_truncating : forall 'd 'datasize 'elements 'esize 'm 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_add_halving_truncating (d, datasize, elements, esize, m, n, unsigned) = {
+function vector_arithmetic_binary_uniform_add_halving_truncating (d, datasize, elements, esize, m, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -7779,8 +7779,8 @@ function vector_arithmetic_binary_uniform_add_halving_truncating (d, datasize, e
     element2 : int = undefined : int;
     sum : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         sum = element1 + element2;
         result = aset_Elem(result, e, esize, __GetSlice_int(esize, sum, 1))
     };
@@ -7800,16 +7800,16 @@ function vector_arithmetic_binary_uniform_add_halving_truncating_decode (Rd, Rn,
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_add_halving_truncating(d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_add_halving_truncating(d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_add_halving_rounding : forall 'd 'datasize 'elements 'esize 'm 'n ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_uniform_add_halving_rounding (d, datasize, elements, esize, m, n, unsigned) = {
+function vector_arithmetic_binary_uniform_add_halving_rounding (d, datasize, elements, esize, m, n, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits('datasize) = V(m);
@@ -7817,8 +7817,8 @@ function vector_arithmetic_binary_uniform_add_halving_rounding (d, datasize, ele
     element1 : int = undefined : int;
     element2 : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         result = aset_Elem(result, e, esize, __GetSlice_int(esize, element1 + element2 + 1, 1))
     };
     V(d) = result
@@ -7837,9 +7837,9 @@ function vector_arithmetic_binary_uniform_add_halving_rounding_decode (Rd, Rn, o
     let 'esize = shl_int(8, UInt(size));
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_uniform_add_halving_rounding(d, datasize, elements, esize, m, n, unsigned)
+    vector_arithmetic_binary_uniform_add_halving_rounding(d, datasize, elements, esize, m, n, val_unsigned)
 }
 
 val vector_arithmetic_binary_uniform_add_fp16 : forall 'd 'datasize 'elements 'esize 'm 'n ('pair : Bool),
@@ -7962,7 +7962,7 @@ val vector_arithmetic_binary_element_mul_long : forall 'd 'datasize 'elements 'e
   ('n >= 0 & 'n <= 31 & 'part in {0, 1}) & ('m >= 0 & 'm <= 31) & ('idxdsize >= 0 & 'esize >= 0) & 'datasize >= 0 & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('idxdsize), int('index), int('m), int('n), int('part), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_element_mul_long (d, datasize, elements, esize, idxdsize, index, m, n, part, unsigned) = {
+function vector_arithmetic_binary_element_mul_long (d, datasize, elements, esize, idxdsize, index, m, n, part, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = Vpart(n, part);
     let operand2 : bits('idxdsize) = V(m);
@@ -7970,9 +7970,9 @@ function vector_arithmetic_binary_element_mul_long (d, datasize, elements, esize
     element1 : int = undefined : int;
     element2 : int = undefined : int;
     product : bits(2 * 'esize) = undefined : bits(2 * 'esize);
-    let element2 = asl_Int(aget_Elem(operand2, index, esize), unsigned);
+    let element2 = asl_Int(aget_Elem(operand2, index, esize), val_unsigned);
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
         product = __GetSlice_int(2 * esize, element1 * element2, 0);
         result = aset_Elem(result, e, 2 * esize, product)
     };
@@ -8007,10 +8007,10 @@ function vector_arithmetic_binary_element_mul_long_decode (Rd, Rn, H, opcode, Rm
     let 'datasize : {'n, 'n == 64. int('n)} = 64;
     let 'part = UInt(Q);
     let 'elements : {'n, 'n == div('datasize, 'esize). int('n)} = datasize / esize;
-    let unsigned : bool = U == 0b1;
+    let val_unsigned : bool = U == 0b1;
     __PostDecode();
     assert(index >= 0 & esize >= 0 & (index + 1) * esize <= idxdsize);
-    vector_arithmetic_binary_element_mul_long(d, datasize, elements, esize, idxdsize, index, m, n, part, unsigned)
+    vector_arithmetic_binary_element_mul_long(d, datasize, elements, esize, idxdsize, index, m, n, part, val_unsigned)
 }
 
 val vector_arithmetic_binary_element_mul_int : forall 'd 'datasize 'elements 'esize 'idxdsize 'index 'm 'n,
@@ -8472,7 +8472,7 @@ val vector_arithmetic_binary_element_mulacc_long : forall 'd 'datasize 'elements
   ('n >= 0 & 'n <= 31 & 'part in {0, 1}) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31) & ('idxdsize >= 0 & 'esize >= 0) & 'datasize >= 0.
   (int('d), int('datasize), int('elements), int('esize), int('idxdsize), int('index), int('m), int('n), int('part), bool('sub_op), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_element_mulacc_long (d, datasize, elements, esize, idxdsize, index, m, n, part, sub_op, unsigned) = {
+function vector_arithmetic_binary_element_mulacc_long (d, datasize, elements, esize, idxdsize, index, m, n, part, sub_op, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = Vpart(n, part);
     let operand2 : bits('idxdsize) = V(m);
@@ -8481,9 +8481,9 @@ function vector_arithmetic_binary_element_mulacc_long (d, datasize, elements, es
     element1 : int = undefined : int;
     element2 : int = undefined : int;
     product : bits(2 * 'esize) = undefined : bits(2 * 'esize);
-    let element2 = asl_Int(aget_Elem(operand2, index, esize), unsigned);
+    let element2 = asl_Int(aget_Elem(operand2, index, esize), val_unsigned);
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
         product = __GetSlice_int(2 * esize, element1 * element2, 0);
         if sub_op then {
             result = aset_Elem(result, e, 2 * esize, aget_Elem(operand3, e, 2 * esize) - product)
@@ -8522,11 +8522,11 @@ function vector_arithmetic_binary_element_mulacc_long_decode (Rd, Rn, H, o2, Rm,
     let 'datasize : {'n, 'n == 64. int('n)} = 64;
     let 'part = UInt(Q);
     let 'elements : {'n, 'n == div('datasize, 'esize). int('n)} = datasize / esize;
-    let unsigned : bool = U == 0b1;
+    let val_unsigned : bool = U == 0b1;
     let sub_op : bool = o2 == 0b1;
     __PostDecode();
     assert(index >= 0 & esize >= 0 & (index + 1) * esize <= idxdsize);
-    vector_arithmetic_binary_element_mulacc_long(d, datasize, elements, esize, idxdsize, index, m, n, part, sub_op, unsigned)
+    vector_arithmetic_binary_element_mulacc_long(d, datasize, elements, esize, idxdsize, index, m, n, part, sub_op, val_unsigned)
 }
 
 val vector_arithmetic_binary_element_mulacc_int : forall 'd 'datasize 'elements 'esize 'idxdsize 'index 'm 'n ('sub_op : Bool),
@@ -9015,7 +9015,7 @@ val vector_arithmetic_binary_element_dotp : forall 'd 'datasize 'elements 'esize
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31) & ('datasize >= 0 & div('esize, 4) >= 0 | not('signed)) & ('datasize >= 0 & div('esize, 4) >= 0 | not(not('signed))).
   (int('d), int('datasize), int('elements), int('esize), int('index), int('m), int('n), bool('signed)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_element_dotp (d, datasize, elements, esize, index, m, n, signed) = {
+function vector_arithmetic_binary_element_dotp (d, datasize, elements, esize, index, m, n, val_signed) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = V(n);
     let operand2 : bits(128) = V(m);
@@ -9025,7 +9025,7 @@ function vector_arithmetic_binary_element_dotp (d, datasize, elements, esize, in
         element1 : int = undefined : int;
         element2 : int = undefined : int;
         foreach (i from 0 to 3 by 1 in inc) {
-            if signed then {
+            if val_signed then {
                 element1 = SInt(aget_Elem(operand1, 4 * e + i, esize / 4));
                 element2 = SInt(aget_Elem(operand2, 4 * index + i, esize / 4))
             } else {
@@ -9056,7 +9056,7 @@ function vector_arithmetic_binary_element_dotp_decode__0 (Rd, Rn, H, Rm, M, L, s
     if size != 0b10 then {
         throw(Error_Undefined())
     };
-    let signed = U == 0b0;
+    let val_signed = U == 0b0;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(M @ Rm);
@@ -9065,7 +9065,7 @@ function vector_arithmetic_binary_element_dotp_decode__0 (Rd, Rn, H, Rm, M, L, s
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     __PostDecode();
-    vector_arithmetic_binary_element_dotp(d, datasize, elements, esize, index, m, n, signed)
+    vector_arithmetic_binary_element_dotp(d, datasize, elements, esize, index, m, n, val_signed)
 }
 
 function vector_arithmetic_binary_element_dotp_decode__1 (Rd, Rn, H, opcode, Rm, M, L, size, U, Q) = {
@@ -9076,7 +9076,7 @@ function vector_arithmetic_binary_element_dotp_decode__1 (Rd, Rn, H, opcode, Rm,
     if size != 0b10 then {
         throw(Error_Undefined())
     };
-    let signed = U == 0b0;
+    let val_signed = U == 0b0;
     let 'd = UInt(Rd);
     let 'n = UInt(Rn);
     let 'm = UInt(M @ Rm);
@@ -9085,14 +9085,14 @@ function vector_arithmetic_binary_element_dotp_decode__1 (Rd, Rn, H, opcode, Rm,
     let 'datasize = if Q == 0b1 then 128 else 64;
     let 'elements = datasize / esize;
     __PostDecode();
-    vector_arithmetic_binary_element_dotp(d, datasize, elements, esize, index, m, n, signed)
+    vector_arithmetic_binary_element_dotp(d, datasize, elements, esize, index, m, n, val_signed)
 }
 
 val vector_arithmetic_binary_disparate_mul_product : forall 'd 'datasize 'elements 'esize 'm 'n 'part ('unsigned : Bool),
   ('n >= 0 & 'n <= 31 & 'part in {0, 1}) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), int('part), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_disparate_mul_product (d, datasize, elements, esize, m, n, part, unsigned) = {
+function vector_arithmetic_binary_disparate_mul_product (d, datasize, elements, esize, m, n, part, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = Vpart(n, part);
     let operand2 : bits('datasize) = Vpart(m, part);
@@ -9100,8 +9100,8 @@ function vector_arithmetic_binary_disparate_mul_product (d, datasize, elements, 
     element1 : int = undefined : int;
     element2 : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         result = aset_Elem(result, e, 2 * esize, __GetSlice_int(2 * esize, element1 * element2, 0))
     };
     V(d) = result
@@ -9121,9 +9121,9 @@ function vector_arithmetic_binary_disparate_mul_product_decode (Rd, Rn, opcode_0
     let 'datasize = 64;
     let 'part = UInt(Q);
     let 'elements = datasize / esize;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_disparate_mul_product(d, datasize, elements, esize, m, n, part, unsigned)
+    vector_arithmetic_binary_disparate_mul_product(d, datasize, elements, esize, m, n, part, val_unsigned)
 }
 
 val vector_arithmetic_binary_disparate_mul_poly : forall 'd 'datasize 'elements 'esize 'm 'n 'part,
@@ -9304,7 +9304,7 @@ val vector_arithmetic_binary_disparate_mul_accum : forall 'd 'datasize 'elements
   ('n >= 0 & 'n <= 31 & 'part in {0, 1}) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31) & ('datasize >= 0 & 'esize >= 0).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), int('part), bool('sub_op), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_disparate_mul_accum (d, datasize, elements, esize, m, n, part, sub_op, unsigned) = {
+function vector_arithmetic_binary_disparate_mul_accum (d, datasize, elements, esize, m, n, part, sub_op, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = Vpart(n, part);
     let operand2 : bits('datasize) = Vpart(m, part);
@@ -9315,8 +9315,8 @@ function vector_arithmetic_binary_disparate_mul_accum (d, datasize, elements, es
     product : bits(2 * 'esize) = undefined : bits(2 * 'esize);
     accum : bits(2 * 'esize) = undefined : bits(2 * 'esize);
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         product = __GetSlice_int(2 * esize, element1 * element2, 0);
         if sub_op then {
             accum = aget_Elem(operand3, e, 2 * esize) - product
@@ -9343,16 +9343,16 @@ function vector_arithmetic_binary_disparate_mul_accum_decode (Rd, Rn, o1, Rm, si
     let 'part = UInt(Q);
     let 'elements = datasize / esize;
     let sub_op = o1 == 0b1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_disparate_mul_accum(d, datasize, elements, esize, m, n, part, sub_op, unsigned)
+    vector_arithmetic_binary_disparate_mul_accum(d, datasize, elements, esize, m, n, part, sub_op, val_unsigned)
 }
 
 val vector_arithmetic_binary_disparate_diff : forall ('accumulate : Bool) 'd 'datasize 'elements 'esize 'm 'n 'part ('unsigned : Bool),
   ('n >= 0 & 'n <= 31 & 'part in {0, 1}) & ('m >= 0 & 'm <= 31) & ('d >= 0 & 'd <= 31 | not('accumulate)) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (bool('accumulate), int('d), int('datasize), int('elements), int('esize), int('m), int('n), int('part), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_disparate_diff (accumulate, d, datasize, elements, esize, m, n, part, unsigned) = {
+function vector_arithmetic_binary_disparate_diff (accumulate, d, datasize, elements, esize, m, n, part, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = Vpart(n, part);
     let operand2 : bits('datasize) = Vpart(m, part);
@@ -9362,8 +9362,8 @@ function vector_arithmetic_binary_disparate_diff (accumulate, d, datasize, eleme
     absdiff : bits(2 * 'esize) = undefined : bits(2 * 'esize);
     result = if accumulate then V(d) else Zeros();
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         absdiff = __GetSlice_int(2 * esize, abs(element1 - element2), 0);
         result = aset_Elem(result, e, 2 * esize, aget_Elem(result, e, 2 * esize) + absdiff)
     };
@@ -9385,16 +9385,16 @@ function vector_arithmetic_binary_disparate_diff_decode (Rd, Rn, op, Rm, size, U
     let 'part = UInt(Q);
     let 'elements = datasize / esize;
     let accumulate = op == 0b0;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_disparate_diff(accumulate, d, datasize, elements, esize, m, n, part, unsigned)
+    vector_arithmetic_binary_disparate_diff(accumulate, d, datasize, elements, esize, m, n, part, val_unsigned)
 }
 
 val vector_arithmetic_binary_disparate_addsub_wide : forall 'd 'datasize 'elements 'esize 'm 'n 'part ('sub_op : Bool) ('unsigned : Bool),
   ('n >= 0 & 'n <= 31) & ('m >= 0 & 'm <= 31 & 'part in {0, 1}) & (2 * 'datasize >= 0 & 2 * 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), int('part), bool('sub_op), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_disparate_addsub_wide (d, datasize, elements, esize, m, n, part, sub_op, unsigned) = {
+function vector_arithmetic_binary_disparate_addsub_wide (d, datasize, elements, esize, m, n, part, sub_op, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits(2 * 'datasize) = V(n);
     let operand2 : bits('datasize) = Vpart(m, part);
@@ -9403,8 +9403,8 @@ function vector_arithmetic_binary_disparate_addsub_wide (d, datasize, elements, 
     element2 : int = undefined : int;
     sum : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, 2 * esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, 2 * esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         if sub_op then {
             sum = element1 - element2
         } else {
@@ -9430,9 +9430,9 @@ function vector_arithmetic_binary_disparate_addsub_wide_decode (Rd, Rn, o1, Rm, 
     let 'part = UInt(Q);
     let 'elements = datasize / esize;
     let sub_op = o1 == 0b1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_disparate_addsub_wide(d, datasize, elements, esize, m, n, part, sub_op, unsigned)
+    vector_arithmetic_binary_disparate_addsub_wide(d, datasize, elements, esize, m, n, part, sub_op, val_unsigned)
 }
 
 val vector_arithmetic_binary_disparate_addsub_narrow : forall 'd 'datasize 'elements 'esize 'm 'n 'part ('round : Bool) ('sub_op : Bool),
@@ -9486,7 +9486,7 @@ val vector_arithmetic_binary_disparate_addsub_long : forall 'd 'datasize 'elemen
   ('n >= 0 & 'n <= 31 & 'part in {0, 1}) & ('m >= 0 & 'm <= 31) & ('datasize >= 0 & 'esize >= 0) & ('d >= 0 & 'd <= 31).
   (int('d), int('datasize), int('elements), int('esize), int('m), int('n), int('part), bool('sub_op), bool('unsigned)) -> unit effect {escape, rreg, undef, wreg}
 
-function vector_arithmetic_binary_disparate_addsub_long (d, datasize, elements, esize, m, n, part, sub_op, unsigned) = {
+function vector_arithmetic_binary_disparate_addsub_long (d, datasize, elements, esize, m, n, part, sub_op, val_unsigned) = {
     CheckFPAdvSIMDEnabled64();
     let operand1 : bits('datasize) = Vpart(n, part);
     let operand2 : bits('datasize) = Vpart(m, part);
@@ -9495,8 +9495,8 @@ function vector_arithmetic_binary_disparate_addsub_long (d, datasize, elements, 
     element2 : int = undefined : int;
     sum : int = undefined : int;
     foreach (e from 0 to (elements - 1) by 1 in inc) {
-        element1 = asl_Int(aget_Elem(operand1, e, esize), unsigned);
-        element2 = asl_Int(aget_Elem(operand2, e, esize), unsigned);
+        element1 = asl_Int(aget_Elem(operand1, e, esize), val_unsigned);
+        element2 = asl_Int(aget_Elem(operand2, e, esize), val_unsigned);
         if sub_op then {
             sum = element1 - element2
         } else {
@@ -9522,7 +9522,7 @@ function vector_arithmetic_binary_disparate_addsub_long_decode (Rd, Rn, o1, Rm, 
     let 'part = UInt(Q);
     let 'elements = datasize / esize;
     let sub_op = o1 == 0b1;
-    let unsigned = U == 0b1;
+    let val_unsigned = U == 0b1;
     __PostDecode();
-    vector_arithmetic_binary_disparate_addsub_long(d, datasize, elements, esize, m, n, part, sub_op, unsigned)
+    vector_arithmetic_binary_disparate_addsub_long(d, datasize, elements, esize, m, n, part, sub_op, val_unsigned)
 }

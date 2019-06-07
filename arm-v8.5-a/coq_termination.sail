@@ -67,6 +67,8 @@ termination_measure __ListConfig
   repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, // 64
   repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1,
   repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, // 96
+  repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1,
+  repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1, repeat 1,
   repeat 1
 
 termination_measure __EndCycle

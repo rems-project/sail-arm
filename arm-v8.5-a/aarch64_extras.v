@@ -4,6 +4,7 @@ Require Import Sail2_operators_bitlists.
 Require Import Sail2_prompt_monad.
 Require Import Sail2_prompt.
 Require Import Sail2_real.
+Require Import Psatz.
 
 Axiom slice : forall {m} (_ : mword m) (_ : Z) (n : Z) `{ArithFact (m >= 0)} `{ArithFact (n >= 0)}, mword n.
 Definition length {n} (x : mword n) := length_mword x.
@@ -101,7 +102,7 @@ Definition undefined_bit {rv e} (_:unit) : monad rv bitU e := returnm BU.
 Definition undefined_real {rv e} (_:unit) : monad rv R e := returnm (realFromFrac 0 1).
 Definition undefined_range {rv e} i j `{ArithFact (i <= j)} : monad rv {z : Z & ArithFact (i <= z /\ z <= j)} e := returnm (build_ex i).
 Definition undefined_atom {rv e} i : monad rv Z e := returnm i.
-Definition undefined_nat {rv e} (_:unit) : monad rv Z e := returnm (0:ii).
+Definition undefined_nat {rv e} (_:unit) : monad rv {n : Z & ArithFact (n >= 0)} e := returnm (build_ex (0:ii)).
 
 (*
 (* Use constants for undefined values for now *)
@@ -272,3 +273,15 @@ tauto.
 Qed.
 
 Hint Resolve nn310 nn3131 : sail.
+
+Lemma euclid_divisor_pos_m1 {x y z} :
+  0 <= x -> y > 0 -> x <= ZEuclid.div y z - 1 -> z >= 0.
+specialize (ZEuclid.div_mod y z).
+specialize (ZEuclid.mod_always_pos y z).
+generalize (ZEuclid.div y z).
+generalize (ZEuclid.modulo y z).
+intros.
+nia.
+Qed.
+
+Hint Resolve euclid_divisor_pos_m1 : sail.

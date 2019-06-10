@@ -10,10 +10,6 @@ Axiom slice : forall {m} (_ : mword m) (_ : Z) (n : Z) `{ArithFact (m >= 0)} `{A
 Definition length {n} (x : mword n) := length_mword x.
 Hint Unfold length : sail.
 
-(* TODO: Should make prelude use this directly. *)
-Require Sail2_string.
-Definition dec_str := Sail2_string.string_of_int.
-
 Lemma Replicate_lemma1 {N M O x} :
   O * M = N ->
   O = Z.quot N M ->
@@ -90,14 +86,10 @@ match vs with
 | _ => Fail "empty list in internal_pick"
 end.
 Definition undefined_string {rv e} (_:unit) : monad rv string e := returnm ""%string.
-Definition undefined_unit {rv e} (_:unit) : monad rv unit e := returnm tt.
 Definition undefined_int {rv e} (_:unit) : monad rv Z e := returnm (0:ii).
 (*val undefined_vector : forall 'rv 'a 'e. integer -> 'a -> monad 'rv (list 'a) 'e*)
 Definition undefined_vector {rv a e} len `{ArithFact (len >= 0)} (u : a) : monad rv (vec a len) e := returnm (vec_init u len).
-(*val undefined_bitvector : forall 'rv 'a 'e. Bitvector 'a => integer -> monad 'rv 'a 'e*)
-Definition undefined_bitvector {rv e} len `{ArithFact (len >= 0)} : monad rv (mword len) e := returnm (mword_of_int 0).
 (*val undefined_bits : forall 'rv 'a 'e. Bitvector 'a => integer -> monad 'rv 'a 'e*)
-Definition undefined_bits {rv e} := @undefined_bitvector rv e.
 Definition undefined_bit {rv e} (_:unit) : monad rv bitU e := returnm BU.
 Definition undefined_real {rv e} (_:unit) : monad rv R e := returnm (realFromFrac 0 1).
 Definition undefined_range {rv e} i j `{ArithFact (i <= j)} : monad rv {z : Z & ArithFact (i <= z /\ z <= j)} e := returnm (build_ex i).
@@ -140,6 +132,10 @@ Definition elf_entry (_:unit) := 0.
 
 Axiom hex_str : Z -> string.
 
+Definition vec_update_dec_loose {T n} (v : vec T n) m t : vec T n :=
+ if sumbool_of_bool (andb (0 <=? m) (m <? n)) then
+   vec_update_dec v m t
+ else v.
 
 Lemma mul_quot_8_helper : forall x, 8 * x = 8 * (Z.quot (8 * x) 8).
 intro.

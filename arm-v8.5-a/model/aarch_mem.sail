@@ -6176,12 +6176,9 @@ val AArch64_WatchpointByteMatch : forall ('n : Int).
 function AArch64_WatchpointByteMatch (n, acctype, vaddress) = {
     let el : bits(2) = if HaveNV2Ext() & acctype == AccType_NV2REGISTER then EL2 else PSTATE.EL;
     let 'top = AddrTop(vaddress, false, el);
-    bottom : int = undefined : int;
-    bottom = if [DBGWVR_EL1[n][2]] == 0b1 then 2 else 3;
-    let 'bottom_fixed = bottom;
-    assert(constraint('bottom_fixed in {2, 3}));
+    bottom : {|2, 3|} = if [DBGWVR_EL1[n][2]] == 0b1 then 2 else 3;
     byte_select_match : bool = undefined : bool;
-    byte_select_match = [slice(DBGWCR_EL1[n], 5, 8)[UInt(slice(vaddress, 0, bottom_fixed))]] != 0b0;
+    byte_select_match = [slice(DBGWCR_EL1[n], 5, 8)[UInt(slice(vaddress, 0, bottom))]] != 0b0;
     mask : int = undefined : int;
     mask = UInt(slice(DBGWCR_EL1[n], 24, 5));
     LSB : bits(8) = undefined : bits(8);
@@ -7989,12 +7986,9 @@ val AArch32_WatchpointByteMatch : forall ('n : Int).
   (int('n), bits(32)) -> bool effect {escape, rreg, undef}
 
 function AArch32_WatchpointByteMatch (n, vaddress) = {
-    bottom : int = undefined : int;
-    bottom = if [DBGWVR[n][2]] == 0b1 then 2 else 3;
-    let bottom_fixed = bottom;
-    assert(bottom_fixed == 2 | bottom_fixed == 3);
+    bottom : {|2, 3|} = if [DBGWVR[n][2]] == 0b1 then 2 else 3;
     byte_select_match : bool = undefined : bool;
-    byte_select_match = [slice(DBGWCR[n], 5, 8)[UInt(slice(vaddress, 0, bottom_fixed))]] != 0b0;
+    byte_select_match = [slice(DBGWCR[n], 5, 8)[UInt(slice(vaddress, 0, bottom))]] != 0b0;
     mask : int = undefined : int;
     mask = UInt(slice(DBGWCR[n], 24, 5));
     LSB : bits(8) = undefined : bits(8);

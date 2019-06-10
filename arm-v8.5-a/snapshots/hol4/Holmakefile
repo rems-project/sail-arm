@@ -1,0 +1,12 @@
+LEMDIR=lib/lem
+SAILDIR=lib/sail
+
+INCLUDES = $(LEMDIR) $(SAILDIR)
+
+all: aarch64Theory.uo
+.PHONY: all
+
+ifdef POLY
+HOLHEAP = $(SAILDIR)/sail-heap
+
+endif

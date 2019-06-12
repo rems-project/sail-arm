@@ -408,7 +408,8 @@ union exception = {
   Error_Implementation_Defined : string,
   Error_ReservedEncoding : unit,
   Error_ExceptionTaken : unit,
-  Error_Unpredictable : unit
+  Error_Unpredictable : unit,
+  Error_SError : bool
 }
 
 val append_str = {ocaml: "concat_str", lem: "stringAppend", c: "concat_str" } :

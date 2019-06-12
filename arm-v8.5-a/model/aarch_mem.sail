@@ -45,6 +45,8 @@
 
 val TakePendingInterrupts : InterruptReq -> bool effect {undef, escape, rreg, wreg}
 
+val TakeSError : bool -> unit effect {escape, rreg, undef, wreg}
+
 val AArch64_TranslationTableWalk : forall ('size : Int).
   (bits(52), bits(1), bits(64), AccType, bool, bool, bool, int('size)) -> TLBRecord effect {escape, undef, rmem, rreg, wreg, wmem}
 
@@ -1055,16 +1057,15 @@ val TakeUnmaskedPhysicalSErrorInterrupts : forall ('iesb_req : Bool).
   bool('iesb_req) -> unit effect {escape, rreg, undef, wreg}
 
 function TakeUnmaskedPhysicalSErrorInterrupts iesb_req = {
-    interrupt_req : InterruptReq = undefined : InterruptReq;
-    interrupt_req.take_SE = false;
-    interrupt_req.take_vSE = false;
-    interrupt_req.take_FIQ = false;
-    interrupt_req.take_vFIQ = false;
-    interrupt_req.take_IRQ = false;
-    interrupt_req.take_vIRQ = false;
-    interrupt_req.iesb_req = false;
-    interrupt_req.take_SE = true;
-    interrupt_req.iesb_req = iesb_req;
+    let interrupt_req : InterruptReq = struct {
+        take_SE = true,
+        take_vSE = false,
+        take_IRQ = false,
+        take_vIRQ = false,
+        take_FIQ = false,
+        take_vFIQ = false,
+        iesb_req = iesb_req
+    };
     let interrupt_taken : bool = TakePendingInterrupts(interrupt_req);
     return()
 }
@@ -9183,9 +9184,7 @@ function TakePendingInterrupts interrupt_req = {
                             AArch32_TakePhysicalIRQException()
                         } else {
                             if AA then {
-                                syndrome32 = AArch32_PhysicalSErrorSyndrome();
-                                syndrome64 = AArch64_PhysicalSErrorSyndrome(interrupt_req.iesb_req);
-                                AArch32_TakePhysicalSErrorException(false, syndrome32.ExT, syndrome32.AET, [syndrome64[24]] == 0b1, slice(syndrome64, 0, 24))
+			        throw(Error_SError(interrupt_req.iesb_req));
                             }
                         }
                     }
@@ -9234,8 +9233,7 @@ function TakePendingInterrupts interrupt_req = {
                             AArch64_TakePhysicalIRQException()
                         } else {
                             if SE then {
-                                syndrome = AArch64_PhysicalSErrorSyndrome(interrupt_req.iesb_req);
-                                AArch64_TakePhysicalSErrorException([syndrome[24]] == 0b1, slice(syndrome, 0, 24))
+			        throw(Error_SError(interrupt_req.iesb_req));
                             }
                         }
                     }
@@ -9244,6 +9242,17 @@ function TakePendingInterrupts interrupt_req = {
         }
     };
     interrupt_taken
+}
+
+function TakeSError(iesb_req) = {
+    if UsingAArch32() then {
+        let syndrome32 : AArch32_SErrorSyndrome = AArch32_PhysicalSErrorSyndrome();
+        let syndrome64 = AArch64_PhysicalSErrorSyndrome(iesb_req);
+        AArch32_TakePhysicalSErrorException(false, syndrome32.ExT, syndrome32.AET, [syndrome64[24]] == 0b1, slice(syndrome64, 0, 24))
+    } else {
+        let syndrome = AArch64_PhysicalSErrorSyndrome(iesb_req);
+        AArch64_TakePhysicalSErrorException([syndrome[24]] == 0b1, slice(syndrome, 0, 24))
+    }
 }
 
 val AArch32_AlignmentFault : forall ('iswrite : Bool) ('secondstage : Bool).

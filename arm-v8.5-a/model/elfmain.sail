@@ -96,6 +96,7 @@ function Step_CPU() = {
               concat_str(DecStr(get_cycle_count()),
               "\n")))));
       },
+      Error_SError(iesb_req) => TakeSError(iesb_req),
       _ => {
         print("Exiting due to unhandled exception during fetch\n");
         exit()
@@ -175,6 +176,7 @@ function Step_CPU() = {
             // print("  This might just be a HINT like 0xd50320df\n");
             ()
           },
+          Error_SError(iesb_req) => TakeSError(iesb_req),
           Error_Implementation_Defined(s) => {
             print(concat_str("IMPLEMENTATION_DEFINED ",
                   concat_str(s,
@@ -316,6 +318,7 @@ function Step_System () = {
               "\n")))));
         ()
       },
+      Error_SError(iesb_req) => TakeSError(iesb_req),
       _ => {
         prerr("Exiting due to unhandled exception\n");
         exit()

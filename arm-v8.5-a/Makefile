@@ -5,6 +5,7 @@ AARCH_FLAGS  = -non_lexical_flow -no_lexp_bounds_check -memo_z3 -no_warn
 AARCH64_SRCS = model/aarch64.sail model/aarch64_float.sail model/aarch64_vector.sail
 AARCH32_SRCS = model/aarch32.sail
 AARCH_SRCS   = model/prelude.sail model/$(DEVICES) model/aarch_types.sail model/aarch_mem.sail $(AARCH64_SRCS) $(AARCH32_SRCS) model/aarch_decode.sail model/$(MAIN)
+LEM_FLAGS    = -const_prop_mutrec AArch64_TakeException -const_prop_mutrec AArch32_SecondStageTranslate -const_prop_mutrec AArch64_SecondStageTranslate -undefined_gen
 
 .PHONY: clean check
 
@@ -19,7 +20,7 @@ aarch64: aarch64.c
 	gcc -O2 aarch64.c $(SAIL_DIR)/lib/*.c -lgmp -lz -I $(SAIL_DIR)/lib/ -o aarch64
 
 aarch64.lem: model/*.sail
-	sail -verbose 1 $(AARCH_FLAGS) $(OPTS) -lem -lem_lib Aarch64_extras model/prelude.sail model/no_devices.sail model/aarch_types.sail model/aarch_mem.sail model/aarch64.sail -o aarch64
+	sail -verbose 1 $(AARCH_FLAGS) $(LEM_FLAGS) $(OPTS) -lem -lem_lib Aarch64_extras model/prelude.sail model/no_devices.sail model/aarch_types.sail model/aarch_mem.sail model/aarch64.sail -o aarch64
 
 clean:
 	-rm -f aarch64.c.tmp

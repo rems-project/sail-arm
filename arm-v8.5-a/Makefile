@@ -20,7 +20,7 @@ aarch64: aarch64.c
 	gcc -O2 aarch64.c $(SAIL_DIR)/lib/*.c -lgmp -lz -I $(SAIL_DIR)/lib/ -o aarch64
 
 aarch64.lem: model/*.sail
-	sail -verbose 1 $(AARCH_FLAGS) $(LEM_FLAGS) $(OPTS) -lem -lem_lib Aarch64_extras model/prelude.sail model/no_devices.sail model/aarch_types.sail model/aarch_mem.sail model/aarch64.sail -o aarch64
+	sail -verbose 1 $(AARCH_FLAGS) $(LEM_FLAGS) $(OPTS) -lem -lem_lib Aarch64_extras -o aarch64 model/prelude.sail model/$(DEVICES) model/aarch_types.sail model/aarch_mem.sail $(AARCH64_SRCS) $(AARCH32_SRCS)
 
 clean:
 	-rm -f aarch64.c.tmp

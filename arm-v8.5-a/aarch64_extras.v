@@ -10,6 +10,8 @@ Axiom slice : forall {m} (_ : mword m) (_ : Z) (n : Z) `{ArithFact (m >= 0)} `{A
 Definition length {n} (x : mword n) := length_mword x.
 Hint Unfold length : sail.
 
+Definition print (_:string) : unit := tt.
+
 Lemma Replicate_lemma1 {N M O x} :
   O * M = N ->
   O = Z.quot N M ->

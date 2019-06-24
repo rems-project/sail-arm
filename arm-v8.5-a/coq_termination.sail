@@ -73,3 +73,7 @@ termination_measure __ListConfig
 
 termination_measure __EndCycle
   repeat 1, repeat 1, repeat 1, repeat 1
+
+/* This is an infinite loop, just want enough that it could do something */
+termination_measure main
+  while 100

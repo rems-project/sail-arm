@@ -2728,7 +2728,7 @@ val Replicate : forall ('M : Int) ('N : Int), ('N >= 0 & 'M >= 1 & mod('N, 'M) =
 
 function Replicate (N, x) = replicate_bits(x, N / 'M)
 
-val Zeros = {ocaml: "zeros", lem: "zeros", smt: "zeros", interpreter: "zeros", c: "zeros"}: forall ('N : Int).
+val Zeros = {ocaml: "zeros", lem: "zeros", smt: "zeros", interpreter: "zeros", c: "zeros", coq: "zeros"}: forall ('N : Int), 'N >= 0.
   implicit('N) -> bits('N)
 
 val set_ClearIRQ : bits(32) -> unit effect {rreg, wreg}
@@ -3698,11 +3698,12 @@ function GTEExtObsAccessListParam () = {
     }
 }
 
-val GTEChkAccessSensitiveBEH : unit -> unit effect {rreg, wreg}
+val GTEChkAccessSensitiveBEH : unit -> unit effect {rreg, wreg, escape}
 
 function GTEChkAccessSensitiveBEH () = {
     let 'list_count = UInt(_GTEParam[0]);
     let 'address_count = list_count / 3;
+    assert (address_count <= 64);
     prerr("GTEChkAccessSensitiveBEH(");
     foreach (i from 0 to (address_count - 1) by 1 in inc) {
         prerr("( address=" ++ HexStr(UInt(_GTEListParam0[i * 3])));
@@ -4252,7 +4253,7 @@ function GTEEnableExtObs () = {
     return()
 }
 
-val GTEProcessParam : unit -> unit effect {rmem, rreg, undef, wmem, wreg}
+val GTEProcessParam : unit -> unit effect {rmem, rreg, undef, wmem, wreg, escape}
 
 function GTEProcessParam () = {
     match _GTECurrentAPI {
@@ -4449,7 +4450,7 @@ function GTEProcessParam () = {
     return()
 }
 
-val set_GTE_API : bits(32) -> unit effect {rmem, rreg, undef, wmem, wreg}
+val set_GTE_API : bits(32) -> unit effect {rmem, rreg, undef, wmem, wreg, escape}
 
 function set_GTE_API val_name = {
     _GTEActive = true;
@@ -10108,7 +10109,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
     disabled : bool = undefined : bool;
     el : bits(2) = undefined : bits(2);
     firstblocklevel : int = undefined : int;
-    grainsize : int = undefined : int;
+    grainsize : nat = undefined : nat;
     hierattrsdisabled : bool = undefined : bool;
     inputsize : int = undefined : int;
     inputsize_max : int = undefined : int;
@@ -10440,9 +10441,10 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
         return(result)
     };
     let baselowerbound : int = 3 + inputsize - ((3 - level) * stride + grainsize);
+    assert(baselowerbound >= 0);
     baseaddress : bits(52) = undefined : bits(52);
     if outputsize == 52 then {
-        let 'z : int = if baselowerbound < 6 then 6 else baselowerbound;
+        let 'z : nat = if baselowerbound < 6 then 6 else baselowerbound;
         assert(constraint(- 'z + 48 >= 0));
         baseaddress = (slice(baseregister, 2, 4) @ slice(baseregister, z, negate(z) + 48)) @ Zeros(z)
     } else {
@@ -11247,6 +11249,7 @@ function AArch32_TranslationTableWalk (ipaddress, vaddress, acctype, iswrite, se
         return(result)
     };
     let baselowerbound : int = 3 + inputsize - ((3 - level) * stride + grainsize);
+    assert(baselowerbound >= 0);
     baseaddress : bits(40) = undefined : bits(40);
     baseaddress = {
         let 'baselowerbound = baselowerbound;

@@ -2294,7 +2294,7 @@ function vector_crypto_aes_mix_decode (Rd, Rn, D, size) = {
 }
 
 val vector_transfer_vector_table : forall 'd 'datasize 'elements ('is_tbl : Bool) 'm 'n 'regs,
-  'datasize >= 0 & (0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'd & 'd <= 31).
+  'regs >= 0 & 'datasize >= 0 & (0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'd & 'd <= 31).
   (int('d), int('datasize), int('elements), bool('is_tbl), int('m), int('n), int('regs)) -> unit effect {escape, rreg, undef, wreg}
 
 function vector_transfer_vector_table (d, datasize, elements, is_tbl, m, n__arg, regs) = {

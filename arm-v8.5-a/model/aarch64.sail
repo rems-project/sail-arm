@@ -4435,6 +4435,7 @@ function ImpDefTagArrayStartAndCount address__arg = {
     let block_bitspan : int = UInt(slice(DCZID_EL0, 0, 4)) + 2;
     let block_bitspan = if block_bitspan < LOG2_TAG_GRANULE then LOG2_TAG_GRANULE else block_bitspan;
     if block_bitspan < 8 then {
+        assert(block_bitspan >= 0);
         address = __SetSlice_bits(64, block_bitspan, address, 0, Zeros(block_bitspan));
         let first_block : bits(4) = ZeroExtend(slice(address, block_bitspan, negate(block_bitspan) + 8), 4);
         let 'first_tag : int = UInt(first_block) * 4;

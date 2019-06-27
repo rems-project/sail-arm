@@ -6,7 +6,6 @@ Require Import Sail2_prompt.
 Require Import Sail2_real.
 Require Import Psatz.
 
-Axiom slice : forall {m} (_ : mword m) (_ : Z) (n : Z) `{ArithFact (m >= 0)} `{ArithFact (n >= 0)}, mword n.
 Definition length {n} (x : mword n) := length_mword x.
 Hint Unfold length : sail.
 

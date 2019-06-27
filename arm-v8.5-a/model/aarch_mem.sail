@@ -2285,7 +2285,7 @@ function AArch32_AccessUsesEL acctype = {
 }
 
 val LookUpRIndex : forall ('n : Int), ('n >= 0 & 'n <= 15).
-  (int('n), bits(5)) -> {'m, (0 <= 'm & 'm <= 31). int('m)} effect {escape}
+  (int('n), bits(5)) -> {'m, (0 <= 'm & 'm <= 30). int('m)} effect {escape}
 
 function LookUpRIndex (n, mode) = {
     assert(n >= 0 & n <= 14);
@@ -6193,7 +6193,7 @@ function AccessIsTagChecked (vaddr, acctype) = {
     true
 }
 
-val AArch64_WatchpointByteMatch : forall ('n : Int).
+val AArch64_WatchpointByteMatch : forall ('n : Int), 0 <= 'n <= 16.
   (int('n), AccType, bits(64)) -> bool effect {escape, rreg, undef}
 
 function AArch64_WatchpointByteMatch (n, acctype, vaddress) = {
@@ -6535,9 +6535,9 @@ val AArch64_MaybeZeroRegisterUppers : unit -> unit effect {escape, rreg, undef, 
 
 function AArch64_MaybeZeroRegisterUppers () = {
     assert(UsingAArch32());
-    first : int = undefined : int;
+    first : range(0,30) = undefined : range(0,30);
     include_R15_name : bool = undefined : bool;
-    last : int = undefined : int;
+    last : range(0,30) = undefined : range(0,30);
     if PSTATE.EL == EL0 & ~(ELUsingAArch32(EL1)) then {
         first = 0;
         last = 14;
@@ -7119,7 +7119,7 @@ function AArch64_StateMatch (SSC__arg, HMC__arg, PxC__arg, linked__arg, LBN, isb
     (priv_match & security_state_match) & (~(linked) | linked_match)
 }
 
-val AArch64_WatchpointMatch : forall 'n 'size ('ispriv : Bool) ('iswrite : Bool).
+val AArch64_WatchpointMatch : forall 'n 'size ('ispriv : Bool) ('iswrite : Bool), 0 <= 'n <= 16.
   (int('n), bits(64), int('size), bool('ispriv), AccType, bool('iswrite)) -> bool effect {escape, rreg, undef}
 
 function AArch64_WatchpointMatch (n, vaddress, size, ispriv, acctype, iswrite) = {
@@ -7138,7 +7138,7 @@ function AArch64_WatchpointMatch (n, vaddress, size, ispriv, acctype, iswrite) =
     ((value_match_name & state_match) & ls_match) & enabled
 }
 
-val AArch64_BreakpointMatch : forall ('n : Int) ('size : Int).
+val AArch64_BreakpointMatch : forall ('n : Int) ('size : Int), 0 <= 'n <= 16.
   (int('n), bits(64), AccType, int('size)) -> bool effect {escape, rreg, undef}
 
 function AArch64_BreakpointMatch (n, vaddress, acctype, size) = {
@@ -8008,7 +8008,7 @@ function CheckTag (memaddrdesc, ptag, write) = {
     }
 }
 
-val AArch32_WatchpointByteMatch : forall ('n : Int).
+val AArch32_WatchpointByteMatch : forall ('n : Int), 0 <= 'n <= 16.
   (int('n), bits(32)) -> bool effect {escape, rreg, undef}
 
 function AArch32_WatchpointByteMatch (n, vaddress) = {
@@ -9694,7 +9694,7 @@ function AArch32_StateMatch (SSC__arg, HMC__arg, PxC__arg, linked__arg, LBN, isb
     (priv_match & security_state_match) & (~(linked) | linked_match)
 }
 
-val AArch32_WatchpointMatch : forall 'n 'size ('ispriv : Bool) ('iswrite : Bool).
+val AArch32_WatchpointMatch : forall 'n 'size ('ispriv : Bool) ('iswrite : Bool), 0 <= 'n <= 16.
   (int('n), bits(32), int('size), bool('ispriv), bool('iswrite)) -> bool effect {escape, rreg, undef}
 
 function AArch32_WatchpointMatch (n, vaddress, size, ispriv, iswrite) = {
@@ -9740,7 +9740,7 @@ function AArch32_CheckWatchpoint (vaddress, acctype, iswrite, size) = {
     }
 }
 
-val AArch32_BreakpointMatch : forall ('n : Int) ('size : Int).
+val AArch32_BreakpointMatch : forall ('n : Int) ('size : Int), 0 <= 'n <= 16.
   (int('n), bits(32), int('size)) -> (bool, bool) effect {escape, rreg, undef}
 
 function AArch32_BreakpointMatch (n, vaddress, size) = {

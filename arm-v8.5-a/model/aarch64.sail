@@ -275,9 +275,9 @@ let STDIN_HANDLE : int(1) = 1
 
 let STDERR_HANDLE : int(3) = 3
 
-let STACK_LIMIT : vector(64, dec, bit) = __GetSlice_int(64, 251658240, 0)
+let STACK_LIMIT : bits(64) = __GetSlice_int(64, 251658240, 0)
 
-let STACK_BASE : vector(64, dec, bit) = __GetSlice_int(64, 268435456, 0)
+let STACK_BASE : bits(64) = __GetSlice_int(64, 268435456, 0)
 
 register SP_EL3 : bits(64)
 
@@ -956,11 +956,11 @@ function get_MPIDR () = {
     r
 }
 
-let MODE_W : vector(2, dec, bit) = 0b01
+let MODE_W : bits(2) = 0b01
 
-let MODE_R : vector(2, dec, bit) = 0b00
+let MODE_R : bits(2) = 0b00
 
-let MODE_A : vector(2, dec, bit) = 0b10
+let MODE_A : bits(2) = 0b10
 
 register MIDR_EL1 : bits(32)
 
@@ -2187,9 +2187,9 @@ function get_HSTR () = {
     r
 }
 
-let HEAP_LIMIT : vector(64, dec, bit) = __GetSlice_int(64, 251658240, 0)
+let HEAP_LIMIT : bits(64) = __GetSlice_int(64, 251658240, 0)
 
-let HEAP_BASE : vector(64, dec, bit) = __GetSlice_int(64, 0, 0)
+let HEAP_BASE : bits(64) = __GetSlice_int(64, 0, 0)
 
 val set_HCR2 : bits(32) -> unit effect {rreg, wreg}
 
@@ -2430,7 +2430,7 @@ function DecodeRegExtend op = {
     }
 }
 
-let DebugHalt_HaltInstruction : vector(6, dec, bit) = 0b101111
+let DebugHalt_HaltInstruction : bits(6) = 0b101111
 
 val DataSynchronizationBarrier : (MBReqDomain, MBReqTypes) -> unit
 

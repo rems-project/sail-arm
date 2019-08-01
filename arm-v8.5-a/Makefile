@@ -16,6 +16,9 @@ aarch64.c: model/*.sail
 	sail -c -O -Oconstant_fold $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64.c.tmp
 	mv aarch64.c.tmp aarch64.c
 
+aarch64.smt_model: model/*.sail
+	sail -smt_serialize $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) -o aarch64
+
 aarch64: aarch64.c
 	gcc -O2 aarch64.c $(SAIL_DIR)/lib/*.c -lgmp -lz -I $(SAIL_DIR)/lib/ -o aarch64
 

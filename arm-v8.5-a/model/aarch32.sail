@@ -666,7 +666,7 @@ function DecodeRegShift typ = {
     shift_t
 }
 
-let DebugException_BKPT : vector(4, dec, bit) = 0x3
+let DebugException_BKPT : bits(4) = 0x3
 
 val DVPRCTX : bits(64) -> unit
 
@@ -11391,7 +11391,7 @@ function ADR_A2_A_decode (cond, Rd, imm12) = {
     };
     let d = UInt(Rd);
     assert(0 <= d & d <= 14);
-    let imm32 : vector(32, dec, bit) = A32ExpandImm(imm12);
+    let imm32 : bits(32) = A32ExpandImm(imm12);
     let add : bool = false;
     __PostDecode();
     ADR_Op_A(add, d, imm32)
@@ -11406,7 +11406,7 @@ function ADR_A1_A_decode (cond, Rd, imm12) = {
     };
     let d = UInt(Rd);
     assert(0 <= d & d <= 14);
-    let imm32 : vector(32, dec, bit) = A32ExpandImm(imm12);
+    let imm32 : bits(32) = A32ExpandImm(imm12);
     let add : bool = true;
     __PostDecode();
     ADR_Op_A(add, d, imm32)
@@ -11466,7 +11466,7 @@ function ADD_i_T3_A_decode (i, S, Rn, imm3, Rd, imm8) = {
     let d = UInt(Rd);
     let n = UInt(Rn);
     let setflags : bool = S == 0b1;
-    let imm32 : vector(32, dec, bit) = T32ExpandImm((i @ imm3) @ imm8);
+    let imm32 : bits(32) = T32ExpandImm((i @ imm3) @ imm8);
     if d == 15 & ~(setflags) | n == 15 then {
         throw(Error_Unpredictable())
     };
@@ -12171,7 +12171,7 @@ function SUBS_PC_A1pre_AS_decode (cond, opcode, Rn, imm12) = {
     let shift_n = 0;
     let shift_t : SRType = undefined : SRType;
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = A32ExpandImm(imm12);
+    let imm32 : bits(32) = A32ExpandImm(imm12);
     let register_form : bool = false;
     __PostDecode();
     SUBS_PC_OpA_AS(imm32, m, n, opcode, register_form, shift_n, shift_t)
@@ -14962,7 +14962,7 @@ function VSEL_T1_A_decode (D, cc, Vn, Vd, size, N, M, Vm) = {
     let 'm = m;
     let 'n = n;
     assert(constraint(('esize in {16, 32, 64} & 0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'n & 'n <= 31)));
-    let cond : vector(3 + 1, dec, bit) = (cc @ ([cc[1]] ^ [cc[0]])) @ 0b0;
+    let cond : bits(4) = (cc @ ([cc[1]] ^ [cc[0]])) @ 0b0;
     __PostDecode();
     VSEL_Op_A(cond, d, esize, m, n)
 }
@@ -15003,7 +15003,7 @@ function VSEL_A1_A_decode (D, cc, Vn, Vd, size, N, M, Vm) = {
     let 'm = m;
     let 'n = n;
     assert(constraint(('esize in {16, 32, 64} & 0 <= 'd & 'd <= 31 & 0 <= 'm & 'm <= 31 & 0 <= 'n & 'n <= 31)));
-    let cond : vector(3 + 1, dec, bit) = (cc @ ([cc[1]] ^ [cc[0]])) @ 0b0;
+    let cond : bits(4) = (cc @ ([cc[1]] ^ [cc[0]])) @ 0b0;
     __PostDecode();
     VSEL_Op_A(cond, d, esize, m, n)
 }
@@ -38442,7 +38442,7 @@ function STRT_T1pre_A_decode (Rn, Rt, imm8) = {
     let postindex : bool = false;
     let add : bool = true;
     let register_form : bool = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     if t == 15 then {
         throw(Error_Unpredictable())
     };
@@ -38490,7 +38490,7 @@ function STRT_A1pre_A_decode (cond, U, Rn, Rt, imm12) = {
     let postindex : bool = true;
     let add : bool = U == 0b1;
     let register_form : bool = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm12, 32);
+    let imm32 : bits(32) = ZeroExtend(imm12, 32);
     if n == 15 | n == t then {
         throw(Error_Unpredictable())
     };
@@ -38540,7 +38540,7 @@ function STRHT_T1pre_A_decode (Rn, Rt, imm8) = {
     let postindex : bool = false;
     let add : bool = true;
     let register_form : bool = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     if t == 15 then {
         throw(Error_Unpredictable())
     };
@@ -38585,7 +38585,7 @@ function STRHT_A1pre_A_decode (cond, U, Rn, Rt, imm4H, imm4L) = {
     let postindex : bool = true;
     let add : bool = U == 0b1;
     let register_form : bool = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     if (t == 15 | n == 15) | n == t then {
         throw(Error_Unpredictable())
     };
@@ -38635,7 +38635,7 @@ function STRBT_T1pre_A_decode (Rn, Rt, imm8) = {
     let postindex : bool = false;
     let add : bool = true;
     let register_form : bool = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     if t == 15 then {
         throw(Error_Unpredictable())
     };
@@ -38683,7 +38683,7 @@ function STRBT_A1pre_A_decode (cond, U, Rn, Rt, imm12) = {
     let postindex : bool = true;
     let add : bool = U == 0b1;
     let register_form : bool = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm12, 32);
+    let imm32 : bits(32) = ZeroExtend(imm12, 32);
     if (t == 15 | n == 15) | n == t then {
         throw(Error_Unpredictable())
     };
@@ -39384,7 +39384,7 @@ function STRB_i_T3_A_decode (Rn, Rt, P, U, W, imm8) = {
     };
     let 't = UInt(Rt);
     let 'n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = W == 0b1;
@@ -40063,7 +40063,7 @@ function VSTM_T1A1_A_decode__0 (P, U, D, W, Rn, Vd, imm8) = {
     let wback : bool = W == 0b1;
     let d = UInt(D @ Vd);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8 @ 0b00, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8 @ 0b00, 32);
     let regs : {'n, (0 <= 'n & 'n <= 127). int('n)} = UInt(imm8) / 2;
     if n == 15 & (wback | CurrentInstrSet() != InstrSet_A32) then {
         throw(Error_Unpredictable())
@@ -40097,7 +40097,7 @@ function VSTM_T1A1_A_decode__1 (cond, P, U, D, W, Rn, Vd, imm8) = {
     let wback : bool = W == 0b1;
     let d = UInt(D @ Vd);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8 @ 0b00, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8 @ 0b00, 32);
     let regs : {'n, (0 <= 'n & 'n <= 127). int('n)} = UInt(imm8) / 2;
     if n == 15 & (wback | CurrentInstrSet() != InstrSet_A32) then {
         throw(Error_Unpredictable())
@@ -40466,7 +40466,7 @@ function STRD_i_A1_A_decode (cond, P, U, W, Rn, Rt, imm4H, imm4L) = {
     let t = UInt(Rt);
     let t2 : int = t + 1;
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = P == 0b0 | W == 0b1;
@@ -41024,7 +41024,7 @@ function LDRT_T1pre_A_decode (Rn, Rt, imm8) = {
     let postindex : bool(false) = false;
     let add : bool(true) = true;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     if t == 15 then {
         throw(Error_Unpredictable())
     };
@@ -41071,7 +41071,7 @@ function LDRT_A1pre_A_decode (cond, U, Rn, Rt, imm12) = {
     let postindex : bool(true) = true;
     let add : bool = U == 0b1;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm12, 32);
+    let imm32 : bits(32) = ZeroExtend(imm12, 32);
     if (t == 15 | n == 15) | n == t then {
         throw(Error_Unpredictable())
     };
@@ -41121,7 +41121,7 @@ function LDRSHT_T1pre_A_decode (Rn, Rt, imm8) = {
     let postindex : bool(false) = false;
     let add : bool(true) = true;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     if t == 15 then {
         throw(Error_Unpredictable())
     };
@@ -41165,7 +41165,7 @@ function LDRSHT_A1pre_A_decode (cond, U, Rn, Rt, imm4H, imm4L) = {
     let postindex : bool(true) = true;
     let add : bool = U == 0b1;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     if (t == 15 | n == 15) | n == t then {
         throw(Error_Unpredictable())
     };
@@ -41213,7 +41213,7 @@ function LDRSBT_T1pre_A_decode (Rn, Rt, imm8) = {
     let postindex : bool(false) = false;
     let add : bool(true) = true;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     if t == 15 then {
         throw(Error_Unpredictable())
     };
@@ -41257,7 +41257,7 @@ function LDRSBT_A1pre_A_decode (cond, U, Rn, Rt, imm4H, imm4L) = {
     let postindex : bool(true) = true;
     let add : bool = U == 0b1;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     if (t == 15 | n == 15) | n == t then {
         throw(Error_Unpredictable())
     };
@@ -41307,7 +41307,7 @@ function LDRHT_T1pre_A_decode (Rn, Rt, imm8) = {
     let postindex : bool(false) = false;
     let add : bool(true) = true;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     if t == 15 then {
         throw(Error_Unpredictable())
     };
@@ -41351,7 +41351,7 @@ function LDRHT_A1pre_A_decode (cond, U, Rn, Rt, imm4H, imm4L) = {
     let postindex : bool(true) = true;
     let add : bool = U == 0b1;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     if (t == 15 | n == 15) | n == t then {
         throw(Error_Unpredictable())
     };
@@ -41399,7 +41399,7 @@ function LDRBT_T1pre_A_decode (Rn, Rt, imm8) = {
     let postindex : bool(false) = false;
     let add : bool(true) = true;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     if t == 15 then {
         throw(Error_Unpredictable())
     };
@@ -41446,7 +41446,7 @@ function LDRBT_A1pre_A_decode (cond, U, Rn, Rt, imm12) = {
     let postindex : bool(true) = true;
     let add : bool = U == 0b1;
     let register_form : bool(false) = false;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm12, 32);
+    let imm32 : bits(32) = ZeroExtend(imm12, 32);
     if (t == 15 | n == 15) | n == t then {
         throw(Error_Unpredictable())
     };
@@ -41908,7 +41908,7 @@ function LDR_i_T4_A_decode (Rn, Rt, P, U, W, imm8) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = W == 0b1;
@@ -42013,7 +42013,7 @@ function LDR_i_A1_A_decode (cond, P, U, W, Rn, Rt, imm12) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm12, 32);
+    let imm32 : bits(32) = ZeroExtend(imm12, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = P == 0b0 | W == 0b1;
@@ -42214,7 +42214,7 @@ function LDRSH_i_T2_A_decode (Rn, Rt, P, U, W, imm8) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = W == 0b1;
@@ -42262,7 +42262,7 @@ function LDRSH_i_A1_A_decode (cond, P, U, W, Rn, Rt, imm4H, imm4L) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = P == 0b0 | W == 0b1;
@@ -42456,7 +42456,7 @@ function LDRSB_i_T2_A_decode (Rn, Rt, P, U, W, imm8) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = W == 0b1;
@@ -42503,7 +42503,7 @@ function LDRSB_i_A1_A_decode (cond, P, U, W, Rn, Rt, imm4H, imm4L) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = P == 0b0 | W == 0b1;
@@ -42704,7 +42704,7 @@ function LDRH_i_T3_A_decode (Rn, Rt, P, U, W, imm8) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = W == 0b1;
@@ -42786,7 +42786,7 @@ function LDRH_i_A1_A_decode (cond, P, U, W, Rn, Rt, imm4H, imm4L) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = P == 0b0 | W == 0b1;
@@ -42980,7 +42980,7 @@ function LDRB_i_T3_A_decode (Rn, Rt, P, U, W, imm8) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = W == 0b1;
@@ -43060,7 +43060,7 @@ function LDRB_i_A1_A_decode (cond, P, U, W, Rn, Rt, imm12) = {
     };
     let t = UInt(Rt);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm12, 32);
+    let imm32 : bits(32) = ZeroExtend(imm12, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = P == 0b0 | W == 0b1;
@@ -43615,7 +43615,7 @@ function VLDM_T1A1_A_decode__0 (cond, P, U, D, W, Rn, Vd, imm8) = {
     let wback : bool = W == 0b1;
     let d = UInt(D @ Vd);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8 @ 0b00, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8 @ 0b00, 32);
     let regs : {'n, (0 <= 'n & 'n <= 127). int('n)} = UInt(imm8) / 2;
     if n == 15 & (wback | CurrentInstrSet() != InstrSet_A32) then {
         throw(Error_Unpredictable())
@@ -43646,7 +43646,7 @@ function VLDM_T1A1_A_decode__1 (P, U, D, W, Rn, Vd, imm8) = {
     let wback : bool = W == 0b1;
     let d = UInt(D @ Vd);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8 @ 0b00, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8 @ 0b00, 32);
     let regs : {'n, (0 <= 'n & 'n <= 127). int('n)} = UInt(imm8) / 2;
     if n == 15 & (wback | CurrentInstrSet() != InstrSet_A32) then {
         throw(Error_Unpredictable())
@@ -44085,7 +44085,7 @@ function LDRD_l_A1_A_decode (cond, U, Rt, imm4H, imm4L) = {
     let t = UInt(Rt);
     assert(t <= 14);
     let t2 = t + 1;
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     let add : bool = U == 0b1;
     if t2 == 15 then {
         throw(Error_Unpredictable())
@@ -44137,7 +44137,7 @@ function LDRD_i_T1_A_decode (P, U, W, Rn, Rt, Rt2, imm8) = {
     let t = UInt(Rt);
     let t2 = UInt(Rt2);
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm8 @ 0b00, 32);
+    let imm32 : bits(32) = ZeroExtend(imm8 @ 0b00, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = W == 0b1;
@@ -44168,7 +44168,7 @@ function LDRD_i_A1_A_decode (cond, P, U, W, Rn, Rt, imm4H, imm4L) = {
     let t = UInt(Rt);
     let t2 = t + 1;
     let n = UInt(Rn);
-    let imm32 : vector(32, dec, bit) = ZeroExtend(imm4H @ imm4L, 32);
+    let imm32 : bits(32) = ZeroExtend(imm4H @ imm4L, 32);
     let index : bool = P == 0b1;
     let add : bool = U == 0b1;
     let wback : bool = P == 0b0 | W == 0b1;

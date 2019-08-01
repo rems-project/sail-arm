@@ -58,7 +58,11 @@ $include <flow.sail>
 $include <arith.sail>
 $include <trace.sail>
 
-type bits ('n : Int) = vector('n, dec, bit)
+$ifdef FEATURE_BITVECTOR_TYPE
+type bits ('n : Int) = bitvector('n, dec)
+$else
+type bits('n : Int) = vector('n, dec, bit)
+$endif
 
 val eq_bit = {ocaml: "(fun (x, y) -> x = y)", lem: "eq", interpreter: "eq_anything", c: "eq_bit"} : (bit, bit) -> bool
 

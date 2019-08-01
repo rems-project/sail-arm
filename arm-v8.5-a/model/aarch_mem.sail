@@ -254,61 +254,61 @@ function get_VBAR_NS () = {
     r
 }
 
-let VAL_SET_PPU_REGION : vector(32, dec, bit) = __GetSlice_int(32, 10, 0)
+let VAL_SET_PPU_REGION : bits(32) = __GetSlice_int(32, 10, 0)
 
-let VAL_SET_CRITICAL_EVENT : vector(32, dec, bit) = __GetSlice_int(32, 17, 0)
+let VAL_SET_CRITICAL_EVENT : bits(32) = __GetSlice_int(32, 17, 0)
 
-let VAL_SETUP_EXT_OBS_64 : vector(32, dec, bit) = __GetSlice_int(32, 25, 0)
+let VAL_SETUP_EXT_OBS_64 : bits(32) = __GetSlice_int(32, 25, 0)
 
-let VAL_SETUP_EXT_OBS : vector(32, dec, bit) = __GetSlice_int(32, 13, 0)
+let VAL_SETUP_EXT_OBS : bits(32) = __GetSlice_int(32, 13, 0)
 
-let VAL_RETURN_OBS_DATA_64 : vector(32, dec, bit) = __GetSlice_int(32, 28, 0)
+let VAL_RETURN_OBS_DATA_64 : bits(32) = __GetSlice_int(32, 28, 0)
 
-let VAL_RELEASE_EXT_OBS : vector(32, dec, bit) = __GetSlice_int(32, 16, 0)
+let VAL_RELEASE_EXT_OBS : bits(32) = __GetSlice_int(32, 16, 0)
 
-let VAL_RANDNUM : vector(32, dec, bit) = __GetSlice_int(32, 20, 0)
+let VAL_RANDNUM : bits(32) = __GetSlice_int(32, 20, 0)
 
-let VAL_PPU_CONTROL : vector(32, dec, bit) = __GetSlice_int(32, 12, 0)
+let VAL_PPU_CONTROL : bits(32) = __GetSlice_int(32, 12, 0)
 
-let VAL_PERFORM_EXT_OBS_64 : vector(32, dec, bit) = __GetSlice_int(32, 27, 0)
+let VAL_PERFORM_EXT_OBS_64 : bits(32) = __GetSlice_int(32, 27, 0)
 
-let VAL_PERFORM_EXT_OBS : vector(32, dec, bit) = __GetSlice_int(32, 15, 0)
+let VAL_PERFORM_EXT_OBS : bits(32) = __GetSlice_int(32, 15, 0)
 
-let VAL_OBSERVER_PIN_VALUE : vector(32, dec, bit) = __GetSlice_int(32, 22, 0)
+let VAL_OBSERVER_PIN_VALUE : bits(32) = __GetSlice_int(32, 22, 0)
 
-let VAL_GET_PPU_REGION : vector(32, dec, bit) = __GetSlice_int(32, 11, 0)
+let VAL_GET_PPU_REGION : bits(32) = __GetSlice_int(32, 11, 0)
 
-let VAL_GET_PPU_ID : vector(32, dec, bit) = __GetSlice_int(32, 9, 0)
+let VAL_GET_PPU_ID : bits(32) = __GetSlice_int(32, 9, 0)
 
-let VAL_EVENTGEN_SETUP : vector(32, dec, bit) = __GetSlice_int(32, 1, 0)
+let VAL_EVENTGEN_SETUP : bits(32) = __GetSlice_int(32, 1, 0)
 
-let VAL_EVENTGEN_QUERY : vector(32, dec, bit) = __GetSlice_int(32, 4, 0)
+let VAL_EVENTGEN_QUERY : bits(32) = __GetSlice_int(32, 4, 0)
 
-let VAL_EVENTGEN_PRIME : vector(32, dec, bit) = __GetSlice_int(32, 2, 0)
+let VAL_EVENTGEN_PRIME : bits(32) = __GetSlice_int(32, 2, 0)
 
-let VAL_EVENTGEN_FREE : vector(32, dec, bit) = __GetSlice_int(32, 6, 0)
+let VAL_EVENTGEN_FREE : bits(32) = __GetSlice_int(32, 6, 0)
 
-let VAL_EVENTGEN_DISABLE : vector(32, dec, bit) = __GetSlice_int(32, 5, 0)
+let VAL_EVENTGEN_DISABLE : bits(32) = __GetSlice_int(32, 5, 0)
 
-let VAL_EVENTGEN_CLEAR : vector(32, dec, bit) = __GetSlice_int(32, 3, 0)
+let VAL_EVENTGEN_CLEAR : bits(32) = __GetSlice_int(32, 3, 0)
 
-let VAL_EN_ACCESS_SENSITIVE_BEH : vector(32, dec, bit) = __GetSlice_int(32, 23, 0)
+let VAL_EN_ACCESS_SENSITIVE_BEH : bits(32) = __GetSlice_int(32, 23, 0)
 
-let VAL_ENABLE_EXT_OBS_64 : vector(32, dec, bit) = __GetSlice_int(32, 26, 0)
+let VAL_ENABLE_EXT_OBS_64 : bits(32) = __GetSlice_int(32, 26, 0)
 
-let VAL_ENABLE_EXT_OBS : vector(32, dec, bit) = __GetSlice_int(32, 14, 0)
+let VAL_ENABLE_EXT_OBS : bits(32) = __GetSlice_int(32, 14, 0)
 
-let VAL_DEFINE_NO_ABORTING_REGIONS : vector(32, dec, bit) = __GetSlice_int(32, 21, 0)
+let VAL_DEFINE_NO_ABORTING_REGIONS : bits(32) = __GetSlice_int(32, 21, 0)
 
-let VAL_DEASSERT : vector(32, dec, bit) = __GetSlice_int(32, 8, 0)
+let VAL_DEASSERT : bits(32) = __GetSlice_int(32, 8, 0)
 
-let VAL_CRITICAL_SECTION_START : vector(32, dec, bit) = __GetSlice_int(32, 18, 0)
+let VAL_CRITICAL_SECTION_START : bits(32) = __GetSlice_int(32, 18, 0)
 
-let VAL_CRITICAL_SECTION_END : vector(32, dec, bit) = __GetSlice_int(32, 19, 0)
+let VAL_CRITICAL_SECTION_END : bits(32) = __GetSlice_int(32, 19, 0)
 
-let VAL_CHK_ACCESS_SENSITIVE_BEH : vector(32, dec, bit) = __GetSlice_int(32, 24, 0)
+let VAL_CHK_ACCESS_SENSITIVE_BEH : bits(32) = __GetSlice_int(32, 24, 0)
 
-let VAL_ASSERT : vector(32, dec, bit) = __GetSlice_int(32, 7, 0)
+let VAL_ASSERT : bits(32) = __GetSlice_int(32, 7, 0)
 
 val ThisInstr : unit -> bits(32) effect {rreg}
 
@@ -633,17 +633,17 @@ function __UNKNOWN_MemType () = {
     MemType_Normal
 }
 
-let MemHint_RWA : vector(2, dec, bit) = 0b11
+let MemHint_RWA : bits(2) = 0b11
 
-let MemHint_RA : vector(2, dec, bit) = 0b10
+let MemHint_RA : bits(2) = 0b10
 
-let MemHint_No : vector(2, dec, bit) = 0b00
+let MemHint_No : bits(2) = 0b00
 
-let MemAttr_WT : vector(2, dec, bit) = 0b10
+let MemAttr_WT : bits(2) = 0b10
 
-let MemAttr_WB : vector(2, dec, bit) = 0b11
+let MemAttr_WB : bits(2) = 0b11
 
-let MemAttr_NC : vector(2, dec, bit) = 0b00
+let MemAttr_NC : bits(2) = 0b00
 
 register MVBAR : bits(32)
 
@@ -775,23 +775,23 @@ register MAIR1_S : bits(32)
 
 register MAIR0_S : bits(32)
 
-let M32_User : vector(5, dec, bit) = 0b10000
+let M32_User : bits(5) = 0b10000
 
-let M32_Undef : vector(5, dec, bit) = 0b11011
+let M32_Undef : bits(5) = 0b11011
 
-let M32_System : vector(5, dec, bit) = 0b11111
+let M32_System : bits(5) = 0b11111
 
-let M32_Svc : vector(5, dec, bit) = 0b10011
+let M32_Svc : bits(5) = 0b10011
 
-let M32_Monitor : vector(5, dec, bit) = 0b10110
+let M32_Monitor : bits(5) = 0b10110
 
-let M32_IRQ : vector(5, dec, bit) = 0b10010
+let M32_IRQ : bits(5) = 0b10010
 
-let M32_Hyp : vector(5, dec, bit) = 0b11010
+let M32_Hyp : bits(5) = 0b11010
 
-let M32_FIQ : vector(5, dec, bit) = 0b10001
+let M32_FIQ : bits(5) = 0b10001
 
-let M32_Abort : vector(5, dec, bit) = 0b10111
+let M32_Abort : bits(5) = 0b10111
 
 val LSInstructionSyndrome : unit -> bits(11) effect {rreg}
 
@@ -893,33 +893,33 @@ function get_HCR () = {
     r
 }
 
-let GTE_ST_REQUEST_GRANTED : vector(64, dec, bit) = __GetSlice_int(64, 0, 0)
+let GTE_ST_REQUEST_GRANTED : bits(64) = __GetSlice_int(64, 0, 0)
 
-let GTE_ST_REQUEST_FAIL : vector(64, dec, bit) = __GetSlice_int(64, 1, 0)
+let GTE_ST_REQUEST_FAIL : bits(64) = __GetSlice_int(64, 1, 0)
 
 let GTE_LIST_PARAM_LEN : int(64) = 64
 
-let GTE_EXT_OBS_RESULTS_ADDRESS : vector(64, dec, bit) = __GetSlice_int(64, 318775296, 0)
+let GTE_EXT_OBS_RESULTS_ADDRESS : bits(64) = __GetSlice_int(64, 318775296, 0)
 
-let GTE_EXT_OBS_OUTER_S : vector(3, dec, bit) = 0b011
+let GTE_EXT_OBS_OUTER_S : bits(3) = 0b011
 
-let GTE_EXT_OBS_OUTER_NS : vector(3, dec, bit) = 0b101
+let GTE_EXT_OBS_OUTER_NS : bits(3) = 0b101
 
-let GTE_EXT_OBS_INNER_S : vector(3, dec, bit) = 0b100
+let GTE_EXT_OBS_INNER_S : bits(3) = 0b100
 
-let GTE_EXT_OBS_INNER_NS : vector(3, dec, bit) = 0b110
+let GTE_EXT_OBS_INNER_NS : bits(3) = 0b110
 
-let GTE_EXT_OBS_ACC_WRITE : vector(3, dec, bit) = 0b010
+let GTE_EXT_OBS_ACC_WRITE : bits(3) = 0b010
 
-let GTE_EXT_OBS_ACC_SIZE8 : vector(3, dec, bit) = 0b011
+let GTE_EXT_OBS_ACC_SIZE8 : bits(3) = 0b011
 
-let GTE_EXT_OBS_ACC_SIZE64 : vector(3, dec, bit) = 0b000
+let GTE_EXT_OBS_ACC_SIZE64 : bits(3) = 0b000
 
-let GTE_EXT_OBS_ACC_SIZE32 : vector(3, dec, bit) = 0b001
+let GTE_EXT_OBS_ACC_SIZE32 : bits(3) = 0b001
 
-let GTE_EXT_OBS_ACC_SIZE16 : vector(3, dec, bit) = 0b010
+let GTE_EXT_OBS_ACC_SIZE16 : bits(3) = 0b010
 
-let GTE_EXT_OBS_ACC_READ : vector(3, dec, bit) = 0b001
+let GTE_EXT_OBS_ACC_READ : bits(3) = 0b001
 
 val GTEGetPPUID : unit -> unit effect {wreg}
 
@@ -1129,13 +1129,13 @@ function set_ELR_hyp val_name = {
 
 register ELR_EL1 : bits(64)
 
-let EL3 : vector(2, dec, bit) = 0b11
+let EL3 : bits(2) = 0b11
 
-let EL2 : vector(2, dec, bit) = 0b10
+let EL2 : bits(2) = 0b10
 
-let EL1 : vector(2, dec, bit) = 0b01
+let EL1 : bits(2) = 0b01
 
-let EL0 : vector(2, dec, bit) = 0b00
+let EL0 : bits(2) = 0b00
 
 register EDSCR : bits(32)
 
@@ -1145,9 +1145,9 @@ function __UNKNOWN_DeviceType () = {
     DeviceType_GRE
 }
 
-let DefaultPMG : vector(8, dec, bit) = __GetSlice_int(8, 0, 0)
+let DefaultPMG : bits(8) = __GetSlice_int(8, 0, 0)
 
-let DefaultPARTID : vector(16, dec, bit) = __GetSlice_int(16, 0, 0)
+let DefaultPARTID : bits(16) = __GetSlice_int(16, 0, 0)
 
 val DefaultMPAMinfo : forall ('secure : Bool).
   bool('secure) -> MPAMinfo effect {undef}
@@ -1160,15 +1160,15 @@ function DefaultMPAMinfo secure = {
     DefaultInfo
 }
 
-let DebugHalt_Watchpoint : vector(6, dec, bit) = 0b101011
+let DebugHalt_Watchpoint : bits(6) = 0b101011
 
-let DebugHalt_Breakpoint : vector(6, dec, bit) = 0b000111
+let DebugHalt_Breakpoint : bits(6) = 0b000111
 
-let DebugException_Watchpoint : vector(4, dec, bit) = 0xA
+let DebugException_Watchpoint : bits(4) = 0xA
 
-let DebugException_VectorCatch : vector(4, dec, bit) = 0x5
+let DebugException_VectorCatch : bits(4) = 0x5
 
-let DebugException_Breakpoint : vector(4, dec, bit) = 0x1
+let DebugException_Breakpoint : bits(4) = 0x1
 
 register DSPSR_EL0 : bits(32)
 
@@ -7053,7 +7053,7 @@ function AArch64_StateMatch (SSC__arg, HMC__arg, PxC__arg, linked__arg, LBN, isb
     let EL2_match : bool = HaveEL(EL2) & HMC == 0b1;
     let EL1_match : bool = [PxC[0]] == 0b1;
     let EL0_match : bool = [PxC[1]] == 0b1;
-    let el : vector(2, dec, bit) = if HaveNV2Ext() & acctype == AccType_NV2REGISTER then EL2 else PSTATE.EL;
+    let el : bits(2) = if HaveNV2Ext() & acctype == AccType_NV2REGISTER then EL2 else PSTATE.EL;
     priv_match : bool = undefined : bool;
     if ~(ispriv) & ~(isbreakpnt) then {
         priv_match = EL0_match
@@ -9631,7 +9631,7 @@ function AArch32_StateMatch (SSC__arg, HMC__arg, PxC__arg, linked__arg, LBN, isb
     let PL1_match : bool = [PxC[0]] == 0b1;
     let PL0_match : bool = [PxC[1]] == 0b1;
     let SSU_match : bool = ((isbreakpnt & HMC == 0b0) & PxC == 0b00) & SSC != 0b11;
-    let el : vector(2, dec, bit) = PSTATE.EL;
+    let el : bits(2) = PSTATE.EL;
     priv_match : bool = undefined : bool;
     if ~(ispriv) & ~(isbreakpnt) then {
         priv_match = PL0_match

@@ -58,7 +58,11 @@ $include <flow.sail>
 $include <arith.sail>
 $include <trace.sail>
 
-type bits ('n : Int) = vector('n, dec, bit)
+$ifdef FEATURE_BITVECTOR_TYPE
+type bits ('n : Int) = bitvector('n, dec)
+$else
+type bits('n : Int) = vector('n, dec, bit)
+$endif
 
 val eq_vec = {ocaml: "eq_list", lem: "eq_vec", c: "eq_bits", coq: "eq_vec"} : forall 'n. (bits('n), bits('n)) -> bool
 
@@ -347,7 +351,7 @@ val RoundDown = {ocaml: "round_down", lem: "realFloor", c: "round_down", coq: "r
 
 val RoundUp = {ocaml: "round_up", lem: "realCeiling", c: "round_up", coq: "round_up"} : real -> int
 
-val abs_real = "abs_real" : real -> real
+val abs_real = {ocaml: "abs_real", lem: "realAbs", c: "abs_real"} : real -> real
 
 overload abs = {abs_int, abs_real}
 
@@ -368,13 +372,13 @@ overload operator % = {emod_int, modulus}
 
 val Real = {ocaml: "to_real", lem: "realFromInteger", c: "to_real", coq: "to_real"} : int -> real
 
-val min_nat = {ocaml: "min_int", lem: "min", c: "min_int"} : (nat, nat) -> nat
+val min_nat = {ocaml: "min_int", lem: "integerMin", c: "min_int"} : (nat, nat) -> nat
 
-val min_int = {ocaml: "min_int", lem: "min", c: "min_int", coq: "Z.min"} : (int, int) -> int
+val min_int = {ocaml: "min_int", lem: "integerMin", c: "Z.min"} : (int, int) -> int
 
-val max_nat = {ocaml: "max_int", lem: "max", c: "max_int"} : (nat, nat) -> nat
+val max_nat = {ocaml: "max_int", lem: "integerMax", c: "max_int"} : (nat, nat) -> nat
 
-val max_int = {ocaml: "max_int", lem: "max", c: "max_int", coq: "Z.max"} : (int, int) -> int
+val max_int = {ocaml: "max_int", lem: "integerMax", c: "Z.max"} : (int, int) -> int
 
 overload min = {min_nat, min_int}
 
@@ -424,7 +428,8 @@ union exception = {
   Error_Implementation_Defined : string,
   Error_ReservedEncoding : unit,
   Error_ExceptionTaken : unit,
-  Error_Unpredictable : unit
+  Error_Unpredictable : unit,
+  Error_SError : bool
 }
 
 val append_str = {ocaml: "concat_str", lem: "stringAppend", c: "concat_str", coq: "String.append" } :

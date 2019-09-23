@@ -311,7 +311,7 @@ definition sub_vec_int  :: "('a::len)Word.word \<Rightarrow> int \<Rightarrow>('
 
 definition mult_vec_int  :: "('a::len)Word.word \<Rightarrow> int \<Rightarrow>('b::len)Word.word "  where 
      " mult_vec_int  l r = ( arith_op_bv_int 
-  instance_Sail2_values_Bitvector_Machine_word_mword_dict ( * )  False (Word.ucast l :: ( 'b::len)Word.word) r )"
+  instance_Sail2_values_Bitvector_Machine_word_mword_dict (*)  False (Word.ucast l :: ( 'b::len)Word.word) r )"
 
 
 \<comment> \<open>\<open>val add_int_vec   : forall 'a. Size 'a => integer -> mword 'a -> mword 'a\<close>\<close>
@@ -327,7 +327,7 @@ definition sub_int_vec  :: " int \<Rightarrow>('a::len)Word.word \<Rightarrow>('
 
 definition mult_int_vec  :: " int \<Rightarrow>('a::len)Word.word \<Rightarrow>('b::len)Word.word "  where 
      " mult_int_vec  l r = ( arith_op_int_bv 
-  instance_Sail2_values_Bitvector_Machine_word_mword_dict ( * )  False l (Word.ucast r :: ( 'b::len)Word.word))"
+  instance_Sail2_values_Bitvector_Machine_word_mword_dict (*)  False l (Word.ucast r :: ( 'b::len)Word.word))"
 
 
 \<comment> \<open>\<open>val add_vec_bool  : forall 'a. Size 'a => mword 'a -> bool -> mword 'a\<close>\<close>

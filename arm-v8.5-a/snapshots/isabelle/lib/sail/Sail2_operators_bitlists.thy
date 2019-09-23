@@ -338,12 +338,12 @@ definition subs_vec  :: "(bitU)list \<Rightarrow>(bitU)list \<Rightarrow>(bitU)l
 definition mult_vec  :: "(bitU)list \<Rightarrow>(bitU)list \<Rightarrow>(bitU)list "   where 
      " mult_vec  = ( arith_op_double_bl 
   (instance_Sail2_values_Bitvector_list_dict
-     instance_Sail2_values_BitU_Sail2_values_bitU_dict) ( * ) False )"
+     instance_Sail2_values_BitU_Sail2_values_bitU_dict) (*) False )"
 
 definition mults_vec  :: "(bitU)list \<Rightarrow>(bitU)list \<Rightarrow>(bitU)list "  where 
      " mults_vec = ( arith_op_double_bl 
   (instance_Sail2_values_Bitvector_list_dict
-     instance_Sail2_values_BitU_Sail2_values_bitU_dict) ( * ) True )"
+     instance_Sail2_values_BitU_Sail2_values_bitU_dict) (*) True )"
 
 
 \<comment> \<open>\<open>val add_vec_int       : list bitU -> integer -> list bitU\<close>\<close>
@@ -362,7 +362,7 @@ definition sub_vec_int  :: "(bitU)list \<Rightarrow> int \<Rightarrow>(bitU)list
 definition mult_vec_int  :: "(bitU)list \<Rightarrow> int \<Rightarrow>(bitU)list "  where 
      " mult_vec_int  l r = ( arith_op_double_bl 
   (instance_Sail2_values_Bitvector_list_dict
-     instance_Sail2_values_BitU_Sail2_values_bitU_dict) ( * ) False l (List.map (\<lambda> b. b) (bits_of_int (int (List.length l)) r)))"
+     instance_Sail2_values_BitU_Sail2_values_bitU_dict) (*) False l (List.map (\<lambda> b. b) (bits_of_int (int (List.length l)) r)))"
 
 
 \<comment> \<open>\<open>val add_int_vec       : integer -> list bitU -> list bitU\<close>\<close>
@@ -381,7 +381,7 @@ definition sub_int_vec  :: " int \<Rightarrow>(bitU)list \<Rightarrow>(bitU)list
 definition mult_int_vec  :: " int \<Rightarrow>(bitU)list \<Rightarrow>(bitU)list "  where 
      " mult_int_vec  l r = ( arith_op_double_bl 
   (instance_Sail2_values_Bitvector_list_dict
-     instance_Sail2_values_BitU_Sail2_values_bitU_dict) ( * ) False (List.map (\<lambda> b. b) (bits_of_int (int (List.length r)) l)) r )"
+     instance_Sail2_values_BitU_Sail2_values_bitU_dict) (*) False (List.map (\<lambda> b. b) (bits_of_int (int (List.length r)) l)) r )"
 
 
 \<comment> \<open>\<open>val add_vec_bit      : list bitU -> bitU -> list bitU\<close>\<close>

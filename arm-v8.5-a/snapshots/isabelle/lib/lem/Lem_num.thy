@@ -234,7 +234,7 @@ definition instance_Num_NumPred_nat_dict  :: "(nat)NumPred_class "  where
 definition instance_Num_NumMult_nat_dict  :: "(nat)NumMult_class "  where 
      " instance_Num_NumMult_nat_dict = ((|
 
-  numMult_method = ( * )|) )"
+  numMult_method = (*)|) )"
 
 
 \<comment> \<open>\<open>val natDiv : nat -> nat -> nat\<close>\<close>
@@ -364,7 +364,7 @@ definition instance_Num_NumPred_Num_natural_dict  :: "(nat)NumPred_class "  wher
 definition instance_Num_NumMult_Num_natural_dict  :: "(nat)NumMult_class "  where 
      " instance_Num_NumMult_Num_natural_dict = ((|
 
-  numMult_method = ( * )|) )"
+  numMult_method = (*)|) )"
 
 
 
@@ -491,7 +491,7 @@ definition instance_Num_NumPred_Num_int_dict  :: "(int)NumPred_class "  where
 definition instance_Num_NumMult_Num_int_dict  :: "(int)NumMult_class "  where 
      " instance_Num_NumMult_Num_int_dict = ((|
 
-  numMult_method = ( * )|) )"
+  numMult_method = (*)|) )"
 
 
 
@@ -621,7 +621,7 @@ definition instance_Num_NumPred_Num_int32_dict  :: "( 32 word)NumPred_class "  w
 definition instance_Num_NumMult_Num_int32_dict  :: "( 32 word)NumMult_class "  where 
      " instance_Num_NumMult_Num_int32_dict = ((|
 
-  numMult_method = ( * )|) )"
+  numMult_method = (*)|) )"
 
 
 
@@ -753,7 +753,7 @@ definition instance_Num_NumPred_Num_int64_dict  :: "( 64 word)NumPred_class "  w
 definition instance_Num_NumMult_Num_int64_dict  :: "( 64 word)NumMult_class "  where 
      " instance_Num_NumMult_Num_int64_dict = ((|
 
-  numMult_method = ( * )|) )"
+  numMult_method = (*)|) )"
 
 
 
@@ -882,7 +882,7 @@ definition instance_Num_NumPred_Num_integer_dict  :: "(int)NumPred_class "  wher
 definition instance_Num_NumMult_Num_integer_dict  :: "(int)NumMult_class "  where 
      " instance_Num_NumMult_Num_integer_dict = ((|
 
-  numMult_method = ( * )|) )"
+  numMult_method = (*)|) )"
 
 
 
@@ -1014,7 +1014,7 @@ definition instance_Num_NumPred_Num_rational_dict  :: "(rat)NumPred_class "  whe
 definition instance_Num_NumMult_Num_rational_dict  :: "(rat)NumMult_class "  where 
      " instance_Num_NumMult_Num_rational_dict = ((|
 
-  numMult_method = ( * )|) )"
+  numMult_method = (*)|) )"
 
 
 \<comment> \<open>\<open>val rationalDiv : rational -> rational -> rational\<close>\<close>
@@ -1145,7 +1145,7 @@ definition instance_Num_NumPred_Num_real_dict  :: "(real)NumPred_class "  where
 definition instance_Num_NumMult_Num_real_dict  :: "(real)NumMult_class "  where 
      " instance_Num_NumMult_Num_real_dict = ((|
 
-  numMult_method = ( * )|) )"
+  numMult_method = (*)|) )"
 
 
 \<comment> \<open>\<open>val realDiv : real -> real -> real\<close>\<close>

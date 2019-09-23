@@ -373,7 +373,7 @@ definition instance_Num_NumPred_Word_bitSequence_dict  :: "(bitSequence)NumPred_
 
 \<comment> \<open>\<open>val bitSeqMult : bitSequence -> bitSequence -> bitSequence\<close>\<close>
 definition bitSeqMult  :: " bitSequence \<Rightarrow> bitSequence \<Rightarrow> bitSequence "  where 
-     " bitSeqMult bs1 bs2 = ( bitSeqArithBinOp ( * ) bs1 bs2 )"
+     " bitSeqMult bs1 bs2 = ( bitSeqArithBinOp (*) bs1 bs2 )"
 
 
 definition instance_Num_NumMult_Word_bitSequence_dict  :: "(bitSequence)NumMult_class "  where 

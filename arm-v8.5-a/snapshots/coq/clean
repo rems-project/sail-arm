@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ ! -f aarch64.v ]; then
+  echo Run clean from the coq directory
+  exit 1
+fi
+
+set -ex 
+rm -f *.{vo,glob} .*.aux
+make -C lib clean

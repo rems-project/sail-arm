@@ -16,6 +16,9 @@ aarch64.c: model/*.sail
 	sail -c -O -Oconstant_fold $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64.c.tmp
 	mv aarch64.c.tmp aarch64.c
 
+interactive: model/*.sail
+	sail -i $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS)
+
 aarch64.smt_model: model/*.sail
 	sail -smt_serialize $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) -o aarch64
 
@@ -25,10 +28,13 @@ aarch64: aarch64.c
 aarch64.lem: model/*.sail
 	sail -verbose 1 $(AARCH_FLAGS) $(LEM_FLAGS) $(OPTS) -lem -lem_lib Aarch64_extras -o aarch64 model/prelude.sail model/$(DEVICES) model/aarch_types.sail model/aarch_mem.sail $(AARCH64_SRCS) $(AARCH32_SRCS)
 
+translate_address.c: model/*.sail translate_address.isail
+	sail -is translate_address.isail
+
 clean:
 	-rm -f aarch64.c.tmp
 	-rm -f aarch64.c
 	-rm -f aarch64
 	-rm -f aarch64.lem
 	-rm -f aarch64_types.lem
-
+	-rm -f translate_address.c

@@ -16,6 +16,10 @@ aarch64.c: model/*.sail
 	sail -c -O -Oconstant_fold $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64.c.tmp
 	mv aarch64.c.tmp aarch64.c
 
+aarch64_128.c: model/*.sail
+	sail -c -O -Ofixed_int -Obv64 -Oconstant_fold $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64_128.c.tmp
+	mv aarch64_128.c.tmp aarch64_128.c
+
 interactive: model/*.sail
 	sail -i $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS)
 
@@ -24,6 +28,9 @@ aarch64.smt_model: model/*.sail
 
 aarch64: aarch64.c
 	gcc -O2 aarch64.c $(SAIL_DIR)/lib/*.c -lgmp -lz -I $(SAIL_DIR)/lib/ -o aarch64
+
+aarch64_128: aarch64_128.c
+	gcc -O3 -flto aarch64_128.c -lgmp -lz -I $(SAIL_DIR)/lib/int128bv64/ -o aarch64_128
 
 aarch64.lem: model/*.sail
 	sail -verbose 1 $(AARCH_FLAGS) $(LEM_FLAGS) $(OPTS) -lem -lem_lib Aarch64_extras -o aarch64 model/prelude.sail model/$(DEVICES) model/aarch_types.sail model/aarch_mem.sail $(AARCH64_SRCS) $(AARCH32_SRCS)
@@ -35,6 +42,9 @@ clean:
 	-rm -f aarch64.c.tmp
 	-rm -f aarch64.c
 	-rm -f aarch64
+	-rm -f aarch64_128.c.tmp
+	-rm -f aarch64_128.c
+	-rm -f aarch64_128
 	-rm -f aarch64.lem
 	-rm -f aarch64_types.lem
 	-rm -f translate_address.c

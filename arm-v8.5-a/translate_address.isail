@@ -3,16 +3,19 @@
 :option -memo_z3
 :option -no_warn
 :option -undefined_gen
+:option -O
+:option -Ofixed_int
+:option -Ofixed_bits
+:option -o translate_address
+:option -c_no_main
+:option -c_no_rts
+:option -c_prefix sail_
+:option -Oconstant_fold
+:option -c_fold_unit asl_prerr_string
 :load model/prelude.sail model/no_devices.sail model/aarch_types.sail model/aarch_mem.sail
 :rewrites c
 :slice_roots AArch64_TranslateAddress
 :slice
 :recheck_types
-:option -O
-:option -Oconstant_fold
-:option -o translate_address
-:option -c_no_main
-:option -c_no_rts
-:option -c_prefix sail_
 :compile c
 :quit

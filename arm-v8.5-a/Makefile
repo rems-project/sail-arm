@@ -1,7 +1,7 @@
 DEVICES = no_devices.sail
 MAIN = elfmain.sail
 
-AARCH_FLAGS  = -non_lexical_flow -no_lexp_bounds_check -memo_z3 -no_warn
+AARCH_FLAGS  = -non_lexical_flow -no_lexp_bounds_check -memo_z3 -no_warn -dno_cast
 AARCH64_SRCS = model/aarch64.sail model/aarch64_float.sail model/aarch64_vector.sail
 AARCH32_SRCS = model/aarch32.sail
 AARCH_SRCS   = model/prelude.sail model/$(DEVICES) model/aarch_types.sail model/aarch_mem.sail $(AARCH64_SRCS) $(AARCH32_SRCS) model/aarch_decode.sail model/$(MAIN)

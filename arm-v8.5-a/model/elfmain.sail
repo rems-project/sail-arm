@@ -81,7 +81,7 @@ function Step_CPU() = {
 
   var fetch_ok : bool = false;
   try {
-      if PSTATE.nRW != bitzero then {
+      if PSTATE.nRW != 0b0 then {
         print("UNIMPLEMENTED: AArch32 support\n");
         exit()
       };
@@ -222,7 +222,7 @@ function Step_Timers() = {
       ((CNTVCT_EL0 - 1) & mask) != Zeros() & (CNTVCT_EL0 & mask) == Zeros()
     };
 
-    if trigger & PSTATE.I == bitzero then {
+    if trigger & PSTATE.I == 0b0 then {
       _IRQPending = true;
       AArch64_TakePhysicalIRQException()
     }
@@ -239,7 +239,7 @@ function Step_Timers() = {
       ((CNTPCT_EL0 - 1) & mask) != Zeros() & (CNTPCT_EL0 & mask) == Zeros()
     };
 
-    if trigger & PSTATE.I == bitzero then {
+    if trigger & PSTATE.I == 0b0 then {
       prerr("[Clock] Tick\n");
       _IRQPending = true;
       AArch64_TakePhysicalIRQException()

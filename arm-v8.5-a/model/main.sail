@@ -212,7 +212,7 @@ function Step_Timers() = {
 
       if SInt(nextTVAL) <= 0 then {
 	 /* IMASK unset         interrupts unmasked */
-	 if ctl[1] == bitzero & PSTATE.I == bitzero then {
+	 if ctl[1] == bitzero & PSTATE.I == 0b0 then {
 	   __GIC_Pending = CNT_IRQ[timer] + PPI_OFFSET;
 	   prerr_bits("[Clock] GIC interrupt ", __GIC_Pending);
 	   _IRQPending = true;

@@ -227,15 +227,6 @@ val __SignExtendSlice = {lem: "exts_slice"} : forall 'm. (bits('m), int, int) ->
 
 val __ZeroExtendSlice = {lem: "extz_slice"} : forall 'm. (bits('m), int, int) -> bits('m)
 
-val cast cast_unit_vec : bit -> bits(1)
-
-function cast_unit_vec b =
-  match b {
-    bitzero => 0b0,
-    bitone  => 0b1
-  }
-
-
 val DecStr = "dec_str" : int -> string
 
 val print = "print" : string -> unit
@@ -374,13 +365,23 @@ val prerr_bits = "prerr_bits" : forall 'n. (string, bits('n)) -> unit
 
 val replicate_bits = "replicate_bits" : forall 'n 'm. (bits('n), atom('m)) -> bits('n * 'm)
 
-/*! We need `one_cast` and `zero_cast` for some of the AutoGen
-functions in the specification, but it's not very nice. */
-val cast one_cast : int(1) -> bits(1)
-function one_cast(_) = 0b1
+val eq_bits_int : forall 'n, 'n in {0, 1}. (bits(1), int('n)) -> bool
 
-val cast zero_cast : int(0) -> bits(1)
-function zero_cast(_) = 0b0
+function eq_bits_int(bv, n) = {
+  match bv {
+    0b0 if n == 0 => true,
+    0b1 if n == 1 => true,
+    _ => false
+  }
+}
+
+val sail_zeros = "zeros" : forall 'n. int('n) -> bits('n)
+
+val eq_bits_zero : forall 'n, 'n >= 0. (bits('n), int(0)) -> bool
+
+function eq_bits_zero(bv, _) = bv == sail_zeros(length(bv))
+
+overload operator == = {eq_bits_int, eq_bits_zero}
 
 /*
 val ex_range : forall 'n 'm.
@@ -435,9 +436,7 @@ function __tarmacEvent(str: string) -> unit = {
   ()
 }
 
-val sail_zeros = "zeros" : forall 'n. int('n) -> bits('n)
-
-val cast zero_vector : forall 'n. (implicit('n), int(0)) -> bits('n)
+val zero_vector : forall 'n. (implicit('n), int(0)) -> bits('n)
 
 function zero_vector(n, _) = sail_zeros(n)
 

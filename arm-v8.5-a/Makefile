@@ -17,11 +17,11 @@ aarch64.c: model/*.sail
 	mv aarch64.c.tmp aarch64.c
 
 aarch64_128.c: model/*.sail
-	sail -c -O -Ofixed_int -Obv64 -Oconstant_fold $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64_128.c.tmp
+	sail -c -O -Ofixed_int -Oconstant_fold $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64_128.c.tmp
 	mv aarch64_128.c.tmp aarch64_128.c
 
 interactive: model/*.sail
-	sail -i $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS)
+	sail -i -undefined_gen $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS)
 
 aarch64.smt_model: model/*.sail
 	sail -smt_serialize $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) -o aarch64

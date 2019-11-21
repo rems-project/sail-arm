@@ -1193,6 +1193,15 @@ val _ = Define `
 
 
 val _ = Define `
+ ((SEE_ref:((regstate),(register_value),(int))register_ref)=  (<|
+  name := "SEE";
+  read_from := (\ s .  s.int_reg "SEE");
+  write_to := (\ v s .  (( s with<| int_reg := (\ reg .  if reg = "SEE" then v else s.int_reg reg) |>)));
+  of_regval := (\ v .  int_of_regval v);
+  regval_of := (\ v .  regval_of_int v) |>))`;
+
+
+val _ = Define `
  ((CNTHCTL_EL2_ref:((regstate),(register_value),((32)words$word))register_ref)=  (<|
   name := "CNTHCTL_EL2";
   read_from := (\ s .  s.bitvector_32_dec_reg "CNTHCTL_EL2");
@@ -5625,7 +5634,8 @@ val _ = Define `
 (*val get_regval : string -> regstate -> maybe register_value*)
 val _ = Define `
  ((get_regval:string -> regstate ->(register_value)option) reg_name s=
-   (if reg_name = "CNTHCTL_EL2" then SOME (CNTHCTL_EL2_ref.regval_of (CNTHCTL_EL2_ref.read_from s)) else
+   (if reg_name = "SEE" then SOME (SEE_ref.regval_of (SEE_ref.read_from s)) else
+  if reg_name = "CNTHCTL_EL2" then SOME (CNTHCTL_EL2_ref.regval_of (CNTHCTL_EL2_ref.read_from s)) else
   if reg_name = "CPTR_EL2" then SOME (CPTR_EL2_ref.regval_of (CPTR_EL2_ref.read_from s)) else
   if reg_name = "CCSIDR_EL1" then SOME (CCSIDR_EL1_ref.regval_of (CCSIDR_EL1_ref.read_from s)) else
   if reg_name = "ACTLR_EL1" then SOME (ACTLR_EL1_ref.regval_of (ACTLR_EL1_ref.read_from s)) else
@@ -6074,7 +6084,8 @@ val _ = Define `
 (*val set_regval : string -> register_value -> regstate -> maybe regstate*)
 val _ = Define `
  ((set_regval:string -> register_value -> regstate ->(regstate)option) reg_name v s=
-   (if reg_name = "CNTHCTL_EL2" then OPTION_MAP (\ v .  CNTHCTL_EL2_ref.write_to v s) (CNTHCTL_EL2_ref.of_regval v) else
+   (if reg_name = "SEE" then OPTION_MAP (\ v .  SEE_ref.write_to v s) (SEE_ref.of_regval v) else
+  if reg_name = "CNTHCTL_EL2" then OPTION_MAP (\ v .  CNTHCTL_EL2_ref.write_to v s) (CNTHCTL_EL2_ref.of_regval v) else
   if reg_name = "CPTR_EL2" then OPTION_MAP (\ v .  CPTR_EL2_ref.write_to v s) (CPTR_EL2_ref.of_regval v) else
   if reg_name = "CCSIDR_EL1" then OPTION_MAP (\ v .  CCSIDR_EL1_ref.write_to v s) (CCSIDR_EL1_ref.of_regval v) else
   if reg_name = "ACTLR_EL1" then OPTION_MAP (\ v .  ACTLR_EL1_ref.write_to v s) (ACTLR_EL1_ref.of_regval v) else

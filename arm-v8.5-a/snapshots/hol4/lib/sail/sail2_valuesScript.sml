@@ -134,9 +134,13 @@ val _ = Define `
 (* Modulus operation corresponding to quot below -- result
    has sign of dividend. *)
 val _ = Define `
- ((hardware_mod:int -> int -> int) (a: int) (b:int) : int=
+ ((tmod_int:int -> int -> int) (a: int) (b:int) : int=
    (let m = ((ABS a) % (ABS b)) in
   if a <( 0 : int) then ~ m else m))`;
+
+
+val _ = Define `
+ ((hardware_mod:int -> int -> int)=  tmod_int)`;
 
 
 (* There are different possible answers for integer divide regarding
@@ -144,13 +148,17 @@ rounding behaviour on negative operands. Positive operands always
 round down so derive the one we want (trucation towards zero) from
 that *)
 val _ = Define `
- ((hardware_quot:int -> int -> int) (a:int) (b:int) : int=
+ ((tdiv_int:int -> int -> int) (a:int) (b:int) : int=
    (let q = ((ABS a) / (ABS b)) in
   if ((a<( 0 : int)) <=> (b<( 0 : int))) then
     q  (* same sign -- result positive *)
   else
     ~ q))`;
  (* different sign -- result negative *)
+
+val _ = Define `
+ ((hardware_quot:int -> int -> int)=  tdiv_int)`;
+
 
 val _ = Define `
  ((max_64u:int)=  (((( 2 : int))**(( 64 : num))) -( 1 : int)))`;
@@ -548,6 +556,29 @@ val _ = Define `
          )))`;
 
 
+val _ = Define `
+ ((nibble_of_char:char ->(bitU#bitU#bitU#bitU)option)= 
+  (\x .  (case x of
+               #"0" => SOME (B0, B0, B0, B0)
+           | #"1" => SOME (B0, B0, B0, B1)
+           | #"2" => SOME (B0, B0, B1, B0)
+           | #"3" => SOME (B0, B0, B1, B1)
+           | #"4" => SOME (B0, B1, B0, B0)
+           | #"5" => SOME (B0, B1, B0, B1)
+           | #"6" => SOME (B0, B1, B1, B0)
+           | #"7" => SOME (B0, B1, B1, B1)
+           | #"8" => SOME (B1, B0, B0, B0)
+           | #"9" => SOME (B1, B0, B0, B1)
+           | #"A" => SOME (B1, B0, B1, B0)
+           | #"B" => SOME (B1, B0, B1, B1)
+           | #"C" => SOME (B1, B1, B0, B0)
+           | #"D" => SOME (B1, B1, B0, B1)
+           | #"E" => SOME (B1, B1, B1, B0)
+           | #"F" => SOME (B1, B1, B1, B1)
+           | _ => NONE
+         )))`;
+
+
  val _ = Define `
  ((hexstring_of_bits:(bitU)list ->((char)list)option) bs=  ((case bs of
     b1 :: b2 :: b3 :: b4 :: bs =>
@@ -563,11 +594,15 @@ val _ = Define `
 
 
 val _ = Define `
- ((show_bitlist:(bitU)list -> string) bs=
+ ((show_bitlist_prefix:char ->(bitU)list -> string) c bs=
    ((case hexstring_of_bits bs of
-    SOME s => IMPLODE (#"0" :: (#"x" :: s))
-  | NONE => IMPLODE (#"0" :: (#"b" :: MAP bitU_char bs))
+    SOME s => IMPLODE (c :: (#"x" :: s))
+  | NONE => IMPLODE (c :: (#"b" :: MAP bitU_char bs))
   )))`;
+
+
+val _ = Define `
+ ((show_bitlist:(bitU)list -> string) bs=  (show_bitlist_prefix #"0" bs))`;
 
 
 (*val subrange_list_inc : forall 'a. list 'a -> integer -> integer -> list 'a*)
@@ -912,6 +947,22 @@ val _ = Define `
   | B1 =>( 1 : int)
   | _ => failwith "int_of_bit saw unknown"
   )))`;
+
+
+(*val count_leading_zero_bits : list bitU -> integer*)
+ val count_leading_zero_bits_defn = Hol_defn "count_leading_zero_bits" `
+ ((count_leading_zero_bits:(bitU)list -> int) v=
+   ((case v of
+    B0 :: v' => count_leading_zero_bits v' +( 1 : int)
+  | _ =>( 0 : int)
+  )))`;
+
+val _ = Lib.with_flag (computeLib.auto_import_definitions, false) Defn.save_defn count_leading_zero_bits_defn;
+
+(*val count_leading_zeros_bv : forall 'a. Bitvector 'a => 'a -> integer*)
+val _ = Define `
+ ((count_leading_zeros_bv:'a Bitvector_class -> 'a -> int)dict_Sail2_values_Bitvector_a v=  (count_leading_zero_bits (
+  dict_Sail2_values_Bitvector_a.bits_of_method v)))`;
 
 
 (*val decimal_string_of_bv : forall 'a. Bitvector 'a => 'a -> string*)

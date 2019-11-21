@@ -617,5 +617,11 @@ val _ = Define `
 
 (*val eq_vec    : forall 'a. Size 'a => mword 'a -> mword 'a -> bool*)
 (*val neq_vec   : forall 'a. Size 'a => mword 'a -> mword 'a -> bool*)
+
+(*val count_leading_zeros : forall 'a. Size 'a => mword 'a -> integer*)
+val _ = Define `
+ ((count_leading_zeros:'a words$word -> int) v=  (count_leading_zeros_bv 
+  instance_Sail2_values_Bitvector_Machine_word_mword_dict v))`;
+
 val _ = export_theory()
 

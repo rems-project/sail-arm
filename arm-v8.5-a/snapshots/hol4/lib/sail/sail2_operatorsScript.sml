@@ -241,15 +241,15 @@ val _ = Define `
 
 val _ = Define `
  ((mod_bv:'a Bitvector_class -> 'b Bitvector_class -> 'b -> 'b -> 'a option)dict_Sail2_values_Bitvector_a dict_Sail2_values_Bitvector_b=  (arith_op_bv_no0 
-  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a hardware_mod F(( 1 : int))))`;
+  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a tmod_int F(( 1 : int))))`;
 
 val _ = Define `
  ((quot_bv:'a Bitvector_class -> 'b Bitvector_class -> 'b -> 'b -> 'a option)dict_Sail2_values_Bitvector_a dict_Sail2_values_Bitvector_b=  (arith_op_bv_no0 
-  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a hardware_quot F(( 1 : int))))`;
+  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a tdiv_int F(( 1 : int))))`;
 
 val _ = Define `
  ((quots_bv:'a Bitvector_class -> 'b Bitvector_class -> 'b -> 'b -> 'a option)dict_Sail2_values_Bitvector_a dict_Sail2_values_Bitvector_b=  (arith_op_bv_no0 
-  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a hardware_quot T(( 1 : int))))`;
+  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a tdiv_int T(( 1 : int))))`;
 
 
 val _ = Define `
@@ -269,11 +269,11 @@ val _ = Define `
 
 val _ = Define `
  ((quot_bv_int:'a Bitvector_class -> 'b Bitvector_class -> 'b -> int -> 'a option)dict_Sail2_values_Bitvector_a dict_Sail2_values_Bitvector_b=  (arith_op_bv_int_no0 
-  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a hardware_quot F(( 1 : int))))`;
+  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a tdiv_int F(( 1 : int))))`;
 
 val _ = Define `
  ((mod_bv_int:'a Bitvector_class -> 'b Bitvector_class -> 'b -> int -> 'a option)dict_Sail2_values_Bitvector_a dict_Sail2_values_Bitvector_b=  (arith_op_bv_int_no0 
-  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a hardware_mod F(( 1 : int))))`;
+  dict_Sail2_values_Bitvector_b dict_Sail2_values_Bitvector_a tmod_int F(( 1 : int))))`;
 
 
 val _ = Define `

@@ -4022,9 +4022,9 @@ function AddWithCarry (x, y, carry_in) = {
     let 'signed_sum = SInt(x) + SInt(y) + UInt(carry_in);
     let result : bits('N) = __GetSlice_int('N, unsigned_sum, 0);
     let n : bits(1) = [result['N - 1]];
-    let z : bits(1) = if IsZero(result) then 0b1 else 0b0;
-    let c : bits(1) = if UInt(result) == unsigned_sum then 0b0 else 0b1;
-    let v : bits(1) = if SInt(result) == signed_sum then 0b0 else 0b1;
+    let z : bits(1) = one_if(IsZero(result));
+    let c : bits(1) = zero_if(UInt(result) == unsigned_sum);
+    let v : bits(1) = zero_if(SInt(result) == signed_sum);
     return((result, ((n @ z) @ c) @ v))
 }
 

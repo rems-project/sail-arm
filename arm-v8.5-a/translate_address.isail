@@ -10,9 +10,10 @@
 :option -c_fold_unit asl_prerr_string
 :load model/prelude.sail model/no_devices.sail model/aarch_types.sail model/aarch_mem.sail
 :rewrites c
-:slice_roots AArch64_TranslateAddress
+:slice_roots AArch64_TranslateAddress initialize_registers
 :slice
 :fix_registers c, __trickbox_enabled=false
 :recheck_types
+:ast test.sail
 :compile c
 :quit

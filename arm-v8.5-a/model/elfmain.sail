@@ -104,6 +104,9 @@ function Step_CPU() = {
       }
   };
 
+  print_bits("PC = ", _PC);
+  print_bits("I = ", __currentInstr);
+
   if fetch_ok then {
       // Detect ASIMD instructions
       is_asimd : bool = match __currentInstr {
@@ -346,7 +349,15 @@ val "load_raw" : (bits(64), string) -> unit
 val init : unit -> unit effect {escape, undef, rreg, wreg}
 
 function init() = {
+  __highest_el_aarch32 = false;
+  CFG_ID_AA64PFR0_EL1_EL0 = 0x1;
+  CFG_ID_AA64PFR0_EL1_EL1 = 0x1;
+  CFG_ID_AA64PFR0_EL1_EL2 = 0x1;
+  CFG_ID_AA64PFR0_EL1_EL3 = 0x1;
   TakeReset(COLD_RESET);
+  _PC = __GetSlice_int(64, elf_entry(), 0);
+  SP_EL0 = ZeroExtend(0x3C00, 64);
+  PSTATE.EL = EL0;
 }
 
 val main : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}

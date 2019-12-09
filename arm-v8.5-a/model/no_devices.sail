@@ -58,7 +58,10 @@ val __ReadRAM : forall 'n 'm.
 
 function __ReadRAM(addr_length, bytes, hex_ram, addr) =
 {
-  ___ReadRAM(addr_length, bytes, hex_ram, addr)
+  print("Read " ++ DecStr(bytes) ++ " bytes @ " ++ BitStr(addr));
+  let value: bits(8 * 'n) = ___ReadRAM(addr_length, bytes, hex_ram, addr);
+  print_bits(" = ", value);
+  value
 }
 
 val __TraceMemoryWrite : forall 'n 'm.
@@ -69,6 +72,8 @@ val __WriteRAM : forall 'n 'm.
 
 function __WriteRAM(addr_length, bytes, hex_ram, addr, data) =
 {
+  print("Write " ++ DecStr(bytes) ++ " bytes @ " ++ BitStr(addr));
+  print_bits(" = ", data);
   ___WriteRAM(addr_length, bytes, hex_ram, addr, data)
 }
 

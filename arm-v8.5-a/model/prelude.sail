@@ -462,3 +462,11 @@ val get_cycle_count = { c: "get_cycle_count" } : unit -> int effect {undef, wreg
 val "append_64" : forall 'n. (bits('n), bits(64)) -> bits('n + 64)
 
 overload __size = {length}
+
+val one_if : bool -> bits(1)
+
+function one_if(b) = if b then 0b1 else 0b0
+
+val zero_if : bool -> bits(1)
+
+function zero_if(b) = if b then 0b0 else 0b1

@@ -346,7 +346,7 @@ let COLD_RESET : bool = true
 
 val "load_raw" : (bits(64), string) -> unit
 
-val init : unit -> unit effect {escape, undef, rreg, wreg}
+val init : unit -> unit effect {escape, undef, rreg, wreg, configuration}
 
 function init() = {
   __highest_el_aarch32 = false;

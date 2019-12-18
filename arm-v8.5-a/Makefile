@@ -1,3 +1,11 @@
+ifeq ($(SAIL_DIR),)
+SAIL_DIR:=$(shell opam config var sail:share)
+ifeq ($(SAIL_DIR),\#undefined)
+$(error Environment variable SAIL_DIR is unset. This variable should either point at the root directory of the Sail repository, or be `opam config var sail:share` if Sail was installed via OPAM)
+endif
+endif
+$(warning SAIL_DIR is $(SAIL_DIR))
+
 DEVICES = no_devices.sail
 MAIN = elfmain.sail
 
@@ -8,6 +16,8 @@ AARCH_SRCS   = model/prelude.sail model/$(DEVICES) model/aarch_types.sail model/
 LEM_FLAGS    = -const_prop_mutrec AArch64_TakeException -const_prop_mutrec AArch32_SecondStageTranslate -const_prop_mutrec AArch64_SecondStageTranslate -undefined_gen
 
 .PHONY: clean check
+
+default: aarch64
 
 check: model/*.sail
 	sail -just_check -verbose 1 $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS)
@@ -42,6 +52,9 @@ aarch64.ir: model/*.sail
 
 translate_address.c: model/*.sail translate_address.isail
 	sail -is translate_address.isail
+
+aarch64.ir: model/*.sail
+	../../isla/isla-sail/isla-sail -v 1 $(AARCH_SRCS) -o aarch64
 
 clean:
 	-rm -f aarch64.c.tmp

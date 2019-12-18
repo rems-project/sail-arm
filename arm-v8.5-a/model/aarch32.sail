@@ -3527,11 +3527,11 @@ function aget_Rmode (n, mode) = {
             if n == 14 then {
                 return(LR_mon)
             } else {
-                return(slice(_R[n], 0, 32))
+                return(slice(_R(n), 0, 32))
             }
         }
     } else {
-        return(slice(_R[LookUpRIndex(n, mode)], 0, 32))
+        return(slice(_R(LookUpRIndex(n, mode)), 0, 32))
     }
 }
 

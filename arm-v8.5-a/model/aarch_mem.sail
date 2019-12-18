@@ -115,7 +115,117 @@ register _ScheduleIRQ : bits(32)
 
 register _ScheduleFIQ : bits(32)
 
-register _R : vector(31, dec, bits(64))
+/* register _R : vector(31, dec, bits(64)) */
+
+register R0 : bits(64)
+register R1 : bits(64)
+register R2 : bits(64)
+register R3 : bits(64)
+register R4 : bits(64)
+register R5 : bits(64)
+register R6 : bits(64)
+register R7 : bits(64)
+register R8 : bits(64)
+register R9 : bits(64)
+register R10 : bits(64)
+register R11 : bits(64)
+register R12 : bits(64)
+register R13 : bits(64)
+register R14 : bits(64)
+register R15 : bits(64)
+register R16 : bits(64)
+register R17 : bits(64)
+register R18 : bits(64)
+register R19 : bits(64)
+register R20 : bits(64)
+register R21 : bits(64)
+register R22 : bits(64)
+register R23 : bits(64)
+register R24 : bits(64)
+register R25 : bits(64)
+register R26 : bits(64)
+register R27 : bits(64)
+register R28 : bits(64)
+register R29 : bits(64)
+register R30 : bits(64)
+
+val get_R : forall 'n, 0 <= 'n <= 30. int('n) -> bits(64) effect {rreg}
+
+function get_R(n) = {
+    match n {
+        0 => R0,
+        1 => R1,
+        2 => R2,
+        3 => R3,
+        4 => R4,
+        5 => R5,
+        6 => R6,
+        7 => R7,
+        8 => R8,
+        9 => R9,
+        10 => R10,
+        11 => R11,
+        12 => R12,
+        13 => R13,
+        14 => R14,
+        15 => R15,
+        16 => R16,
+        17 => R17,
+        18 => R18,
+        19 => R19,
+        20 => R20,
+        21 => R21,
+        22 => R22,
+        23 => R23,
+        24 => R24,
+        25 => R25,
+        26 => R26,
+        27 => R27,
+        28 => R28,
+        29 => R29,
+        _ => R30
+    }
+}
+
+val set_R : forall 'n, 0 <= 'n <= 30. (int('n), bits(64)) -> unit effect {wreg}
+
+function set_R(n, v) = {
+    match n {
+        0 => R0 = v,
+        1 => R1 = v,
+        2 => R2 = v,
+        3 => R3 = v,
+        4 => R4 = v,
+        5 => R5 = v,
+        6 => R6 = v,
+        7 => R7 = v,
+        8 => R8 = v,
+        9 => R9 = v,
+        10 => R10 = v,
+        11 => R11 = v,
+        12 => R12 = v,
+        13 => R13 = v,
+        14 => R14 = v,
+        15 => R15 = v,
+        16 => R16 = v,
+        17 => R17 = v,
+        18 => R18 = v,
+        19 => R19 = v,
+        20 => R20 = v,
+        21 => R21 = v,
+        22 => R22 = v,
+        23 => R23 = v,
+        24 => R24 = v,
+        25 => R25 = v,
+        26 => R26 = v,
+        27 => R27 = v,
+        28 => R28 = v,
+        29 => R29 = v,
+        _ => R30 = v
+    }
+}
+
+overload _R = {get_R, set_R}
 
 register _PendingPhysicalSE : bool
 
@@ -2286,7 +2396,7 @@ function AArch32_AccessUsesEL acctype = {
 }
 
 val LookUpRIndex : forall ('n : Int), ('n >= 0 & 'n <= 15).
-  (int('n), bits(5)) -> {'m, (0 <= 'm & 'm <= 31). int('m)} effect {escape}
+  (int('n), bits(5)) -> {'m, (0 <= 'm & 'm <= 30). int('m)} effect {escape}
 
 function LookUpRIndex (n, mode) = {
     assert(n >= 0 & n <= 14);
@@ -5846,18 +5956,18 @@ function aset_Rmode (n, mode, value_name) = {
             if n == 14 then {
                 LR_mon = value_name
             } else {
-                __tc1 : bits(64) = _R[n];
+                __tc1 : bits(64) = _R(n);
                 __tc1 = __SetSlice_bits(64, 32, __tc1, 0, value_name);
-                _R[n] = __tc1
+                _R(n) = __tc1
             }
         }
     } else {
         if ~(HighestELUsingAArch32()) & ConstrainUnpredictableBool(Unpredictable_ZEROUPPER) then {
-            _R[LookUpRIndex(n, mode)] = ZeroExtend(value_name)
+            _R(LookUpRIndex(n, mode)) = ZeroExtend(value_name)
         } else {
-            __tc2 : bits(64) = _R[LookUpRIndex(n, mode)];
+            __tc2 : bits(64) = _R(LookUpRIndex(n, mode));
             __tc2 = __SetSlice_bits(64, 32, __tc2, 0, value_name);
-            _R[LookUpRIndex(n, mode)] = __tc2
+            _R(LookUpRIndex(n, mode)) = __tc2
         }
     };
     return()
@@ -6535,29 +6645,28 @@ val AArch64_MaybeZeroRegisterUppers : unit -> unit effect {escape, rreg, undef, 
 
 function AArch64_MaybeZeroRegisterUppers () = {
     assert(UsingAArch32());
-    first : int = undefined : int;
+    let first = 0;
     include_R15_name : bool = undefined : bool;
     last : int = undefined : int;
     if PSTATE.EL == EL0 & ~(ELUsingAArch32(EL1)) then {
-        first = 0;
         last = 14;
         include_R15_name = false
     } else {
         if ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & ~(ELUsingAArch32(EL2)) then {
-            first = 0;
             last = 30;
             include_R15_name = false
         } else {
-            first = 0;
             last = 30;
             include_R15_name = true
         }
     };
+    let 'last = last;
+    assert(constraint('last <= 30));
     foreach (n from first to last by 1 in inc) {
         if (n != 15 | include_R15_name) & ConstrainUnpredictableBool(Unpredictable_ZEROUPPER) then {
-            __tc1 : bits(64) = _R[n];
+            __tc1 : bits(64) = _R(n);
             __tc1 = __SetSlice_bits(64, 32, __tc1, 32, Zeros());
-            _R[n] = __tc1
+            _R(n) = __tc1
         }
     };
     return()

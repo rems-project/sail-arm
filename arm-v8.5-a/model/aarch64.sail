@@ -4450,7 +4450,7 @@ val aset_X : forall ('width : Int) ('n : Int), ('n >= 0 & 'n <= 31).
 
 function aset_X (n, value_name) = {
     assert('width == 32 | 'width == 64);
-    if n != 31 then _R[n] = ZeroExtend(value_name, 64)
+    if n != 31 then _R(n) = ZeroExtend(value_name, 64)
     else ();
     return()
 }
@@ -4486,7 +4486,7 @@ val aget_X : forall 'width 'n,
   ('n >= 0 & 'n <= 31 & 'width in {8, 16, 32, 64}).
   (implicit('width), int('n)) -> bits('width) effect {rreg}
 
-function aget_X (width, n) = if n != 31 then slice(_R[n], 0, width) else Zeros(width)
+function aget_X (width, n) = if n != 31 then slice(_R(n), 0, width) else Zeros(width)
 
 overload X = {aget_X}
 

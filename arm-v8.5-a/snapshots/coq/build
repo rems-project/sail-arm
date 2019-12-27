@@ -5,10 +5,10 @@ if [ ! -f aarch64.v ]; then
   exit 1
 fi
 
-if [ ! -d bbv ]; then
-  echo 'Check out a copy of https://github.com/mit-plv/bbv and build it.'
-  exit 1
-fi
+#if [ ! -d bbv ]; then
+#  echo 'Check out a copy of https://github.com/mit-plv/bbv and build it.'
+#  exit 1
+#fi
 
 set -ex
 make -C lib

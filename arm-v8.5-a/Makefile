@@ -45,6 +45,11 @@ aarch64_128: aarch64_128.c
 aarch64.lem: model/*.sail
 	sail -verbose 1 $(AARCH_FLAGS) $(LEM_FLAGS) $(OPTS) -lem -lem_lib Aarch64_extras -o aarch64 model/prelude.sail model/$(DEVICES) model/aarch_types.sail model/aarch_mem.sail $(AARCH64_SRCS) $(AARCH32_SRCS)
 
+
+aarch64.ir: model/*.sail
+	../../isla/isla-sail/isla-sail $(AARCH_SRCS) -o aarch64
+
+
 translate_address.c: model/*.sail translate_address.isail
 	sail -is translate_address.isail
 

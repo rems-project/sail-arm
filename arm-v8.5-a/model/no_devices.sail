@@ -43,6 +43,10 @@
 /* IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                          */
 /**************************************************************************/
 
+$include <regfp.sail>
+
+val sail_zero_extend = "zero_extend" : forall 'n 'm, 'm >= 'n. (bits('n), int('m)) -> bits('m)
+
 val ___WriteRAM = "write_ram" : forall 'n 'm.
   (atom('m), atom('n), bits('m), bits('m), bits(8 * 'n)) -> unit effect {wmem}
 
@@ -50,19 +54,17 @@ val __InitRAM : forall 'm. (atom('m), int, bits('m), bits(8)) -> unit
 
 function __InitRAM (_, _, _, _) = ()
 
-val ___ReadRAM = "read_ram" : forall 'n 'm.
-  (atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
+val __bad_read = "bad_read" : forall 'n. int('n) -> bits(8 * 'n)
 
 val __ReadRAM : forall 'n 'm.
   (atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
 
 function __ReadRAM(addr_length, bytes, hex_ram, addr) =
-{
-  print("Read " ++ DecStr(bytes) ++ " bytes @ " ++ BitStr(addr));
-  let value: bits(8 * 'n) = ___ReadRAM(addr_length, bytes, hex_ram, addr);
-  print_bits(" = ", value);
-  value
-}
+    if 64 >= addr_length & bytes > 0 then {
+        __read_mem(Read_plain, 64, sail_zero_extend(addr, 64), bytes)
+    } else {
+        __bad_read(bytes)
+    }
 
 val __TraceMemoryWrite : forall 'n 'm.
   (atom('n), bits('m), bits(8 * 'n)) -> unit
@@ -72,8 +74,8 @@ val __WriteRAM : forall 'n 'm.
 
 function __WriteRAM(addr_length, bytes, hex_ram, addr, data) =
 {
-  print("Write " ++ DecStr(bytes) ++ " bytes @ " ++ BitStr(addr));
-  print_bits(" = ", data);
+  //print("Write " ++ DecStr(bytes) ++ " bytes @ " ++ BitStr(addr));
+  //print_bits(" = ", data);
   ___WriteRAM(addr_length, bytes, hex_ram, addr, data)
 }
 

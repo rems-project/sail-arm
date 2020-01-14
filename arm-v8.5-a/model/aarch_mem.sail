@@ -10407,7 +10407,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
             }
         };
         stride = grainsize - 3;
-        level = 4 - RoundUp(Real(inputsize - grainsize) / Real(stride))
+        level = 4 - cdiv_int(inputsize - grainsize, stride)
     } else {
         inputaddr = ZeroExtend(ipaddress);
         if IsSecureEL2Enabled() & IsSecure() then {
@@ -11326,7 +11326,7 @@ function AArch32_TranslationTableWalk (ipaddress, vaddress, acctype, iswrite, se
             lookupsecure = IsSecure();
             singlepriv = false
         };
-        level = 4 - RoundUp(Real(inputsize - grainsize) / Real(stride))
+        level = 4 - cdiv_int(inputsize - grainsize, stride)
     } else {
         inputaddr = ipaddress;
         inputsize = 32 - SInt(slice(get_VTCR(), 0, 4));

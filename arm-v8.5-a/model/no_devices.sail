@@ -60,7 +60,7 @@ val __ReadRAM : forall 'n 'm.
   (atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
 
 function __ReadRAM(addr_length, bytes, hex_ram, addr) =
-    if 64 >= addr_length & bytes > 0 then {
+    if addr_length <= 64 & bytes > 0 then {
         __read_mem(Read_plain, 64, sail_zero_extend(addr, 64), bytes)
     } else {
         __bad_read(bytes)
@@ -69,15 +69,26 @@ function __ReadRAM(addr_length, bytes, hex_ram, addr) =
 val __TraceMemoryWrite : forall 'n 'm.
   (atom('n), bits('m), bits(8 * 'n)) -> unit
 
+val __bad_write = "bad_write" : unit -> unit
+
+/* FIXME: wmv vs wmem effect? */
+val __write_mem2
+  = { ocaml: "Platform.write_mem", c: "platform_write_mem", _: "write_mem" }
+  : forall 'n (constant 'addrsize : Int), 'n > 0 & 'addrsize in {32, 64}.
+  (write_kind, int('addrsize), bits('addrsize), int('n), bits(8 * 'n)) -> bool effect {wmem}
+
+val __bad_read = "bad_read" : forall 'n. int('n) -> bits(8 * 'n)
+
 val __WriteRAM : forall 'n 'm.
   (atom('m), atom('n), bits('m), bits('m), bits(8 * 'n)) -> unit effect {wmem}
 
 function __WriteRAM(addr_length, bytes, hex_ram, addr, data) =
-{
-  //print("Write " ++ DecStr(bytes) ++ " bytes @ " ++ BitStr(addr));
-  //print_bits(" = ", data);
-  ___WriteRAM(addr_length, bytes, hex_ram, addr, data)
-}
+    if addr_length <= 64 & bytes > 0 then {
+      let _ = __write_mem2(Write_plain, 64, sail_zero_extend(addr, 64), bytes, data);
+      ()
+    } else {
+      __bad_write()
+    }
 
 function __TraceMemoryWrite(bytes, addr, data) = ()
 

@@ -470,3 +470,7 @@ function one_if(b) = if b then 0b1 else 0b0
 val zero_if : bool -> bits(1)
 
 function zero_if(b) = if b then 0b0 else 0b1
+
+// ceil(m/n) = floor((m + n - 1) / n)
+function cdiv_int(m: int, n: int) -> int =
+  ((m + n) - 1) / n

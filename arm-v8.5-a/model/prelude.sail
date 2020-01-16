@@ -463,13 +463,13 @@ val "append_64" : forall 'n. (bits('n), bits(64)) -> bits('n + 64)
 
 overload __size = {length}
 
-val one_if : bool -> bits(1)
+val "one_if" : bool -> bits(1)
 
-function one_if(b) = if b then 0b1 else 0b0
+/* function one_if(b) = if b then 0b1 else 0b0 */
 
-val zero_if : bool -> bits(1)
+val "zero_if" : bool -> bits(1)
 
-function zero_if(b) = if b then 0b0 else 0b1
+/* function zero_if(b) = if b then 0b0 else 0b1 */
 
 // ceil(m/n) = floor((m + n - 1) / n)
 function cdiv_int(m: int, n: int) -> int =

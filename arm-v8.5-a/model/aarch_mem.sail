@@ -6365,6 +6365,8 @@ val AArch64_TranslateAddressS1Off : (bits(64), AccType, bool) -> TLBRecord effec
 function AArch64_TranslateAddressS1Off (vaddress, acctype, iswrite) = {
     assert(~(ELUsingAArch32(S1TranslationRegime())));
     result : TLBRecord = undefined : TLBRecord;
+    result.descupdate.AF = false;
+    result.descupdate.AP = false;
     let 'Top = AddrTop(vaddress, acctype == AccType_IFETCH, PSTATE.EL);
     ipaddress : bits(52) = undefined : bits(52);
     level : int = undefined : int;
@@ -8012,6 +8014,8 @@ function AArch64_FirstStageTranslate (vaddress, acctype, iswrite, wasaligned, si
     s2fs1walk : bool = undefined : bool;
     s2fs1walk = false;
     S1 : TLBRecord = undefined : TLBRecord;
+    S1.descupdate.AF = false;
+    S1.descupdate.AP = false;
     nTLSMD : bits(1) = undefined : bits(1);
     permissioncheck : bool = undefined : bool;
     if s1_enabled then {
@@ -10204,6 +10208,8 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
         assert((IsSecureEL2Enabled() | (HaveEL(EL2) & ~(IsSecure())) & ~(ELUsingAArch32(EL2))) & HasS2Translation())
     };
     result : TLBRecord = undefined : TLBRecord;
+    result.descupdate.AF = false;
+    result.descupdate.AP = false;
     descaddr : AddressDescriptor = undefined : AddressDescriptor;
     baseregister : bits(64) = undefined : bits(64);
     inputaddr : bits(64) = undefined : bits(64);

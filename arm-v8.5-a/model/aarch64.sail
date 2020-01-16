@@ -2585,8 +2585,11 @@ val ClearExclusiveLocal : forall ('processorid : Int).
   int('processorid) -> unit effect {undef, wreg}
 
 function ClearExclusiveLocal processorid = {
+    /*
     __exclusive_block_address = undefined : bits(52);
     return()
+    */
+    ()
 }
 
 val ClearEventRegister : unit -> unit effect {wreg}
@@ -4040,25 +4043,34 @@ val MarkExclusiveLocal : forall ('processorid : Int) ('size : Int).
   (FullAddress, int('processorid), int('size)) -> unit effect {wreg}
 
 function MarkExclusiveLocal (paddress, processorid, size) = {
+    /*
     __exclusive_block_address = GetExclusiveBlockAddress(paddress.address);
     return()
+    */
+    ()
 }
 
 val IsExclusiveLocal : forall ('processorid : Int) ('size : Int).
   (FullAddress, int('processorid), int('size)) -> bool effect {rreg}
 
 function IsExclusiveLocal (paddress, processorid, size) = {
+    /*
     __exclusive_block_address == GetExclusiveBlockAddress(paddress.address)
+    */
+    false
 }
 
 val ClearExclusiveByAddress : forall ('processorid : Int) ('size : Int).
   (FullAddress, int('processorid), int('size)) -> unit effect {rreg, undef, wreg}
 
 function ClearExclusiveByAddress (paddress, processorid, size) = {
+    /*
     if __exclusive_block_address == GetExclusiveBlockAddress(paddress.address) then {
         __exclusive_block_address = undefined : bits(52)
     };
     return()
+    */
+    ()
 }
 
 val Extend__0 : forall ('M : Int) ('N : Int), 'M >= 0.

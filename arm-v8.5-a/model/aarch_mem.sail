@@ -370,7 +370,7 @@ register configuration __v81_implemented : bool = true
 
 register configuration __unpred_tsize_aborts : bool = true
 
-register configuration __trickbox_enabled : bool = true
+register configuration __trickbox_enabled : bool = false
 
 register configuration __tlb_enabled : bool = true
 

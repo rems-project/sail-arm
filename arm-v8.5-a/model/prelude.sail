@@ -207,7 +207,7 @@ val SInt_gt0 = {
 } : forall 'n, 'n > 0. bits('n) -> {'m, (- (2 ^ ('n - 1)) <= 'm <= 2 ^ ('n - 1) - 1). int('m)}
 val SInt_ge0 = {
   c: "sail_signed",
-  _: "sint0"
+  _: "sint_plain"
 } : forall 'n, 'n >= 0. bits('n) -> int
 overload SInt = {SInt_gt0, SInt_ge0}
 

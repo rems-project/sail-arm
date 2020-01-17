@@ -10855,7 +10855,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
 
 function AArch64_CheckAndUpdateDescriptor (result, fault, secondstage, vaddress, acctype, iswrite, s2fs1walk, hwupdatewalk__arg) = {
     hwupdatewalk : bool = hwupdatewalk__arg;
-    hw_update_AF : bool = undefined : bool;
+    hw_update_AF : bool = false;
     if result.AF then {
         if fault.typ == Fault_None then {
             hw_update_AF = true

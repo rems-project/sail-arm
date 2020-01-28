@@ -257,7 +257,7 @@ val Step_System : unit -> unit effect {configuration, escape, undef, wreg, rreg,
 function Step_System () = {
     try {
       try {
-        Step_Timers();
+        () // Step_Timers();
       } catch {
         _ => {
           print(concat_str("Exception taken during Step_Timers.  PC=",

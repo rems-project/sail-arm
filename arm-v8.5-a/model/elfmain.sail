@@ -108,6 +108,10 @@ function Step_CPU() = {
   print_bits("PC = ", _PC);
   print_bits("I = ", __currentInstr);
 
+  if __currentInstr == 0x0000_0000 then {
+      exit()
+  };
+
   if fetch_ok then {
       // Detect ASIMD instructions
       is_asimd : bool = match __currentInstr {
@@ -359,6 +363,7 @@ function init() = {
   _PC = __GetSlice_int(64, elf_entry(), 0);
   SP_EL0 = ZeroExtend(0x3C00, 64);
   PSTATE.EL = EL0;
+  DBGEN = LOW;
 }
 
 val main : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}

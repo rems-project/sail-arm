@@ -162,7 +162,8 @@ enum AccType = {
   AccType_DC_UNPRIV,
   AccType_IC,
   AccType_DCZVA,
-  AccType_AT
+  AccType_AT,
+  AccType_TAG
 }
 
 enum MemType = {MemType_Normal, MemType_Device}

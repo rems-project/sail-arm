@@ -2703,10 +2703,10 @@ function __WriteMemory (N, address, val_name) = {
 }
 
 val __ReadMemory : forall ('N : Int).
-  (int('N), bits(56)) -> bits(8 * 'N) effect {rmem, rreg}
+  (AccType, int('N), bits(56)) -> bits(8 * 'N) effect {rmem, rreg}
 
-function __ReadMemory (N, address) = {
-    let r = __ReadRAM(56, N, __defaultRAM, address);
+function __ReadMemory (acctype, N, address) = {
+    let r = __ReadRAM(acctype, 56, N, __defaultRAM, address);
     __TraceMemoryRead(N, address, r);
     r
 }
@@ -3154,7 +3154,7 @@ function aget__MemTag desc = {
     assert(log2_tag_granule >= 0);
     let tag_index : bits(64) = LSR(offset, log2_tag_granule);
     let tagaddress : bits(56) = TAG_STORE_AREA + slice(tag_index, 0, 56);
-    let tagbyte : bits(8) = __ReadMemory(1, ZeroExtend(tagaddress));
+    let tagbyte : bits(8) = __ReadMemory(AccType_TAG, 1, ZeroExtend(tagaddress));
     slice(tagbyte, 0, 4)
 }
 
@@ -3312,16 +3312,16 @@ function GTEPerformExtObsCommon observer = {
               ok = true;
               match slice(_GTEExtObsAccess[i], 8, 3) {
                 ? if ? == GTE_EXT_OBS_ACC_SIZE64 => {
-                    data = __SetSlice_bits(64, 64, data, 0, __ReadMemory(8, slice(_GTEExtObsAddress[i], 0, 56)))
+                    data = __SetSlice_bits(64, 64, data, 0, __ReadMemory(AccType_NORMAL, 8, slice(_GTEExtObsAddress[i], 0, 56)))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE32 => {
-                    data = __SetSlice_bits(64, 32, data, 0, __ReadMemory(4, slice(_GTEExtObsAddress[i], 0, 56)))
+                    data = __SetSlice_bits(64, 32, data, 0, __ReadMemory(AccType_NORMAL, 4, slice(_GTEExtObsAddress[i], 0, 56)))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE16 => {
-                    data = __SetSlice_bits(64, 16, data, 0, __ReadMemory(2, slice(_GTEExtObsAddress[i], 0, 56)))
+                    data = __SetSlice_bits(64, 16, data, 0, __ReadMemory(AccType_NORMAL, 2, slice(_GTEExtObsAddress[i], 0, 56)))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE8 => {
-                    data = __SetSlice_bits(64, 8, data, 0, __ReadMemory(1, slice(_GTEExtObsAddress[i], 0, 56)))
+                    data = __SetSlice_bits(64, 8, data, 0, __ReadMemory(AccType_NORMAL, 1, slice(_GTEExtObsAddress[i], 0, 56)))
                 },
                 _ => {
                     ok = false
@@ -10132,10 +10132,10 @@ function aget__Mem (desc, size, accdesc) = {
         } else {
             result : bits(8 * 'size) = undefined : bits(8 * 'size);
             if size == 16 then {
-                result = __SetSlice_bits(8 * size, 64, result, 0, __ReadMemory(8, ZeroExtend(paddress)));
-                result = __SetSlice_bits(8 * size, 64, result, 64, __ReadMemory(8, ZeroExtend(paddress + 8)))
+                result = __SetSlice_bits(8 * size, 64, result, 0, __ReadMemory(accdesc.acctype, 8, ZeroExtend(paddress)));
+                result = __SetSlice_bits(8 * size, 64, result, 64, __ReadMemory(accdesc.acctype, 8, ZeroExtend(paddress + 8)))
             } else {
-                result = __ReadMemory(size, ZeroExtend(paddress))
+                result = __ReadMemory(accdesc.acctype, size, ZeroExtend(paddress))
             };
             if __trickbox_enabled then {
                 GTECheckAccessSensitiveAccess(paddress, size, result, true)

@@ -11966,7 +11966,7 @@ val AArch64_ResetControlRegisters : forall ('cold_reset : Bool).
 
 function AArch64_ResetControlRegisters cold_reset = {
     ResetControlRegisters(cold_reset);
-    _TLB_Invalidate()
+    //_TLB_Invalidate()
 }
 
 val AArch32_ResetControlRegisters : forall ('cold_reset : Bool).
@@ -11975,7 +11975,7 @@ val AArch32_ResetControlRegisters : forall ('cold_reset : Bool).
 function AArch32_ResetControlRegisters cold_reset = {
     PSTATE.SS = 0b0;
     ResetControlRegisters(cold_reset);
-    _TLB_Invalidate()
+    //_TLB_Invalidate()
 }
 
 val AArch64_ExecutingBTIInstr : unit -> bool effect {rreg, undef}
@@ -12137,7 +12137,7 @@ function AArch64_TakeReset cold_reset = {
     PSTATE.SS = 0b0;
     PSTATE.DIT = 0b0;
     PSTATE.IL = 0b0;
-    AArch64_ResetGeneralRegisters();
+    //AArch64_ResetGeneralRegisters();
     AArch64_ResetSIMDFPRegisters();
     AArch64_ResetSpecialRegisters();
     ResetExternalDebugRegisters(cold_reset);
@@ -14645,7 +14645,7 @@ function AArch32_TakeReset cold_reset = {
     PSTATE.T = [get_SCTLR()[30]];
     PSTATE.E = [get_SCTLR()[25]];
     PSTATE.IL = 0b0;
-    AArch32_ResetGeneralRegisters();
+    //AArch32_ResetGeneralRegisters();
     AArch32_ResetSIMDFPRegisters();
     AArch32_ResetSpecialRegisters();
     ResetExternalDebugRegisters(cold_reset);

@@ -43,12 +43,21 @@
 /* IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                          */
 /**************************************************************************/
 
+$define ARM_SPEC
+
 $include <regfp.sail>
 
-val sail_zero_extend = "zero_extend" : forall 'n 'm, 'm >= 'n. (bits('n), int('m)) -> bits('m)
+val acctype_to_read_kind : AccType -> read_kind
 
-val ___WriteRAM = "write_ram" : forall 'n 'm.
-  (atom('m), atom('n), bits('m), bits('m), bits(8 * 'n)) -> unit effect {wmem}
+function acctype_to_read_kind(acctype) = {
+    match acctype {
+        AccType_NORMAL => Read_plain,
+        AccType_IFETCH => Read_ifetch,
+        _ => Read_plain
+    }
+}
+
+val sail_zero_extend = "zero_extend" : forall 'n 'm, 'm >= 'n. (bits('n), int('m)) -> bits('m)
 
 val __InitRAM : forall 'm. (atom('m), int, bits('m), bits(8)) -> unit
 
@@ -57,11 +66,11 @@ function __InitRAM (_, _, _, _) = ()
 val __bad_read = "bad_read" : forall 'n. int('n) -> bits(8 * 'n)
 
 val __ReadRAM : forall 'n 'm.
-  (atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
+  (AccType, atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
 
-function __ReadRAM(addr_length, bytes, hex_ram, addr) =
+function __ReadRAM(acctype, addr_length, bytes, hex_ram, addr) =
     if addr_length <= 64 & bytes > 0 then {
-        __read_mem(Read_plain, 64, sail_zero_extend(addr, 64), bytes)
+        __read_mem(acctype_to_read_kind(acctype), 64, sail_zero_extend(addr, 64), bytes)
     } else {
         __bad_read(bytes)
     }

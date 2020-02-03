@@ -111,6 +111,8 @@ function Step_CPU() = {
       exit()
   };
 
+  __instr_announce(__currentInstr);
+
   if fetch_ok then {
       // Detect ASIMD instructions
       is_asimd : bool = match __currentInstr {
@@ -372,6 +374,7 @@ val check_cycle_count = { c: "cycle_count" } : unit -> unit
 function main() = {
   let verbosity = __GetVerbosity();
   init();
+  check_cycle_count();
   while true do {
     if verbosity[0] == bitone then {
         nzcv = (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V);

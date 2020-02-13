@@ -418,3 +418,61 @@ function isla_footprint(opcode) = {
     _ => false
   }
 }
+
+
+/* This is the function that is called by isla-client and thus by read-dwarf */
+val isla_client : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
+
+function isla_client(opcode) = {
+  SEE = -1;
+
+  __highest_el_aarch32 = false;
+  CFG_ID_AA64PFR0_EL1_EL0 = 0x1;
+  CFG_ID_AA64PFR0_EL1_EL1 = 0x1;
+  CFG_ID_AA64PFR0_EL1_EL2 = 0x1;
+  CFG_ID_AA64PFR0_EL1_EL3 = 0x1;
+  PSTATE.SP = 0b1;
+  PSTATE.EL = EL0;
+  PSTATE.nRW = 0b0;
+  PSTATE.D = 0b0;
+  PSTATE.A = 0b0;
+  PSTATE.I = 0b0;
+  PSTATE.F = 0b0;
+  _PC = 0x00000000deadbeef;
+  __v81_implemented = false;
+  __v82_implemented = false;
+  __v83_implemented = false;
+  __v84_implemented = false;
+  __v85_implemented = false;
+  TCR_EL2 = 0x0000000000000000;
+  HCR_EL2 = 0x0000000000000000;
+  SCTLR_EL2 = 0x0000000000000000;
+  MDSCR_EL1 = 0x00000000;
+  MDCR_EL3 = 0x00000000;
+  EDSCR = 0x00000000;
+  OSDLR_EL1 = 0x00000000;
+  SCR_EL3 = 0x00000000;
+  OSLSR_EL1 = 0x00000000;
+  __exclusive_granule_sizze = 0x4;
+  __tlb_enabled = false;
+  __CNTControlBase = 0x0000000000000;
+  MPIDR_EL1 = 0x0000000000000000;
+  /* EDSCR = @bvand(zEDSCR, 0xFFFFBFFF); */
+  /* MDSCR_EL1 = @bvand(zMDSCR_EL1, 0xFFFF7FFF); */
+  __trickbox_enabled = false;
+
+  PSTATE.EL = EL2;
+
+  __PC_changed = false;
+  __currentInstr = opcode;
+  DBGEN = LOW;
+
+  // The first cycle during footprint analysis is reserved for initialization, and ignored.
+  check_cycle_count();
+  try {
+    decode64(opcode);
+    true
+  } catch {
+    _ => false
+  }
+}

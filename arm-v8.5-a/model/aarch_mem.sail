@@ -8038,7 +8038,7 @@ function AArch64_FirstStageTranslate (vaddress, acctype, iswrite, wasaligned, si
             }
         }
     };
-    if ((~(wasaligned) & acctype != AccType_IFETCH | acctype == AccType_DCZVA) & S1.addrdesc.memattrs.typ == MemType_Device) & ~(IsFault(S1.addrdesc)) then {
+    if ((~(wasaligned) & acctype != AccType_IFETCH | acctype == AccType_DCZVA) & ~(IsFault(S1.addrdesc)) & S1.addrdesc.memattrs.typ == MemType_Device)  then {
         __tc2 : AddressDescriptor = S1.addrdesc;
         __tc2.fault = AArch64_AlignmentFault(acctype, iswrite, secondstage);
         S1.addrdesc = __tc2

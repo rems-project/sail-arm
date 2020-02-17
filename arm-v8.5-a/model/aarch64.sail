@@ -11502,9 +11502,11 @@ function BranchToAddr (target, branch_type) = {
     Hint_Branch(branch_type);
     if 'N == 32 then {
         assert(UsingAArch32());
+        __branch_announce(64, ZeroExtend(64, target));
         _PC = ZeroExtend(target)
     } else {
         assert('N == 64 & ~(UsingAArch32()));
+        __branch_announce(64, slice(target, 0, 64));
         _PC = slice(target, 0, 64)
     };
     __PC_changed = true;

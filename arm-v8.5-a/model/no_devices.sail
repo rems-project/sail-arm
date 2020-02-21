@@ -104,3 +104,47 @@ function __TraceMemoryWrite(bytes, addr, data) = ()
 val __TraceMemoryRead : forall 'n 'm. (atom('n), bits('m), bits(8 * 'n)) -> unit
 
 function __TraceMemoryRead(bytes, addr, data) = ()
+
+// Translates an Arm DSB or DMB into a Isla compatible barrier kind.
+val to_barrier_kind : (bool, MBReqDomain, MBReqTypes) -> barrier_kind
+
+function to_barrier_kind (is_dsb, domain, types) = {
+    match (is_dsb, domain, types) {
+      (false, MBReqDomain_FullSystem, MBReqTypes_All) => Barrier_DMB_SY,
+      (false, MBReqDomain_FullSystem, MBReqTypes_ST) => Barrier_DMB_ST,
+      (false, MBReqDomain_FullSystem, MBReqTypes_LB) => Barrier_DMB_LD,
+
+      (false, MBReqDomain_InnerShareable, MBReqTypes_All) => Barrier_DMB_ISH,
+      (false, MBReqDomain_InnerShareable, MBReqTypes_ST) => Barrier_DMB_ISHST,
+      (false, MBReqDomain_InnerShareable, MBReqTypes_LD) => Barrier_DMB_ISHLD,
+
+      (false, MBReqDomain_NonShareable, MBReqTypes_All) => Barrier_DMB_NSH,
+      (false, MBReqDomain_NonShareable, MBReqTypes_ST) => Barrier_DMB_NSHST,
+      (false, MBReqDomain_NonShareable, MBReqTypes_LD) => Barrier_DMB_NSHLD,
+
+      (false, MBReqDomain_OuterShareable, MBReqTypes_All) => Barrier_DMB_OSH,
+      (false, MBReqDomain_OuterShareable, MBReqTypes_ST) => Barrier_DMB_OSHST,
+      (false, MBReqDomain_OuterShareable, MBReqTypes_LD) => Barrier_DMB_OSHLD,
+
+      (true, MBReqDomain_FullSystem, MBReqTypes_All) => Barrier_DSB_SY,
+      (true, MBReqDomain_FullSystem, MBReqTypes_ST) => Barrier_DSB_ST,
+      (true, MBReqDomain_FullSystem, MBReqTypes_LB) => Barrier_DSB_LD,
+
+      (true, MBReqDomain_InnerShareable, MBReqTypes_All) => Barrier_DSB_ISH,
+      (true, MBReqDomain_InnerShareable, MBReqTypes_ST) => Barrier_DSB_ISHST,
+      (true, MBReqDomain_InnerShareable, MBReqTypes_LD) => Barrier_DSB_ISHLD,
+
+      (true, MBReqDomain_NonShareable, MBReqTypes_All) => Barrier_DSB_NSH,
+      (true, MBReqDomain_NonShareable, MBReqTypes_ST) => Barrier_DSB_NSHST,
+      (true, MBReqDomain_NonShareable, MBReqTypes_LD) => Barrier_DSB_NSHLD,
+
+      (true, MBReqDomain_OuterShareable, MBReqTypes_All) => Barrier_DSB_OSH,
+      (true, MBReqDomain_OuterShareable, MBReqTypes_ST) => Barrier_DSB_OSHST,
+      (true, MBReqDomain_OuterShareable, MBReqTypes_LD) => Barrier_DSB_OSHLD
+    }
+}
+
+/* FIXME: ARM stubs don't have effects */
+val __barrier_no_effect
+  = { ocaml: "Platform.barrier", c: "platform_barrier", _: "barrier" }
+  : barrier_kind -> unit

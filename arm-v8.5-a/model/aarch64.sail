@@ -2435,13 +2435,13 @@ let DebugHalt_HaltInstruction : bits(6) = 0b101111
 val DataSynchronizationBarrier : (MBReqDomain, MBReqTypes) -> unit
 
 function DataSynchronizationBarrier (domain, types) = {
-    return()
+    __barrier_no_effect(to_barrier_kind(true, domain, types))
 }
 
 val DataMemoryBarrier : (MBReqDomain, MBReqTypes) -> unit
 
 function DataMemoryBarrier (domain, types) = {
-    return()
+    __barrier_no_effect(to_barrier_kind(false, domain, types))
 }
 
 val system_barriers : (MBReqDomain, MemBarrierOp, MBReqTypes) -> unit

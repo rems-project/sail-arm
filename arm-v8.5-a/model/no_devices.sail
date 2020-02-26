@@ -111,24 +111,24 @@ val to_barrier_kind : (bool, MBReqDomain, MBReqTypes) -> barrier_kind
 function to_barrier_kind (is_dsb, domain, types) = {
     match (is_dsb, domain, types) {
       (false, MBReqDomain_FullSystem, MBReqTypes_All) => Barrier_DMB_SY,
-      (false, MBReqDomain_FullSystem, MBReqTypes_ST) => Barrier_DMB_ST,
-      (false, MBReqDomain_FullSystem, MBReqTypes_LB) => Barrier_DMB_LD,
+      (false, MBReqDomain_FullSystem, MBReqTypes_Writes) => Barrier_DMB_ST,
+      (false, MBReqDomain_FullSystem, MBReqTypes_Reads) => Barrier_DMB_LD,
 
       (false, MBReqDomain_InnerShareable, MBReqTypes_All) => Barrier_DMB_ISH,
-      (false, MBReqDomain_InnerShareable, MBReqTypes_ST) => Barrier_DMB_ISHST,
-      (false, MBReqDomain_InnerShareable, MBReqTypes_LD) => Barrier_DMB_ISHLD,
+      (false, MBReqDomain_InnerShareable, MBReqTypes_Writes) => Barrier_DMB_ISHST,
+      (false, MBReqDomain_InnerShareable, MBReqTypes_Reads) => Barrier_DMB_ISHLD,
 
       (false, MBReqDomain_NonShareable, MBReqTypes_All) => Barrier_DMB_NSH,
-      (false, MBReqDomain_NonShareable, MBReqTypes_ST) => Barrier_DMB_NSHST,
-      (false, MBReqDomain_NonShareable, MBReqTypes_LD) => Barrier_DMB_NSHLD,
+      (false, MBReqDomain_NonShareable, MBReqTypes_Writes) => Barrier_DMB_NSHST,
+      (false, MBReqDomain_NonShareable, MBReqTypes_Reads) => Barrier_DMB_NSHLD,
 
       (false, MBReqDomain_OuterShareable, MBReqTypes_All) => Barrier_DMB_OSH,
-      (false, MBReqDomain_OuterShareable, MBReqTypes_ST) => Barrier_DMB_OSHST,
-      (false, MBReqDomain_OuterShareable, MBReqTypes_LD) => Barrier_DMB_OSHLD,
+      (false, MBReqDomain_OuterShareable, MBReqTypes_Writes) => Barrier_DMB_OSHST,
+      (false, MBReqDomain_OuterShareable, MBReqTypes_Reads) => Barrier_DMB_OSHLD,
 
       (true, MBReqDomain_FullSystem, MBReqTypes_All) => Barrier_DSB_SY,
-      (true, MBReqDomain_FullSystem, MBReqTypes_ST) => Barrier_DSB_ST,
-      (true, MBReqDomain_FullSystem, MBReqTypes_LB) => Barrier_DSB_LD,
+      (true, MBReqDomain_FullSystem, MBReqTypes_Writes) => Barrier_DSB_ST,
+      (true, MBReqDomain_FullSystem, MBReqTypes_Reads) => Barrier_DSB_LD,
 
       (true, MBReqDomain_InnerShareable, MBReqTypes_All) => Barrier_DSB_ISH,
       (true, MBReqDomain_InnerShareable, MBReqTypes_ST) => Barrier_DSB_ISHST,

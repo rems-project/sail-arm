@@ -53,6 +53,7 @@ function acctype_to_read_kind(acctype) = {
     match acctype {
         AccType_NORMAL => Read_plain,
         AccType_IFETCH => Read_ifetch,
+        AccType_ORDERED => Read_acquire,
         _ => Read_plain
     }
 }
@@ -88,12 +89,21 @@ val __write_mem2
 
 val __bad_read = "bad_read" : forall 'n. int('n) -> bits(8 * 'n)
 
-val __WriteRAM : forall 'n 'm.
-  (atom('m), atom('n), bits('m), bits('m), bits(8 * 'n)) -> unit effect {wmem}
+val acctype_to_write_kind : AccType -> write_kind
 
-function __WriteRAM(addr_length, bytes, hex_ram, addr, data) =
+function acctype_to_write_kind(acctype) = {
+    match acctype {
+        AccType_ORDERED => Write_release,
+        _ => Write_plain
+    }
+}
+
+val __WriteRAM : forall 'n 'm.
+  (AccType, atom('m), atom('n), bits('m), bits('m), bits(8 * 'n)) -> unit effect {wmem}
+
+function __WriteRAM(acctype, addr_length, bytes, hex_ram, addr, data) =
     if addr_length <= 64 & bytes > 0 then {
-      let _ = __write_mem2(Write_plain, 64, sail_zero_extend(addr, 64), bytes, data);
+      let _ = __write_mem2(acctype_to_write_kind(acctype), 64, sail_zero_extend(addr, 64), bytes, data);
       ()
     } else {
       __bad_write()

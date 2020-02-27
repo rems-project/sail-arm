@@ -3955,7 +3955,8 @@ function aset__MemTag (desc, value_name) = {
     assert(log2_tag_granule >= 0);
     let tag_index : bits(64) = LSR(offset, log2_tag_granule);
     let tagaddress : bits(56) = TAG_STORE_AREA + slice(tag_index, 0, 56);
-    __WriteMemory(1, ZeroExtend(tagaddress), 0x0 @ value_name)
+    // CHECK: Is it AccType_NORMAL though?
+    __WriteMemory(AccType_NORMAL, 1, ZeroExtend(tagaddress), 0x0 @ value_name)
 }
 
 overload _MemTag = {aset__MemTag}

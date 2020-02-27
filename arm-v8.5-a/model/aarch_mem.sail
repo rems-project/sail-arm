@@ -2694,10 +2694,10 @@ function BigEndianReverse value_name = {
 }
 
 val __WriteMemory : forall ('N : Int).
-  (int('N), bits(56), bits(8 * 'N)) -> unit effect {rreg, wmem}
+  (AccType, int('N), bits(56), bits(8 * 'N)) -> unit effect {rreg, wmem}
 
-function __WriteMemory (N, address, val_name) = {
-    __WriteRAM(56, N, __defaultRAM, address, val_name);
+function __WriteMemory (acctype, N, address, val_name) = {
+    __WriteRAM(acctype, 56, N, __defaultRAM, address, val_name);
     __TraceMemoryWrite(N, address, val_name);
     return()
 }
@@ -3337,16 +3337,16 @@ function GTEPerformExtObsCommon observer = {
               ok = true;
               match slice(_GTEExtObsAccess[i], 8, 3) {
                 ? if ? == GTE_EXT_OBS_ACC_SIZE64 => {
-                    __WriteMemory(8, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 64))
+                    __WriteMemory(AccType_NORMAL, 8, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 64))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE32 => {
-                    __WriteMemory(4, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 32))
+                    __WriteMemory(AccType_NORMAL, 4, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 32))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE16 => {
-                    __WriteMemory(2, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 16))
+                    __WriteMemory(AccType_NORMAL, 2, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 16))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE8 => {
-                    __WriteMemory(1, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 8))
+                    __WriteMemory(AccType_NORMAL, 1, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 8))
                 },
                 _ => {
                     ok = false
@@ -10078,10 +10078,10 @@ function aset__Mem (desc, size, accdesc, value_name) = {
                 GTECheckAccessSensitiveAccess(paddress, size, value_name, false)
             };
             if size == 16 then {
-                __WriteMemory(8, ZeroExtend(paddress), slice(value_name, 0, 64));
-                __WriteMemory(8, ZeroExtend(paddress + 8), slice(value_name, 64, 64))
+                __WriteMemory(accdesc.acctype, 8, ZeroExtend(paddress), slice(value_name, 0, 64));
+                __WriteMemory(accdesc.acctype, 8, ZeroExtend(paddress + 8), slice(value_name, 64, 64))
             } else {
-                __WriteMemory(size, ZeroExtend(paddress), value_name)
+                __WriteMemory(accdesc.acctype, size, ZeroExtend(paddress), value_name)
             }
         }
     };

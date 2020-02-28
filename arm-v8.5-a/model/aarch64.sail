@@ -1079,10 +1079,10 @@ register LOREA_EL1 : bits(64)
 register LORC_EL1 : bits(32)
 
 val IsExclusiveGlobal : forall ('processorid : Int) ('size : Int).
-  (FullAddress, int('processorid), int('size)) -> bool
+  (FullAddress, int('processorid), int('size)) -> bool effect {undef}
 
 function IsExclusiveGlobal (paddress, processorid, size) = {
-    true
+    undefined : bool
 }
 
 val asl_Int : forall ('N : Int) ('unsigned : Bool), 'N >= 0.
@@ -4058,7 +4058,7 @@ function IsExclusiveLocal (paddress, processorid, size) = {
     /*
     __exclusive_block_address == GetExclusiveBlockAddress(paddress.address)
     */
-    false
+    true
 }
 
 val ClearExclusiveByAddress : forall ('processorid : Int) ('size : Int).

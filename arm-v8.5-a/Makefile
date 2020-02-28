@@ -27,7 +27,7 @@ aarch64.smt_model: model/*.sail
 	sail -smt_serialize $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) -o aarch64
 
 aarch64: aarch64.c
-	gcc -O2 aarch64.c $(SAIL_DIR)/lib/*.c -lgmp -lz -I $(SAIL_DIR)/lib/ -o aarch64
+	gcc -O2 aarch64.c $(SAIL_DIR)/lib/*.c -DHAVE_SETCONFIG -lgmp -lz -I $(SAIL_DIR)/lib/ -o aarch64
 
 aarch64_128: aarch64_128.c
 	gcc -O3 -flto aarch64_128.c -lgmp -lz -I $(SAIL_DIR)/lib/int128bv64/ -o aarch64_128

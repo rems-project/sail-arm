@@ -62,6 +62,8 @@ let SPI_OFFSET = 32
 val Step_CPU : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
 
 function Step_CPU() = {
+  SEE = -1;
+
   // Check for pending interrupts
   var interrupt_req : InterruptReq = undefined;
   interrupt_req.take_SE  = true; interrupt_req.take_vSE  = true;

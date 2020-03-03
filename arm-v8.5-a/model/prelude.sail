@@ -474,3 +474,11 @@ val "zero_if" : bool -> bits(1)
 // ceil(m/n) = floor((m + n - 1) / n)
 function cdiv_int(m: int, n: int) -> int =
   ((m + n) - 1) / n
+
+val __monomorphize = "monomorphize" : forall 'n, 'n >= 0. bits('n) -> bits('n)
+
+val __mark_register = "mark_register" : forall ('a: Type). (register('a), string) -> unit
+
+val __ignore_write_to : forall ('a: Type). register('a) -> unit
+
+function __ignore_write_to(reg) = __mark_register(reg, "ignore_write")

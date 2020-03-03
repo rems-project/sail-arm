@@ -227,6 +227,45 @@ function set_R(n, v) = {
 
 overload _R = {get_R, set_R}
 
+val ignore_data_dependency : forall 'n, 0 <= 'n <= 31. int('n) -> unit
+
+function ignore_data_dependency(n) = {
+    match n {
+        0 => __ignore_write_to(ref R0),
+        1 => __ignore_write_to(ref R1),
+        2 => __ignore_write_to(ref R2),
+        3 => __ignore_write_to(ref R3),
+        4 => __ignore_write_to(ref R4),
+        5 => __ignore_write_to(ref R5),
+        6 => __ignore_write_to(ref R6),
+        7 => __ignore_write_to(ref R7),
+        8 => __ignore_write_to(ref R8),
+        9 => __ignore_write_to(ref R9),
+        10 => __ignore_write_to(ref R10),
+        11 => __ignore_write_to(ref R11),
+        12 => __ignore_write_to(ref R12),
+        13 => __ignore_write_to(ref R13),
+        14 => __ignore_write_to(ref R14),
+        15 => __ignore_write_to(ref R15),
+        16 => __ignore_write_to(ref R16),
+        17 => __ignore_write_to(ref R17),
+        18 => __ignore_write_to(ref R18),
+        19 => __ignore_write_to(ref R19),
+        20 => __ignore_write_to(ref R20),
+        21 => __ignore_write_to(ref R21),
+        22 => __ignore_write_to(ref R22),
+        23 => __ignore_write_to(ref R23),
+        24 => __ignore_write_to(ref R24),
+        25 => __ignore_write_to(ref R25),
+        26 => __ignore_write_to(ref R26),
+        27 => __ignore_write_to(ref R27),
+        28 => __ignore_write_to(ref R28),
+        29 => __ignore_write_to(ref R29),
+        30 => __ignore_write_to(ref R30),
+        _ => ()
+    }
+}
+
 register _PendingPhysicalSE : bool
 
 register _PPURSER : bits(32)

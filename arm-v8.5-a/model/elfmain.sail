@@ -86,7 +86,7 @@ function Step_CPU() = {
         print("UNIMPLEMENTED: AArch32 support\n");
         exit()
       };
-      __currentInstr       = __monomorphize(__fetchA64());
+      __currentInstr       = __fetchA64();
       __currentInstrLength = 4;
       fetch_ok = true;
   } catch {

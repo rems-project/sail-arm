@@ -28537,6 +28537,7 @@ function memory_exclusive_single (acctype, datasize, elsize, memop, n, pair, reg
               aset_Mem(address, dbytes, acctype, data);
               status = ExclusiveMonitorsStatus()
           };
+          ignore_data_dependency(s);
           aset_X(s, ZeroExtend(status, 32))
       },
       MemOp_LOAD => {

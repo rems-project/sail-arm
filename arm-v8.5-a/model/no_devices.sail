@@ -54,6 +54,8 @@ function acctype_to_read_kind(acctype) = {
         AccType_NORMAL => Read_plain,
         AccType_IFETCH => Read_ifetch,
         AccType_ORDERED => Read_acquire,
+        AccType_ATOMIC => Read_exclusive,
+        AccType_ORDEREDATOMIC => Read_exclusive_acquire,
         _ => Read_plain
     }
 }
@@ -70,7 +72,8 @@ val __ReadRAM : forall 'n 'm.
   (AccType, atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
 
 function __ReadRAM(acctype, addr_length, bytes, hex_ram, addr) =
-    if addr_length <= 64 & bytes > 0 then {
+    if addr_length > 0 & addr_length <= 64 & bytes > 0 then {
+        let addr = if acctype == AccType_IFETCH then __monomorphize(addr) else addr;
         __read_mem(acctype_to_read_kind(acctype), 64, sail_zero_extend(addr, 64), bytes)
     } else {
         __bad_read(bytes)
@@ -94,6 +97,8 @@ val acctype_to_write_kind : AccType -> write_kind
 function acctype_to_write_kind(acctype) = {
     match acctype {
         AccType_ORDERED => Write_release,
+        AccType_ATOMIC => Write_exclusive,
+        AccType_ORDEREDATOMIC => Write_exclusive_release,
         _ => Write_plain
     }
 }
@@ -102,7 +107,7 @@ val __WriteRAM : forall 'n 'm.
   (AccType, atom('m), atom('n), bits('m), bits('m), bits(8 * 'n)) -> unit effect {wmem}
 
 function __WriteRAM(acctype, addr_length, bytes, hex_ram, addr, data) =
-    if addr_length <= 64 & bytes > 0 then {
+    if addr_length > 0 & addr_length <= 64 & bytes > 0 then {
       let _ = __write_mem2(acctype_to_write_kind(acctype), 64, sail_zero_extend(addr, 64), bytes, data);
       ()
     } else {

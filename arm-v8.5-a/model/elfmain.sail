@@ -438,7 +438,6 @@ function isla_client(opcode) = {
   PSTATE.A = 0b0;
   PSTATE.I = 0b0;
   PSTATE.F = 0b0;
-  _PC = 0x00000000deadbeef;
   __v81_implemented = false;
   __v82_implemented = false;
   __v83_implemented = false;

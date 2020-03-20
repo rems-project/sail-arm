@@ -29312,7 +29312,7 @@ function IC_IVAU val_name = {
             AArch32_Abort(slice(val_name, 0, 32), memaddrdesc.fault)
         }
     };
-    return()
+    __cache_maintenance(Cache_op_I_IVAU, 64, val_name)
 }
 
 val DC_IVAC : bits(64) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
@@ -29345,7 +29345,7 @@ function DC_IVAC val_name = {
         }
     };
     if HasS2Translation() & [HCR_EL2[0]] == 0b1 then ();
-    return()
+    __cache_maintenance(Cache_op_D_IVAC, 64, val_name)
 }
 
 val DC_IGDVAC : bits(64) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
@@ -29382,7 +29382,7 @@ function DC_CVAU val_name = {
             AArch32_Abort(slice(val_name, 0, 32), memaddrdesc.fault)
         }
     };
-    return()
+    __cache_maintenance(Cache_op_D_CVAU, 64, val_name)
 }
 
 val DC_CVAC : bits(64) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
@@ -29411,7 +29411,7 @@ function DC_CVAC val_name = {
             AArch32_Abort(slice(val_name, 0, 32), memaddrdesc.fault)
         }
     };
-    return()
+    __cache_maintenance(Cache_op_D_CVAC, 64, val_name)
 }
 
 val DC_CVAP : bits(64) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}

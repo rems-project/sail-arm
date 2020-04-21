@@ -482,3 +482,5 @@ val __mark_register = "mark_register" : forall ('a: Type). (register('a), string
 val __ignore_write_to : forall ('a: Type). register('a) -> unit
 
 function __ignore_write_to(reg) = __mark_register(reg, "ignore_write")
+
+val "align_bits" : forall 'n 'm, 'n >= 0 & 'm >= 1. (bits('n), int('m)) -> bits('n)

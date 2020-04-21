@@ -3551,7 +3551,10 @@ overload Align = {Align__0, Align__1}
 
 function Align__0 (x, y) = y * (x / y)
 
-function Align__1 (x, y) = __GetSlice_int('N, Align(UInt(x), y), 0)
+function Align__1 (x, y) = {
+  assert(length(x) > 0 & y > 0);
+  align_bits(x, y)
+}
 
 val aset_ELR__0 : (bits(2), bits(64)) -> unit effect {escape, wreg}
 

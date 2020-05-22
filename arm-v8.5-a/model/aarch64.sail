@@ -1078,11 +1078,13 @@ register LOREA_EL1 : bits(64)
 
 register LORC_EL1 : bits(32)
 
+register configuration exclusive_never_fails : bool = true
+
 val IsExclusiveGlobal : forall ('processorid : Int) ('size : Int).
   (FullAddress, int('processorid), int('size)) -> bool effect {undef}
 
 function IsExclusiveGlobal (paddress, processorid, size) = {
-    undefined : bool
+    if exclusive_never_fails then true else undefined : bool
 }
 
 val asl_Int : forall ('N : Int) ('unsigned : Bool), 'N >= 0.

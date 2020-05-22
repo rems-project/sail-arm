@@ -4727,7 +4727,7 @@ function integer_arithmetic_div (d, datasize, m, n, unsigned) = {
     if IsZero(operand2) then {
         result = 0
     } else {
-        result = RoundTowardsZero(Real(asl_Int(operand1, unsigned)) / Real(asl_Int(operand2, unsigned)))
+        result = tdiv_int(asl_Int(operand1, unsigned), asl_Int(operand2, unsigned))
     };
     X(d) = __GetSlice_int(datasize, result, 0)
 }

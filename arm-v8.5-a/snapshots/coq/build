@@ -12,6 +12,6 @@ fi
 
 set -ex
 make -C lib
-coqc -R bbv/theories bbv -R lib Sail aarch64_extras.v
-coqc -R bbv/theories bbv -R lib Sail aarch64_types.v
-coqc -time -R bbv/theories bbv -R lib Sail aarch64.v
+coqc  -R lib Sail aarch64_extras.v
+coqc  -R lib Sail aarch64_types.v
+coqc -time -R lib Sail aarch64.v

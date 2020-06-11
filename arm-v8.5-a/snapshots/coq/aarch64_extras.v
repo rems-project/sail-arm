@@ -11,6 +11,7 @@ Hint Unfold length : sail.
 
 Definition print (_:string) : unit := tt.
 
+Open Scope Z_scope.
 Lemma Replicate_lemma1 {N M O x} :
   O * M = N ->
   O = Z.quot N M ->

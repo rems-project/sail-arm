@@ -10,7 +10,10 @@ It took <10 minutes to interactively check until line 16K.
 
 Dependencies:
 ````
-opam install coq-bbv
+git clone https://github.com/mit-plv/bbv
+git checkout coq-8.9-compat
+make -j8
+make install
 ````
 
 Build:

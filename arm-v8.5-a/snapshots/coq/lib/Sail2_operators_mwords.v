@@ -94,6 +94,7 @@ Definition update_vec_inc {a} (w : mword a) i b : mword a :=
 (*val update_vec_dec : forall 'a. Size 'a => mword 'a -> integer -> bitU -> mword 'a*)
 Definition update_vec_dec {a} (w : mword a) i b : mword a := opt_def w (update_mword_dec w i b).
 
+Open Scope Z_scope.
 Lemma subrange_lemma0 {n m o} `{ArithFact (0 <= o)} `{ArithFact (o <= m < n)} : (Z.to_nat o <= Z.to_nat m < Z.to_nat n)%nat.
 intros.
 unwrap_ArithFacts.

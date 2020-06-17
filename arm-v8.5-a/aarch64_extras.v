@@ -1,9 +1,6 @@
-Require Import Sail2_instr_kinds.
-Require Import Sail2_values.
-Require Import Sail2_operators_bitlists.
-Require Import Sail2_prompt_monad.
-Require Import Sail2_prompt.
-Require Import Sail2_real.
+Require Import Sail.Base.
+Require Import Sail.Real.
+Open Scope Z.
 Require Import Psatz.
 
 Definition length {n} (x : mword n) := length_mword x.

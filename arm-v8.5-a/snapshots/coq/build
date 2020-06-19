@@ -5,13 +5,12 @@ if [ ! -f aarch64.v ]; then
   exit 1
 fi
 
-if [ ! -d bbv ]; then
-  echo 'Check out a copy of https://github.com/mit-plv/bbv and build it.'
-  exit 1
+if [ -v BBV_DIR ]; then
+  BBV_OPT=-Q "$BBV_DIR"
 fi
 
 set -ex
 make -C lib
-coqc -R bbv/theories bbv -R lib Sail aarch64_extras.v
-coqc -R bbv/theories bbv -R lib Sail aarch64_types.v
-coqc -time -R bbv/theories bbv -R lib Sail aarch64.v
+coqc $BBV_OPT -Q lib Sail aarch64_extras.v
+coqc $BBV_OPT -Q lib Sail aarch64_types.v
+coqc -time $BBV_OPT -Q lib Sail aarch64.v

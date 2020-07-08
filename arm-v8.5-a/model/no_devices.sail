@@ -56,6 +56,7 @@ function acctype_to_read_kind(acctype) = {
         AccType_ORDERED => Read_acquire,
         AccType_ATOMIC => Read_exclusive,
         AccType_ORDEREDATOMIC => Read_exclusive_acquire,
+        AccType_ORDEREDATOMICRW => Read_exclusive_acquire,
         _ => Read_plain
     }
 }
@@ -99,6 +100,7 @@ function acctype_to_write_kind(acctype) = {
         AccType_ORDERED => Write_release,
         AccType_ATOMIC => Write_exclusive,
         AccType_ORDEREDATOMIC => Write_exclusive_release,
+        AccType_ORDEREDATOMICRW => Write_exclusive_release,
         _ => Write_plain
     }
 }

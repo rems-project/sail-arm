@@ -3161,6 +3161,7 @@ val TransformTag : bits(64) -> bits(4) effect {escape}
 
 function TransformTag vaddr = let vtag : bits(4) = slice(vaddr, 56, 4) in let tagdelta : bits(4) = ZeroExtend([vaddr[55]]) in let ptag : bits(4) = vtag + tagdelta in ptag
 
+/*
 val LSR_C : forall ('N : Int) ('shift : Int), 'N >= 0.
   (bits('N), int('shift)) -> (bits('N), bits(1)) effect {escape}
 
@@ -3171,6 +3172,13 @@ function LSR_C (x, shift) = {
     let result : bits('N) = slice(extended_x, shift, 'N);
     let carry_out : bits(1) = [extended_x[shift - 1]];
     return((result, carry_out))
+}
+*/
+val LSR_C : forall 'N 'shift. (bits('N), int('shift)) -> (bits('N), bits(1))
+
+function LSR_C (x, shift) = {
+    let carry_out = if (shift > 0 & shift <= 'N) then x[shift - 1] else bitzero;
+    (sail_shiftright(x, shift), [carry_out])
 }
 
 val LSR : forall ('N : Int) ('shift : Int), ('shift >= 0 & 'N >= 0).

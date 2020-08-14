@@ -3977,6 +3977,7 @@ function Poly32Mod2 (data__arg, poly) = {
     slice(data, 0, 32)
 }
 
+/*
 val LSL_C : forall ('N : Int) ('shift : Int), 'N >= 0.
   (bits('N), int('shift)) -> (bits('N), bits(1)) effect {escape}
 
@@ -3987,6 +3988,14 @@ function LSL_C (x, shift) = {
     let result : bits('N) = slice(extended_x, 0, 'N);
     let carry_out : bits(1) = [extended_x['N]];
     return((result, carry_out))
+}
+*/
+val LSL_C : forall ('N 'shift : Int).
+  (bits('N), int('shift)) -> (bits('N), bits(1))
+
+function LSL_C (x, shift) = {
+    let carry_out = if shift > 0 & shift <= 'N then x['N - shift] else bitzero;
+    (sail_shiftleft(x, shift), [carry_out])
 }
 
 val LSL : forall ('N : Int) ('shift : Int), ('shift >= 0 & 'N >= 0).
@@ -4090,6 +4099,7 @@ function Extend__0 (x, N, unsigned) = {
 
 function Extend__1 (N, x, unsigned) = Extend__0(x, 'N, unsigned)
 
+/*
 val ASR_C : forall ('N : Int) ('shift : Int), 'N >= 0.
   (bits('N), int('shift)) -> (bits('N), bits(1)) effect {escape}
 
@@ -4100,6 +4110,14 @@ function ASR_C (x, shift) = {
     let result : bits('N) = slice(extended_x, shift, 'N);
     let carry_out : bits(1) = [extended_x[shift - 1]];
     return((result, carry_out))
+}
+*/
+val ASR_C : forall 'N 'shift, 'N >= 0.
+  (bits('N), int('shift)) -> (bits('N), bits(1))
+
+function ASR_C (x, shift) = {
+    let carry_out = if shift == 0 | 'N == 0 then bitzero else if shift >= 'N then x['N - 1] else x['shift - 1];
+    (sail_arith_shiftright(x, shift), [carry_out])
 }
 
 val ASR : forall ('N : Int) ('shift : Int), ('shift >= 0 & 'N >= 0).

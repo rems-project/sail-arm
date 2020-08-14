@@ -484,3 +484,13 @@ val __ignore_write_to : forall ('a: Type). register('a) -> unit
 function __ignore_write_to(reg) = __mark_register(reg, "ignore_write")
 
 val "align_bits" : forall 'n 'm, 'n >= 0 & 'm >= 1. (bits('n), int('m)) -> bits('n)
+
+
+val sail_shiftleft = "shiftl" : forall 'n ('ord : Order).
+    (bitvector('n, 'ord), int) -> bitvector('n, 'ord) effect pure
+
+val sail_shiftright = "shiftr" : forall 'n ('ord : Order).
+    (bitvector('n, 'ord), int) -> bitvector('n, 'ord) effect pure
+
+val sail_arith_shiftright = "arith_shiftr" : forall 'n ('ord : Order).
+    (bitvector('n, 'ord), int) -> bitvector('n, 'ord) effect pure

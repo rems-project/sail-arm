@@ -468,7 +468,16 @@ function isla_client(opcode) = {
   // The first cycle during footprint analysis is reserved for initialization, and ignored.
   check_cycle_count();
   try {
-    decode64(opcode);
+    var continue_decode: bool = true;
+    while continue_decode do {
+      try {
+        decode64(opcode);
+        continue_decode = false
+      } catch {
+        Error_See(_) => (),
+        exn => throw(exn)
+      }
+    };
     true
   } catch {
     _ => false

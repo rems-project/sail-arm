@@ -27760,7 +27760,7 @@ function memory_single_general_immediate_signed_offset_lda_stl_memory_single_gen
 }
 
 val memory_pair_simdfp_postidx : forall 'datasize 'n 't 't2,
-  ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31 & 't2 >= 0 & 't2 <= 31 & 'datasize in {8, 16, 32, 64}).
+  ('n >= 0 & 'n <= 31 & 't >= 0 & 't <= 31 & 't2 >= 0 & 't2 <= 31 & 'datasize in {8, 16, 32, 64, 128}).
   (AccType, int('datasize), MemOp, int('n), bits(64), bool, int('t), int('t2), bool) -> unit effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function memory_pair_simdfp_postidx (acctype, datasize, memop, n, offset, postindex, t, t2, wback) = {
@@ -27845,7 +27845,7 @@ function memory_pair_simdfp_preidx_memory_pair_simdfp_postidx__decode (Rt, Rn, R
     };
     let 'scale = 2 + UInt(opc);
     let 'datasize = shl_int(8, scale);
-    assert(constraint('datasize in {8, 16, 32, 64}));
+    assert(constraint('datasize in {8, 16, 32, 64, 128}));
     let offset : bits(64) = LSL(SignExtend(imm7, 64), scale);
     __PostDecode();
     memory_pair_simdfp_postidx(acctype, datasize, memop, n, offset, postindex, t, t2, wback)
@@ -27867,7 +27867,7 @@ function memory_pair_simdfp_postidx_memory_pair_simdfp_postidx__decode (Rt, Rn, 
     };
     let 'scale = 2 + UInt(opc);
     let 'datasize = shl_int(8, scale);
-    assert(constraint('datasize in {8, 16, 32, 64}));
+    assert(constraint('datasize in {8, 16, 32, 64, 128}));
     let offset : bits(64) = LSL(SignExtend(imm7, 64), scale);
     __PostDecode();
     memory_pair_simdfp_postidx(acctype, datasize, memop, n, offset, postindex, t, t2, wback)
@@ -27889,7 +27889,7 @@ function memory_pair_simdfp_offset_memory_pair_simdfp_postidx__decode (Rt, Rn, R
     };
     let 'scale = 2 + UInt(opc);
     let 'datasize = shl_int(8, scale);
-    assert(constraint('datasize in {8, 16, 32, 64}));
+    assert(constraint('datasize in {8, 16, 32, 64, 128}));
     let offset : bits(64) = LSL(SignExtend(imm7, 64), scale);
     __PostDecode();
     memory_pair_simdfp_postidx(acctype, datasize, memop, n, offset, postindex, t, t2, wback)

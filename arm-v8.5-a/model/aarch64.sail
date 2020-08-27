@@ -13842,7 +13842,7 @@ val integer_pac_autia_hint_decode : (bits(5), bits(3), bits(4), bits(4), bits(3)
 function integer_pac_autia_hint_decode (Rt, op2, CRm, CRn, op1, op0, L) = {
     __unconditional = true;
     d : int = undefined : int;
-    n : int = undefined : int;
+    n : int = 0 : int;
     source_is_sp : bool = false;
     match CRm @ op2 {
       0b0011100 => {

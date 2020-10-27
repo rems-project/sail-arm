@@ -293,6 +293,7 @@ definition replicate_bits_bv  :: " 'a Bitvector_class \<Rightarrow> 'a \<Rightar
 definition duplicate_bit_bv  :: " 'a BitU_class \<Rightarrow> 'a \<Rightarrow> int \<Rightarrow>(bitU)list "  where 
      " duplicate_bit_bv dict_Sail2_values_BitU_a bit len = ( replicate_bits_bv 
   (instance_Sail2_values_Bitvector_list_dict dict_Sail2_values_BitU_a) [bit] len )"
+   for bit :: "'a"
 
 
 \<comment> \<open>\<open>val eq_bv : forall 'a. Bitvector 'a => 'a -> 'a -> bool\<close>\<close>

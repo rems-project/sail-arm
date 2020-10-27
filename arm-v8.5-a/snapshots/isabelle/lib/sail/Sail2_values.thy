@@ -116,6 +116,7 @@ fun  repeat  :: " 'a list \<Rightarrow> int \<Rightarrow> 'a list "  where
 
 definition duplicate_to_list  :: " 'a \<Rightarrow> int \<Rightarrow> 'a list "  where 
      " duplicate_to_list bit length1 = ( repeat [bit] length1 )"
+   for bit :: "'a"
 
 
 fun  replace  :: " 'a list \<Rightarrow> int \<Rightarrow> 'a \<Rightarrow> 'a list "  where 

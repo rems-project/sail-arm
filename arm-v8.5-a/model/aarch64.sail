@@ -9542,7 +9542,7 @@ function AArch64_AutoGen_ArchitectureReset cold = {
     SCTLR_EL1 = __SetSlice_bits(64, 1, SCTLR_EL1, 17, 0b0);
     SCTLR_EL1 = __SetSlice_bits(64, 1, SCTLR_EL1, 12, 0b0);
     SCTLR_EL1 = __SetSlice_bits(64, 1, SCTLR_EL1, 2, 0b0);
-    SCTLR_EL1 = __SetSlice_bits(64, 1, SCTLR_EL1, 0, 0b0);
+    // SCTLR_EL1 = __SetSlice_bits(64, 1, SCTLR_EL1, 0, 0b0);
     SCTLR_EL2 = __SetSlice_bits(64, 19, SCTLR_EL2, 45, 0b0000000000000000000);
     SCTLR_EL2 = __SetSlice_bits(64, 1, SCTLR_EL2, 42, 0b0);
     SCTLR_EL2 = __SetSlice_bits(64, 2, SCTLR_EL2, 38, 0b00);
@@ -12403,6 +12403,7 @@ function branch_unconditional_register (branch_type, m, n, pac, source_is_sp, us
         }
     };
     if branch_type == BranchType_INDCALL then {
+        ignore_dependency_edge(n, 30);
         X(30) = PC() + 4
     };
     BranchTo(target, branch_type)

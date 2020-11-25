@@ -478,6 +478,7 @@ function cdiv_int(m: int, n: int) -> int =
 val __monomorphize = "monomorphize" : forall 'n, 'n >= 0. bits('n) -> bits('n)
 
 val __mark_register = "mark_register" : forall ('a: Type). (register('a), string) -> unit
+val __mark_register_pair = "mark_register_pair" : forall ('a: Type) ('b: Type). (register('a), register('b), string) -> unit
 
 val __ignore_write_to : forall ('a: Type). register('a) -> unit
 

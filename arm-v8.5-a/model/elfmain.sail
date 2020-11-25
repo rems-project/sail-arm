@@ -364,6 +364,7 @@ function init() = {
   _PC = __GetSlice_int(64, elf_entry(), 0);
   SP_EL0 = ZeroExtend(0x3C00, 64);
   PSTATE.EL = EL0;
+  PSTATE.PAN = 0b0;
   DBGEN = LOW;
 }
 

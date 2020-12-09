@@ -392,6 +392,8 @@ function main() = {
   }
 }
 
+val isla_reset_registers = "reset_registers" : unit -> unit
+
 val isla_footprint : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function isla_footprint(opcode) = {
@@ -408,6 +410,8 @@ function isla_footprint(opcode) = {
   __PC_changed = false;
   __currentInstr = opcode;
   DBGEN = LOW;
+
+  isla_reset_registers();
 
   // The first cycle during footprint analysis is reserved for initialization, and ignored.
   check_cycle_count();

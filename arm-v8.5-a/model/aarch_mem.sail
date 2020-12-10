@@ -3635,6 +3635,7 @@ val CombineS1S2Desc : (AddressDescriptor, AddressDescriptor) -> AddressDescripto
 
 function CombineS1S2Desc (s1desc, s2desc) = {
     result : AddressDescriptor = undefined : AddressDescriptor;
+    result.fault = AArch64_NoFault();
     result.paddress = s2desc.paddress;
     if IsFault(s1desc) | IsFault(s2desc) then {
         result = if IsFault(s1desc) then s1desc else s2desc
@@ -10278,6 +10279,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
     result.descupdate.AF = false;
     result.descupdate.AP = false;
     descaddr : AddressDescriptor = undefined : AddressDescriptor;
+    descaddr.fault = AArch64_NoFault();
     baseregister : bits(64) = undefined : bits(64);
     inputaddr : bits(64) = undefined : bits(64);
     if __tlb_enabled then {
@@ -10655,6 +10657,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
     blocktranslate : bool = undefined : bool;
     desc : bits(64) = undefined : bits(64);
     descaddr2 : AddressDescriptor = undefined : AddressDescriptor;
+    descaddr2.fault = AArch64_NoFault();
     hwupdatewalk : bool = undefined : bool;
     repeat {
         addrselectbottom = (3 - level) * stride + grainsize;

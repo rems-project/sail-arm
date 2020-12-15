@@ -53,9 +53,6 @@ aarch64.ir: model/*.sail
 translate_address.c: model/*.sail translate_address.isail
 	sail -is translate_address.isail
 
-aarch64.ir: model/*.sail
-	../../isla/isla-sail/isla-sail -v 1 $(AARCH_SRCS) -o aarch64
-
 clean:
 	-rm -f aarch64.c.tmp
 	-rm -f aarch64.c

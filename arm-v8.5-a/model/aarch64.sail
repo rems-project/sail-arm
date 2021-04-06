@@ -3526,380 +3526,380 @@ function TLBReset () = {
 val _TLB_Invalidate : unit -> unit effect {rreg, wreg}
 
 function _TLB_Invalidate () = {
-    TLBReset();
+    //TLBReset();
     return()
 }
 
 val TLBI_VMALLS12E1OS : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLS12E1OS () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VMALLS12E1OS, 64, Zeros(64))
 }
 
 val TLBI_VMALLS12E1IS : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLS12E1IS () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VMALLS12E1IS, 64, Zeros(64))
 }
 
 val TLBI_VMALLS12E1 : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLS12E1 () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VMALLS12E1, 64, Zeros(64))
 }
 
 val TLBI_VMALLE1OS : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLE1OS () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VMALLE1OS, 64, Zeros(64))
 }
 
 val TLBI_VMALLE1IS : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLE1IS () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VMALLE1IS, 64, Zeros(64))
 }
 
 val TLBI_VMALLE1 : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLE1 () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VMALLE1, 64, Zeros(64))
 }
 
 val TLBI_VALE3OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE3OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VALE3OS, 64, val_name)
 }
 
 val TLBI_VALE3IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE3IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VALE3IS, 64, val_name)
 }
 
 val TLBI_VALE3 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE3 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VALE3, 64, val_name)
 }
 
 val TLBI_VALE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VALE1OS, 64, val_name)
 }
 
 val TLBI_VALE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VALE1IS, 64, val_name)
 }
 
 val TLBI_VALE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VALE1, 64, val_name)
 }
 
 val TLBI_VAE3OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE3OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAE3OS, 64, val_name)
 }
 
 val TLBI_VAE3IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE3IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAE3IS, 64, val_name)
 }
 
 val TLBI_VAE3 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE3 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAE3, 64, val_name)
 }
 
 val TLBI_VAE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAE1OS, 64, val_name)
 }
 
 val TLBI_VAE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAE1IS, 64, val_name)
 }
 
 val TLBI_VAE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAE1, 64, val_name)
 }
 
 val TLBI_VAALE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAALE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAALE1OS, 64, val_name)
 }
 
 val TLBI_VAALE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAALE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAALE1IS, 64, val_name)
 }
 
 val TLBI_VAALE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAALE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAALE1, 64, val_name)
 }
 
 val TLBI_VAAE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAAE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAAE1OS, 64, val_name)
 }
 
 val TLBI_VAAE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAAE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAAE1IS, 64, val_name)
 }
 
 val TLBI_VAAE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAAE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_VAAE1, 64, val_name)
 }
 
 val TLBI_RVALE3IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE3IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVALE3IS, 64, val_name)
 }
 
 val TLBI_RVALE3 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE3 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVALE3, 64, val_name)
 }
 
 val TLBI_RVALE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVALE1OS, 64, val_name)
 }
 
 val TLBI_RVALE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVALE1IS, 64, val_name)
 }
 
 val TLBI_RVALE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVALE1, 64, val_name)
 }
 
 val TLBI_RVAE3OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE3OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAE3OS, 64, val_name)
 }
 
 val TLBI_RVAE3IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE3IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAE3IS, 64, val_name)
 }
 
 val TLBI_RVAE3 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE3 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAE3, 64, val_name)
 }
 
 val TLBI_RVAE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAE1OS, 64, val_name)
 }
 
 val TLBI_RVAE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAE1IS, 64, val_name)
 }
 
 val TLBI_RVAE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAE1, 64, val_name)
 }
 
 val TLBI_RVAALE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAALE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAALE1OS, 64, val_name)
 }
 
 val TLBI_RVAALE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAALE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAALE1IS, 64, val_name)
 }
 
 val TLBI_RVAALE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAALE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAALE1, 64, val_name)
 }
 
 val TLBI_RVAAE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAAE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAAE1OS, 64, val_name)
 }
 
 val TLBI_RVAAE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAAE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAAE1IS, 64, val_name)
 }
 
 val TLBI_RVAAE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAAE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RVAAE1, 64, val_name)
 }
 
 val TLBI_RIPAS2LE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2LE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RIPAS2LE1OS, 64, val_name)
 }
 
 val TLBI_RIPAS2LE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2LE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RIPAS2LE1IS, 64, val_name)
 }
 
 val TLBI_RIPAS2LE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2LE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RIPAS2LE1, 64, val_name)
 }
 
 val TLBI_RIPAS2E1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2E1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RIPAS2E1OS, 64, val_name)
 }
 
 val TLBI_RIPAS2E1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2E1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RIPAS2E1IS, 64, val_name)
 }
 
 val TLBI_RIPAS2E1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2E1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_RIPAS2E1, 64, val_name)
 }
 
 val TLBI_IPAS2LE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2LE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_IPAS2LE1OS, 64, val_name)
 }
 
 val TLBI_IPAS2LE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2LE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_IPAS2LE1IS, 64, val_name)
 }
 
 val TLBI_IPAS2LE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2LE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_IPAS2LE1, 64, val_name)
 }
 
 val TLBI_IPAS2E1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2E1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_IPAS2E1OS, 64, val_name)
 }
 
 val TLBI_IPAS2E1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2E1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_IPAS2E1IS, 64, val_name)
 }
 
 val TLBI_IPAS2E1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2E1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_IPAS2E1, 64, val_name)
 }
 
 val TLBI_ASIDE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_ASIDE1OS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_ASIDE1OS, 64, val_name)
 }
 
 val TLBI_ASIDE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_ASIDE1IS val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_ASIDE1IS, 64, val_name)
 }
 
 val TLBI_ASIDE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_ASIDE1 val_name = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_ASIDE1, 64, val_name)
 }
 
 val TLBI_ALLE3OS : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE3OS () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_ALLE3OS, 64, Zeros(64))
 }
 
 val TLBI_ALLE3IS : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE3IS () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_ALLE3IS, 64, Zeros(64))
 }
 
 val TLBI_ALLE3 : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE3 () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_ALLE3, 64, Zeros(64))
 }
 
 val TLBI_ALLE1OS : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE1OS () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_ALLE1OS, 64, Zeros(64))
 }
 
 val TLBI_ALLE1IS : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE1IS () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_ALLE1IS, 64, Zeros(64))
 }
 
 val TLBI_ALLE1 : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE1 () = {
-    _TLB_Invalidate()
+    __cache_maintenance(Cache_op_TLBI_ALLE1, 64, Zeros(64))
 }
 
 val aset_V : forall ('width : Int) ('n : Int), ('n >= 0 & 'n <= 31).
@@ -20657,7 +20657,7 @@ val TLBI_VALE2OS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VALE2OS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_VALE2OS, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20667,7 +20667,7 @@ val TLBI_VALE2IS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VALE2IS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_VALE2IS, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20677,7 +20677,7 @@ val TLBI_VALE2 : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VALE2 val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_VALE2, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20687,7 +20687,7 @@ val TLBI_VAE2OS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VAE2OS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_VAE2OS, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20697,7 +20697,7 @@ val TLBI_VAE2IS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VAE2IS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_VAE2IS, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20707,7 +20707,7 @@ val TLBI_VAE2 : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VAE2 val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_VAE2, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20717,7 +20717,7 @@ val TLBI_RVALE2OS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVALE2OS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_RVALE2OS, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20727,7 +20727,7 @@ val TLBI_RVALE2IS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVALE2IS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_RVALE2IS, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20737,7 +20737,7 @@ val TLBI_RVALE2 : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVALE2 val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_RVALE2, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20747,7 +20747,7 @@ val TLBI_RVAE2OS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVAE2OS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_RVAE2OS, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20757,7 +20757,7 @@ val TLBI_RVAE2IS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVAE2IS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_RVAE2IS, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20767,7 +20767,7 @@ val TLBI_RVAE2 : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVAE2 val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_RVAE2, 64, val_name)
     } else {
         UndefinedFault()
     }
@@ -20777,7 +20777,7 @@ val TLBI_ALLE2OS : unit -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_ALLE2OS () = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_ALLE2OS, 64, Zeros(64))
     } else {
         UndefinedFault()
     }
@@ -20787,7 +20787,7 @@ val TLBI_ALLE2IS : unit -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_ALLE2IS () = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_ALLE2IS, 64, Zeros(64))
     } else {
         UndefinedFault()
     }
@@ -20797,7 +20797,7 @@ val TLBI_ALLE2 : unit -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_ALLE2 () = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        _TLB_Invalidate()
+        __cache_maintenance(Cache_op_TLBI_ALLE2, 64, Zeros(64))
     } else {
         UndefinedFault()
     }

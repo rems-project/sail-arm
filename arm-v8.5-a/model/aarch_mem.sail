@@ -7025,7 +7025,7 @@ function AArch64_CheckS2Permission (perms, vaddress, ipaddress, level, acctype, 
     };
     fail : bool = undefined : bool;
     failedread : bool = undefined : bool;
-    if acctype == AccType_IFETCH & ~(s2fs1walk) then {
+    if acctype == AccType_IFETCH /* & ~(s2fs1walk) */ then {
         fail = xn;
         failedread = true
     } else {

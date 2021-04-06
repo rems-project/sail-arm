@@ -372,9 +372,12 @@ val main : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, 
 
 val check_cycle_count = { c: "cycle_count" } : unit -> unit
 
+val isla_reset_registers = "reset_registers" : unit -> unit
+
 function main() = {
   let verbosity = __GetVerbosity();
   init();
+  isla_reset_registers();
   check_cycle_count();
   while true do {
     if verbosity[0] == bitone then {
@@ -392,37 +395,45 @@ function main() = {
   }
 }
 
-val isla_reset_registers = "reset_registers" : unit -> unit
-
 val isla_footprint : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function isla_footprint(opcode) = {
   SEE = -1;
 
-  __highest_el_aarch32 = false;
-  CFG_ID_AA64PFR0_EL1_EL0 = 0x1;
-  CFG_ID_AA64PFR0_EL1_EL1 = 0x1;
-  CFG_ID_AA64PFR0_EL1_EL2 = 0x1;
-  CFG_ID_AA64PFR0_EL1_EL3 = 0x1;
+  //__highest_el_aarch32 = false;
+  //CFG_ID_AA64PFR0_EL1_EL0 = 0x1;
+  //CFG_ID_AA64PFR0_EL1_EL1 = 0x1;
+  //CFG_ID_AA64PFR0_EL1_EL2 = 0x1;
+  //CFG_ID_AA64PFR0_EL1_EL3 = 0x1;
   TakeReset(COLD_RESET);
   AArch64_ResetGeneralRegisters();
+
   PSTATE.EL = EL0;
   __PC_changed = false;
   __currentInstr = opcode;
   DBGEN = LOW;
 
+  // Will set any registers passed via the -R option or the registers.reset config section
   isla_reset_registers();
 
   // The first cycle during footprint analysis is reserved for initialization, and ignored.
   check_cycle_count();
   try {
-    decode64(opcode);
+    var continue_decode: bool = true;
+    while continue_decode do {
+      try {
+        decode64(opcode);
+        continue_decode = false
+      } catch {
+        Error_See(_) => (),
+        exn => throw(exn)
+      }
+    };
     true
   } catch {
     _ => false
   }
 }
-
 
 /* This is the function that is called by isla-client and thus by read-dwarf */
 val isla_client : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}

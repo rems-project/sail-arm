@@ -45,7 +45,7 @@
 
 $define ARM_SPEC
 
-$include <regfp.sail>
+$include "aarch_regfp.sail"
 
 val acctype_to_read_kind : AccType -> read_kind
 

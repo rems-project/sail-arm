@@ -394,19 +394,11 @@ function main() = {
 
 val isla_reset_registers = "reset_registers" : unit -> unit
 
-val isla_footprint : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
+val isla_footprint_no_init : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
-function isla_footprint(opcode) = {
+function isla_footprint_no_init(opcode) = {
   SEE = -1;
 
-  __highest_el_aarch32 = false;
-  CFG_ID_AA64PFR0_EL1_EL0 = 0x1;
-  CFG_ID_AA64PFR0_EL1_EL1 = 0x1;
-  CFG_ID_AA64PFR0_EL1_EL2 = 0x1;
-  CFG_ID_AA64PFR0_EL1_EL3 = 0x1;
-  TakeReset(COLD_RESET);
-  AArch64_ResetGeneralRegisters();
-  PSTATE.EL = EL0;
   __PC_changed = false;
   __currentInstr = opcode;
   DBGEN = LOW;
@@ -423,6 +415,20 @@ function isla_footprint(opcode) = {
   }
 }
 
+val isla_footprint : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
+
+function isla_footprint(opcode) = {
+  __highest_el_aarch32 = false;
+  CFG_ID_AA64PFR0_EL1_EL0 = 0x1;
+  CFG_ID_AA64PFR0_EL1_EL1 = 0x1;
+  CFG_ID_AA64PFR0_EL1_EL2 = 0x1;
+  CFG_ID_AA64PFR0_EL1_EL3 = 0x1;
+  TakeReset(COLD_RESET);
+  AArch64_ResetGeneralRegisters();
+  PSTATE.EL = EL0;
+
+  isla_footprint_no_init(opcode)
+}
 
 /* This is the function that is called by isla-client and thus by read-dwarf */
 val isla_client : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}

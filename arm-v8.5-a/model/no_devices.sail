@@ -72,9 +72,11 @@ val __bad_read = "bad_read" : forall 'n. int('n) -> bits(8 * 'n)
 val __ReadRAM : forall 'n 'm.
   (AccType, atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
 
+register configuration __isla_monomorphize_reads: bool = false
+
 function __ReadRAM(acctype, addr_length, bytes, hex_ram, addr) =
     if addr_length > 0 & addr_length <= 64 & bytes > 0 then {
-        let addr = if acctype == AccType_IFETCH then __monomorphize(addr) else addr;
+        let addr = if acctype == AccType_IFETCH | __isla_monomorphize_reads then __monomorphize(addr) else addr;
         __read_mem(acctype_to_read_kind(acctype), 64, sail_zero_extend(addr, 64), bytes)
     } else {
         __bad_read(bytes)

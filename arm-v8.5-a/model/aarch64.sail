@@ -20408,6 +20408,7 @@ function branch_unconditional_eret (pac, use_key_a) = {
             target = AuthIB(ELR(), SP())
         }
     };
+    __barrier(Barrier_ERET);
     AArch64_ExceptionReturn(target, SPSR())
 }
 

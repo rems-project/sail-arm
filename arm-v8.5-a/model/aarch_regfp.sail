@@ -95,7 +95,8 @@ enum barrier_kind = {
   Barrier_DSB_OSH,
   Barrier_DSB_OSHST,
   Barrier_DSB_OSHLD,
-  Barrier_ISB
+  Barrier_ISB,
+  Barrier_ERET
 }
 
 /* cache maintenance instructions */

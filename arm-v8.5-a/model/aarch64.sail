@@ -23013,6 +23013,7 @@ val AArch64_SysRegWrite : forall 'op0 'op1 'crn 'crm 'op2.
 
 function AArch64_SysRegWrite (op0, op1, crn, crm, op2, val_name) = {
     AArch64_AutoGen_SysRegWrite(PSTATE.EL, __GetSlice_int(2, op0, 0), __GetSlice_int(3, op1, 0), __GetSlice_int(4, crn, 0), __GetSlice_int(3, op2, 0), __GetSlice_int(4, crm, 0), 0b0, val_name);
+    __barrier(Barrier_MSR);
     if ((((op0 == 3 & crn == 12) & ((op1 == 6 | op1 == 4) | op1 == 0)) & op2 == 2) & crm == 0) & [val_name[1]] == 0b1 then {
         TakeReset(false)
     };

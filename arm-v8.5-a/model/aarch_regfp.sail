@@ -96,6 +96,7 @@ enum barrier_kind = {
   Barrier_DSB_OSHST,
   Barrier_DSB_OSHLD,
   Barrier_ISB,
+  Barrier_TakeException,
   Barrier_ERET,
   Barrier_MSR
 }

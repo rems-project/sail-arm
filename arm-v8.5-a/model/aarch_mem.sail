@@ -7496,6 +7496,7 @@ function AArch64_TakeException (target_el, exception, preferred_exception_return
     if HaveMTEExt() then {
         PSTATE.TCO = 0b1
     };
+    __barrier(Barrier_TakeException);
     BranchTo(slice(aget_VBAR(), 11, 53) @ __GetSlice_int(11, vect_offset, 0), BranchType_EXCEPTION);
     if sync_errors then {
         SynchronizeErrors();

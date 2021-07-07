@@ -236,6 +236,11 @@ val __cache_maintenance
   : forall (constant 'addrsize : Int), 'addrsize in {32, 64}.
   (cache_op_kind, int('addrsize), bits('addrsize)) -> unit
 
+val __cache_maintenance_extra
+  = { ocaml: "Platform.cache_maintenance_extra", c: "platform_cache_maintenance_extra", _ : "cache_maintenance_extra" }
+  : forall (constant 'addrsize : Int), 'addrsize in {32, 64}.
+  (cache_op_kind, int('addrsize), bits('addrsize), bits(64)) -> unit
+
 val __instr_announce
   = { ocaml: "Platform.instr_announce", c: "platform_instr_announce", _: "instr_announce" }
   : forall 'n, 'n > 0.

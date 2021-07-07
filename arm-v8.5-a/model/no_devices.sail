@@ -73,6 +73,7 @@ val __ReadRAM : forall 'n 'm.
   (AccType, atom('m), atom('n), bits('m), bits('m)) -> bits(8 * 'n) effect {rmem}
 
 register configuration __isla_monomorphize_reads: bool = false
+register configuration __isla_monomorphize_writes: bool = false
 
 function __ReadRAM(acctype, addr_length, bytes, hex_ram, addr) =
     if addr_length > 0 & addr_length <= 64 & bytes > 0 then {
@@ -112,6 +113,7 @@ val __WriteRAM : forall 'n 'm.
 
 function __WriteRAM(acctype, addr_length, bytes, hex_ram, addr, data) =
     if addr_length > 0 & addr_length <= 64 & bytes > 0 then {
+      let addr = if __isla_monomorphize_writes then __monomorphize(addr) else addr;
       let _ = __write_mem2(acctype_to_write_kind(acctype), 64, sail_zero_extend(addr, 64), bytes, data);
       ()
     } else {

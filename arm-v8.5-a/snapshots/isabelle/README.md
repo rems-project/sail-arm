@@ -5,6 +5,9 @@ for the base fragment of the [ARM v8.5](aarch64/) specification, currently
 excluding 32 bit, floating point, and vector instructions.  This snapshots is
 provided for convenience, and is not guaranteed to be up-to-date.
 
+It requires [Isabelle 2020](https://isabelle.in.tum.de/website-Isabelle2020/index.html)
+to build.
+
 A heap image containing the architecture definitions (as well as the Lem and
 Sail libraries in the [lem](lem/) subdirectory) can be built using
 

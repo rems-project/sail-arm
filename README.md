@@ -4,7 +4,9 @@
 
 ## License
 
-All models are licensed under the BSD 3-Clause Clear license in `LICENSE` Artefacts such as the snapshots in this repository that are produced by Sail are also subject to the same license.
+All models are licensed under the BSD 3-Clause Clear license in `LICENSE`.
+Artefacts such as the snapshots in this repository that are produced by Sail are also subject to the same license.
+The snapshots of the Lem and Sail libraries include copies of their licenses.
 
 ## Models
 

@@ -19,6 +19,10 @@ This software was developed by Arm and the University of
 Cambridge Computer Laboratory (Department of Computer Science and
 Technology) under DARPA/AFRL contract FA8650-18-C-7809 ("CIFV").
 
+This project has received funding from the European Research Council
+(ERC) under the European Union’s Horizon 2020 research and innovation
+programme (grant agreement No 789108, ELVER).
+
 This software was developed by Arm, the University of Cambridge, and
 the University of Edinburgh within the Rigorous Engineering of
 Mainstream Systems (REMS) project, partly funded by EPSRC grant

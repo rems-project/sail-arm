@@ -403,6 +403,7 @@ function isla_footprint_no_init(opcode) = {
 
   __PC_changed = false;
   __currentInstr = opcode;
+  __currentInstrLength = 4;
   DBGEN = LOW;
 
   // Will set any registers passed via the -R option or the registers.reset config section
@@ -421,6 +422,7 @@ function isla_footprint_no_init(opcode) = {
         exn => throw(exn)
       }
     };
+    if ~(__PC_changed) then _PC = _PC + __currentInstrLength else ();
     true
   } catch {
     _ => false

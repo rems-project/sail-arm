@@ -1,3 +1,11 @@
+ifeq ($(SAIL_DIR),)
+SAIL_DIR:=$(shell opam var sail:share)
+ifeq ($(SAIL_DIR),\#undefined)
+$(error Environment variable SAIL_DIR is unset. This variable should either point at the root directory of the Sail repository, or be `opam var sail:share` if Sail was installed via OPAM)
+endif
+endif
+$(warning SAIL_DIR is $(SAIL_DIR))
+
 DEVICES = no_devices.sail
 MAIN = elfmain.sail
 

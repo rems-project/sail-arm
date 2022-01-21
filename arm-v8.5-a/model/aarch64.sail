@@ -1098,6 +1098,7 @@ function asl_Int (x, unsigned) = {
 val InstructionSynchronizationBarrier : unit -> unit
 
 function InstructionSynchronizationBarrier () = {
+    __synchronize_registers();
     __barrier_no_effect(Barrier_ISB)
 }
 

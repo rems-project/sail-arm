@@ -495,3 +495,5 @@ val sail_shiftright = "shiftr" : forall 'n ('ord : Order).
 
 val sail_arith_shiftright = "arith_shiftr" : forall 'n ('ord : Order).
     (bitvector('n, 'ord), int) -> bitvector('n, 'ord) effect pure
+
+val __synchronize_registers = "platform_synchronize_registers" : unit -> unit

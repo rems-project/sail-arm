@@ -444,6 +444,14 @@ function isla_footprint(opcode) = {
   isla_footprint_no_init(opcode)
 }
 
+$property
+val prop_AArch64_TranslateAddress_nofault : forall ('iswrite : Bool) ('wasaligned : Bool) 'size.
+  (bits(64), AccType, bool('iswrite), bool('wasaligned), int('size), AddressDescriptor) -> bool effect {escape, rmem, rreg, undef, wmem, wreg}
+
+function prop_AArch64_TranslateAddress_nofault(vaddress, acctype, iswrite, wasaligned, size, descriptor) = {
+  descriptor.fault.typ == Fault_None
+}
+
 /* This is the function that is called by isla-client and thus by read-dwarf */
 val isla_client : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 

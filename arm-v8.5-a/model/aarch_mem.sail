@@ -43,12 +43,20 @@
 /* IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                          */
 /**************************************************************************/
 
+val Replicate : forall ('M : Int) ('N : Int), ('M >= 1 & mod('N, 'M) == 0).
+  (implicit('N), bits('M)) -> bits('N)
+
+function Replicate (N, x) = replicate_bits(x, N / 'M)
+
+val Zeros = {ocaml: "zeros", lem: "zeros", smt: "zeros", interpreter: "zeros", c: "zeros"}: forall ('N : Int).
+  implicit('N) -> bits('N)
+
 val TakePendingInterrupts : InterruptReq -> bool effect {undef, escape, rreg, wreg}
 
 val TakeSError : bool -> unit effect {escape, rreg, undef, wreg}
 
 val AArch64_TranslationTableWalk : forall ('size : Int).
-  (bits(52), bits(1), bits(64), AccType, bool, bool, bool, int('size)) -> TLBRecord effect {escape, undef, rmem, rreg, wreg, wmem}
+  (bits(52), bits(1), bits(64), AccType, bool, bool, bool, int('size)) -> (TLBRecord, option(TranslationInfo)) effect {escape, undef, rmem, rreg, wreg, wmem}
 
 val IsZero_slice : forall ('n : Int), 'n >= 0.
   (bits('n), int, int) -> bool effect {escape}
@@ -64,6 +72,8 @@ val AArch64_CheckAndUpdateDescriptor : (DescriptorUpdate, FaultRecord, bool, bit
 
 val AArch32_TranslationTableWalk : forall ('size : Int).
   (bits(40), bits(32), AccType, bool, bool, bool, int('size)) -> TLBRecord effect {escape, rmem, rreg, undef, wmem, wreg}
+
+val AArch64_Abort : (bits(64), FaultRecord) -> unit effect {escape, rreg, undef, wreg}
 
 register __highest_el_aarch32 : bool
 
@@ -149,79 +159,123 @@ register R28 : bits(64)
 register R29 : bits(64)
 register R30 : bits(64)
 
+let GPRs : vector(31, dec, register(bits(64))) = [
+    ref R30,
+    ref R29,
+    ref R28,
+    ref R27,
+    ref R26,
+    ref R25,
+    ref R24,
+    ref R23,
+    ref R22,
+    ref R21,
+    ref R20,
+    ref R19,
+    ref R18,
+    ref R17,
+    ref R16,
+    ref R15,
+    ref R14,
+    ref R13,
+    ref R12,
+    ref R11,
+    ref R10,
+    ref R9,
+    ref R8,
+    ref R7,
+    ref R6,
+    ref R5,
+    ref R4,
+    ref R3,
+    ref R2,
+    ref R1,
+    ref R0
+]
+
+register __isla_vector_gpr: bool = false
+
+val read_gpr = monadic "read_register_from_vector" : forall 'n, 0 <= 'n <= 30. (int('n), vector(31, dec, register(bits(64)))) -> bits(64)
+
 val get_R : forall 'n, 0 <= 'n <= 30. int('n) -> bits(64) effect {rreg}
 
 function get_R(n) = {
-    match n {
-        0 => R0,
-        1 => R1,
-        2 => R2,
-        3 => R3,
-        4 => R4,
-        5 => R5,
-        6 => R6,
-        7 => R7,
-        8 => R8,
-        9 => R9,
-        10 => R10,
-        11 => R11,
-        12 => R12,
-        13 => R13,
-        14 => R14,
-        15 => R15,
-        16 => R16,
-        17 => R17,
-        18 => R18,
-        19 => R19,
-        20 => R20,
-        21 => R21,
-        22 => R22,
-        23 => R23,
-        24 => R24,
-        25 => R25,
-        26 => R26,
-        27 => R27,
-        28 => R28,
-        29 => R29,
-        _ => R30
+    if __isla_vector_gpr then read_gpr(n, GPRs) else {
+        match n {
+            0 => R0,
+            1 => R1,
+            2 => R2,
+            3 => R3,
+            4 => R4,
+            5 => R5,
+            6 => R6,
+            7 => R7,
+            8 => R8,
+            9 => R9,
+            10 => R10,
+            11 => R11,
+            12 => R12,
+            13 => R13,
+            14 => R14,
+            15 => R15,
+            16 => R16,
+            17 => R17,
+            18 => R18,
+            19 => R19,
+            20 => R20,
+            21 => R21,
+            22 => R22,
+            23 => R23,
+            24 => R24,
+            25 => R25,
+            26 => R26,
+            27 => R27,
+            28 => R28,
+            29 => R29,
+            _ => R30
+        }
     }
 }
+
+val write_gpr = monadic "write_register_from_vector" : forall 'n, 0 <= 'n <= 30. (int('n), bits(64), vector(31, dec, register(bits(64)))) -> unit
 
 val set_R : forall 'n, 0 <= 'n <= 30. (int('n), bits(64)) -> unit effect {wreg}
 
 function set_R(n, v) = {
-    match n {
-        0 => R0 = v,
-        1 => R1 = v,
-        2 => R2 = v,
-        3 => R3 = v,
-        4 => R4 = v,
-        5 => R5 = v,
-        6 => R6 = v,
-        7 => R7 = v,
-        8 => R8 = v,
-        9 => R9 = v,
-        10 => R10 = v,
-        11 => R11 = v,
-        12 => R12 = v,
-        13 => R13 = v,
-        14 => R14 = v,
-        15 => R15 = v,
-        16 => R16 = v,
-        17 => R17 = v,
-        18 => R18 = v,
-        19 => R19 = v,
-        20 => R20 = v,
-        21 => R21 = v,
-        22 => R22 = v,
-        23 => R23 = v,
-        24 => R24 = v,
-        25 => R25 = v,
-        26 => R26 = v,
-        27 => R27 = v,
-        28 => R28 = v,
-        29 => R29 = v,
-        _ => R30 = v
+    if __isla_vector_gpr then write_gpr(n, v, GPRs) else {
+        match n {
+            0 => R0 = v,
+            1 => R1 = v,
+            2 => R2 = v,
+            3 => R3 = v,
+            4 => R4 = v,
+            5 => R5 = v,
+            6 => R6 = v,
+            7 => R7 = v,
+            8 => R8 = v,
+            9 => R9 = v,
+            10 => R10 = v,
+            11 => R11 = v,
+            12 => R12 = v,
+            13 => R13 = v,
+            14 => R14 = v,
+            15 => R15 = v,
+            16 => R16 = v,
+            17 => R17 = v,
+            18 => R18 = v,
+            19 => R19 = v,
+            20 => R20 = v,
+            21 => R21 = v,
+            22 => R22 = v,
+            23 => R23 = v,
+            24 => R24 = v,
+            25 => R25 = v,
+            26 => R26 = v,
+            27 => R27 = v,
+            28 => R28 = v,
+            29 => R29 = v,
+            _ => R30 = v
+        }
     }
 }
 
@@ -2748,21 +2802,28 @@ function BigEndianReverse value_name = {
 }
 
 val __WriteMemory : forall ('N : Int).
-  (AccType, int('N), bits(56), bits(8 * 'N)) -> unit effect {rreg, wmem}
+  (AccType, option(TranslationInfo), int('N), bits(64), bits(56), bits(8 * 'N)) -> unit effect {rreg, wmem}
 
-function __WriteMemory (acctype, N, address, val_name) = {
-    __WriteRAM(acctype, 56, N, __defaultRAM, address, val_name);
-    __TraceMemoryWrite(N, address, val_name);
-    return()
+function __WriteMemory (acctype, translation_info, N, vaddress, paddress, val_name) = {
+    if N > 0 then {
+        match sail_mem_write(write_request(acctype, translation_info, N, vaddress, paddress, val_name)) {
+            Ok(_) => (),
+            Err(fault) => AArch64_Abort(vaddress, fault),
+        }
+    }
 }
 
-val __ReadMemory : forall ('N : Int).
-  (AccType, int('N), bits(56)) -> bits(8 * 'N) effect {rmem, rreg}
+val __ReadMemory : forall ('N : Int), 'N > 0.
+  (AccType, option(TranslationInfo), int('N), bits(64), bits(56)) -> bits(8 * 'N) effect {rmem, rreg}
 
-function __ReadMemory (acctype, N, address) = {
-    let r = __ReadRAM(acctype, 56, N, __defaultRAM, address);
-    __TraceMemoryRead(N, address, r);
-    r
+function __ReadMemory (acctype, translation_info, N, vaddress, paddress) = {
+    match sail_mem_read(read_request(acctype, translation_info, N, vaddress, paddress)) {
+        Ok((value, _)) => value,
+        Err(fault) => {
+            AArch64_Abort(vaddress, fault);
+            Zeros(8 * N)
+        }
+    }
 }
 
 val ThisInstrLength : unit -> int effect {rreg}
@@ -2887,14 +2948,6 @@ function AArch32_ReportHypEntry exception = {
     };
     return()
 }
-
-val Replicate : forall ('M : Int) ('N : Int), ('M >= 1 & mod('N, 'M) == 0).
-  (implicit('N), bits('M)) -> bits('N)
-
-function Replicate (N, x) = replicate_bits(x, N / 'M)
-
-val Zeros = {ocaml: "zeros", lem: "zeros", smt: "zeros", interpreter: "zeros", c: "zeros"}: forall ('N : Int).
-  implicit('N) -> bits('N)
 
 val set_ClearIRQ : bits(32) -> unit effect {rreg, wreg}
 
@@ -3216,7 +3269,7 @@ function aget__MemTag desc = {
     assert(log2_tag_granule >= 0);
     let tag_index : bits(64) = LSR(offset, log2_tag_granule);
     let tagaddress : bits(56) = TAG_STORE_AREA + slice(tag_index, 0, 56);
-    let tagbyte : bits(8) = __ReadMemory(AccType_TAG, 1, ZeroExtend(tagaddress));
+    let tagbyte : bits(8) = __ReadMemory(AccType_TAG, None(), 1, desc.vaddress, ZeroExtend(tagaddress));
     slice(tagbyte, 0, 4)
 }
 
@@ -3374,16 +3427,16 @@ function GTEPerformExtObsCommon observer = {
               ok = true;
               match slice(_GTEExtObsAccess[i], 8, 3) {
                 ? if ? == GTE_EXT_OBS_ACC_SIZE64 => {
-                    data = __SetSlice_bits(64, 64, data, 0, __ReadMemory(AccType_NORMAL, 8, slice(_GTEExtObsAddress[i], 0, 56)))
+                    data = __SetSlice_bits(64, 64, data, 0, __ReadMemory(AccType_NORMAL, None(), 8, Zeros(), slice(_GTEExtObsAddress[i], 0, 56)))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE32 => {
-                    data = __SetSlice_bits(64, 32, data, 0, __ReadMemory(AccType_NORMAL, 4, slice(_GTEExtObsAddress[i], 0, 56)))
+                    data = __SetSlice_bits(64, 32, data, 0, __ReadMemory(AccType_NORMAL, None(), 4, Zeros(), slice(_GTEExtObsAddress[i], 0, 56)))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE16 => {
-                    data = __SetSlice_bits(64, 16, data, 0, __ReadMemory(AccType_NORMAL, 2, slice(_GTEExtObsAddress[i], 0, 56)))
+                    data = __SetSlice_bits(64, 16, data, 0, __ReadMemory(AccType_NORMAL, None(), 2, Zeros(), slice(_GTEExtObsAddress[i], 0, 56)))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE8 => {
-                    data = __SetSlice_bits(64, 8, data, 0, __ReadMemory(AccType_NORMAL, 1, slice(_GTEExtObsAddress[i], 0, 56)))
+                    data = __SetSlice_bits(64, 8, data, 0, __ReadMemory(AccType_NORMAL, None(), 1, Zeros(), slice(_GTEExtObsAddress[i], 0, 56)))
                 },
                 _ => {
                     ok = false
@@ -3397,18 +3450,19 @@ function GTEPerformExtObsCommon observer = {
           },
           ? if ? == GTE_EXT_OBS_ACC_WRITE => {
               ok = true;
+              let addr = _GTEExtObsAddress[i];
               match slice(_GTEExtObsAccess[i], 8, 3) {
                 ? if ? == GTE_EXT_OBS_ACC_SIZE64 => {
-                    __WriteMemory(AccType_NORMAL, 8, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 64))
+                    __WriteMemory(AccType_NORMAL, None(), 8, addr, slice(addr, 0, 56), slice(_GTEExtObsData[i], 0, 64))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE32 => {
-                    __WriteMemory(AccType_NORMAL, 4, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 32))
+                    __WriteMemory(AccType_NORMAL, None(), 4, addr, slice(addr, 0, 56), slice(_GTEExtObsData[i], 0, 32))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE16 => {
-                    __WriteMemory(AccType_NORMAL, 2, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 16))
+                    __WriteMemory(AccType_NORMAL, None(), 2, addr, slice(addr, 0, 56), slice(_GTEExtObsData[i], 0, 16))
                 },
                 ? if ? == GTE_EXT_OBS_ACC_SIZE8 => {
-                    __WriteMemory(AccType_NORMAL, 1, slice(_GTEExtObsAddress[i], 0, 56), slice(_GTEExtObsData[i], 0, 8))
+                    __WriteMemory(AccType_NORMAL, None(), 1, addr, slice(addr, 0, 56), slice(_GTEExtObsData[i], 0, 8))
                 },
                 _ => {
                     ok = false
@@ -5732,6 +5786,16 @@ function EL2Enabled () = {
     IsSecureEL2Enabled() | HaveEL(EL2) & ~(IsSecure())
 }
 
+val VMID_opt : unit -> option(bits(16)) effect {rreg}
+
+function VMID_opt() = {
+    if EL2Enabled() then {
+        Some(VTTBR_EL2[63 .. 48])
+    } else {
+        None()
+    }
+}
+
 val getMPAM_PMG : forall ('MPAMn : Int) ('InD : Bool).
   (int('MPAMn), bool('InD)) -> bits(8) effect {escape, rreg, undef}
 
@@ -7063,7 +7127,7 @@ function AArch64_CheckS2Permission (perms, vaddress, ipaddress, level, acctype, 
 }
 
 val AArch64_SecondStageTranslate : forall ('iswrite : Bool) ('wasaligned : Bool) ('s2fs1walk : Bool) 'size ('hwupdatewalk : Bool).
-  (AddressDescriptor, bits(64), AccType, bool('iswrite), bool('wasaligned), bool('s2fs1walk), int('size), bool('hwupdatewalk)) -> AddressDescriptor effect {escape, rmem, rreg, undef, wmem, wreg}
+  (AddressDescriptor, bits(64), AccType, bool('iswrite), bool('wasaligned), bool('s2fs1walk), int('size), bool('hwupdatewalk)) -> (AddressDescriptor, option(TranslationInfo)) effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_SecondStageTranslate (S1, vaddress, acctype, iswrite, wasaligned, s2fs1walk, size, hwupdatewalk) = {
     assert(HasS2Translation());
@@ -7071,12 +7135,13 @@ function AArch64_SecondStageTranslate (S1, vaddress, acctype, iswrite, wasaligne
     let secondstage = true;
     NS : bits(1) = undefined : bits(1);
     S2 : TLBRecord = undefined : TLBRecord;
+    translation_info : option(TranslationInfo) = None();
     ipaddress : bits(52) = undefined : bits(52);
     result : AddressDescriptor = undefined : AddressDescriptor;
     if s2_enabled then {
         ipaddress = slice(S1.paddress.address, 0, 52);
         NS = S1.paddress.NS;
-        S2 = AArch64_TranslationTableWalk(ipaddress, NS, vaddress, acctype, iswrite, secondstage, s2fs1walk, size);
+        (S2, translation_info) = AArch64_TranslationTableWalk(ipaddress, NS, vaddress, acctype, iswrite, secondstage, s2fs1walk, size);
         if ((~(wasaligned) & acctype != AccType_IFETCH | acctype == AccType_DCZVA) & S2.addrdesc.memattrs.typ == MemType_Device) & ~(IsFault(S2.addrdesc)) then {
             __tc1 : AddressDescriptor = S2.addrdesc;
             __tc1.fault = AArch64_AlignmentFault(acctype, iswrite, secondstage);
@@ -7102,11 +7167,11 @@ function AArch64_SecondStageTranslate (S1, vaddress, acctype, iswrite, wasaligne
     } else {
         result = S1
     };
-    result
+    (result, translation_info)
 }
 
 val AArch64_SecondStageWalk : forall ('iswrite : Bool) 'size ('hwupdatewalk : Bool).
-  (AddressDescriptor, bits(64), AccType, bool('iswrite), int('size), bool('hwupdatewalk)) -> AddressDescriptor effect {escape, rmem, rreg, undef, wmem, wreg}
+  (AddressDescriptor, bits(64), AccType, bool('iswrite), int('size), bool('hwupdatewalk)) -> (AddressDescriptor, option(TranslationInfo)) effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_SecondStageWalk (S1, vaddress, acctype, iswrite, size, hwupdatewalk) = {
     assert(HasS2Translation());
@@ -7400,11 +7465,11 @@ function BranchTo (target, branch_type) = {
     Hint_Branch(branch_type);
     if 'N == 32 then {
         assert(UsingAArch32());
-        __branch_announce(64, ZeroExtend(64, target));
+        sail_branch_announce(64, ZeroExtend(64, target));
         _PC = ZeroExtend(target)
     } else {
         assert('N == 64 & ~(UsingAArch32()));
-        __branch_announce(64, slice(target, 0, 64));
+        sail_branch_announce(64, slice(target, 0, 64));
         _PC = AArch64_BranchAddr(slice(target, 0, 64))
     };
     __PC_changed = true;
@@ -7496,7 +7561,6 @@ function AArch64_TakeException (target_el, exception, preferred_exception_return
     if HaveMTEExt() then {
         PSTATE.TCO = 0b1
     };
-    __barrier(Barrier_TakeException);
     BranchTo(slice(aget_VBAR(), 11, 53) @ __GetSlice_int(11, vect_offset, 0), BranchType_EXCEPTION);
     if sync_errors then {
         SynchronizeErrors();
@@ -7852,8 +7916,6 @@ function AArch64_BreakpointException fault = {
     }
 }
 
-val AArch64_Abort : (bits(64), FaultRecord) -> unit effect {escape, rreg, undef, wreg}
-
 function AArch64_Abort (vaddress, fault) = {
     if IsDebugException(fault) then {
         if fault.acctype == AccType_IFETCH then {
@@ -8065,7 +8127,7 @@ function AArch64_CheckPermission (perms, vaddress, level, NS, acctype, iswrite) 
 }
 
 val AArch64_FirstStageTranslate : forall ('iswrite : Bool) ('wasaligned : Bool) 'size.
-  (bits(64), AccType, bool('iswrite), bool('wasaligned), int('size)) -> AddressDescriptor effect {escape, rmem, rreg, undef, wmem, wreg}
+  (bits(64), AccType, bool('iswrite), bool('wasaligned), int('size)) -> (AddressDescriptor, option(TranslationInfo)) effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_FirstStageTranslate (vaddress, acctype, iswrite, wasaligned, size) = {
     s1_enabled : bool = undefined : bool;
@@ -8085,10 +8147,11 @@ function AArch64_FirstStageTranslate (vaddress, acctype, iswrite, wasaligned, si
     S1 : TLBRecord = undefined : TLBRecord;
     S1.descupdate.AF = false;
     S1.descupdate.AP = false;
+    translation_info : option(TranslationInfo) = None();
     nTLSMD : bits(1) = undefined : bits(1);
     permissioncheck : bool = undefined : bool;
     if s1_enabled then {
-        S1 = AArch64_TranslationTableWalk(ipaddress, 0b1, vaddress, acctype, iswrite, secondstage, s2fs1walk, size);
+        (S1, translation_info) = AArch64_TranslationTableWalk(ipaddress, 0b1, vaddress, acctype, iswrite, secondstage, s2fs1walk, size);
         permissioncheck = true;
         if acctype == AccType_IFETCH then {
             InGuardedPage = S1.GP == 0b1
@@ -8125,38 +8188,37 @@ function AArch64_FirstStageTranslate (vaddress, acctype, iswrite, wasaligned, si
     __tc4 : AddressDescriptor = S1.addrdesc;
     __tc4.fault = AArch64_CheckAndUpdateDescriptor(S1.descupdate, S1.addrdesc.fault, secondstage, vaddress, acctype, iswrite, s2fs1walk, hwupdatewalk);
     S1.addrdesc = __tc4;
-    S1.addrdesc
+    (S1.addrdesc, translation_info)
 }
 
 val AArch64_FullTranslate : forall ('iswrite : Bool) ('wasaligned : Bool) 'size.
-  (bits(64), AccType, bool('iswrite), bool('wasaligned), int('size)) -> AddressDescriptor effect {escape, rmem, rreg, undef, wmem, wreg}
+  (bits(64), AccType, bool('iswrite), bool('wasaligned), int('size)) -> (AddressDescriptor, option(TranslationInfo)) effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_FullTranslate (vaddress, acctype, iswrite, wasaligned, size) = {
-    let S1 = AArch64_FirstStageTranslate(vaddress, acctype, iswrite, wasaligned, size);
+    let (S1, translation_info) = AArch64_FirstStageTranslate(vaddress, acctype, iswrite, wasaligned, size);
     hwupdatewalk : bool = undefined : bool;
-    result : AddressDescriptor = undefined : AddressDescriptor;
     s2fs1walk : bool = undefined : bool;
     if (~(IsFault(S1)) & ~(HaveNV2Ext() & acctype == AccType_NV2REGISTER)) & HasS2Translation() then {
         s2fs1walk = false;
         hwupdatewalk = false;
-        result = AArch64_SecondStageTranslate(S1, vaddress, acctype, iswrite, wasaligned, s2fs1walk, size, hwupdatewalk)
+        AArch64_SecondStageTranslate(S1, vaddress, acctype, iswrite, wasaligned, s2fs1walk, size, hwupdatewalk)
     } else {
-        result = S1
-    };
-    result
+        (S1, translation_info)
+    }
 }
 
 val AArch64_TranslateAddress : forall ('iswrite : Bool) ('wasaligned : Bool) 'size.
-  (bits(64), AccType, bool('iswrite), bool('wasaligned), int('size)) -> AddressDescriptor effect {escape, rmem, rreg, undef, wmem, wreg}
+  (bits(64), AccType, bool('iswrite), bool('wasaligned), int('size)) -> (AddressDescriptor, option(TranslationInfo)) effect {escape, rmem, rreg, undef, wmem, wreg}
 
 function AArch64_TranslateAddress (vaddress, acctype, iswrite, wasaligned, size) = {
     result : AddressDescriptor = undefined : AddressDescriptor;
-    result = AArch64_FullTranslate(vaddress, acctype, iswrite, wasaligned, size);
+    let (desc, translation_info) = AArch64_FullTranslate(vaddress, acctype, iswrite, wasaligned, size);
+    result = desc;
     if ~(acctype == AccType_PTW | acctype == AccType_IC | acctype == AccType_AT) & ~(IsFault(result)) then {
         result.fault = AArch64_CheckDebug(vaddress, acctype, iswrite, size)
     };
     result.vaddress = ZeroExtend(vaddress);
-    result
+    (result, translation_info)
 }
 
 val aget_MemTag : bits(64) -> bits(4) effect {escape, rmem, rreg, undef, wmem, wreg}
@@ -8165,7 +8227,7 @@ function aget_MemTag address = {
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     let value_name = undefined : bits(4);
     let iswrite = false;
-    let memaddrdesc = AArch64_TranslateAddress(address, AccType_NORMAL, iswrite, true, TAG_GRANULE);
+    let (memaddrdesc, _) = AArch64_TranslateAddress(address, AccType_NORMAL, iswrite, true, TAG_GRANULE);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
     };
@@ -9562,7 +9624,8 @@ function AArch32_SecondStageTranslate (S1, vaddress, acctype, iswrite, wasaligne
     assert(IsZero(slice(S1.paddress.address, 40, 8)));
     let hwupdatewalk = false;
     if ~(ELUsingAArch32(EL2)) then {
-        return(AArch64_SecondStageTranslate(S1, ZeroExtend(vaddress, 64), acctype, iswrite, wasaligned, s2fs1walk, size, hwupdatewalk))
+        let (result, _) = AArch64_SecondStageTranslate(S1, ZeroExtend(vaddress, 64), acctype, iswrite, wasaligned, s2fs1walk, size, hwupdatewalk);
+        return result
     };
     let s2_enabled = [get_HCR()[0]] == 0b1 | [get_HCR()[12]] == 0b1;
     let secondstage = true;
@@ -10102,9 +10165,9 @@ function _CheckAbortRegions (desc, size, accdesc, read) = {
 }
 
 val aset__Mem : forall ('size : Int), 'size >= 0.
-  (AddressDescriptor, int('size), AccessDescriptor, bits(8 * 'size)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
+  (AddressDescriptor, option(TranslationInfo), int('size), AccessDescriptor, bits(8 * 'size)) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
 
-function aset__Mem (desc, size, accdesc, value_name) = {
+function aset__Mem (desc, translation_info, size, accdesc, value_name) = {
     let read : bits(1) = 0b0;
     paddress : bits(52) = desc.paddress.address;
     let extflag : bits(1) = desc.paddress.NS;
@@ -10145,10 +10208,10 @@ function aset__Mem (desc, size, accdesc, value_name) = {
                 GTECheckAccessSensitiveAccess(paddress, size, value_name, false)
             };
             if size == 16 then {
-                __WriteMemory(accdesc.acctype, 8, ZeroExtend(paddress), slice(value_name, 0, 64));
-                __WriteMemory(accdesc.acctype, 8, ZeroExtend(paddress + 8), slice(value_name, 64, 64))
+                __WriteMemory(accdesc.acctype, translation_info, 8, desc.vaddress, ZeroExtend(paddress), slice(value_name, 0, 64));
+                __WriteMemory(accdesc.acctype, translation_info, 8, desc.vaddress, ZeroExtend(paddress + 8), slice(value_name, 64, 64))
             } else {
-                __WriteMemory(accdesc.acctype, size, ZeroExtend(paddress), value_name)
+                __WriteMemory(accdesc.acctype, translation_info, size, desc.vaddress, ZeroExtend(paddress), value_name)
             }
         }
     };
@@ -10157,11 +10220,10 @@ function aset__Mem (desc, size, accdesc, value_name) = {
 
 overload _Mem = {aset__Mem}
 
-val aget__Mem : forall 'size,
-  (8 * 'size >= 0 | not(not('size in {8, 16}))).
-  (AddressDescriptor, int('size), AccessDescriptor) -> bits(8 * 'size) effect {escape, rmem, rreg, undef, wreg}
+val aget__Mem : forall 'size, 'size > 0.
+  (AddressDescriptor, option(TranslationInfo), int('size), AccessDescriptor) -> bits(8 * 'size) effect {escape, rmem, rreg, undef, wreg}
 
-function aget__Mem (desc, size, accdesc) = {
+function aget__Mem (desc, translation_info, size, accdesc) = {
     let read = 0b1;
     paddress : bits(52) = desc.paddress.address;
     let extflag = desc.paddress.NS;
@@ -10201,10 +10263,10 @@ function aget__Mem (desc, size, accdesc) = {
         } else {
             result : bits(8 * 'size) = undefined : bits(8 * 'size);
             if size == 16 then {
-                result = __SetSlice_bits(8 * size, 64, result, 0, __ReadMemory(accdesc.acctype, 8, ZeroExtend(paddress)));
-                result = __SetSlice_bits(8 * size, 64, result, 64, __ReadMemory(accdesc.acctype, 8, ZeroExtend(paddress + 8)))
+                result = __SetSlice_bits(8 * size, 64, result, 0, __ReadMemory(accdesc.acctype, translation_info, 8, desc.vaddress, ZeroExtend(paddress)));
+                result = __SetSlice_bits(8 * size, 64, result, 64, __ReadMemory(accdesc.acctype, translation_info, 8, desc.vaddress, ZeroExtend(paddress + 8)))
             } else {
-                result = __ReadMemory(accdesc.acctype, size, ZeroExtend(paddress))
+                result = __ReadMemory(accdesc.acctype, translation_info, size, desc.vaddress, ZeroExtend(paddress))
             };
             if __trickbox_enabled then {
                 GTECheckAccessSensitiveAccess(paddress, size, result, true)
@@ -10226,7 +10288,7 @@ function AArch64_aget_MemSingle (address, size, acctype, wasaligned) = {
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     value_name : bits(8 * 'size) = undefined : bits('size * 8);
     let iswrite = false;
-    let memaddrdesc = AArch64_TranslateAddress(address, acctype, iswrite, wasaligned, size);
+    let (memaddrdesc, translation_info) = AArch64_TranslateAddress(address, acctype, iswrite, wasaligned, size);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
     };
@@ -10239,7 +10301,7 @@ function AArch64_aget_MemSingle (address, size, acctype, wasaligned) = {
             }
         }
     };
-    let value_name = _Mem(memaddrdesc, size, accdesc);
+    let value_name = _Mem(memaddrdesc, translation_info, size, accdesc);
     value_name
 }
 
@@ -10291,7 +10353,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
         };
         let cacheline : TLBLine = TLBLookup(ZeroExtend(inputaddr, 64), secondstage, s1_nonsecure, acctype);
         if cacheline.valid_name then {
-            return(cacheline.data)
+            return (cacheline.data, None())
         }
     };
     __tc1 : MemoryAttributes = descaddr.memattrs;
@@ -10594,7 +10656,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
         __tc2 : AddressDescriptor = result.addrdesc;
         __tc2.fault = AArch64_TranslationFault(ipaddress, s1_nonsecure, level, acctype, iswrite, secondstage, s2fs1walk);
         result.addrdesc = __tc2;
-        return(result)
+        return (result, None())
     };
     outputsize : int = undefined : int;
     match ps {
@@ -10631,7 +10693,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
         __tc3 : AddressDescriptor = result.addrdesc;
         __tc3.fault = AArch64_AddressSizeFault(ipaddress, s1_nonsecure, level, acctype, iswrite, secondstage, s2fs1walk);
         result.addrdesc = __tc3;
-        return(result)
+        return (result, None())
     };
     let baselowerbound : int = 3 + inputsize - ((3 - level) * stride + grainsize);
     baseaddress : bits(52) = undefined : bits(52);
@@ -10673,17 +10735,18 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
             descaddr2 = descaddr
         } else {
             hwupdatewalk = false;
-            descaddr2 = AArch64_SecondStageWalk(descaddr, vaddress, acctype, iswrite, 8, hwupdatewalk);
+            let (s2_result, translation_info) = AArch64_SecondStageWalk(descaddr, vaddress, acctype, iswrite, 8, hwupdatewalk);
+            descaddr2 = s2_result;
             if IsFault(descaddr2) then {
                 __tc6 : AddressDescriptor = result.addrdesc;
                 __tc6.fault = descaddr2.fault;
                 result.addrdesc = __tc6;
-                return(result)
+                return (result, translation_info)
             }
         };
         descaddr2.vaddress = ZeroExtend(vaddress);
         accdesc = CreateAccessDescriptorPTW(acctype, secondstage, s2fs1walk, level);
-        desc = aget__Mem(descaddr2, 8, accdesc);
+        desc = aget__Mem(descaddr2, None(), 8, accdesc);
         if reversedescriptors then {
             desc = BigEndianReverse(desc)
         };
@@ -10691,7 +10754,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
             __tc7 : AddressDescriptor = result.addrdesc;
             __tc7.fault = AArch64_TranslationFault(ipaddress, s1_nonsecure, level, acctype, iswrite, secondstage, s2fs1walk);
             result.addrdesc = __tc7;
-            return(result)
+            return (result, None())
         };
         if slice(desc, 0, 2) == 0b01 | level == 3 then {
             blocktranslate = true
@@ -10700,7 +10763,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
                 __tc8 : AddressDescriptor = result.addrdesc;
                 __tc8.fault = AArch64_AddressSizeFault(ipaddress, s1_nonsecure, level, acctype, iswrite, secondstage, s2fs1walk);
                 result.addrdesc = __tc8;
-                return(result)
+                return (result, None())
             };
             if outputsize == 52 then {
                 let 'g = grainsize;
@@ -10735,7 +10798,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
         __tc9 : AddressDescriptor = result.addrdesc;
         __tc9.fault = AArch64_TranslationFault(ipaddress, s1_nonsecure, level, acctype, iswrite, secondstage, s2fs1walk);
         result.addrdesc = __tc9;
-        return(result)
+        return (result, None())
     };
     contiguousbitcheck : bool = undefined : bool;
     if largegrain then {
@@ -10752,14 +10815,14 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
             __tc10 : AddressDescriptor = result.addrdesc;
             __tc10.fault = AArch64_TranslationFault(ipaddress, s1_nonsecure, level, acctype, iswrite, secondstage, s2fs1walk);
             result.addrdesc = __tc10;
-            return(result)
+            return (result, None())
         }
     };
     if (outputsize < 52 & largegrain) & ~(IsZero_slice(desc, 12, 4)) | outputsize < 48 & ~(IsZero_slice(desc, outputsize, negate(outputsize) + 48)) then {
         __tc11 : AddressDescriptor = result.addrdesc;
         __tc11.fault = AArch64_AddressSizeFault(ipaddress, s1_nonsecure, level, acctype, iswrite, secondstage, s2fs1walk);
         result.addrdesc = __tc11;
-        return(result)
+        return (result, None())
     };
     outputaddress : bits(52) = undefined : bits(52);
     if outputsize == 52 then {
@@ -10776,7 +10839,7 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
             __tc12 : AddressDescriptor = result.addrdesc;
             __tc12.fault = AArch64_AccessFlagFault(ipaddress, s1_nonsecure, level, acctype, iswrite, secondstage, s2fs1walk);
             result.addrdesc = __tc12;
-            return(result)
+            return (result, None())
         } else {
             __tc13 : DescriptorUpdate = result.descupdate;
             __tc13.AF = true;
@@ -10921,7 +10984,16 @@ function AArch64_TranslationTableWalk (ipaddress, s1_nonsecure, vaddress, acctyp
     if __tlb_enabled then {
         TLBCache(ZeroExtend(inputaddr, 64), secondstage, s1_nonsecure, acctype, result)
     };
-    result
+    let translation_info: TranslationInfo = struct {
+        regime = PSTATE.EL,
+        vmid = VMID_opt(),
+        asid = Some(baseregister[63 .. 48]),
+        va = vaddress,
+        s1level = None(),
+        s2info = None(),
+        memattrs = result.addrdesc.memattrs,
+    };
+    (result, Some(translation_info))
 }
 
 function AArch64_CheckAndUpdateDescriptor (result, fault, secondstage, vaddress, acctype, iswrite, s2fs1walk, hwupdatewalk__arg) = {
@@ -10956,13 +11028,14 @@ function AArch64_CheckAndUpdateDescriptor (result, fault, secondstage, vaddress,
             descaddr2 = result.descaddr
         } else {
             hwupdatewalk = true;
-            descaddr2 = AArch64_SecondStageWalk(result.descaddr, vaddress, acctype, iswrite, 8, hwupdatewalk);
+            let (s2_result, _) = AArch64_SecondStageWalk(result.descaddr, vaddress, acctype, iswrite, 8, hwupdatewalk);
+            descaddr2 = s2_result;
             if IsFault(descaddr2) then {
                 return(descaddr2.fault)
             }
         };
         accdesc = CreateAccessDescriptor(AccType_ATOMICRW);
-        desc = _Mem(descaddr2, 8, accdesc);
+        desc = _Mem(descaddr2, None(), 8, accdesc);
         el = AArch64_AccessUsesEL(acctype);
         match el {
           ? if ? == EL3 => {
@@ -10984,7 +11057,7 @@ function AArch64_CheckAndUpdateDescriptor (result, fault, secondstage, vaddress,
         if hw_update_AP then {
             desc = __SetSlice_bits(64, 1, desc, 7, if secondstage then 0b1 else 0b0)
         };
-        _Mem(descaddr2, 8, accdesc) = if reversedescriptors then BigEndianReverse(desc) else desc
+        _Mem(descaddr2, None(), 8, accdesc) = if reversedescriptors then BigEndianReverse(desc) else desc
     };
     fault
 }
@@ -11061,7 +11134,7 @@ function AArch32_TranslationTableWalkSD (vaddress, acctype, iswrite, size) = {
     accdesc : AccessDescriptor = undefined : AccessDescriptor;
     accdesc = CreateAccessDescriptorPTW(acctype, secondstage, s2fs1walk, level);
     l1desc : bits(32) = undefined : bits(32);
-    l1desc = aget__Mem(l1descaddr2, 4, accdesc);
+    l1desc = aget__Mem(l1descaddr2, None(), 4, accdesc);
     if [get_SCTLR()[25]] == 0b1 then {
         l1desc = BigEndianReverse(l1desc)
     };
@@ -11109,7 +11182,7 @@ function AArch32_TranslationTableWalkSD (vaddress, acctype, iswrite, size) = {
           };
           l2descaddr2.vaddress = ZeroExtend(vaddress);
           accdesc = CreateAccessDescriptorPTW(acctype, secondstage, s2fs1walk, level);
-          l2desc = aget__Mem(l2descaddr2, 4, accdesc);
+          l2desc = aget__Mem(l2descaddr2, None(), 4, accdesc);
           if [get_SCTLR()[25]] == 0b1 then {
               l2desc = BigEndianReverse(l2desc)
           };
@@ -11315,7 +11388,8 @@ val AArch32_TranslateAddress : forall ('iswrite : Bool) ('wasaligned : Bool) 'si
 
 function AArch32_TranslateAddress (vaddress, acctype, iswrite, wasaligned, size) = {
     if ~(ELUsingAArch32(S1TranslationRegime())) then {
-        return(AArch64_TranslateAddress(ZeroExtend(vaddress, 64), acctype, iswrite, wasaligned, size))
+        let (result, _) = AArch64_TranslateAddress(ZeroExtend(vaddress, 64), acctype, iswrite, wasaligned, size);
+        return result
     };
     result : AddressDescriptor = undefined : AddressDescriptor;
     result = AArch32_FullTranslate(vaddress, acctype, iswrite, wasaligned, size);
@@ -11485,7 +11559,7 @@ function AArch32_TranslationTableWalk (ipaddress, vaddress, acctype, iswrite, se
         };
         descaddr2.vaddress = ZeroExtend(vaddress);
         accdesc = CreateAccessDescriptorPTW(acctype, secondstage, s2fs1walk, level);
-        desc = aget__Mem(descaddr2, 8, accdesc);
+        desc = aget__Mem(descaddr2, None(), 8, accdesc);
         if reversedescriptors then {
             desc = BigEndianReverse(desc)
         };
@@ -11675,7 +11749,7 @@ function AArch32_aget_MemSingle (address, size, acctype, wasaligned) = {
             }
         }
     };
-    let value_name = _Mem(memaddrdesc, size, accdesc);
+    let value_name = _Mem(memaddrdesc, None(), size, accdesc);
     value_name
 }
 

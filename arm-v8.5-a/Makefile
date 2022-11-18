@@ -6,7 +6,7 @@ endif
 endif
 $(warning SAIL_DIR is $(SAIL_DIR))
 
-DEVICES = no_devices.sail
+DEVICES = aarch_interface.sail
 MAIN = elfmain.sail
 
 AARCH_FLAGS  = -non_lexical_flow -no_lexp_bounds_check -memo_z3 -no_warn -dno_cast
@@ -21,6 +21,9 @@ default: aarch64
 
 check: model/*.sail
 	sail -just_check -verbose 1 $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS)
+
+decode_info: model/*.sail
+	sail -plugin ~/scripts/armdecode/plugin.cmxs -arm_decode -verbose 1 $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS)
 
 aarch64.c: model/*.sail
 	sail -c -O -Oconstant_fold $(AARCH_FLAGS) $(OPTS) $(AARCH_SRCS) 1> aarch64.c.tmp

@@ -1098,8 +1098,8 @@ function asl_Int (x, unsigned) = {
 val InstructionSynchronizationBarrier : unit -> unit
 
 function InstructionSynchronizationBarrier () = {
-    __synchronize_registers();
-    __barrier_no_effect(Barrier_ISB)
+    sail_synchronize_registers();
+    sail_barrier(Barrier_ISB())
 }
 
 register ISR_EL1 : bits(32)
@@ -2438,13 +2438,13 @@ let DebugHalt_HaltInstruction : bits(6) = 0b101111
 val DataSynchronizationBarrier : (MBReqDomain, MBReqTypes) -> unit
 
 function DataSynchronizationBarrier (domain, types) = {
-    __barrier_no_effect(to_barrier_kind(true, domain, types))
+    sail_barrier(Barrier_DSB(struct { domain = domain, types = types }))
 }
 
 val DataMemoryBarrier : (MBReqDomain, MBReqTypes) -> unit
 
 function DataMemoryBarrier (domain, types) = {
-    __barrier_no_effect(to_barrier_kind(false, domain, types))
+    sail_barrier(Barrier_DMB(struct { domain = domain, types = types }))
 }
 
 val system_barriers : (MBReqDomain, MemBarrierOp, MBReqTypes) -> unit
@@ -3544,373 +3544,373 @@ function VMID() = {
 val TLBI_VMALLS12E1OS : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLS12E1OS () = {
-    __cache_maintenance_extra(Cache_op_TLBI_VMALLS12E1OS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VMALLS12E1OS(), vmid = VMID() })
 }
 
 val TLBI_VMALLS12E1IS : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLS12E1IS () = {
-    __cache_maintenance_extra(Cache_op_TLBI_VMALLS12E1IS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VMALLS12E1IS(), vmid = VMID() })
 }
 
 val TLBI_VMALLS12E1 : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLS12E1 () = {
-    __cache_maintenance_extra(Cache_op_TLBI_VMALLS12E1, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VMALLS12E1(), vmid = VMID() })
 }
 
 val TLBI_VMALLE1OS : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLE1OS () = {
-    __cache_maintenance_extra(Cache_op_TLBI_VMALLE1OS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VMALLE1OS(), vmid = VMID() })
 }
 
 val TLBI_VMALLE1IS : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLE1IS () = {
-    __cache_maintenance_extra(Cache_op_TLBI_VMALLE1IS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VMALLE1IS(), vmid = VMID() })
 }
 
 val TLBI_VMALLE1 : unit -> unit effect {rreg, wreg}
 
 function TLBI_VMALLE1 () = {
-    __cache_maintenance_extra(Cache_op_TLBI_VMALLE1, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VMALLE1(), vmid = VMID() })
 }
 
 val TLBI_VALE3OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE3OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VALE3OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VALE3OS(val_name), vmid = VMID() })
 }
 
 val TLBI_VALE3IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE3IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VALE3IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VALE3IS(val_name), vmid = VMID() })
 }
 
 val TLBI_VALE3 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE3 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VALE3, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VALE3(val_name), vmid = VMID() })
 }
 
 val TLBI_VALE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VALE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VALE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_VALE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VALE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VALE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_VALE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VALE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VALE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VALE1(val_name), vmid = VMID() })
 }
 
 val TLBI_VAE3OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE3OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAE3OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAE3OS(val_name), vmid = VMID() })
 }
 
 val TLBI_VAE3IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE3IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAE3IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAE3IS(val_name), vmid = VMID() })
 }
 
 val TLBI_VAE3 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE3 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAE3, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAE3(val_name), vmid = VMID() })
 }
 
 val TLBI_VAE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_VAE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_VAE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAE1(val_name), vmid = VMID() })
 }
 
 val TLBI_VAALE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAALE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAALE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAALE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_VAALE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAALE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAALE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAALE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_VAALE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAALE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAALE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAALE1(val_name), vmid = VMID() })
 }
 
 val TLBI_VAAE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAAE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAAE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAAE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_VAAE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAAE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAAE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAAE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_VAAE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_VAAE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_VAAE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_VAAE1(val_name), vmid = VMID() })
 }
 
 val TLBI_RVALE3IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE3IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVALE3IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVALE3IS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVALE3 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE3 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVALE3, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVALE3(val_name), vmid = VMID() })
 }
 
 val TLBI_RVALE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVALE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVALE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVALE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVALE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVALE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVALE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVALE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVALE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVALE1(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAE3OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE3OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAE3OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAE3OS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAE3IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE3IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAE3IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAE3IS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAE3 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE3 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAE3, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAE3(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAE1(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAALE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAALE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAALE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAALE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAALE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAALE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAALE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAALE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAALE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAALE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAALE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAALE1(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAAE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAAE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAAE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAAE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAAE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAAE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAAE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAAE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_RVAAE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RVAAE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RVAAE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RVAAE1(val_name), vmid = VMID() })
 }
 
 val TLBI_RIPAS2LE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2LE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RIPAS2LE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RIPAS2LE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_RIPAS2LE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2LE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RIPAS2LE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RIPAS2LE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_RIPAS2LE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2LE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RIPAS2LE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RIPAS2LE1(val_name), vmid = VMID() })
 }
 
 val TLBI_RIPAS2E1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2E1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RIPAS2E1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RIPAS2E1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_RIPAS2E1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2E1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RIPAS2E1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RIPAS2E1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_RIPAS2E1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_RIPAS2E1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_RIPAS2E1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_RIPAS2E1(val_name), vmid = VMID() })
 }
 
 val TLBI_IPAS2LE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2LE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_IPAS2LE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_IPAS2LE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_IPAS2LE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2LE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_IPAS2LE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_IPAS2LE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_IPAS2LE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2LE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_IPAS2LE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_IPAS2LE1(val_name), vmid = VMID() })
 }
 
 val TLBI_IPAS2E1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2E1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_IPAS2E1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_IPAS2E1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_IPAS2E1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2E1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_IPAS2E1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_IPAS2E1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_IPAS2E1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_IPAS2E1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_IPAS2E1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_IPAS2E1(val_name), vmid = VMID() })
 }
 
 val TLBI_ASIDE1OS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_ASIDE1OS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_ASIDE1OS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_ASIDE1OS(val_name), vmid = VMID() })
 }
 
 val TLBI_ASIDE1IS : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_ASIDE1IS val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_ASIDE1IS, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_ASIDE1IS(val_name), vmid = VMID() })
 }
 
 val TLBI_ASIDE1 : bits(64) -> unit effect {rreg, wreg}
 
 function TLBI_ASIDE1 val_name = {
-    __cache_maintenance_extra(Cache_op_TLBI_ASIDE1, 64, val_name, ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_ASIDE1(val_name), vmid = VMID() })
 }
 
 val TLBI_ALLE3OS : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE3OS () = {
-    __cache_maintenance_extra(Cache_op_TLBI_ALLE3OS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_ALLE3OS(), vmid = VMID() })
 }
 
 val TLBI_ALLE3IS : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE3IS () = {
-    __cache_maintenance_extra(Cache_op_TLBI_ALLE3IS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_ALLE3IS(), vmid = VMID() })
 }
 
 val TLBI_ALLE3 : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE3 () = {
-    __cache_maintenance_extra(Cache_op_TLBI_ALLE3, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_ALLE3(), vmid = VMID() })
 }
 
 val TLBI_ALLE1OS : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE1OS () = {
-    __cache_maintenance_extra(Cache_op_TLBI_ALLE1OS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_ALLE1OS(), vmid = VMID() })
 }
 
 val TLBI_ALLE1IS : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE1IS () = {
-    __cache_maintenance_extra(Cache_op_TLBI_ALLE1IS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_ALLE1IS(), vmid = VMID() })
 }
 
 val TLBI_ALLE1 : unit -> unit effect {rreg, wreg}
 
 function TLBI_ALLE1 () = {
-    __cache_maintenance_extra(Cache_op_TLBI_ALLE1, 64, Zeros(64), ZeroExtend(VMID(), 64))
+    sail_tlbi(struct { typ = TLBIType_ALLE1(), vmid = VMID() })
 }
 
 val aset_V : forall ('width : Int) ('n : Int), ('n >= 0 & 'n <= 31).
@@ -3969,7 +3969,7 @@ function aset__MemTag (desc, value_name) = {
     let tag_index : bits(64) = LSR(offset, log2_tag_granule);
     let tagaddress : bits(56) = TAG_STORE_AREA + slice(tag_index, 0, 56);
     // CHECK: Is it AccType_NORMAL though?
-    __WriteMemory(AccType_NORMAL, 1, ZeroExtend(tagaddress), 0x0 @ value_name)
+    __WriteMemory(AccType_NORMAL, None(), 1, desc.vaddress, ZeroExtend(tagaddress), 0x0 @ value_name)
 }
 
 overload _MemTag = {aset__MemTag}
@@ -11534,11 +11534,11 @@ function BranchToAddr (target, branch_type) = {
     Hint_Branch(branch_type);
     if 'N == 32 then {
         assert(UsingAArch32());
-        __branch_announce(64, ZeroExtend(64, target));
+        sail_branch_announce(64, ZeroExtend(64, target));
         _PC = ZeroExtend(target)
     } else {
         assert('N == 64 & ~(UsingAArch32()));
-        __branch_announce(64, slice(target, 0, 64));
+        sail_branch_announce(64, slice(target, 0, 64));
         _PC = slice(target, 0, 64)
     };
     __PC_changed = true;
@@ -20073,7 +20073,7 @@ val check_access_z : forall ('iswrite : Bool).
 function check_access_z (val_name, iswrite) = {
     let 'size = 4 * 2 ^ UInt(slice(DCZID_EL0, 0, 4));
     let vaddress : bits(64) = Align(val_name, size);
-    let memaddrdesc : AddressDescriptor = AArch64_FullTranslate(vaddress, AccType_DCZVA, iswrite, true, 1);
+    let (memaddrdesc, _) = AArch64_FullTranslate(vaddress, AccType_DCZVA, iswrite, true, 1);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(val_name, memaddrdesc.fault)
     }
@@ -20089,7 +20089,7 @@ function aset_MemTag (address, value_name) = {
         AArch64_Abort(address, AArch64_AlignmentFault(AccType_NORMAL, iswrite, secondstage))
     };
     let wasaligned = true;
-    let memaddrdesc = AArch64_TranslateAddress(address, AccType_NORMAL, iswrite, wasaligned, TAG_GRANULE);
+    let (memaddrdesc, _) = AArch64_TranslateAddress(address, AccType_NORMAL, iswrite, wasaligned, TAG_GRANULE);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
     };
@@ -20178,7 +20178,7 @@ function AArch64_SetExclusiveMonitors (address, size) = {
     let acctype = AccType_ATOMIC;
     let iswrite = false;
     let aligned = address == Align(address, size);
-    let memaddrdesc : AddressDescriptor = AArch64_TranslateAddress(address, acctype, iswrite, aligned, size);
+    let (memaddrdesc, _)  = AArch64_TranslateAddress(address, acctype, iswrite, aligned, size);
     if IsFault(memaddrdesc) then {
         return()
     };
@@ -20206,7 +20206,7 @@ function AArch64_ExclusiveMonitorsPass (address, size) = {
     if ~(passed) then {
         return(false)
     };
-    let memaddrdesc : AddressDescriptor = AArch64_TranslateAddress(address, acctype, iswrite, aligned, size);
+    let (memaddrdesc, _) = AArch64_TranslateAddress(address, acctype, iswrite, aligned, size);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
     };
@@ -20419,7 +20419,7 @@ function branch_unconditional_eret (pac, use_key_a) = {
             target = AuthIB(ELR(), SP())
         }
     };
-    __barrier(Barrier_ERET);
+    sail_eret(target[55 .. 0]);
     AArch64_ExceptionReturn(target, SPSR())
 }
 
@@ -20669,7 +20669,7 @@ val TLBI_VALE2OS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VALE2OS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_VALE2OS, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_VALE2OS(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20679,7 +20679,7 @@ val TLBI_VALE2IS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VALE2IS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_VALE2IS, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_VALE2IS(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20689,7 +20689,7 @@ val TLBI_VALE2 : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VALE2 val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_VALE2, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_VALE2(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20699,7 +20699,7 @@ val TLBI_VAE2OS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VAE2OS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_VAE2OS, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_VAE2OS(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20709,7 +20709,7 @@ val TLBI_VAE2IS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VAE2IS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_VAE2IS, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_VAE2IS(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20719,7 +20719,7 @@ val TLBI_VAE2 : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_VAE2 val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_VAE2, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_VAE2(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20729,7 +20729,7 @@ val TLBI_RVALE2OS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVALE2OS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_RVALE2OS, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_RVALE2OS(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20739,7 +20739,7 @@ val TLBI_RVALE2IS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVALE2IS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_RVALE2IS, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_RVALE2IS(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20749,7 +20749,7 @@ val TLBI_RVALE2 : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVALE2 val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_RVALE2, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_RVALE2(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20759,7 +20759,7 @@ val TLBI_RVAE2OS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVAE2OS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_RVAE2OS, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_RVAE2OS(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20769,7 +20769,7 @@ val TLBI_RVAE2IS : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVAE2IS val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_RVAE2IS, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_RVAE2IS(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20779,7 +20779,7 @@ val TLBI_RVAE2 : bits(64) -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_RVAE2 val_name = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_RVAE2, 64, val_name, ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_RVAE2(val_name), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20789,7 +20789,7 @@ val TLBI_ALLE2OS : unit -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_ALLE2OS () = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_ALLE2OS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_ALLE2OS(), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20799,7 +20799,7 @@ val TLBI_ALLE2IS : unit -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_ALLE2IS () = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_ALLE2IS, 64, Zeros(64), ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_ALLE2IS(), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -20809,7 +20809,7 @@ val TLBI_ALLE2 : unit -> unit effect {escape, rreg, undef, wreg}
 
 function TLBI_ALLE2 () = {
     if HaveEL(EL2) | PSTATE.EL != EL3 then {
-        __cache_maintenance_extra(Cache_op_TLBI_ALLE2, 64, Zeros(64), ZeroExtend(VMID(), 64))
+        sail_tlbi(struct { typ = TLBIType_ALLE2(), vmid = VMID() })
     } else {
         UndefinedFault()
     }
@@ -21034,7 +21034,8 @@ function DC_ZVA val_name = {
     let 'size = 4 * 2 ^ UInt(slice(DCZID_EL0, 0, 4));
     let vaddress : bits(64) = Align(val_name, size);
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
-    memaddrdesc = AArch64_FullTranslate(vaddress, AccType_DCZVA, iswrite, true, 1);
+    let (_memaddrdesc, translation_info) = AArch64_FullTranslate(vaddress, AccType_DCZVA, iswrite, true, 1);
+    memaddrdesc = _memaddrdesc;
     if IsFault(memaddrdesc) then {
         AArch64_Abort(val_name, memaddrdesc.fault)
     };
@@ -21049,7 +21050,7 @@ function DC_ZVA val_name = {
                 }
             }
         };
-        _Mem(memaddrdesc, 1, accdesc) = Zeros();
+        _Mem(memaddrdesc, translation_info, 1, accdesc) = Zeros();
         __tc1 : FullAddress = memaddrdesc.paddress;
         __tc1.address = memaddrdesc.paddress.address + 1;
         memaddrdesc.paddress = __tc1
@@ -21074,7 +21075,7 @@ function AArch64_aset_MemSingle (address, size, acctype, wasaligned, value_name)
     assert(address == Align(address, size));
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     let iswrite = true;
-    let memaddrdesc = AArch64_TranslateAddress(address, acctype, iswrite, wasaligned, size);
+    let (memaddrdesc, translation_info) = AArch64_TranslateAddress(address, acctype, iswrite, wasaligned, size);
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
     };
@@ -21090,7 +21091,7 @@ function AArch64_aset_MemSingle (address, size, acctype, wasaligned, value_name)
             }
         }
     };
-    _Mem(memaddrdesc, size, accdesc) = value_name;
+    _Mem(memaddrdesc, translation_info, size, accdesc) = value_name;
     return()
 }
 
@@ -23024,7 +23025,6 @@ val AArch64_SysRegWrite : forall 'op0 'op1 'crn 'crm 'op2.
 
 function AArch64_SysRegWrite (op0, op1, crn, crm, op2, val_name) = {
     AArch64_AutoGen_SysRegWrite(PSTATE.EL, __GetSlice_int(2, op0, 0), __GetSlice_int(3, op1, 0), __GetSlice_int(4, crn, 0), __GetSlice_int(3, op2, 0), __GetSlice_int(4, crm, 0), 0b0, val_name);
-    __barrier(Barrier_MSR);
     if ((((op0 == 3 & crn == 12) & ((op1 == 6 | op1 == 4) | op1 == 0)) & op2 == 2) & crm == 0) & [val_name[1]] == 0b1 then {
         TakeReset(false)
     };
@@ -29141,7 +29141,8 @@ function AArch64_AT_S1Ex (val_name, el, iswrite) = {
     if el == EL0 & ELUsingAArch32(EL1) | el != EL0 & ELUsingAArch32(el) then {
         addrdesc = AArch32_FirstStageTranslate(slice(val_name, 0, 32), AccType_AT, iswrite, true, 1)
     } else {
-        addrdesc = AArch64_FirstStageTranslate(val_name, AccType_AT, iswrite, true, 1)
+        let (_addrdesc, _) = AArch64_FirstStageTranslate(val_name, AccType_AT, iswrite, true, 1);
+        addrdesc = _addrdesc
     };
     __RESTORE_EL();
     if IsFault(addrdesc) then {
@@ -29241,7 +29242,8 @@ function AArch64_AT_S12Ex (val_name, el, iswrite) = {
     if ELUsingAArch32(EL1) then {
         addrdesc = AArch32_FullTranslate(slice(val_name, 0, 32), AccType_AT, iswrite, true, 1)
     } else {
-        addrdesc = AArch64_FullTranslate(val_name, AccType_AT, iswrite, true, 1)
+        let (_addrdesc, _) = AArch64_FullTranslate(val_name, AccType_AT, iswrite, true, 1);
+        addrdesc = _addrdesc
     };
     __RESTORE_EL();
     if IsFault(addrdesc) then {
@@ -29283,7 +29285,8 @@ val check_access : forall ('iswrite : Bool) ('a64nb : Int).
 function check_access (val_name, iswrite, a64nb) = {
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
-        memaddrdesc = AArch64_TranslateAddress(val_name, AccType_DC, iswrite, true, a64nb);
+        let (_memaddrdesc, _) = AArch64_TranslateAddress(val_name, AccType_DC, iswrite, true, a64nb);
+        memaddrdesc = _memaddrdesc;
         if IsFault(memaddrdesc) then {
             AArch64_Abort(val_name, memaddrdesc.fault)
         }
@@ -29336,7 +29339,8 @@ function IC_IVAU val_name = {
     let iswrite = false;
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
-        memaddrdesc = AArch64_TranslateAddress(val_name, AccType_DC, iswrite, true, 4);
+        let (_memaddrdesc, _) = AArch64_TranslateAddress(val_name, AccType_DC, iswrite, true, 4);
+        memaddrdesc = _memaddrdesc;
         if IsFault(memaddrdesc) then {
             AArch64_Abort(val_name, memaddrdesc.fault)
         }
@@ -29346,7 +29350,7 @@ function IC_IVAU val_name = {
             AArch32_Abort(slice(val_name, 0, 32), memaddrdesc.fault)
         }
     };
-    __cache_maintenance(Cache_op_I_IVAU, 64, val_name)
+    sail_cache_op(struct { kind = Cache_op_I_IVAU, address = val_name })
 }
 
 val DC_IVAC : bits(64) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
@@ -29367,7 +29371,8 @@ function DC_IVAC val_name = {
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
         iswrite = true;
-        memaddrdesc = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 4);
+        let (_memaddrdesc, _) = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 4);
+        memaddrdesc = _memaddrdesc;
         if IsFault(memaddrdesc) then {
             AArch64_Abort(val_name, memaddrdesc.fault)
         }
@@ -29379,7 +29384,7 @@ function DC_IVAC val_name = {
         }
     };
     if HasS2Translation() & [HCR_EL2[0]] == 0b1 then ();
-    __cache_maintenance(Cache_op_D_IVAC, 64, val_name)
+    sail_cache_op(struct { kind = Cache_op_D_IVAC, address = val_name })
 }
 
 val DC_IGDVAC : bits(64) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
@@ -29406,7 +29411,8 @@ function DC_CVAU val_name = {
     let iswrite = false;
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
-        memaddrdesc = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 4);
+        let (_memaddrdesc, _) = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 4);
+        memaddrdesc = _memaddrdesc;
         if IsFault(memaddrdesc) then {
             AArch64_Abort(val_name, memaddrdesc.fault)
         }
@@ -29416,7 +29422,7 @@ function DC_CVAU val_name = {
             AArch32_Abort(slice(val_name, 0, 32), memaddrdesc.fault)
         }
     };
-    __cache_maintenance(Cache_op_D_CVAU, 64, val_name)
+    sail_cache_op(struct { kind = Cache_op_D_CVAU, address = val_name })
 }
 
 val DC_CVAC : bits(64) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
@@ -29435,7 +29441,8 @@ function DC_CVAC val_name = {
     let iswrite = false;
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
-        memaddrdesc = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 4);
+        let (_memaddrdesc, _) = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 4);
+        memaddrdesc = _memaddrdesc;
         if IsFault(memaddrdesc) then {
             AArch64_Abort(val_name, memaddrdesc.fault)
         }
@@ -29445,7 +29452,7 @@ function DC_CVAC val_name = {
             AArch32_Abort(slice(val_name, 0, 32), memaddrdesc.fault)
         }
     };
-    __cache_maintenance(Cache_op_D_CVAC, 64, val_name)
+    sail_cache_op(struct { kind = Cache_op_D_CVAC, address = val_name })
 }
 
 val DC_CVAP : bits(64) -> unit effect {escape, rmem, rreg, undef, wmem, wreg}
@@ -29486,7 +29493,8 @@ function DC_CIVAC val_name = {
     let iswrite = false;
     memaddrdesc : AddressDescriptor = undefined : AddressDescriptor;
     if ~(ELUsingAArch32(PSTATE.EL)) then {
-        memaddrdesc = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 8);
+        let (_memaddrdesc, _) = AArch64_TranslateAddress(val_name, acctype, iswrite, true, 8);
+        memaddrdesc = _memaddrdesc;
         if IsFault(memaddrdesc) then {
             AArch64_Abort(val_name, memaddrdesc.fault)
         }

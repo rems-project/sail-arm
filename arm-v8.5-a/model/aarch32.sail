@@ -36370,7 +36370,7 @@ function AArch32_TranslationTableWalkSDX (vaddress, acctype, iswrite, size) = {
     accdesc : AccessDescriptor = undefined : AccessDescriptor;
     accdesc = CreateAccessDescriptorPTW(acctype, secondstage, s2fs1walk, level);
     l1desc : bits(32) = undefined : bits(32);
-    l1desc = aget__Mem(l1descaddr2, 4, accdesc);
+    l1desc = aget__Mem(l1descaddr2, None(), 4, accdesc);
     if [get_SCTLR()[25]] == 0b1 then {
         l1desc = BigEndianReverse(l1desc)
     };
@@ -36419,7 +36419,7 @@ function AArch32_TranslationTableWalkSDX (vaddress, acctype, iswrite, size) = {
           };
           l2descaddr2.vaddress = ZeroExtend(vaddress);
           accdesc = CreateAccessDescriptorPTW(acctype, secondstage, s2fs1walk, level);
-          l2desc = aget__Mem(l2descaddr2, 4, accdesc);
+          l2desc = aget__Mem(l2descaddr2, None(), 4, accdesc);
           if [get_SCTLR()[25]] == 0b1 then {
               l2desc = BigEndianReverse(l2desc)
           };
@@ -38194,7 +38194,7 @@ function AArch32_aset_MemSingle (address, size, acctype, wasaligned, value_name)
             }
         }
     };
-    _Mem(memaddrdesc, size, accdesc) = value_name;
+    _Mem(memaddrdesc, None(), size, accdesc) = value_name;
     return()
 }
 

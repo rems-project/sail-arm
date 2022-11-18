@@ -78,7 +78,11 @@ register configuration __isla_monomorphize_writes: bool = false
 function __ReadRAM(acctype, addr_length, bytes, hex_ram, addr) =
     if addr_length > 0 & addr_length <= 64 & bytes > 0 then {
         let addr = if acctype == AccType_IFETCH | __isla_monomorphize_reads then __monomorphize(addr) else addr;
-        __read_mem(acctype_to_read_kind(acctype), 64, sail_zero_extend(addr, 64), bytes)
+        if acctype == AccType_IFETCH then {
+            __read_mem_ifetch(acctype_to_read_kind(acctype), 64, sail_zero_extend(addr, 64), bytes)
+        } else {
+            __read_mem(acctype_to_read_kind(acctype), 64, sail_zero_extend(addr, 64), bytes)
+        }
     } else {
         __bad_read(bytes)
     }

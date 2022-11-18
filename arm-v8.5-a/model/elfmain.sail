@@ -45,6 +45,8 @@
 
 $include <elf.sail>
 
+val __GetVerbosity = {c: "sail_get_verbosity"}: unit -> bits(64) effect {rreg, undef}
+
 val read_register = "reg_deref" : forall ('a : Type). register('a) -> 'a effect {rreg}
 
 //             EL1 physical        EL2 physical        EL3 physical        EL1 virtual,       EL2 virtual
@@ -94,7 +96,7 @@ function Step_CPU() = {
         print(concat_str("Exception taken during IFetch from PC=",
               concat_str(HexStr(UInt(aget_PC())),
               concat_str(" in cycle=",
-              concat_str(DecStr(get_cycle_count()),
+              concat_str(DecStr(sail_get_cycle_count()),
               "\n")))));
       },
       Error_SError(iesb_req) => TakeSError(iesb_req),
@@ -111,7 +113,7 @@ function Step_CPU() = {
       exit()
   };
 
-  __instr_announce(__currentInstr);
+  sail_instr_announce(__currentInstr);
 
   if fetch_ok then {
       // Detect ASIMD instructions
@@ -181,7 +183,7 @@ function Step_CPU() = {
                   concat_str(" opcode=",
                   concat_str(HexStr(UInt(__currentInstr)),
                   concat_str(" in cycle ",
-                  concat_str(DecStr(get_cycle_count()),
+                  concat_str(DecStr(sail_get_cycle_count()),
                   "\n")))))));
             // print("  This might just be a HINT like 0xd50320df\n");
             ()
@@ -269,7 +271,7 @@ function Step_System () = {
           print(concat_str("Exception taken during Step_Timers.  PC=",
                 concat_str(HexStr(UInt(aget_PC())),
                 concat_str(" cycle=",
-                concat_str(DecStr(get_cycle_count()),
+                concat_str(DecStr(sail_get_cycle_count()),
                 "\n")))));
         }
       };
@@ -290,7 +292,7 @@ function Step_System () = {
             print(concat_str("Exception taken during Step_CPU.  PC=",
                   concat_str(HexStr(UInt(aget_PC())),
                   concat_str(" cycle=",
-                  concat_str(DecStr(get_cycle_count()),
+                  concat_str(DecStr(sail_get_cycle_count()),
                   "\n")))));
           }
         };
@@ -299,7 +301,7 @@ function Step_System () = {
       // We want to keep track of what exception level we are in for debugging purposes.
       if UInt(prevEL) != UInt(PSTATE.EL) then {
         prerr_bits(concat_str("[Sail] ",
-                   concat_str(DecStr(get_cycle_count()),
+                   concat_str(DecStr(sail_get_cycle_count()),
                    " Exception level changed to: ")),
                    PSTATE.EL);
       };
@@ -308,7 +310,7 @@ function Step_System () = {
         print(concat_str("   at PC=",
               concat_str(HexStr(UInt(aget_PC())),
               concat_str(" in cycle=",
-              concat_str(DecStr(get_cycle_count()),
+              concat_str(DecStr(sail_get_cycle_count()),
               "\n")))));
       };
       if prevCNTKCTL_EL1 != CNTKCTL_EL1 then {
@@ -324,7 +326,7 @@ function Step_System () = {
         print(concat_str("Exception taken during Step_System.  PC=",
               concat_str(HexStr(UInt(aget_PC())),
               concat_str(" cycle=",
-              concat_str(DecStr(get_cycle_count()),
+              concat_str(DecStr(sail_get_cycle_count()),
               "\n")))));
         ()
       },
@@ -341,7 +343,7 @@ function Step_System () = {
         print(concat_str("Exception taken during __EndCycle.  PC=",
               concat_str(HexStr(UInt(aget_PC())),
               concat_str(" cycle=",
-              concat_str(DecStr(get_cycle_count()),
+              concat_str(DecStr(sail_get_cycle_count()),
               "\n")))));
       }
     };
@@ -370,20 +372,16 @@ function init() = {
 
 val main : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
 
-val check_cycle_count = { c: "cycle_count" } : unit -> unit
-
-val isla_reset_registers = "reset_registers" : unit -> unit
-
 function main() = {
   let verbosity = __GetVerbosity();
   init();
-  isla_reset_registers();
-  check_cycle_count();
+  sail_reset_registers();
+  sail_end_cycle();
   while true do {
     if verbosity[0] == bitone then {
         nzcv = (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V);
         print(concat_str("[Sail] ",
-              concat_str(DecStr(get_cycle_count()),
+              concat_str(DecStr(sail_get_cycle_count()),
               concat_str(" PC=",
               concat_str(HexStr(UInt(aget_PC())),
               concat_str(" NZCV=",
@@ -391,10 +389,11 @@ function main() = {
               "\n")))))));
     };
     Step_System();
-    check_cycle_count();
+    sail_end_cycle();
   }
 }
 
+register __isla_continue_on_see: bool = true
 
 val isla_footprint_no_init : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
@@ -407,10 +406,10 @@ function isla_footprint_no_init(opcode) = {
   DBGEN = LOW;
 
   // Will set any registers passed via the -R option or the registers.reset config section
-  isla_reset_registers();
+  sail_reset_registers();
 
   // The first cycle during footprint analysis is reserved for initialization, and ignored.
-  check_cycle_count();
+  sail_end_cycle();
   try {
     var continue_decode: bool = true;
     while continue_decode do {
@@ -418,7 +417,7 @@ function isla_footprint_no_init(opcode) = {
         decode64(opcode);
         continue_decode = false
       } catch {
-        Error_See(_) => (),
+        Error_See(_) if __isla_continue_on_see => (),
         exn => throw(exn)
       }
     };
@@ -470,10 +469,10 @@ function isla_client(opcode) = {
   __currentInstr = opcode;
   DBGEN = LOW;
 
-  isla_reset_registers();
+  sail_reset_registers();
 
   // The first cycle during footprint analysis is reserved for initialization, and ignored.
-  check_cycle_count();
+  sail_end_cycle();
   try {
     decode64(opcode);
     true

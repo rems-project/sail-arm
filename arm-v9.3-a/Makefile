@@ -1,0 +1,82 @@
+LEM=lem
+CC=gcc
+
+# Attempt to work with either sail from opam or built from repo in SAIL_DIR
+ifneq ($(SAIL_DIR),)
+# Use sail repo in SAIL_DIR
+SAIL:=$(SAIL_DIR)/sail
+export SAIL_DIR
+else
+# Use sail from opam package
+SAIL_DIR:=$(shell opam config var sail:share)
+SAIL:=sail
+endif
+
+ISLA_SAIL=isla-sail
+
+SAIL_SRCS=src/prelude.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/config.sail src/sysops.sail src/instrs64.sail src/instrs32.sail src/devices.sail src/fetch.sail src/impdefs.sail src/interrupts.sail src/mem.sail src/step.sail src/map_clauses.sail src/event_clauses.sail src/stubs.sail
+SAIL_MAIN=src/elfmain.sail
+ISLA_MAIN=src/isla_main.sail
+LEM_SPLICES=$(wildcard src/lem-patches/*.sail)
+SAIL_FLAGS=
+SAIL_C_FLAGS = -O -Oconstant_fold
+
+all: lem.stamp isabelle.stamp coq.stamp
+
+.PHONY: all clean interactive gen_c gen_isabelle
+
+lem lem.stamp: $(SAIL_SRCS) $(LEM_SPLICES) lem/prelude.lem
+	mkdir -p isabelle
+	$(SAIL) -dprofile -verbose 1 -memo_z3 -grouped_regstate \
+	        -lem -lem_output_dir lem -isa_output_dir isabelle -o armv9 -lem_lib Prelude \
+	        -lem_mwords -mono_rewrites -auto_mono -undefined_gen \
+	        $(foreach splice,$(LEM_SPLICES),-splice $(splice)) \
+	        $(SAIL_SRCS) $(SAIL_FLAGS)
+	sed -i '/open import Sail2_prompt_monad/a open import Prelude' lem/armv9_types.lem
+	sed -i -f src/lem-patches/ldr1ron_ty0_fixup.sed lem/armv9.lem
+	touch lem.stamp
+
+lem/prelude.lem: src/lem-patches/prelude.lem
+	mkdir -p lem
+	cp $^ lem
+
+gen_isabelle isabelle isabelle.stamp: lem.stamp
+	mkdir -p isabelle
+	$(LEM) -isa -outdir isabelle -lib Sail=$(SAIL_DIR)/src/gen_lib \
+	    lem/prelude.lem lem/armv9_types.lem lem/armv9.lem
+	touch isabelle.stamp
+
+gen_coq coq coq.stamp: $(SAIL_SRCS) src/coq_termination.sail
+	$(SAIL) -dprofile -verbose 1 -memo_z3 \
+	        -coq -dcoq_undef_axioms \
+	        -coq_output_dir coq -o armv9 -coq_lib arm_extras \
+	        -undefined_gen \
+	        $(SAIL_SRCS) $(SAIL_FLAGS) \
+	        src/coq_termination.sail
+	touch coq.stamp
+
+c/armv9.c: $(SAIL_SRCS) $(SAIL_MAIN)
+	mkdir -p c
+	$(SAIL) -dprofile -verbose 1 -memo_z3 \
+		-c $(SAIL_C_FLAGS) $(SAIL_FLAGS) $(SAIL_SRCS) $(SAIL_MAIN) > c/armv9.c.temp
+	mv c/armv9.c.temp c/armv9.c
+
+gen_c c c.stamp: c/armv9.c
+	$(CC) -O2 -DHAVE_SETCONFIG c/armv9.c $(SAIL_DIR)/lib/*.c -lgmp -lz -I $(SAIL_DIR)/lib/ -o c/armv9
+	touch c.stamp
+
+gen_ir ir/morello.ir: $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN)
+	mkdir -p ir
+	$(ISLA_SAIL) -v 1 -mono_rewrites $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN) -o ir/armv9
+
+interactive:
+	$(SAIL) -i -infer_effects -verbose 1 \
+	        $(SAIL_SRCS) $(SAIL_FLAGS) \
+	        src/coq_termination.sail
+
+clean:
+	rm -f lem.stamp lem/arm.lem lem/arm_types.lem
+	rm -f isabelle.stamp isabelle/Arm_lemmas.thy isabelle/Arm.thy isabelle/Arm_types.thy \
+	  isabelle/Prelude.thy isabelle/ArmAuxiliary.thy
+	rm -f coq.stamp coq/{arm_extras,arm,arm_types}.{v,vo,vok,vos,glob}
+	rm -f ir/morello.ir

@@ -1,0 +1,258 @@
+open import Pervasives_extra
+open import Sail2_instr_kinds
+open import Sail2_values
+open import Sail2_operators_mwords
+open import Sail2_prompt_monad
+open import Sail2_prompt
+
+val __ReadMemory : forall 'rv 'n 'e. Size 'n => integer -> mword ty56 -> monad 'rv (mword 'n) 'e
+let __ReadMemory n addr = read_mem Read_plain (56:integer) addr n
+val __WriteMemory : forall 'rv 'n 'e. Size 'n => integer -> mword ty56 -> mword 'n -> monad 'rv unit 'e
+let __WriteMemory n addr data = write_mem Write_plain (56:integer) addr n data >>= fun _ -> return ()
+
+(* TODO *)
+val putchar : integer -> unit
+let putchar _ = ()
+
+val wakeup_request : forall 'rv 'e. unit -> monad 'rv unit 'e
+let wakeup_request _ = return ()
+
+val sleep_request : forall 'rv 'e. unit -> monad 'rv unit 'e
+let sleep_request _ = return ()
+
+type ty288
+instance (Size ty288) let size = 288 end
+declare isabelle target_rep type ty288 = `288`
+declare hol target_rep type ty288 = `288`
+type ty320
+instance (Size ty320) let size = 320 end
+declare isabelle target_rep type ty320 = `320`
+declare hol target_rep type ty320 = `320`
+type ty352
+instance (Size ty352) let size = 352 end
+declare isabelle target_rep type ty352 = `352`
+declare hol target_rep type ty352 = `352`
+type ty384
+instance (Size ty384) let size = 384 end
+declare isabelle target_rep type ty384 = `384`
+declare hol target_rep type ty384 = `384`
+type ty416
+instance (Size ty416) let size = 416 end
+declare isabelle target_rep type ty416 = `416`
+declare hol target_rep type ty416 = `416`
+type ty448
+instance (Size ty448) let size = 448 end
+declare isabelle target_rep type ty448 = `448`
+declare hol target_rep type ty448 = `448`
+type ty480
+instance (Size ty480) let size = 480 end
+declare isabelle target_rep type ty480 = `480`
+declare hol target_rep type ty480 = `480`
+type ty512
+instance (Size ty512) let size = 512 end
+declare isabelle target_rep type ty512 = `512`
+declare hol target_rep type ty512 = `512`
+type ty640
+instance (Size ty640) let size = 640 end
+declare isabelle target_rep type ty640 = `640`
+declare hol target_rep type ty640 = `640`
+type ty768
+instance (Size ty768) let size = 768 end
+declare isabelle target_rep type ty768 = `768`
+declare hol target_rep type ty768 = `768`
+type ty896
+instance (Size ty896) let size = 896 end
+declare isabelle target_rep type ty896 = `896`
+declare hol target_rep type ty896 = `896`
+type ty1024
+instance (Size ty1024) let size = 1024 end
+declare isabelle target_rep type ty1024 = `1024`
+declare hol target_rep type ty1024 = `1024`
+type ty1152
+instance (Size ty1152) let size = 1152 end
+declare isabelle target_rep type ty1152 = `1152`
+declare hol target_rep type ty1152 = `1152`
+type ty1280
+instance (Size ty1280) let size = 1280 end
+declare isabelle target_rep type ty1280 = `1280`
+declare hol target_rep type ty1280 = `1280`
+type ty1408
+instance (Size ty1408) let size = 1408 end
+declare isabelle target_rep type ty1408 = `1408`
+declare hol target_rep type ty1408 = `1408`
+type ty1536
+instance (Size ty1536) let size = 1536 end
+declare isabelle target_rep type ty1536 = `1536`
+declare hol target_rep type ty1536 = `1536`
+type ty1664
+instance (Size ty1664) let size = 1664 end
+declare isabelle target_rep type ty1664 = `1664`
+declare hol target_rep type ty1664 = `1664`
+type ty1792
+instance (Size ty1792) let size = 1792 end
+declare isabelle target_rep type ty1792 = `1792`
+declare hol target_rep type ty1792 = `1792`
+type ty1920
+instance (Size ty1920) let size = 1920 end
+declare isabelle target_rep type ty1920 = `1920`
+declare hol target_rep type ty1920 = `1920`
+type ty2048
+instance (Size ty2048) let size = 2048 end
+declare isabelle target_rep type ty2048 = `2048`
+declare hol target_rep type ty2048 = `2048`
+type ty2304
+instance (Size ty2304) let size = 2304 end
+declare isabelle target_rep type ty2304 = `2304`
+declare hol target_rep type ty2304 = `2304`
+type ty2560
+instance (Size ty2560) let size = 2560 end
+declare isabelle target_rep type ty2560 = `2560`
+declare hol target_rep type ty2560 = `2560`
+type ty2816
+instance (Size ty2816) let size = 2816 end
+declare isabelle target_rep type ty2816 = `2816`
+declare hol target_rep type ty2816 = `2816`
+type ty3072
+instance (Size ty3072) let size = 3072 end
+declare isabelle target_rep type ty3072 = `3072`
+declare hol target_rep type ty3072 = `3072`
+type ty3328
+instance (Size ty3328) let size = 3328 end
+declare isabelle target_rep type ty3328 = `3328`
+declare hol target_rep type ty3328 = `3328`
+type ty3584
+instance (Size ty3584) let size = 3584 end
+declare isabelle target_rep type ty3584 = `3584`
+declare hol target_rep type ty3584 = `3584`
+type ty3840
+instance (Size ty3840) let size = 3840 end
+declare isabelle target_rep type ty3840 = `3840`
+declare hol target_rep type ty3840 = `3840`
+type ty4096
+instance (Size ty4096) let size = 4096 end
+declare isabelle target_rep type ty4096 = `4096`
+declare hol target_rep type ty4096 = `4096`
+type ty4608
+instance (Size ty4608) let size = 4608 end
+declare isabelle target_rep type ty4608 = `4608`
+declare hol target_rep type ty4608 = `4608`
+type ty6400
+instance (Size ty6400) let size = 6400 end
+declare isabelle target_rep type ty6400 = `6400`
+declare hol target_rep type ty6400 = `6400`
+type ty8192
+instance (Size ty8192) let size = 8192 end
+declare isabelle target_rep type ty8192 = `8192`
+declare hol target_rep type ty8192 = `8192`
+type ty9216
+instance (Size ty9216) let size = 9216 end
+declare isabelle target_rep type ty9216 = `9216`
+declare hol target_rep type ty9216 = `9216`
+type ty12800
+instance (Size ty12800) let size = 12800 end
+declare isabelle target_rep type ty12800 = `12800`
+declare hol target_rep type ty12800 = `12800`
+
+type ty12544
+instance (Size ty12544) let size = 12544 end
+declare isabelle target_rep type ty12544 = `12544`
+declare hol target_rep type ty12544 = `12544`
+
+type ty16384
+instance (Size ty16384) let size = 16384 end
+declare isabelle target_rep type ty16384 = `16384`
+declare hol target_rep type ty16384 = `16384`
+
+type ty18432
+instance (Size ty18432) let size = 18432 end
+declare isabelle target_rep type ty18432 = `18432`
+declare hol target_rep type ty18432 = `18432`
+
+type ty20736
+instance (Size ty20736) let size = 20736 end
+declare isabelle target_rep type ty20736 = `20736`
+declare hol target_rep type ty20736 = `20736`
+
+type ty25088
+instance (Size ty25088) let size = 25088 end
+declare isabelle target_rep type ty25088 = `25088`
+declare hol target_rep type ty25088 = `25088`
+
+type ty25600
+instance (Size ty25600) let size = 25600 end
+declare isabelle target_rep type ty25600 = `25600`
+declare hol target_rep type ty25600 = `25600`
+
+type ty30976
+instance (Size ty30976) let size = 30976 end
+declare isabelle target_rep type ty30976 = `30976`
+declare hol target_rep type ty30976 = `30976`
+
+type ty32768
+instance (Size ty32768) let size = 32768 end
+declare isabelle target_rep type ty32768 = `32768`
+declare hol target_rep type ty32768 = `32768`
+
+type ty36864
+instance (Size ty36864) let size = 36864 end
+declare isabelle target_rep type ty36864 = `36864`
+declare hol target_rep type ty36864 = `36864`
+
+type ty41472
+instance (Size ty41472) let size = 41472 end
+declare isabelle target_rep type ty41472 = `41472`
+declare hol target_rep type ty41472 = `41472`
+
+type ty43264
+instance (Size ty43264) let size = 43264 end
+declare isabelle target_rep type ty43264 = `43264`
+declare hol target_rep type ty43264 = `43264`
+
+type ty50176
+instance (Size ty50176) let size = 50176 end
+declare isabelle target_rep type ty50176 = `50176`
+declare hol target_rep type ty50176 = `50176`
+
+type ty51200
+instance (Size ty51200) let size = 51200 end
+declare isabelle target_rep type ty51200 = `51200`
+declare hol target_rep type ty51200 = `51200`
+
+type ty57600
+instance (Size ty57600) let size = 57600 end
+declare isabelle target_rep type ty57600 = `57600`
+declare hol target_rep type ty57600 = `57600`
+
+type ty61952
+instance (Size ty61952) let size = 61952 end
+declare isabelle target_rep type ty61952 = `61952`
+declare hol target_rep type ty61952 = `61952`
+
+type ty65536
+instance (Size ty65536) let size = 65536 end
+declare isabelle target_rep type ty65536 = `65536`
+declare hol target_rep type ty65536 = `65536`
+
+type ty73728
+instance (Size ty73728) let size = 73728 end
+declare isabelle target_rep type ty73728 = `73728`
+declare hol target_rep type ty73728 = `73728`
+
+type ty86528
+instance (Size ty86528) let size = 86528 end
+declare isabelle target_rep type ty86528 = `86528`
+
+type ty100352
+instance (Size ty100352) let size = 100352 end
+declare isabelle target_rep type ty100352 = `100352`
+declare hol target_rep type ty100352 = `100352`
+
+type ty115200
+instance (Size ty115200) let size = 115200 end
+declare isabelle target_rep type ty115200 = `115200`
+declare hol target_rep type ty115200 = `115200`
+
+type ty131072
+instance (Size ty131072) let size = 131072 end
+declare isabelle target_rep type ty131072 = `131072`
+declare hol target_rep type ty131072 = `131072`

@@ -3686,7 +3686,16 @@ function CombineS1S2Desc (s1desc, s2desc) = {
             result.memattrs = __tc12
         }
     };
-    result.memattrs = MemAttrDefaults(result.memattrs);
+    /* TODO: BS: the original ASL contained just:
+     *
+     * result.memattrs = MemAttrDefaults(result.memattrs);
+     *
+     * but this reads some uninitialized fields, so
+     * I modify this to check if it wasn't a fault first
+     */
+    if ~(IsFault(result)) then {
+        result.memattrs = MemAttrDefaults(result.memattrs);
+    };
     result
 }
 

@@ -1,0 +1,42 @@
+name: CI (Coq)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        env:
+        - { COQ_VERSION: "master", COQ_PACKAGE: "coq libcoq-ocaml-dev", PPA: "ppa:jgross-h/coq-master-daily"             }
+        - { COQ_VERSION: "8.15.0", COQ_PACKAGE: "coq-8.15.0", PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-08" }
+        - { COQ_VERSION: "8.14.1", COQ_PACKAGE: "coq-8.14.1", PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-08" }
+        - { COQ_VERSION: "8.13.2", COQ_PACKAGE: "coq-8.13.2", PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-05" }
+        - { COQ_VERSION: "8.12.2", COQ_PACKAGE: "coq-8.12.2", PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-05" }
+        - { COQ_VERSION: "8.11.2", COQ_PACKAGE: "coq-8.11.2", PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-05" }
+        - { COQ_VERSION: "8.10.2", COQ_PACKAGE: "coq-8.10.2", PPA: "ppa:jgross-h/many-coq-versions-ocaml-4-05" }
+        - { COQ_VERSION: "8.9.1" , COQ_PACKAGE: "coq-8.9.1" , PPA: "ppa:jgross-h/many-coq-versions"            }
+        - { COQ_VERSION: "8.8.2" , COQ_PACKAGE: "coq-8.8.2" , PPA: "ppa:jgross-h/many-coq-versions"            }
+        - { COQ_VERSION: "8.7.2" , COQ_PACKAGE: "coq-8.7.2" , PPA: "ppa:jgross-h/many-coq-versions"            }
+
+    env: ${{ matrix.env }}
+
+    steps:
+    - name: install Coq
+      run: |
+        if [ ! -z "$PPA" ]; then sudo add-apt-repository "$PPA" -y; fi
+        sudo apt-get update -q
+        sudo apt-get install $COQ_PACKAGE -y --allow-unauthenticated
+    - name: echo build params
+      run: |
+        lscpu
+        uname -a
+        lsb_release -a
+        coqc --version
+        echo | coqtop
+    - uses: actions/checkout@v2
+    - run: make

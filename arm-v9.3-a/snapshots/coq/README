@@ -1,3 +1,4 @@
-This was built by Sail 0.15 and should be used with the Coq library
-accompanying Sail (note that the library can be built without building the rest
-of the tool).
+This model was generated with Sail 0.15.  Also included are copies of
+the supporting libraries for bitvectors (bbv 1.3) and Sail (0.15).
+The build.sh shell script will build all three.  This was tested with
+Coq 8.16.0.

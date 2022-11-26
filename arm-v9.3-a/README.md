@@ -35,7 +35,9 @@ kernel above the C emulator.
 ## License
 
 The files in this repository are licensed under the BSD 3-Clause Clear license
-in `LICENSE`.
+in `LICENSE`, except for the snapshots of the Lem and Sail theorem prover
+libraries in the `snapshots` directory, which come with their own license files
+in their respective subdirectories.
 
 Copyright (c) 2022 Arm Limited (or its affiliates), Thomas Bauereiss, Brian
 Campbell, Alasdair Armstrong, Alastair Reid, Peter Sewell

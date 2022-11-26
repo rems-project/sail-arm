@@ -1,0 +1,16 @@
+session "Sail-Armv9-Base" in "base" = "Sail" +
+  options [document = false]
+  theories
+    Armv9_base
+
+session "Sail-Armv9-Instrs" in "instrs" = "Sail-Armv9-Base" +
+  options [document = false]
+  theories
+    Armv9_instrs64
+    Armv9_instrs32
+    Armv9_decode
+
+session "Sail-Armv9" = "Sail-Armv9-Instrs" +
+  options [document = false]
+  theories
+    Armv9_lemmas

@@ -82,3 +82,14 @@ function __FetchNextInstr() = {
     }
   }
 }
+
+val __ExecuteInstr : (__InstrEnc, bits(32)) -> unit
+
+function __ExecuteInstr(enc, opcode) = {
+  match enc {
+    __A64 => __DecodeA64(UInt(_PC), opcode),
+    __A32 => __DecodeA32(UInt(_PC), opcode),
+    __T32 => __DecodeT32(UInt(_PC), opcode),
+    __T16 => __DecodeT16(UInt(_PC), opcode[15 .. 0])
+  }
+}

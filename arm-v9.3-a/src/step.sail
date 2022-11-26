@@ -96,16 +96,19 @@ function Step_CPU() = {
 
     try {
       __BranchTaken = false;
-      match enc {
-        __A64 => __DecodeA64(UInt(_PC), opcode),
-        __A32 => __DecodeA32(UInt(_PC), opcode),
-        __T32 => __DecodeT32(UInt(_PC), opcode),
-        __T16 => __DecodeT16(UInt(_PC), opcode[15 .. 0])
+      try {
+        __ExecuteInstr(enc, opcode)
+      } catch {
+        Error_See(msg) => {
+          if (__GetVerbosity()[1] == bitone) then prerr_endline("[Sail] SEE(" ++ msg ++ "), retrying decode");
+          __ExecuteInstr(enc, opcode)
+        },
+        e => throw(e)
       }
     } catch {
-      Error_Undefined()         => try { UndefinedFault() } catch { _ => prerr_endline("Exception during Undefined recovery at PC=" ++ bits_str(oldPC) ++ " instr=" ++ bits_str(opcode)) },
-      Error_See(_) => {
-	print("Unexpected SEE, exiting.\n");
+      Error_Undefined() => try { UndefinedFault() } catch { _ => prerr_endline("Exception during Undefined recovery at PC=" ++ bits_str(oldPC) ++ " instr=" ++ bits_str(opcode)) },
+      Error_See(msg) => {
+        print("Unexpected SEE: '" ++ msg ++ "', exiting.\n");
         exit()
       },
       Error_ReservedEncoding(_) => try { UndefinedFault() } catch { _ => prerr_endline("Exception during ReservedEncoding recovery") },

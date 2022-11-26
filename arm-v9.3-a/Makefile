@@ -21,9 +21,9 @@ LEM_SPLICES=$(wildcard src/lem-patches/*.sail)
 SAIL_FLAGS=
 SAIL_C_FLAGS = -O -Oconstant_fold
 
-all: lem.stamp isabelle.stamp coq.stamp
+all: c.stamp lem.stamp isabelle.stamp coq.stamp
 
-.PHONY: all clean interactive gen_c gen_isabelle
+.PHONY: all clean interactive gen_c gen_isabelle gen_coq gen_ir
 
 lem lem.stamp: $(SAIL_SRCS) $(LEM_SPLICES) lem/prelude.lem
 	mkdir -p isabelle

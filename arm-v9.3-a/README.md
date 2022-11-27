@@ -21,7 +21,12 @@ particular, `step.sail` contains a simple top-level fetch-decode-execute
 function, and `impdefs.sail` and `map_clauses.sail` contain some default
 choices for implementation-defined behaviour.
 
-## Building
+The `snapshots` directory contains pre-built artifacts derived from the Sail
+specification:  theorem prover definitions and C emulator source code.  These
+snapshots are provided for convenience, and are not guaranteed to be
+up-to-date.
+
+## Building from source
 
 To build artifacts derived from the Sail specification, make sure that a recent
 version of [Sail][sail] is installed (last tested using revision `b785601e`),

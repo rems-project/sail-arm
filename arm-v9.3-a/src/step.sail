@@ -63,6 +63,7 @@ function Step_CPU() = {
   var enc : __InstrEnc = __ThisInstrEnc;
   try {
     (enc, opcode) = __FetchNextInstr();
+    opcode = __monomorphize(opcode);
     __SetThisInstr(opcode);
     __SetThisInstrEnc(enc);
     fetch_ok = true;
@@ -80,10 +81,12 @@ function Step_CPU() = {
   };
 
   // Use a magic instruction to kill the simulator in init
-  if opcode == 0xfee1dead then {
+  if opcode == 0xfee1dead | opcode == 0x00000000 then {
     print("[Sail] Finished Successfully!\n");
     exit()
   };
+  
+  sail_instr_announce(opcode);
 
   if fetch_ok then {
     // test for ERET instruction from EL3_Secure - only supported in v8.4
@@ -139,9 +142,11 @@ val Step_Timers : unit -> unit effect {escape, undef, wreg, rreg}
 
 function Step_Timers() = {
   GenericCounterTick();
+  /*
   if (__GIC_InterruptPending() & PSTATE.I == 0b0) then {
     __HandlePendingInterrupt()
   }
+  */
 }
 
 val Step_System : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
@@ -208,7 +213,7 @@ function __InitSystem() = {
   DBGEN = LOW;
   TakeReset(true);
   Init_Timers();
-  Init_Devices();
+  // Init_Devices();
 }
 
 // Simple top level fetch and execute function.

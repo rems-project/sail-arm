@@ -89,6 +89,7 @@ function isla_footprint_no_init(opcode) = {
   isla_reset_registers();
 
   __ThisInstr = opcode;
+  __ThisInstrEnc = __A64;
 
   // The first cycle during footprint analysis is reserved for initialization, and ignored.
   check_cycle_count();

@@ -99,11 +99,11 @@ function ConsumptionOfSpeculativeDataBarrier () = {
 }
 
 function DataMemoryBarrier (domain, types) = {
-    return()
+    sail_barrier(Barrier_DMB(struct { domain = domain, types = types, nXS = false }))
 }
 
 function DataSynchronizationBarrier (domain, types, nXS) = {
-    return()
+    sail_barrier(Barrier_DSB(struct { domain = domain, types = types, nXS = nXS }))
 }
 
 function DiscardTransactionalWrites () = {
@@ -147,7 +147,7 @@ function Hint_Yield () = {
 }
 
 function InstructionSynchronizationBarrier () = {
-    return()
+    sail_barrier(Barrier_ISB())
 }
 
 function IsASEInstruction () = {
@@ -295,7 +295,7 @@ function SetTagCheckedInstruction checked = {
 }
 
 function SpeculationBarrier () = {
-    return()
+    sail_barrier(Barrier_SB())
 }
 
 function SpeculativeStoreBypassBarrierToPA () = {
@@ -315,11 +315,13 @@ function StopInstructionPrefetchAndEnableITR () = {
 }
 
 function SupportedNonPowerTwoVL nbits = {
-    return(__UNKNOWN_boolean())
+    // return(__UNKNOWN_boolean())
+    true
 }
 
 function SupportedPowerTwoSVL nbits = {
-    return(__UNKNOWN_boolean())
+    // return(__UNKNOWN_boolean())
+    true
 }
 
 function SynchronizeContext () = {

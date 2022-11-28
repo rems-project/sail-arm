@@ -67,7 +67,7 @@ gen_c c c.stamp: c/armv9.c
 
 gen_ir ir/morello.ir: $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN)
 	mkdir -p ir
-	$(ISLA_SAIL) -v 1 -mono_rewrites $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN) -o ir/armv9
+	$(ISLA_SAIL) -v 1 -memo_z3 -mono_rewrites $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN) -o ir/armv9
 
 interactive:
 	$(SAIL) -i -infer_effects -verbose 1 \

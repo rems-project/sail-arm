@@ -38,99 +38,6 @@
 /*  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.         */
 /******************************************************************************/
 
-// Redirect memory primitives to Sail builtins
-
-val __ReadMem
-  = { ocaml: "Platform.read_mem", c: "platform_read_mem", _: "read_mem" }
-  : forall 'n (constant 'addrsize : Int), 'n > 0 & 'addrsize in {32, 64}.
-  (read_kind, int('addrsize), bits('addrsize), int('n)) -> bits(8 * 'n) effect {rmem}
-
-val __ReadTaggedMem
-  = { lem: "read_memt", coq: "read_memt" }
-  : forall 'n (constant 'addrsize : Int), 'n > 0 & 'addrsize in {32, 64}.
-  (read_kind, bits('addrsize), int('n)) -> (bits(8 * 'n), bit) effect {rmemt}
-
-val __WriteMem
-  = { lem: "write_mem", coq: "write_mem" }
-  : forall 'n (constant 'addrsize : Int), 'n > 0 & 'addrsize in {32, 64}.
-  (write_kind, int('addrsize), bits('addrsize), int('n), bits(8 * 'n)) -> bool effect {wmv}
-
-function __WriteMem(wk, addrsize, addr, size, data) = {
-  match('addrsize) {
-    32 => __write_mem(wk, 32, addr, size, data),
-    64 => __write_mem(wk, 64, addr, size, data)
-  }
-}
-
-val acctype_to_read_kind : AccType -> read_kind
-
-function acctype_to_read_kind(acctype) = {
-    match acctype {
-        AccType_NORMAL => Read_plain,
-        AccType_IFETCH => Read_ifetch,
-        AccType_ORDERED => Read_acquire,
-        AccType_ATOMIC => Read_exclusive,
-        AccType_ATOMICRW => Read_exclusive,
-        AccType_ORDEREDATOMIC => Read_exclusive_acquire,
-        AccType_ORDEREDATOMICRW => Read_exclusive_acquire,
-        _ => Read_plain
-    }
-}
-
-val _Mem_read : forall 'size, 'size > 0. (AddressDescriptor, int('size), AccessDescriptor) -> bits(8 * 'size)
-
-$ifdef HAVE_DEVICES
-function _Mem_read (desc, size, accdesc) = {
-  let paddress = desc.paddress.address;
-  if (size >= 4 & paddress[(length(paddress) - 1) .. 16] == ZeroExtend(GIC_BASE)) then {
-    // TODO: Pass read kind?
-    ZeroExtend(__ReadGIC(paddress[15 .. 0]), 8 * size);
-  } else if (paddress[(length(paddress) - 1) .. 16] == ZeroExtend(UART_BASE)) then {
-    __ReadUART(paddress[15 .. 0], size);
-  } else {
-    __ReadMem(acctype_to_read_kind(accdesc.acctype), 64, ZeroExtend(paddress, 64), size)
-  }
-}
-$else
-function _Mem_read (desc, size, accdesc) = {
-  __ReadMem(acctype_to_read_kind(accdesc.acctype), 64, ZeroExtend(desc.paddress.address, 64), size)
-}
-$endif
-
-val acctype_to_write_kind : AccType -> write_kind
-
-function acctype_to_write_kind(acctype) = {
-    match acctype {
-        AccType_ORDERED => Write_release,
-        AccType_ATOMIC => Write_exclusive,
-        AccType_ATOMICRW => Write_exclusive,
-        AccType_ORDEREDATOMIC => Write_exclusive_release,
-        AccType_ORDEREDATOMICRW => Write_exclusive_release,
-        _ => Write_plain
-    }
-}
-
-val _Mem_set : forall 'size, 'size > 0. (AddressDescriptor, int('size), AccessDescriptor, bits(8 * 'size)) -> unit
-
-$ifdef HAVE_DEVICES
-function _Mem_set (desc, size, accdesc, data) = {
-  let paddress = desc.paddress.address;
-  if (size == 4 & paddress[(length(paddress) - 1) .. 16] == ZeroExtend(GIC_BASE)) then {
-    __WriteGIC(paddress[15 .. 0], data)
-  } else if (paddress[(length(paddress) - 1) .. 16] == ZeroExtend(UART_BASE)) then {
-    __WriteUART(paddress[15 .. 0], size, data)
-  } else {
-    let _ = __WriteMem(acctype_to_write_kind(accdesc.acctype), 64, ZeroExtend(paddress, 64), size, data);
-    ()
-  }
-}
-$else
-function _Mem_set (desc, size, accdesc, data) = {
-  let _ = __WriteMem(acctype_to_write_kind(accdesc.acctype), 64, ZeroExtend(desc.paddress.address, 64), size, data);
-  ()
-}
-$endif
-
 function PhysMemTagWrite (desc, accdesc, data) = {
   // TODO
   return undefined;
@@ -143,13 +50,28 @@ function PhysMemTagRead (desc, accdesc) = {
 
 val CreatePhysMemRetStatus : (Fault, AccType) -> PhysMemRetStatus
 
-function CreatePhysMemRetStatus (fault, acctype) = struct { statuscode = fault, extflag = 0b0, errortype = 0b00, store64bstatus = Zeros(), acctype = acctype }
+function CreatePhysMemRetStatus (fault, acctype) = struct {
+  statuscode = fault,
+  extflag = 0b0,
+  errortype = 0b00,
+  store64bstatus = Zeros(),
+  acctype = acctype
+}
 
 function PhysMemRead (desc, size, accdesc) = {
-  return (CreatePhysMemRetStatus(Fault_None, accdesc.acctype), _Mem_read(desc, size, accdesc));
+  match sail_mem_read(read_request(accdesc.acctype, None(), size, desc.vaddress, 0x0 @ desc.paddress.address)) {
+    Ok((value, _)) => (CreatePhysMemRetStatus(Fault_None, accdesc.acctype), value),
+    Err(statuscode) => (CreatePhysMemRetStatus(statuscode, accdesc.acctype), sail_zeros(8 * size))
+  }
 }
 
 function PhysMemWrite (desc, size, accdesc, data) = {
-  _Mem_set(desc, size, accdesc, data);
-  return CreatePhysMemRetStatus(Fault_None, accdesc.acctype);
+  if size > 0 then {
+    match sail_mem_write(write_request(accdesc.acctype, None(), size, desc.vaddress, 0x0 @ desc.paddress.address, data)) {
+      Ok(_) => CreatePhysMemRetStatus(Fault_None, accdesc.acctype),
+      Err(statuscode) => CreatePhysMemRetStatus(statuscode, accdesc.acctype)
+    }
+  } else {
+    CreatePhysMemRetStatus(Fault_None, accdesc.acctype)
+  }
 }

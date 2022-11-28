@@ -14,7 +14,7 @@ endif
 
 ISLA_SAIL=isla-sail
 
-SAIL_SRCS=src/prelude.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/config.sail src/sysops.sail src/instrs64.sail src/instrs32.sail src/devices.sail src/fetch.sail src/impdefs.sail src/interrupts.sail src/mem.sail src/step.sail src/map_clauses.sail src/event_clauses.sail src/stubs.sail
+SAIL_SRCS=src/prelude.sail src/interface.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/config.sail src/sysops.sail src/instrs64.sail src/instrs32.sail src/fetch.sail src/impdefs.sail src/interrupts.sail src/mem.sail src/step.sail src/map_clauses.sail src/event_clauses.sail src/stubs.sail
 SAIL_MAIN=src/elfmain.sail
 ISLA_MAIN=src/isla_main.sail
 LEM_SPLICES=$(wildcard src/lem-patches/*.sail)

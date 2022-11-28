@@ -61,6 +61,8 @@ function main() = {
   try {
     let verbosity = __GetVerbosity();
     __InitSystem();
+    _PC = Slice_int(elf_entry(), 0, 64);
+    check_cycle_count();
     while true do {
       if verbosity[0] == bitone then {
           nzcv = (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V);

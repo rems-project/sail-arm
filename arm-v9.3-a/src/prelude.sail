@@ -49,7 +49,6 @@ $include <string.sail>
 $include <real.sail>
 $include <reverse_endianness.sail>
 $include <mono_rewrites.sail>
-$include <regfp.sail>
 
 /* These could be given refined types, if necessary */
 val implies : (bool, bool) -> bool
@@ -216,6 +215,8 @@ val xor_vec = pure {c: "xor_bits", _: "xor_vec"} : forall 'n, 'n >= 0. (bits('n)
 overload AND = {and_vec}
 overload OR = {or_vec}
 overload EOR = {xor_vec}
+
+val align_bits = pure "align_bits" : forall 'n 'm, 'n >= 0 & 'm >= 1. (bits('n), int('m)) -> bits('n)
 
 val SignExtend0 = pure "sign_extend" : forall 'n 'm, 'n > 0 & 'm >= 'n.
   (bits('n), int('m)) -> bits('m)

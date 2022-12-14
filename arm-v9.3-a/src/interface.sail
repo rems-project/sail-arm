@@ -1,7 +1,7 @@
 
 $include <concurrency_interface.sail>
 $include <concurrency_interface/tlbi.sail>
-$include <concurrency_interface/eret.sail>
+$include <concurrency_interface/exception.sail>
 $include <concurrency_interface/cache_op.sail>
 
 enum SecurityState = {SS_NonSecure, SS_Root, SS_Realm, SS_Secure}
@@ -286,7 +286,10 @@ union Barrier = {
 instantiation sail_barrier with
   'barrier = Barrier
 
-instantiation sail_eret
+instantiation sail_return_exception
+
+instantiation sail_take_exception with
+  'fault = option(FaultRecord)
 
 val __mark_register = "mark_register" : forall ('a: Type). (register('a), string) -> unit
 val __mark_register_pair = "mark_register_pair" : forall ('a: Type) ('b: Type). (register('a), register('b), string) -> unit

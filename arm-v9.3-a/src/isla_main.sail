@@ -78,8 +78,6 @@
 /*  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.         */
 /*============================================================================*/
 
-val isla_reset_registers = "reset_registers" : unit -> unit
-
 val isla_footprint_no_init : bits(32) -> bool effect {configuration, escape, rmem, rreg, undef, wmem, wreg}
 
 function isla_footprint_no_init(opcode) = {

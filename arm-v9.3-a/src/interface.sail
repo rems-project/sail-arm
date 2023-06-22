@@ -4,6 +4,8 @@ $include <concurrency_interface/tlbi.sail>
 $include <concurrency_interface/exception.sail>
 $include <concurrency_interface/cache_op.sail>
 
+enum Shareability = {Shareability_NSH, Shareability_ISH, Shareability_OSH}
+
 enum SecurityState = {SS_NonSecure, SS_Root, SS_Realm, SS_Secure}
 
 enum AccType = {
@@ -132,6 +134,57 @@ union arm_acc_type = {
   SAcc_AT : unit
 }
 
+
+enum CacheOp = {CacheOp_Clean, CacheOp_Invalidate, CacheOp_CleanInvalidate}
+
+enum CacheOpScope = {
+  CacheOpScope_SetWay,
+  CacheOpScope_PoU,
+  CacheOpScope_PoC,
+  CacheOpScope_PoP,
+  CacheOpScope_PoDP,
+  CacheOpScope_ALLU,
+  CacheOpScope_ALLUIS
+}
+
+enum CachePASpace = {
+  CPAS_NonSecure,
+  CPAS_Any,
+  CPAS_RealmNonSecure,
+  CPAS_Realm,
+  CPAS_Root,
+  CPAS_SecureNonSecure,
+  CPAS_Secure
+}
+
+enum CacheType = {
+  CacheType_Data,
+  CacheType_Tag,
+  CacheType_Data_Tag,
+  CacheType_Instruction
+}
+
+struct CacheRecord = {
+  acctype : AccType,
+  cacheop : CacheOp,
+  opscope : CacheOpScope,
+  cachetype : CacheType,
+  regval : bits(64),
+  paddress : FullAddress,
+  vaddress : bits(64),
+  set : int,
+  way : int,
+  level : int,
+  shareability : Shareability,
+  translated : bool,
+  is_vmid_valid : bool,
+  vmid : bits(16),
+  is_asid_valid : bool,
+  asid : bits(16),
+  security : SecurityState,
+  cpas : CachePASpace
+}
+
 function AccType_to_Access_kind(acc : AccType) -> Access_kind(arm_acc_type) = {
   match acc {
     AccType_NORMAL => AK_explicit(struct{variety = AV_plain, strength = AS_normal}),
@@ -247,8 +300,6 @@ struct TLBIRecord = {
   tg : bits(2)
 }
 
-enum Shareability = {Shareability_NSH, Shareability_ISH, Shareability_OSH}
-
 struct TLBI = {
   rec: TLBIRecord,
   shareability : Shareability,
@@ -256,6 +307,9 @@ struct TLBI = {
 
 instantiation sail_tlbi with
   'tlbi = TLBI
+
+instantiation sail_cache_op with
+  'cache_op = CacheRecord
 
 enum MBReqDomain = {
   MBReqDomain_Nonshareable,

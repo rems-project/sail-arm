@@ -1,0 +1,5 @@
+ -mono_split src/instrs64_sve.sail:11315:esize \
+ -mono_split src/instrs64_sve.sail:11394:esize \
+ -mono_split src/instrs64_sve.sail:11473:esize \
+ -mono_split src/instrs64_sve.sail:11552:esize \
+ -mono_split src/instrs64_sve.sail:11631:esize

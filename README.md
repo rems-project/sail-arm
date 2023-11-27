@@ -4,8 +4,8 @@
 
 ## Models
 
-The `arm-v8.5-a` and `arm-v9.3-a` directories contain Sail models of the
-Armv8.5-A and Armv9.3-A architectures, respectively, with instructions for
+The `arm-v8.5-a`, `arm-v9.3-a`, and `arm-v9.4-a` directories contain Sail models of the
+Armv8.5-A, Armv9.3-A, and Armv9.4-A architectures, respectively, with instructions for
 building there.
 
 ## License

@@ -1,0 +1,8 @@
+This model uses our new concurrency interface, which expects to use a
+bitvector library from stdpp-unstable.  Unfortunately this isn't in opam (it
+will be once the library is promoted to the main stdpp library), so a copy
+from https://gitlab.mpi-sws.org/iris/stdpp is required.  The easiest way is to
+add their opam repository for the development branch.  Similarly, the stdpp
+version of coq-sail is required from https://github.com/rems-project/coq-sail,
+which can be installed by an opam pin (e.g., by cloning the repository and
+using opam install ./coq-sail-stdpp.opam.

@@ -61,8 +61,8 @@ function gic_readonly(offset : bits(16)) -> unit = {
   prerr_bits("[GIC] Write to RO offset: ", offset);
 }
 
-register __GIC_Pending : option(InterruptID)
-register __GIC_Active : option(InterruptID)
+register __GIC_Pending : option(InterruptID) = None()
+register __GIC_Active : option(InterruptID) = None()
 
 let GIC_PENDING_NONE : bits(32) = 0x0000_03ff
 

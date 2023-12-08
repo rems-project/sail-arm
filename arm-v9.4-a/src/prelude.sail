@@ -311,8 +311,6 @@ overload operator ++ = {append_int, append_bool, append_str}
 val print_integer : int -> unit
 function print_integer(i) = print_int("", i)
 
-overload print = {print_endline, print_int, print_integer}
-
 val print_newline : unit -> unit
 function print_newline () = print_endline("")
 

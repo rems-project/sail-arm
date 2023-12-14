@@ -1645,7 +1645,7 @@ function execute_aarch64_instrs_vector_arithmetic_binary_uniform_logical_and_orr
       LogicalOp_ORR => {
           result = operand1 | operand2
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_vector_arithmetic_binary_uniform_logical_and_orr")
     };
     V_set(d, datasize) = result
 }
@@ -3768,7 +3768,7 @@ function execute_aarch64_instrs_branch_unconditional_register (branch_type, m, n
       BranchType_RET => {
           BTypeNext = 0b00
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_branch_unconditional_register")
     };
     let branch_conditional : bool = false;
     BranchTo(target, branch_type, branch_conditional)
@@ -8042,7 +8042,7 @@ function decode_cpyp_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1, s
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyp_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8099,7 +8099,7 @@ function decode_cpypn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpypn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8156,7 +8156,7 @@ function decode_cpyprn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyprn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8213,7 +8213,7 @@ function decode_cpyprt_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyprt_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8270,7 +8270,7 @@ function decode_cpyprtn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyprtn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8327,7 +8327,7 @@ function decode_cpyprtrn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyprtrn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8384,7 +8384,7 @@ function decode_cpyprtwn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyprtwn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8441,7 +8441,7 @@ function decode_cpypt_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpypt_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8498,7 +8498,7 @@ function decode_cpyptn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyptn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8555,7 +8555,7 @@ function decode_cpyptrn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyptrn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8612,7 +8612,7 @@ function decode_cpyptwn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyptwn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8669,7 +8669,7 @@ function decode_cpypwn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpypwn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8726,7 +8726,7 @@ function decode_cpypwt_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpypwt_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8783,7 +8783,7 @@ function decode_cpypwtn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op1
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpypwtn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8840,7 +8840,7 @@ function decode_cpypwtrn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpypwtrn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -8897,7 +8897,7 @@ function decode_cpypwtwn_aarch64_instrs_memory_mcpymset_cpy (Rd, Rn, op2, Rs, op
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpypwtwn_aarch64_instrs_memory_mcpymset_cpy")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpy(d, n, options_name, s, stage)
@@ -9097,7 +9097,7 @@ function decode_cpyfp_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, op1,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfp_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9154,7 +9154,7 @@ function decode_cpyfpn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, op1
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfpn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9211,7 +9211,7 @@ function decode_cpyfprn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, op
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfprn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9268,7 +9268,7 @@ function decode_cpyfprt_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, op
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfprt_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9325,7 +9325,7 @@ function decode_cpyfprtn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfprtn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9382,7 +9382,7 @@ function decode_cpyfprtrn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfprtrn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9439,7 +9439,7 @@ function decode_cpyfprtwn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfprtwn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9496,7 +9496,7 @@ function decode_cpyfpt_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, op1
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfpt_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9553,7 +9553,7 @@ function decode_cpyfptn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, op
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfptn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9610,7 +9610,7 @@ function decode_cpyfptrn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfptrn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9667,7 +9667,7 @@ function decode_cpyfptwn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfptwn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9724,7 +9724,7 @@ function decode_cpyfpwn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, op
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfpwn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9781,7 +9781,7 @@ function decode_cpyfpwt_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, op
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfpwt_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9838,7 +9838,7 @@ function decode_cpyfpwtn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfpwtn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9895,7 +9895,7 @@ function decode_cpyfpwtrn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfpwtrn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -9952,7 +9952,7 @@ function decode_cpyfpwtwn_aarch64_instrs_memory_mcpymset_cpyf (Rd, Rn, op2, Rs, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_cpyfpwtwn_aarch64_instrs_memory_mcpymset_cpyf")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_cpyf(d, n, options_name, s, stage)
@@ -11275,7 +11275,7 @@ function execute_aarch64_instrs_vector_arithmetic_binary_uniform_cmp_fp16_sisd (
           CompareOp_GT => {
               test_passed = FPCompareGT(element1, element2, fpcr)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch64_instrs_vector_arithmetic_binary_uniform_cmp_fp16_sisd")
         };
         result = Elem_set(result, e, esize, if test_passed then Ones(esize) else
           Zeros(esize))
@@ -16867,7 +16867,7 @@ function execute_aarch64_instrs_float_convert_fix (d, fltsize, fracbits, intsize
           fltval = Elem_set(fltval, 0, fltsize, FixedToFP(intval, fracbits, is_unsigned, fpcr, rounding, fltsize));
           V_set(d, fsize) = fltval
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_float_convert_fix")
     }
 }
 
@@ -22871,7 +22871,7 @@ function decode_ld1_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb (Rt, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld1_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -22941,7 +22941,7 @@ function decode_ld1_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc (R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld1_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23011,7 +23011,7 @@ function decode_ld1r_advsimd_aarch64_instrs_memory_vector_single_no_wb (Rt, Rn, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld1r_advsimd_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23081,7 +23081,7 @@ function decode_ld1r_advsimd_aarch64_instrs_memory_vector_single_post_inc (Rt, R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld1r_advsimd_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23151,7 +23151,7 @@ function decode_ld2_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb (Rt, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld2_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23221,7 +23221,7 @@ function decode_ld2_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc (R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld2_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23291,7 +23291,7 @@ function decode_ld2r_advsimd_aarch64_instrs_memory_vector_single_no_wb (Rt, Rn, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld2r_advsimd_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23361,7 +23361,7 @@ function decode_ld2r_advsimd_aarch64_instrs_memory_vector_single_post_inc (Rt, R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld2r_advsimd_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23431,7 +23431,7 @@ function decode_ld3_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb (Rt, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld3_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23501,7 +23501,7 @@ function decode_ld3_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc (R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld3_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23571,7 +23571,7 @@ function decode_ld3r_advsimd_aarch64_instrs_memory_vector_single_no_wb (Rt, Rn, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld3r_advsimd_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23641,7 +23641,7 @@ function decode_ld3r_advsimd_aarch64_instrs_memory_vector_single_post_inc (Rt, R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld3r_advsimd_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23711,7 +23711,7 @@ function decode_ld4_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb (Rt, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld4_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23781,7 +23781,7 @@ function decode_ld4_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc (R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld4_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23851,7 +23851,7 @@ function decode_ld4r_advsimd_aarch64_instrs_memory_vector_single_no_wb (Rt, Rn, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld4r_advsimd_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23921,7 +23921,7 @@ function decode_ld4r_advsimd_aarch64_instrs_memory_vector_single_post_inc (Rt, R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ld4r_advsimd_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -23991,7 +23991,7 @@ function decode_st1_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb (Rt, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_st1_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -24061,7 +24061,7 @@ function decode_st1_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc (R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_st1_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -24131,7 +24131,7 @@ function decode_st2_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb (Rt, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_st2_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -24201,7 +24201,7 @@ function decode_st2_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc (R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_st2_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -24271,7 +24271,7 @@ function decode_st3_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb (Rt, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_st3_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -24341,7 +24341,7 @@ function decode_st3_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc (R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_st3_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -24411,7 +24411,7 @@ function decode_st4_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb (Rt, 
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_st4_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb")
     };
     let 'scale = scale;
     let 'index = index;
@@ -24481,7 +24481,7 @@ function decode_st4_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc (R
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_st4_advsimd_sngl_aarch64_instrs_memory_vector_single_post_inc")
     };
     let 'scale = scale;
     let 'index = index;
@@ -27218,7 +27218,7 @@ function decode_ldap1_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb_ord
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ldap1_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb_ordered")
     };
     let 'scale = scale;
     let 'index = index;
@@ -27287,7 +27287,7 @@ function decode_stl1_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb_orde
               scale = 3
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_stl1_advsimd_sngl_aarch64_instrs_memory_vector_single_no_wb_ordered")
     };
     let 'scale = scale;
     let 'index = index;
@@ -27406,7 +27406,7 @@ function decode_ldapr_aarch64_instrs_memory_ordered_rcpc_writeback (Rt, Rn, size
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapr_aarch64_instrs_memory_ordered_rcpc_writeback")
         }
     };
     execute_aarch64_instrs_memory_ordered_rcpc(datasize, n, offset, regsize, t, tagchecked, wb_unknown, wback)
@@ -27599,7 +27599,7 @@ function decode_ldapur_gen_aarch64_instrs_memory_single_general_immediate_signed
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapur_gen_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -27618,7 +27618,7 @@ function decode_ldapur_gen_aarch64_instrs_memory_single_general_immediate_signed
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapur_gen_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl(datasize, memop, n, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -27684,7 +27684,7 @@ function decode_ldapurb_aarch64_instrs_memory_single_general_immediate_signed_of
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapurb_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -27703,7 +27703,7 @@ function decode_ldapurb_aarch64_instrs_memory_single_general_immediate_signed_of
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapurb_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl(datasize, memop, n, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -27769,7 +27769,7 @@ function decode_ldapurh_aarch64_instrs_memory_single_general_immediate_signed_of
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapurh_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -27788,7 +27788,7 @@ function decode_ldapurh_aarch64_instrs_memory_single_general_immediate_signed_of
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapurh_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl(datasize, memop, n, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -27854,7 +27854,7 @@ function decode_ldapursb_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapursb_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -27873,7 +27873,7 @@ function decode_ldapursb_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapursb_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl(datasize, memop, n, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -27939,7 +27939,7 @@ function decode_ldapursh_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapursh_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -27958,7 +27958,7 @@ function decode_ldapursh_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapursh_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl(datasize, memop, n, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -28024,7 +28024,7 @@ function decode_ldapursw_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapursw_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -28043,7 +28043,7 @@ function decode_ldapursw_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldapursw_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl(datasize, memop, n, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -28109,7 +28109,7 @@ function decode_stlur_gen_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlur_gen_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -28128,7 +28128,7 @@ function decode_stlur_gen_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlur_gen_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl(datasize, memop, n, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -28194,7 +28194,7 @@ function decode_stlurb_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlurb_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -28213,7 +28213,7 @@ function decode_stlurb_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlurb_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl(datasize, memop, n, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -28279,7 +28279,7 @@ function decode_stlurh_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlurh_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -28298,7 +28298,7 @@ function decode_stlurh_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlurh_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_lda_stl(datasize, memop, n, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -28343,7 +28343,7 @@ function execute_aarch64_instrs_memory_single_simdfp_immediate_signed_offset_ord
           assert(constraint('datasize in {8, 16, 32, 64, 128}));
           V_set(t, datasize) = data
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_single_simdfp_immediate_signed_offset_ordered")
     };
     if wback then {
         if postindex then {
@@ -28466,7 +28466,7 @@ function execute_aarch64_instrs_memory_ordered (datasize, limitedordered, memop,
           assert(constraint(('datasize >= 0 & 'regsize >= 'datasize)));
           X_set(t, regsize) = ZeroExtend(data, regsize)
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_ordered")
     };
     if SPESampleInFlight then {
         let ar : bits(1) = 0b1;
@@ -28857,7 +28857,7 @@ function decode_stlr_aarch64_instrs_memory_ordered_writeback (Rt, Rn, size) = {
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlr_aarch64_instrs_memory_ordered_writeback")
         }
     };
     execute_aarch64_instrs_memory_ordered(datasize, limitedordered, memop, n, offset, regsize, rt_unknown, t, tagchecked, wback)
@@ -29011,7 +29011,7 @@ function execute_aarch64_instrs_memory_exclusive_pair (acqrel, datasize, elsize,
               X_set(t, regsize) = ZeroExtend(data, regsize)
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_exclusive_pair")
     };
     if SPESampleInFlight then {
         let ar : bits(1) = if acqrel then 0b1 else 0b0;
@@ -29052,7 +29052,7 @@ function decode_ldaxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldaxp_aarch64_instrs_memory_exclusive_pair")
         }
     };
     if memop == MemOp_STORE then {
@@ -29069,7 +29069,7 @@ function decode_ldaxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs,
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldaxp_aarch64_instrs_memory_exclusive_pair")
             }
         };
         if s == n & n != 31 then {
@@ -29085,7 +29085,7 @@ function decode_ldaxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs,
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldaxp_aarch64_instrs_memory_exclusive_pair")
             }
         };
         ()
@@ -29138,7 +29138,7 @@ function decode_ldxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldxp_aarch64_instrs_memory_exclusive_pair")
         }
     };
     if memop == MemOp_STORE then {
@@ -29155,7 +29155,7 @@ function decode_ldxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldxp_aarch64_instrs_memory_exclusive_pair")
             }
         };
         if s == n & n != 31 then {
@@ -29171,7 +29171,7 @@ function decode_ldxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldxp_aarch64_instrs_memory_exclusive_pair")
             }
         };
         ()
@@ -29224,7 +29224,7 @@ function decode_stlxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlxp_aarch64_instrs_memory_exclusive_pair")
         }
     };
     if memop == MemOp_STORE then {
@@ -29241,7 +29241,7 @@ function decode_stlxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs,
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stlxp_aarch64_instrs_memory_exclusive_pair")
             }
         };
         if s == n & n != 31 then {
@@ -29257,7 +29257,7 @@ function decode_stlxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs,
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stlxp_aarch64_instrs_memory_exclusive_pair")
             }
         };
         ()
@@ -29306,7 +29306,7 @@ function decode_stxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stxp_aarch64_instrs_memory_exclusive_pair")
         }
     };
     if memop == MemOp_STORE then {
@@ -29323,7 +29323,7 @@ function decode_stxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stxp_aarch64_instrs_memory_exclusive_pair")
             }
         };
         if s == n & n != 31 then {
@@ -29339,7 +29339,7 @@ function decode_stxp_aarch64_instrs_memory_exclusive_pair (Rt, Rn, Rt2, o0, Rs, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stxp_aarch64_instrs_memory_exclusive_pair")
             }
         };
         ()
@@ -29431,7 +29431,7 @@ function execute_aarch64_instrs_memory_exclusive_single (acqrel, datasize, elsiz
               X_set(t, regsize) = ZeroExtend(data, regsize)
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_exclusive_single")
     };
     if SPESampleInFlight then {
         let ar : bits(1) = if acqrel then 0b1 else 0b0;
@@ -29472,7 +29472,7 @@ function decode_ldaxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldaxr_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -29489,7 +29489,7 @@ function decode_ldaxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldaxr_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -29505,7 +29505,7 @@ function decode_ldaxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldaxr_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -29558,7 +29558,7 @@ function decode_ldaxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldaxrb_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -29575,7 +29575,7 @@ function decode_ldaxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldaxrb_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -29591,7 +29591,7 @@ function decode_ldaxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldaxrb_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -29644,7 +29644,7 @@ function decode_ldaxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldaxrh_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -29661,7 +29661,7 @@ function decode_ldaxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldaxrh_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -29677,7 +29677,7 @@ function decode_ldaxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldaxrh_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -29730,7 +29730,7 @@ function decode_ldxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, Rs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldxr_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -29747,7 +29747,7 @@ function decode_ldxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, Rs
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldxr_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -29763,7 +29763,7 @@ function decode_ldxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, Rs
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldxr_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -29816,7 +29816,7 @@ function decode_ldxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldxrb_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -29833,7 +29833,7 @@ function decode_ldxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldxrb_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -29849,7 +29849,7 @@ function decode_ldxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldxrb_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -29902,7 +29902,7 @@ function decode_ldxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldxrh_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -29919,7 +29919,7 @@ function decode_ldxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldxrh_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -29935,7 +29935,7 @@ function decode_ldxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_ldxrh_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -29988,7 +29988,7 @@ function decode_stlxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlxr_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -30005,7 +30005,7 @@ function decode_stlxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stlxr_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -30021,7 +30021,7 @@ function decode_stlxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stlxr_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -30074,7 +30074,7 @@ function decode_stlxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlxrb_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -30091,7 +30091,7 @@ function decode_stlxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stlxrb_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -30107,7 +30107,7 @@ function decode_stlxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stlxrb_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -30160,7 +30160,7 @@ function decode_stlxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stlxrh_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -30177,7 +30177,7 @@ function decode_stlxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stlxrh_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -30193,7 +30193,7 @@ function decode_stlxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, 
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stlxrh_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -30246,7 +30246,7 @@ function decode_stxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, Rs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stxr_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -30263,7 +30263,7 @@ function decode_stxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, Rs
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stxr_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -30279,7 +30279,7 @@ function decode_stxr_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, Rs
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stxr_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -30332,7 +30332,7 @@ function decode_stxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stxrb_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -30349,7 +30349,7 @@ function decode_stxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stxrb_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -30365,7 +30365,7 @@ function decode_stxrb_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stxrb_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -30418,7 +30418,7 @@ function decode_stxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stxrh_aarch64_instrs_memory_exclusive_single")
         }
     };
     if memop == MemOp_STORE then {
@@ -30435,7 +30435,7 @@ function decode_stxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stxrh_aarch64_instrs_memory_exclusive_single")
             }
         };
         if s == n & n != 31 then {
@@ -30451,7 +30451,7 @@ function decode_stxrh_aarch64_instrs_memory_exclusive_single (Rt, Rn, Rt2, o0, R
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_stxrh_aarch64_instrs_memory_exclusive_single")
             }
         };
         ()
@@ -30528,7 +30528,7 @@ function decode_ldclrp_aarch64_instrs_memory_atomicops_ld_128_ldclrp (Rt, Rn, op
       0b011 => {
           op = MemAtomicOp_ORR
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ldclrp_aarch64_instrs_memory_atomicops_ld_128_ldclrp")
     };
     let acquire : bool = A == 0b1;
     let release : bool = R == 0b1;
@@ -30713,7 +30713,7 @@ function execute_aarch64_instrs_memory_ordered_pair_ldiapp (datasize, memop, n, 
           X_set(t, datasize) = data1;
           X_set(t2, datasize) = data2
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_ordered_pair_ldiapp")
     };
     if wback then {
         if wb_unknown then {
@@ -30772,7 +30772,7 @@ function decode_ldiapp_aarch64_instrs_memory_ordered_pair_ldiapp (Rt, Rn, opc2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldiapp_aarch64_instrs_memory_ordered_pair_ldiapp")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -30791,7 +30791,7 @@ function decode_ldiapp_aarch64_instrs_memory_ordered_pair_ldiapp (Rt, Rn, opc2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldiapp_aarch64_instrs_memory_ordered_pair_ldiapp")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -30807,7 +30807,7 @@ function decode_ldiapp_aarch64_instrs_memory_ordered_pair_ldiapp (Rt, Rn, opc2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldiapp_aarch64_instrs_memory_ordered_pair_ldiapp")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -30882,7 +30882,7 @@ function execute_aarch64_instrs_memory_pair_general_no_alloc (datasize, memop, n
           X_set(t, datasize) = data1;
           X_set(t2, datasize) = data2
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_pair_general_no_alloc")
     };
     if wback then {
         if postindex then {
@@ -30931,7 +30931,7 @@ function decode_ldnp_gen_aarch64_instrs_memory_pair_general_no_alloc (Rt, Rn, Rt
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldnp_gen_aarch64_instrs_memory_pair_general_no_alloc")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -30980,7 +30980,7 @@ function decode_stnp_gen_aarch64_instrs_memory_pair_general_no_alloc (Rt, Rn, Rt
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stnp_gen_aarch64_instrs_memory_pair_general_no_alloc")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -31037,7 +31037,7 @@ function execute_aarch64_instrs_memory_pair_simdfp_no_alloc (datasize, memop, n,
           V_set(t, datasize) = data1;
           V_set(t2, datasize) = data2
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_pair_simdfp_no_alloc")
     };
     if wback then {
         if postindex then {
@@ -31086,7 +31086,7 @@ function decode_ldnp_fpsimd_aarch64_instrs_memory_pair_simdfp_no_alloc (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldnp_fpsimd_aarch64_instrs_memory_pair_simdfp_no_alloc")
         }
     };
     assert(constraint('datasize in {32, 64, 128, 256}));
@@ -31135,7 +31135,7 @@ function decode_stnp_fpsimd_aarch64_instrs_memory_pair_simdfp_no_alloc (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stnp_fpsimd_aarch64_instrs_memory_pair_simdfp_no_alloc")
         }
     };
     assert(constraint('datasize in {32, 64, 128, 256}));
@@ -31192,7 +31192,7 @@ function execute_aarch64_instrs_memory_pair_simdfp_post_idx (datasize, memop, n,
           V_set(t, datasize) = data1;
           V_set(t2, datasize) = data2
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_pair_simdfp_post_idx")
     };
     if wback then {
         if postindex then {
@@ -31241,7 +31241,7 @@ function decode_ldp_fpsimd_aarch64_instrs_memory_pair_simdfp_post_idx (Rt, Rn, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_fpsimd_aarch64_instrs_memory_pair_simdfp_post_idx")
         }
     };
     assert(constraint('datasize in {32, 64, 128, 256}));
@@ -31290,7 +31290,7 @@ function decode_ldp_fpsimd_aarch64_instrs_memory_pair_simdfp_pre_idx (Rt, Rn, Rt
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_fpsimd_aarch64_instrs_memory_pair_simdfp_pre_idx")
         }
     };
     assert(constraint('datasize in {32, 64, 128, 256}));
@@ -31339,7 +31339,7 @@ function decode_ldp_fpsimd_aarch64_instrs_memory_pair_simdfp_offset (Rt, Rn, Rt2
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_fpsimd_aarch64_instrs_memory_pair_simdfp_offset")
         }
     };
     assert(constraint('datasize in {32, 64, 128, 256}));
@@ -31388,7 +31388,7 @@ function decode_stp_fpsimd_aarch64_instrs_memory_pair_simdfp_post_idx (Rt, Rn, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_fpsimd_aarch64_instrs_memory_pair_simdfp_post_idx")
         }
     };
     assert(constraint('datasize in {32, 64, 128, 256}));
@@ -31437,7 +31437,7 @@ function decode_stp_fpsimd_aarch64_instrs_memory_pair_simdfp_pre_idx (Rt, Rn, Rt
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_fpsimd_aarch64_instrs_memory_pair_simdfp_pre_idx")
         }
     };
     assert(constraint('datasize in {32, 64, 128, 256}));
@@ -31486,7 +31486,7 @@ function decode_stp_fpsimd_aarch64_instrs_memory_pair_simdfp_offset (Rt, Rn, Rt2
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_fpsimd_aarch64_instrs_memory_pair_simdfp_offset")
         }
     };
     assert(constraint('datasize in {32, 64, 128, 256}));
@@ -31577,7 +31577,7 @@ function execute_aarch64_instrs_memory_pair_general_post_idx (datasize, memop, n
               X_set(t2, datasize) = data2
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_pair_general_post_idx")
     };
     if wback then {
         if wb_unknown then {
@@ -31633,7 +31633,7 @@ function decode_ldp_gen_aarch64_instrs_memory_pair_general_post_idx (Rt, Rn, Rt2
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_gen_aarch64_instrs_memory_pair_general_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -31652,7 +31652,7 @@ function decode_ldp_gen_aarch64_instrs_memory_pair_general_post_idx (Rt, Rn, Rt2
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_gen_aarch64_instrs_memory_pair_general_post_idx")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -31668,7 +31668,7 @@ function decode_ldp_gen_aarch64_instrs_memory_pair_general_post_idx (Rt, Rn, Rt2
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_gen_aarch64_instrs_memory_pair_general_post_idx")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -31722,7 +31722,7 @@ function decode_ldp_gen_aarch64_instrs_memory_pair_general_pre_idx (Rt, Rn, Rt2,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_gen_aarch64_instrs_memory_pair_general_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -31741,7 +31741,7 @@ function decode_ldp_gen_aarch64_instrs_memory_pair_general_pre_idx (Rt, Rn, Rt2,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_gen_aarch64_instrs_memory_pair_general_pre_idx")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -31757,7 +31757,7 @@ function decode_ldp_gen_aarch64_instrs_memory_pair_general_pre_idx (Rt, Rn, Rt2,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_gen_aarch64_instrs_memory_pair_general_pre_idx")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -31811,7 +31811,7 @@ function decode_ldp_gen_aarch64_instrs_memory_pair_general_offset (Rt, Rn, Rt2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_gen_aarch64_instrs_memory_pair_general_offset")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -31830,7 +31830,7 @@ function decode_ldp_gen_aarch64_instrs_memory_pair_general_offset (Rt, Rn, Rt2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_gen_aarch64_instrs_memory_pair_general_offset")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -31846,7 +31846,7 @@ function decode_ldp_gen_aarch64_instrs_memory_pair_general_offset (Rt, Rn, Rt2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldp_gen_aarch64_instrs_memory_pair_general_offset")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -31900,7 +31900,7 @@ function decode_ldpsw_aarch64_instrs_memory_pair_general_post_idx (Rt, Rn, Rt2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldpsw_aarch64_instrs_memory_pair_general_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -31919,7 +31919,7 @@ function decode_ldpsw_aarch64_instrs_memory_pair_general_post_idx (Rt, Rn, Rt2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldpsw_aarch64_instrs_memory_pair_general_post_idx")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -31935,7 +31935,7 @@ function decode_ldpsw_aarch64_instrs_memory_pair_general_post_idx (Rt, Rn, Rt2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldpsw_aarch64_instrs_memory_pair_general_post_idx")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -31989,7 +31989,7 @@ function decode_ldpsw_aarch64_instrs_memory_pair_general_pre_idx (Rt, Rn, Rt2, i
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldpsw_aarch64_instrs_memory_pair_general_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -32008,7 +32008,7 @@ function decode_ldpsw_aarch64_instrs_memory_pair_general_pre_idx (Rt, Rn, Rt2, i
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldpsw_aarch64_instrs_memory_pair_general_pre_idx")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -32024,7 +32024,7 @@ function decode_ldpsw_aarch64_instrs_memory_pair_general_pre_idx (Rt, Rn, Rt2, i
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldpsw_aarch64_instrs_memory_pair_general_pre_idx")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -32078,7 +32078,7 @@ function decode_ldpsw_aarch64_instrs_memory_pair_general_offset (Rt, Rn, Rt2, im
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldpsw_aarch64_instrs_memory_pair_general_offset")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -32097,7 +32097,7 @@ function decode_ldpsw_aarch64_instrs_memory_pair_general_offset (Rt, Rn, Rt2, im
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldpsw_aarch64_instrs_memory_pair_general_offset")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -32113,7 +32113,7 @@ function decode_ldpsw_aarch64_instrs_memory_pair_general_offset (Rt, Rn, Rt2, im
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldpsw_aarch64_instrs_memory_pair_general_offset")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -32167,7 +32167,7 @@ function decode_stp_gen_aarch64_instrs_memory_pair_general_post_idx (Rt, Rn, Rt2
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_gen_aarch64_instrs_memory_pair_general_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -32186,7 +32186,7 @@ function decode_stp_gen_aarch64_instrs_memory_pair_general_post_idx (Rt, Rn, Rt2
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_gen_aarch64_instrs_memory_pair_general_post_idx")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -32202,7 +32202,7 @@ function decode_stp_gen_aarch64_instrs_memory_pair_general_post_idx (Rt, Rn, Rt2
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_gen_aarch64_instrs_memory_pair_general_post_idx")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -32256,7 +32256,7 @@ function decode_stp_gen_aarch64_instrs_memory_pair_general_pre_idx (Rt, Rn, Rt2,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_gen_aarch64_instrs_memory_pair_general_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -32275,7 +32275,7 @@ function decode_stp_gen_aarch64_instrs_memory_pair_general_pre_idx (Rt, Rn, Rt2,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_gen_aarch64_instrs_memory_pair_general_pre_idx")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -32291,7 +32291,7 @@ function decode_stp_gen_aarch64_instrs_memory_pair_general_pre_idx (Rt, Rn, Rt2,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_gen_aarch64_instrs_memory_pair_general_pre_idx")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -32345,7 +32345,7 @@ function decode_stp_gen_aarch64_instrs_memory_pair_general_offset (Rt, Rn, Rt2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_gen_aarch64_instrs_memory_pair_general_offset")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -32364,7 +32364,7 @@ function decode_stp_gen_aarch64_instrs_memory_pair_general_offset (Rt, Rn, Rt2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_gen_aarch64_instrs_memory_pair_general_offset")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -32380,7 +32380,7 @@ function decode_stp_gen_aarch64_instrs_memory_pair_general_offset (Rt, Rn, Rt2, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stp_gen_aarch64_instrs_memory_pair_general_offset")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -32427,7 +32427,7 @@ function execute_aarch64_instrs_memory_single_simdfp_immediate_signed_post_idx (
           assert(constraint('datasize in {8, 16, 32, 64, 128}));
           V_set(t, datasize) = data
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_single_simdfp_immediate_signed_post_idx")
     };
     if wback then {
         if postindex then {
@@ -32646,7 +32646,7 @@ function execute_aarch64_instrs_memory_literal_general (memop, nontemporal, offs
       MemOp_PREFETCH => {
           Prefetch(address, t[4 .. 0])
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_literal_general")
     };
     if SPESampleInFlight then {
         SPESampleGeneralPurposeLoadStore()
@@ -32934,7 +32934,7 @@ function decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_signe
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -32953,7 +32953,7 @@ function decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_signe
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33020,7 +33020,7 @@ function decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_signe
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33039,7 +33039,7 @@ function decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_signe
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33106,7 +33106,7 @@ function decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_unsig
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33125,7 +33125,7 @@ function decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_unsig
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldr_imm_gen_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33192,7 +33192,7 @@ function decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33211,7 +33211,7 @@ function decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33278,7 +33278,7 @@ function decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33297,7 +33297,7 @@ function decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33364,7 +33364,7 @@ function decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33383,7 +33383,7 @@ function decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrb_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33450,7 +33450,7 @@ function decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33469,7 +33469,7 @@ function decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33536,7 +33536,7 @@ function decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33555,7 +33555,7 @@ function decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33622,7 +33622,7 @@ function decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33641,7 +33641,7 @@ function decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrh_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33708,7 +33708,7 @@ function decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33727,7 +33727,7 @@ function decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33794,7 +33794,7 @@ function decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33813,7 +33813,7 @@ function decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33880,7 +33880,7 @@ function decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_unsigne
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33899,7 +33899,7 @@ function decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_unsigne
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsb_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -33966,7 +33966,7 @@ function decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -33985,7 +33985,7 @@ function decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34052,7 +34052,7 @@ function decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34071,7 +34071,7 @@ function decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34138,7 +34138,7 @@ function decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_unsigne
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34157,7 +34157,7 @@ function decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_unsigne
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsh_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34224,7 +34224,7 @@ function decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34243,7 +34243,7 @@ function decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34310,7 +34310,7 @@ function decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34329,7 +34329,7 @@ function decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_signed_
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34396,7 +34396,7 @@ function decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_unsigne
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34415,7 +34415,7 @@ function decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_unsigne
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsw_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34482,7 +34482,7 @@ function decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_signe
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34501,7 +34501,7 @@ function decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_signe
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34568,7 +34568,7 @@ function decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_signe
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34587,7 +34587,7 @@ function decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_signe
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34654,7 +34654,7 @@ function decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_unsig
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34673,7 +34673,7 @@ function decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_unsig
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_str_imm_gen_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34740,7 +34740,7 @@ function decode_strb_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strb_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34759,7 +34759,7 @@ function decode_strb_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strb_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34826,7 +34826,7 @@ function decode_strb_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strb_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34845,7 +34845,7 @@ function decode_strb_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strb_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34912,7 +34912,7 @@ function decode_strb_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strb_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -34931,7 +34931,7 @@ function decode_strb_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strb_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -34998,7 +34998,7 @@ function decode_strh_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strh_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35017,7 +35017,7 @@ function decode_strh_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strh_imm_aarch64_instrs_memory_single_general_immediate_signed_post_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -35084,7 +35084,7 @@ function decode_strh_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strh_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35103,7 +35103,7 @@ function decode_strh_imm_aarch64_instrs_memory_single_general_immediate_signed_p
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strh_imm_aarch64_instrs_memory_single_general_immediate_signed_pre_idx")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -35170,7 +35170,7 @@ function decode_strh_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strh_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35189,7 +35189,7 @@ function decode_strh_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strh_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -35333,7 +35333,7 @@ function decode_ldr_reg_gen_aarch64_instrs_memory_single_general_register (Rt, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldr_reg_gen_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35352,7 +35352,7 @@ function decode_ldr_reg_gen_aarch64_instrs_memory_single_general_register (Rt, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldr_reg_gen_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -35430,7 +35430,7 @@ function decode_ldrb_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrb_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35449,7 +35449,7 @@ function decode_ldrb_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrb_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -35527,7 +35527,7 @@ function decode_ldrh_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrh_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35546,7 +35546,7 @@ function decode_ldrh_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrh_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -35624,7 +35624,7 @@ function decode_ldrsb_reg_aarch64_instrs_memory_single_general_register (Rt, Rn,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsb_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35643,7 +35643,7 @@ function decode_ldrsb_reg_aarch64_instrs_memory_single_general_register (Rt, Rn,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsb_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -35721,7 +35721,7 @@ function decode_ldrsh_reg_aarch64_instrs_memory_single_general_register (Rt, Rn,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsh_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35740,7 +35740,7 @@ function decode_ldrsh_reg_aarch64_instrs_memory_single_general_register (Rt, Rn,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsh_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -35818,7 +35818,7 @@ function decode_ldrsw_reg_aarch64_instrs_memory_single_general_register (Rt, Rn,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsw_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35837,7 +35837,7 @@ function decode_ldrsw_reg_aarch64_instrs_memory_single_general_register (Rt, Rn,
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldrsw_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -35919,7 +35919,7 @@ function decode_prfm_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_prfm_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -35938,7 +35938,7 @@ function decode_prfm_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_prfm_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -36019,7 +36019,7 @@ function decode_str_reg_gen_aarch64_instrs_memory_single_general_register (Rt, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_str_reg_gen_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -36038,7 +36038,7 @@ function decode_str_reg_gen_aarch64_instrs_memory_single_general_register (Rt, R
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_str_reg_gen_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -36116,7 +36116,7 @@ function decode_strb_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strb_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -36135,7 +36135,7 @@ function decode_strb_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strb_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -36213,7 +36213,7 @@ function decode_strh_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strh_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -36232,7 +36232,7 @@ function decode_strh_reg_aarch64_instrs_memory_single_general_register (Rt, Rn, 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_strh_reg_aarch64_instrs_memory_single_general_register")
         }
     };
     execute_aarch64_instrs_memory_single_general_register(datasize, extend_type, m, memop, n, nontemporal, postindex, regsize, rt_unknown, shift, is_signed, t, tagchecked, wb_unknown, wback)
@@ -36280,7 +36280,7 @@ function execute_aarch64_instrs_memory_single_simdfp_register (datasize, extend_
           assert(constraint('datasize in {8, 16, 32, 64, 128}));
           V_set(t, datasize) = data
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_single_simdfp_register")
     };
     if wback then {
         if postindex then {
@@ -36399,7 +36399,7 @@ function execute_aarch64_instrs_memory_single_general_immediate_signed_pac (memo
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch64_instrs_memory_single_general_immediate_signed_pac")
         }
     };
     if n == 31 then {
@@ -36521,7 +36521,7 @@ function decode_ldsetp_aarch64_instrs_memory_atomicops_ld_128_ldsetp (Rt, Rn, op
       0b011 => {
           op = MemAtomicOp_ORR
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_ldsetp_aarch64_instrs_memory_atomicops_ld_128_ldsetp")
     };
     let acquire : bool = A == 0b1;
     let release : bool = R == 0b1;
@@ -36660,7 +36660,7 @@ function decode_ldtr_aarch64_instrs_memory_single_general_immediate_signed_offse
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtr_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -36679,7 +36679,7 @@ function decode_ldtr_aarch64_instrs_memory_single_general_immediate_signed_offse
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtr_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -36746,7 +36746,7 @@ function decode_ldtrb_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrb_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -36765,7 +36765,7 @@ function decode_ldtrb_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrb_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -36832,7 +36832,7 @@ function decode_ldtrh_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrh_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -36851,7 +36851,7 @@ function decode_ldtrh_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrh_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -36918,7 +36918,7 @@ function decode_ldtrsb_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrsb_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -36937,7 +36937,7 @@ function decode_ldtrsb_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrsb_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37004,7 +37004,7 @@ function decode_ldtrsh_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrsh_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37023,7 +37023,7 @@ function decode_ldtrsh_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrsh_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37090,7 +37090,7 @@ function decode_ldtrsw_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrsw_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37109,7 +37109,7 @@ function decode_ldtrsw_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldtrsw_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37176,7 +37176,7 @@ function decode_sttr_aarch64_instrs_memory_single_general_immediate_signed_offse
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sttr_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37195,7 +37195,7 @@ function decode_sttr_aarch64_instrs_memory_single_general_immediate_signed_offse
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sttr_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37262,7 +37262,7 @@ function decode_sttrb_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sttrb_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37281,7 +37281,7 @@ function decode_sttrb_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sttrb_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37348,7 +37348,7 @@ function decode_sttrh_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sttrh_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37367,7 +37367,7 @@ function decode_sttrh_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sttrh_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_unpriv(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37412,7 +37412,7 @@ function execute_aarch64_instrs_memory_single_simdfp_immediate_signed_offset_nor
           assert(constraint('datasize in {8, 16, 32, 64, 128}));
           V_set(t, datasize) = data
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_single_simdfp_immediate_signed_offset_normal")
     };
     if wback then {
         if postindex then {
@@ -37612,7 +37612,7 @@ function decode_ldur_gen_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldur_gen_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37631,7 +37631,7 @@ function decode_ldur_gen_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldur_gen_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37702,7 +37702,7 @@ function decode_ldurb_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldurb_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37721,7 +37721,7 @@ function decode_ldurb_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldurb_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37792,7 +37792,7 @@ function decode_ldurh_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldurh_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37811,7 +37811,7 @@ function decode_ldurh_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldurh_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37882,7 +37882,7 @@ function decode_ldursb_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldursb_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37901,7 +37901,7 @@ function decode_ldursb_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldursb_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -37972,7 +37972,7 @@ function decode_ldursh_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldursh_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -37991,7 +37991,7 @@ function decode_ldursh_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldursh_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -38062,7 +38062,7 @@ function decode_ldursw_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldursw_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -38081,7 +38081,7 @@ function decode_ldursw_aarch64_instrs_memory_single_general_immediate_signed_off
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_ldursw_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -38152,7 +38152,7 @@ function decode_prfum_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_prfum_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -38171,7 +38171,7 @@ function decode_prfum_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_prfum_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -38242,7 +38242,7 @@ function decode_stur_gen_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stur_gen_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -38261,7 +38261,7 @@ function decode_stur_gen_aarch64_instrs_memory_single_general_immediate_signed_o
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stur_gen_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -38332,7 +38332,7 @@ function decode_sturb_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sturb_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -38351,7 +38351,7 @@ function decode_sturb_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sturb_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -38422,7 +38422,7 @@ function decode_sturh_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sturh_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -38441,7 +38441,7 @@ function decode_sturh_aarch64_instrs_memory_single_general_immediate_signed_offs
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_sturh_aarch64_instrs_memory_single_general_immediate_signed_offset_normal")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -39902,7 +39902,7 @@ function decode_prfm_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_prfm_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     if ((memop == MemOp_STORE & wback) & n == t) & n != 31 then {
@@ -39921,7 +39921,7 @@ function decode_prfm_imm_aarch64_instrs_memory_single_general_immediate_unsigned
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_prfm_imm_aarch64_instrs_memory_single_general_immediate_unsigned")
         }
     };
     execute_aarch64_instrs_memory_single_general_immediate_unsigned(datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback)
@@ -41233,7 +41233,7 @@ function decode_rev16_advsimd_aarch64_instrs_vector_arithmetic_unary_rev (Rd, Rn
       0b00 => {
           container_size = 64
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_rev16_advsimd_aarch64_instrs_vector_arithmetic_unary_rev")
     };
     let 'container_size = container_size;
     let 'containers = DIV(datasize, container_size);
@@ -41274,7 +41274,7 @@ function decode_rev32_advsimd_aarch64_instrs_vector_arithmetic_unary_rev (Rd, Rn
       0b00 => {
           container_size = 64
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_rev32_advsimd_aarch64_instrs_vector_arithmetic_unary_rev")
     };
     let 'container_size = container_size;
     let 'containers = DIV(datasize, container_size);
@@ -41315,7 +41315,7 @@ function decode_rev64_advsimd_aarch64_instrs_vector_arithmetic_unary_rev (Rd, Rn
       0b00 => {
           container_size = 64
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_rev64_advsimd_aarch64_instrs_vector_arithmetic_unary_rev")
     };
     let 'container_size = container_size;
     let 'containers = DIV(datasize, container_size);
@@ -43124,7 +43124,7 @@ function decode_setp_aarch64_instrs_memory_mcpymset_set (Rd, Rn, op2, Rs, sz) = 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_setp_aarch64_instrs_memory_mcpymset_set")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_set(d, n, options_name, s, stage)
@@ -43180,7 +43180,7 @@ function decode_setpn_aarch64_instrs_memory_mcpymset_set (Rd, Rn, op2, Rs, sz) =
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_setpn_aarch64_instrs_memory_mcpymset_set")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_set(d, n, options_name, s, stage)
@@ -43236,7 +43236,7 @@ function decode_setpt_aarch64_instrs_memory_mcpymset_set (Rd, Rn, op2, Rs, sz) =
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_setpt_aarch64_instrs_memory_mcpymset_set")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_set(d, n, options_name, s, stage)
@@ -43292,7 +43292,7 @@ function decode_setptn_aarch64_instrs_memory_mcpymset_set (Rd, Rn, op2, Rs, sz) 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_setptn_aarch64_instrs_memory_mcpymset_set")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_set(d, n, options_name, s, stage)
@@ -43537,7 +43537,7 @@ function decode_setgp_aarch64_instrs_memory_mcpymset_setg (Rd, Rn, op2, Rs, sz) 
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_setgp_aarch64_instrs_memory_mcpymset_setg")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_setg(d, n, options_name, s, stage)
@@ -43596,7 +43596,7 @@ function decode_setgpn_aarch64_instrs_memory_mcpymset_setg (Rd, Rn, op2, Rs, sz)
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_setgpn_aarch64_instrs_memory_mcpymset_setg")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_setg(d, n, options_name, s, stage)
@@ -43655,7 +43655,7 @@ function decode_setgpt_aarch64_instrs_memory_mcpymset_setg (Rd, Rn, op2, Rs, sz)
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_setgpt_aarch64_instrs_memory_mcpymset_setg")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_setg(d, n, options_name, s, stage)
@@ -43714,7 +43714,7 @@ function decode_setgptn_aarch64_instrs_memory_mcpymset_setg (Rd, Rn, op2, Rs, sz
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_setgptn_aarch64_instrs_memory_mcpymset_setg")
         }
     };
     execute_aarch64_instrs_memory_mcpymset_setg(d, n, options_name, s, stage)
@@ -51034,7 +51034,7 @@ function execute_aarch64_instrs_memory_ordered_pair_stilp (datasize, memop, n, o
           X_set(t, datasize) = data1;
           X_set(t2, datasize) = data2
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch64_instrs_memory_ordered_pair_stilp")
     };
     if wback then {
         if wb_unknown then {
@@ -51093,7 +51093,7 @@ function decode_stilp_aarch64_instrs_memory_ordered_pair_stilp (Rt, Rn, opc2, Rt
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stilp_aarch64_instrs_memory_ordered_pair_stilp")
         }
     };
     if ((memop == MemOp_STORE & wback) & (t == n | t2 == n)) & n != 31 then {
@@ -51112,7 +51112,7 @@ function decode_stilp_aarch64_instrs_memory_ordered_pair_stilp (Rt, Rn, opc2, Rt
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stilp_aarch64_instrs_memory_ordered_pair_stilp")
         }
     };
     if memop == MemOp_LOAD & t == t2 then {
@@ -51128,7 +51128,7 @@ function decode_stilp_aarch64_instrs_memory_ordered_pair_stilp (Rt, Rn, opc2, Rt
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_stilp_aarch64_instrs_memory_ordered_pair_stilp")
         }
     };
     assert(constraint('datasize in {32, 64}));
@@ -52395,8 +52395,7 @@ function decode_tstart_aarch64_instrs_system_tme_tstart Rt = {
       },
       2048 => {
           execute_aarch64_instrs_system_tme_tstart(2048, t)
-      },
-      _ => ()
+      }
     }
 }
 

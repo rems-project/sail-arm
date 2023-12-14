@@ -102,9 +102,7 @@ function EncodeVARange () = {
           assert(Have56BitVAExt());
           return(0b0001)
       },
-      _ => {
-          return(undefined : bits(4))
-      }
+      _ => PatternMatchFailure("EncodeVARange")
     }
 }
 
@@ -1425,7 +1423,7 @@ function TakeReset cold = {
           ? if ? == EL1 => {
               assert(ID_AA64PFR0_EL1[EL1] == 0b0010)
           },
-          _ => ()
+          _ => PatternMatchFailure("TakeReset")
         };
         __highest_el_aarch32 = true;
         FeatureImpl[num_of_Feature(FEAT_AA64EL0)] = false;

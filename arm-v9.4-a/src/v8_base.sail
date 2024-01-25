@@ -35064,8 +35064,7 @@ val SPEAddByteToRecord : bits(8) -> unit
 
 function SPEAddByteToRecord b = {
     let size = SPERecordSize;
-    assert(size < SPEMaxRecordSize);
-    assert(constraint((0 <= '_size & '_size < 64)));
+    assert(0 <= size & size < SPEMaxRecordSize);
     SPERecordData[size] = b;
     SPERecordSize = size + 1
 }

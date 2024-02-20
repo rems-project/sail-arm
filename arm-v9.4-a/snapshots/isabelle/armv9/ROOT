@@ -1,0 +1,23 @@
+session "Sail-Armv9-Base" in "base" = "Sail" +
+  options [document = false]
+  theories
+    Armv9_base
+    Armv9_base2
+
+session "Sail-Armv9-Instrs" in "instrs" = "Sail-Armv9-Base" +
+  options [document = false]
+  theories
+    Armv9_instrs64
+    Armv9_instrs32
+
+session "Sail-Armv9-Vector-Instrs" in "vector_instrs" = "Sail-Armv9-Instrs" +
+  options [document = false]
+  theories
+    Armv9_instrs64_sve
+    Armv9_instrs64_sme
+
+session "Sail-Armv9" = "Sail-Armv9-Vector-Instrs" +
+  options [document = false]
+  theories
+    Armv9
+    Armv9_lemmas

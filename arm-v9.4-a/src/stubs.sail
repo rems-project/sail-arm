@@ -211,6 +211,7 @@ function GetPendingPhysicalSError () = {
 }
 
 function Hint_Branch hint = {
+    Branchtypetaken = hint;
     return()
 }
 

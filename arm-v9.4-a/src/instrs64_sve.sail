@@ -97,8 +97,7 @@ function decode_FADD_Z_P_ZS__ (size, Pg, i1, Zdn) = {
       },
       2048 => {
           execute_FADD_Z_P_ZS__(2048, dn, esize, g, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -170,8 +169,7 @@ function decode_FSUB_Z_P_ZS__ (size, Pg, i1, Zdn) = {
       },
       2048 => {
           execute_FSUB_Z_P_ZS__(2048, dn, esize, g, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -243,8 +241,7 @@ function decode_FMUL_Z_P_ZS__ (size, Pg, i1, Zdn) = {
       },
       2048 => {
           execute_FMUL_Z_P_ZS__(2048, dn, esize, g, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -316,8 +313,7 @@ function decode_FSUBR_Z_P_ZS__ (size, Pg, i1, Zdn) = {
       },
       2048 => {
           execute_FSUBR_Z_P_ZS__(2048, dn, esize, g, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -386,8 +382,7 @@ function decode_FMAXNM_Z_P_ZS__ (size, Pg, i1, Zdn) = {
       },
       2048 => {
           execute_FMAXNM_Z_P_ZS__(2048, dn, esize, g, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -456,8 +451,7 @@ function decode_FMINNM_Z_P_ZS__ (size, Pg, i1, Zdn) = {
       },
       2048 => {
           execute_FMINNM_Z_P_ZS__(2048, dn, esize, g, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -526,8 +520,7 @@ function decode_FMAX_Z_P_ZS__ (size, Pg, i1, Zdn) = {
       },
       2048 => {
           execute_FMAX_Z_P_ZS__(2048, dn, esize, g, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -596,8 +589,7 @@ function decode_FMIN_Z_P_ZS__ (size, Pg, i1, Zdn) = {
       },
       2048 => {
           execute_FMIN_Z_P_ZS__(2048, dn, esize, g, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -655,7 +647,7 @@ function execute_FCMGE_P_P_Z0__ (VL, d, esize, g, n, op) = {
                   assert(constraint(('esize - 1 - 0 + 1 == 16 | 'esize - 1 - 0 + 1 == 32 | 'esize - 1 - 0 + 1 == 64)));
                   res = FPCompareGE(0[esize - 1 .. 0], element, FPCR_read())
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_FCMGE_P_P_Z0__")
             };
             let pbit : bits(1) = if res then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -696,8 +688,7 @@ function decode_FCMGE_P_P_Z0__ (size, eq, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_FCMGE_P_P_Z0__(2048, d, esize, g, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -758,7 +749,7 @@ function execute_FCMGT_P_P_Z0__ (VL, d, esize, g, n, op) = {
                   assert(constraint(('esize - 1 - 0 + 1 == 16 | 'esize - 1 - 0 + 1 == 32 | 'esize - 1 - 0 + 1 == 64)));
                   res = FPCompareGE(0[esize - 1 .. 0], element, FPCR_read())
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_FCMGT_P_P_Z0__")
             };
             let pbit : bits(1) = if res then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -799,8 +790,7 @@ function decode_FCMGT_P_P_Z0__ (size, eq, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_FCMGT_P_P_Z0__(2048, d, esize, g, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -861,7 +851,7 @@ function execute_FCMLT_P_P_Z0__ (VL, d, esize, g, n, op) = {
                   assert(constraint(('esize - 1 - 0 + 1 == 16 | 'esize - 1 - 0 + 1 == 32 | 'esize - 1 - 0 + 1 == 64)));
                   res = FPCompareGE(0[esize - 1 .. 0], element, FPCR_read())
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_FCMLT_P_P_Z0__")
             };
             let pbit : bits(1) = if res then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -902,8 +892,7 @@ function decode_FCMLT_P_P_Z0__ (size, eq, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_FCMLT_P_P_Z0__(2048, d, esize, g, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -964,7 +953,7 @@ function execute_FCMLE_P_P_Z0__ (VL, d, esize, g, n, op) = {
                   assert(constraint(('esize - 1 - 0 + 1 == 16 | 'esize - 1 - 0 + 1 == 32 | 'esize - 1 - 0 + 1 == 64)));
                   res = FPCompareGE(0[esize - 1 .. 0], element, FPCR_read())
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_FCMLE_P_P_Z0__")
             };
             let pbit : bits(1) = if res then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -1005,8 +994,7 @@ function decode_FCMLE_P_P_Z0__ (size, eq, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_FCMLE_P_P_Z0__(2048, d, esize, g, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1067,7 +1055,7 @@ function execute_FCMEQ_P_P_Z0__ (VL, d, esize, g, n, op) = {
                   assert(constraint(('esize - 1 - 0 + 1 == 16 | 'esize - 1 - 0 + 1 == 32 | 'esize - 1 - 0 + 1 == 64)));
                   res = FPCompareGE(0[esize - 1 .. 0], element, FPCR_read())
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_FCMEQ_P_P_Z0__")
             };
             let pbit : bits(1) = if res then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -1108,8 +1096,7 @@ function decode_FCMEQ_P_P_Z0__ (size, eq, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_FCMEQ_P_P_Z0__(2048, d, esize, g, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1170,7 +1157,7 @@ function execute_FCMNE_P_P_Z0__ (VL, d, esize, g, n, op) = {
                   assert(constraint(('esize - 1 - 0 + 1 == 16 | 'esize - 1 - 0 + 1 == 32 | 'esize - 1 - 0 + 1 == 64)));
                   res = FPCompareGE(0[esize - 1 .. 0], element, FPCR_read())
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_FCMNE_P_P_Z0__")
             };
             let pbit : bits(1) = if res then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -1211,8 +1198,7 @@ function decode_FCMNE_P_P_Z0__ (size, eq, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_FCMNE_P_P_Z0__(2048, d, esize, g, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1284,8 +1270,7 @@ function decode_FADDA_V_P_Z__ (size, Pg, Zm, Vdn) = {
       },
       2048 => {
           execute_FADDA_V_P_Z__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1354,8 +1339,7 @@ function decode_FCVTZU_Z_P_Z_D2X (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZU_Z_P_Z_D2X(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1424,8 +1408,7 @@ function decode_FCVTZU_Z_P_Z_D2W (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZU_Z_P_Z_D2W(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1494,8 +1477,7 @@ function decode_FCVTZU_Z_P_Z_S2W (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZU_Z_P_Z_S2W(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1564,8 +1546,7 @@ function decode_FCVTZU_Z_P_Z_S2X (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZU_Z_P_Z_S2X(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1634,8 +1615,7 @@ function decode_FCVTZS_Z_P_Z_D2X (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZS_Z_P_Z_D2X(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1704,8 +1684,7 @@ function decode_FCVTZS_Z_P_Z_D2W (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZS_Z_P_Z_D2W(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1774,8 +1753,7 @@ function decode_FCVTZS_Z_P_Z_S2W (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZS_Z_P_Z_S2W(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1844,8 +1822,7 @@ function decode_FCVTZS_Z_P_Z_S2X (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZS_Z_P_Z_S2X(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1914,8 +1891,7 @@ function decode_FCVTZS_Z_P_Z_FP162H (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZS_Z_P_Z_FP162H(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1984,8 +1960,7 @@ function decode_FCVTZS_Z_P_Z_FP162W (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZS_Z_P_Z_FP162W(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2054,8 +2029,7 @@ function decode_FCVTZS_Z_P_Z_FP162X (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZS_Z_P_Z_FP162X(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2124,8 +2098,7 @@ function decode_FCVTZU_Z_P_Z_FP162H (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZU_Z_P_Z_FP162H(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2194,8 +2167,7 @@ function decode_FCVTZU_Z_P_Z_FP162W (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZU_Z_P_Z_FP162W(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2264,8 +2236,7 @@ function decode_FCVTZU_Z_P_Z_FP162X (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTZU_Z_P_Z_FP162X(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2334,8 +2305,7 @@ function decode_SCVTF_Z_P_Z_H2FP16 (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SCVTF_Z_P_Z_H2FP16(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2404,8 +2374,7 @@ function decode_SCVTF_Z_P_Z_W2FP16 (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SCVTF_Z_P_Z_W2FP16(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2474,8 +2443,7 @@ function decode_SCVTF_Z_P_Z_X2FP16 (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SCVTF_Z_P_Z_X2FP16(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2544,8 +2512,7 @@ function decode_UCVTF_Z_P_Z_H2FP16 (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UCVTF_Z_P_Z_H2FP16(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2614,8 +2581,7 @@ function decode_UCVTF_Z_P_Z_W2FP16 (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UCVTF_Z_P_Z_W2FP16(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2684,8 +2650,7 @@ function decode_UCVTF_Z_P_Z_X2FP16 (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UCVTF_Z_P_Z_X2FP16(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2752,8 +2717,7 @@ function decode_FCVT_Z_P_Z_D2S (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVT_Z_P_Z_D2S(2048, d, d_esize, esize, g, n, s_esize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2819,8 +2783,7 @@ function decode_FCVT_Z_P_Z_D2H (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVT_Z_P_Z_D2H(2048, d, d_esize, esize, g, n, s_esize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2886,8 +2849,7 @@ function decode_FCVT_Z_P_Z_S2D (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVT_Z_P_Z_S2D(2048, d, d_esize, esize, g, n, s_esize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2953,8 +2915,7 @@ function decode_FCVT_Z_P_Z_H2D (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVT_Z_P_Z_H2D(2048, d, d_esize, esize, g, n, s_esize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3020,8 +2981,7 @@ function decode_FCVT_Z_P_Z_H2S (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVT_Z_P_Z_H2S(2048, d, d_esize, esize, g, n, s_esize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3087,8 +3047,7 @@ function decode_FCVT_Z_P_Z_S2H (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVT_Z_P_Z_S2H(2048, d, d_esize, esize, g, n, s_esize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3147,8 +3106,7 @@ function decode_FRECPE_Z_Z__ (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRECPE_Z_Z__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3207,8 +3165,7 @@ function decode_FRSQRTE_Z_Z__ (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRSQRTE_Z_Z__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3275,8 +3232,7 @@ function decode_FRECPX_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FRECPX_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3344,8 +3300,7 @@ function decode_FSQRT_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FSQRT_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3415,8 +3370,7 @@ function decode_FRINTA_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTA_Z_P_Z__(2048, d, esize, exact, g, n, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3486,8 +3440,7 @@ function decode_FRINTI_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTI_Z_P_Z__(2048, d, esize, exact, g, n, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3557,8 +3510,7 @@ function decode_FRINTM_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTM_Z_P_Z__(2048, d, esize, exact, g, n, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3628,8 +3580,7 @@ function decode_FRINTN_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTN_Z_P_Z__(2048, d, esize, exact, g, n, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3699,8 +3650,7 @@ function decode_FRINTP_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTP_Z_P_Z__(2048, d, esize, exact, g, n, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3770,8 +3720,7 @@ function decode_FRINTX_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTX_Z_P_Z__(2048, d, esize, exact, g, n, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3841,8 +3790,7 @@ function decode_FRINTZ_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTZ_Z_P_Z__(2048, d, esize, exact, g, n, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3911,8 +3859,7 @@ function decode_UCVTF_Z_P_Z_X2S (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UCVTF_Z_P_Z_X2S(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3981,8 +3928,7 @@ function decode_UCVTF_Z_P_Z_X2D (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UCVTF_Z_P_Z_X2D(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4051,8 +3997,7 @@ function decode_UCVTF_Z_P_Z_W2S (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UCVTF_Z_P_Z_W2S(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4121,8 +4066,7 @@ function decode_UCVTF_Z_P_Z_W2D (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UCVTF_Z_P_Z_W2D(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4191,8 +4135,7 @@ function decode_SCVTF_Z_P_Z_X2S (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SCVTF_Z_P_Z_X2S(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4261,8 +4204,7 @@ function decode_SCVTF_Z_P_Z_X2D (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SCVTF_Z_P_Z_X2D(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4331,8 +4273,7 @@ function decode_SCVTF_Z_P_Z_W2S (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SCVTF_Z_P_Z_W2S(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4401,8 +4342,7 @@ function decode_SCVTF_Z_P_Z_W2D (int_U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SCVTF_Z_P_Z_W2D(2048, d, d_esize, esize, g, n, rounding, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4473,8 +4413,7 @@ function decode_FABD_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FABD_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4542,8 +4481,7 @@ function decode_FADD_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FADD_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4614,8 +4552,7 @@ function decode_FDIV_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FDIV_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4686,8 +4623,7 @@ function decode_FDIVR_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FDIVR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4755,8 +4691,7 @@ function decode_FMAXNM_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAXNM_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4824,8 +4759,7 @@ function decode_FMINNM_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMINNM_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4893,8 +4827,7 @@ function decode_FMAX_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAX_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4962,8 +4895,7 @@ function decode_FMIN_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMIN_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5031,8 +4963,7 @@ function decode_FMUL_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMUL_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5103,8 +5034,7 @@ function decode_FMULX_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMULX_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5175,8 +5105,7 @@ function decode_FSCALE_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FSCALE_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5244,8 +5173,7 @@ function decode_FSUB_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FSUB_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5316,8 +5244,7 @@ function decode_FSUBR_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FSUBR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5377,8 +5304,7 @@ function decode_FADDV_V_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FADDV_V_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5438,8 +5364,7 @@ function decode_FMAXNMV_V_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FMAXNMV_V_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5499,8 +5424,7 @@ function decode_FMINNMV_V_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FMINNMV_V_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5560,8 +5484,7 @@ function decode_FMAXV_V_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FMAXV_V_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5621,8 +5544,7 @@ function decode_FMINV_V_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FMINV_V_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5669,7 +5591,7 @@ function execute_FACGE_P_P_ZZ__ (VL, d, esize, g, m, n, op) = {
                   assert(constraint('esize in {16, 32, 64}));
                   res = FPCompareGT(FPAbs(element1), FPAbs(element2), FPCR_read())
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_FACGE_P_P_ZZ__")
             };
             let pbit : bits(1) = if res then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -5711,8 +5633,7 @@ function decode_FACGE_P_P_ZZ__ (size, Zm, Pg, Zn, Pd) = {
       },
       2048 => {
           execute_FACGE_P_P_ZZ__(2048, d, esize, g, m, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5760,7 +5681,7 @@ function execute_FACGT_P_P_ZZ__ (VL, d, esize, g, m, n, op) = {
                   assert(constraint('esize in {16, 32, 64}));
                   res = FPCompareGT(FPAbs(element1), FPAbs(element2), FPCR_read())
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_FACGT_P_P_ZZ__")
             };
             let pbit : bits(1) = if res then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -5802,8 +5723,7 @@ function decode_FACGT_P_P_ZZ__ (size, Zm, Pg, Zn, Pd) = {
       },
       2048 => {
           execute_FACGT_P_P_ZZ__(2048, d, esize, g, m, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5913,8 +5833,7 @@ function decode_FCMUO_P_P_ZZ__ (size, Zm, Pg, Zn, Pd) = {
       },
       2048 => {
           execute_FCMUO_P_P_ZZ__(2048, d, esize, g, m, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6024,8 +5943,7 @@ function decode_FCMGE_P_P_ZZ__ (size, Zm, cmph, Pg, Zn, cmpl, Pd) = {
       },
       2048 => {
           execute_FCMGE_P_P_ZZ__(2048, d, esize, g, m, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6137,8 +6055,7 @@ function decode_FCMGT_P_P_ZZ__ (size, Zm, cmph, Pg, Zn, cmpl, Pd) = {
       },
       2048 => {
           execute_FCMGT_P_P_ZZ__(2048, d, esize, g, m, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6250,8 +6167,7 @@ function decode_FCMEQ_P_P_ZZ__ (size, Zm, cmph, Pg, Zn, cmpl, Pd) = {
       },
       2048 => {
           execute_FCMEQ_P_P_ZZ__(2048, d, esize, g, m, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6363,8 +6279,7 @@ function decode_FCMNE_P_P_ZZ__ (size, Zm, cmph, Pg, Zn, cmpl, Pd) = {
       },
       2048 => {
           execute_FCMNE_P_P_ZZ__(2048, d, esize, g, m, n, op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6451,8 +6366,7 @@ function decode_FMLA_Z_P_ZZZ__ (size, Zm, N, op, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_FMLA_Z_P_ZZZ__(2048, da, esize, g, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6539,8 +6453,7 @@ function decode_FMLS_Z_P_ZZZ__ (size, Zm, N, op, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_FMLS_Z_P_ZZZ__(2048, da, esize, g, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6630,8 +6543,7 @@ function decode_FNMLA_Z_P_ZZZ__ (size, Zm, N, op, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_FNMLA_Z_P_ZZZ__(2048, da, esize, g, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6721,8 +6633,7 @@ function decode_FNMLS_Z_P_ZZZ__ (size, Zm, N, op, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_FNMLS_Z_P_ZZZ__(2048, da, esize, g, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6812,8 +6723,7 @@ function decode_FMAD_Z_P_ZZZ__ (size, Za, N, op, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAD_Z_P_ZZZ__(2048, a, dn, esize, g, m, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6903,8 +6813,7 @@ function decode_FMSB_Z_P_ZZZ__ (size, Za, N, op, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMSB_Z_P_ZZZ__(2048, a, dn, esize, g, m, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6994,8 +6903,7 @@ function decode_FNMAD_Z_P_ZZZ__ (size, Za, N, op, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FNMAD_Z_P_ZZZ__(2048, a, dn, esize, g, m, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7085,8 +6993,7 @@ function decode_FNMSB_Z_P_ZZZ__ (size, Za, N, op, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FNMSB_Z_P_ZZZ__(2048, a, dn, esize, g, m, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7149,8 +7056,7 @@ function decode_FADD_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FADD_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7210,8 +7116,7 @@ function decode_FMUL_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FMUL_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7271,8 +7176,7 @@ function decode_FSUB_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FSUB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7335,8 +7239,7 @@ function decode_FTSMUL_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FTSMUL_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7399,8 +7302,7 @@ function decode_FRECPS_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FRECPS_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7463,8 +7365,7 @@ function decode_FRSQRTS_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FRSQRTS_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7527,8 +7428,7 @@ function decode_FTSSEL_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FTSSEL_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7588,8 +7488,7 @@ function decode_FEXPA_Z_Z__ (size, Zn, Zd) = {
       },
       2048 => {
           execute_FEXPA_Z_Z__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7651,8 +7550,7 @@ function decode_FTMAD_Z_ZZI__ (size, imm3, Zm, Zdn) = {
       },
       2048 => {
           execute_FTMAD_Z_ZZI__(2048, dn, esize, imm, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7743,8 +7641,7 @@ function decode_FCADD_Z_P_ZZ__ (size, rot, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FCADD_Z_P_ZZ__(2048, dn, esize, g, m, sub_i, sub_r)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7843,8 +7740,7 @@ function decode_FCMLA_Z_P_ZZZ__ (size, Zm, rot, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_FCMLA_Z_P_ZZZ__(2048, da, esize, g, m, n, neg_i, neg_r, sel_a, sel_b)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7939,8 +7835,7 @@ function decode_FCMLA_Z_ZZZi_H (size, i2, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_FCMLA_Z_ZZZi_H(2048, da, esize, index, m, n, neg_i, neg_r, sel_a, sel_b)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8035,8 +7930,7 @@ function decode_FCMLA_Z_ZZZi_S (size, i1, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_FCMLA_Z_ZZZi_S(2048, da, esize, index, m, n, neg_i, neg_r, sel_a, sel_b)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8101,8 +7995,7 @@ function decode_FMUL_Z_ZZi_H (i3h, i3l, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FMUL_Z_ZZi_H(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8175,8 +8068,7 @@ function decode_FMLA_Z_ZZZi_H (i3h, i3l, Zm, op, Zn, Zda) = {
       },
       2048 => {
           execute_FMLA_Z_ZZZi_H(2048, da, esize, index, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8250,8 +8142,7 @@ function decode_FMLS_Z_ZZZi_H (i3h, i3l, Zm, op, Zn, Zda) = {
       },
       2048 => {
           execute_FMLS_Z_ZZZi_H(2048, da, esize, index, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8316,8 +8207,7 @@ function decode_FMUL_Z_ZZi_S (size, i2, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FMUL_Z_ZZi_S(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8390,8 +8280,7 @@ function decode_FMLA_Z_ZZZi_S (size, i2, Zm, op, Zn, Zda) = {
       },
       2048 => {
           execute_FMLA_Z_ZZZi_S(2048, da, esize, index, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8465,8 +8354,7 @@ function decode_FMLS_Z_ZZZi_S (size, i2, Zm, op, Zn, Zda) = {
       },
       2048 => {
           execute_FMLS_Z_ZZZi_S(2048, da, esize, index, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8531,8 +8419,7 @@ function decode_FMUL_Z_ZZi_D (size, i1, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FMUL_Z_ZZi_D(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8605,8 +8492,7 @@ function decode_FMLA_Z_ZZZi_D (size, i1, Zm, op, Zn, Zda) = {
       },
       2048 => {
           execute_FMLA_Z_ZZZi_D(2048, da, esize, index, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8680,8 +8566,7 @@ function decode_FMLS_Z_ZZZi_D (size, i1, Zm, op, Zn, Zda) = {
       },
       2048 => {
           execute_FMLS_Z_ZZZi_D(2048, da, esize, index, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8760,8 +8645,7 @@ function decode_FADDP_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FADDP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8838,8 +8722,7 @@ function decode_FMAXNMP_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAXNMP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8916,8 +8799,7 @@ function decode_FMAXP_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAXP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8994,8 +8876,7 @@ function decode_FMINNMP_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMINNMP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9072,8 +8953,7 @@ function decode_FMINP_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_FMINP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9138,8 +9018,7 @@ function decode_FMLALB_Z_ZZZ__ (o2, Zm, op, T, Zn, Zda) = {
       },
       2048 => {
           execute_FMLALB_Z_ZZZ__(2048, da, esize, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9206,8 +9085,7 @@ function decode_FMLALT_Z_ZZZ__ (o2, Zm, op, T, Zn, Zda) = {
       },
       2048 => {
           execute_FMLALT_Z_ZZZ__(2048, da, esize, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9274,8 +9152,7 @@ function decode_FMLSLB_Z_ZZZ__ (o2, Zm, op, T, Zn, Zda) = {
       },
       2048 => {
           execute_FMLSLB_Z_ZZZ__(2048, da, esize, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9342,8 +9219,7 @@ function decode_FMLSLT_Z_ZZZ__ (o2, Zm, op, T, Zn, Zda) = {
       },
       2048 => {
           execute_FMLSLT_Z_ZZZ__(2048, da, esize, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9414,8 +9290,7 @@ function decode_FMLALB_Z_ZZZi_S (o2, i3h, Zm, op, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_FMLALB_Z_ZZZi_S(2048, da, esize, index, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9488,8 +9363,7 @@ function decode_FMLALT_Z_ZZZi_S (o2, i3h, Zm, op, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_FMLALT_Z_ZZZi_S(2048, da, esize, index, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9562,8 +9436,7 @@ function decode_FMLSLB_Z_ZZZi_S (o2, i3h, Zm, op, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_FMLSLB_Z_ZZZi_S(2048, da, esize, index, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9636,8 +9509,7 @@ function decode_FMLSLT_Z_ZZZi_S (o2, i3h, Zm, op, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_FMLSLT_Z_ZZZi_S(2048, da, esize, index, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9701,8 +9573,7 @@ function decode_BFMLALB_Z_ZZZ__ (o2, Zm, op, T, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLALB_Z_ZZZ__(2048, da, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9764,8 +9635,7 @@ function decode_BFMLALT_Z_ZZZ__ (o2, Zm, op, T, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLALT_Z_ZZZ__(2048, da, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9831,8 +9701,7 @@ function decode_BFMLSLB_Z_ZZZ__ (o2, Zm, op, T, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLSLB_Z_ZZZ__(2048, da, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9898,8 +9767,7 @@ function decode_BFMLSLT_Z_ZZZ__ (o2, Zm, op, T, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLSLT_Z_ZZZ__(2048, da, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9965,8 +9833,7 @@ function decode_BFMLALB_Z_ZZZi__ (o2, i3h, Zm, op, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLALB_Z_ZZZi__(2048, da, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10034,8 +9901,7 @@ function decode_BFMLALT_Z_ZZZi__ (o2, i3h, Zm, op, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLALT_Z_ZZZi__(2048, da, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10107,8 +9973,7 @@ function decode_BFMLSLB_Z_ZZZi__ (o2, i3h, Zm, op, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLSLB_Z_ZZZi__(2048, da, index, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10180,8 +10045,7 @@ function decode_BFMLSLT_Z_ZZZi__ (o2, i3h, Zm, op, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLSLT_Z_ZZZi__(2048, da, index, m, n, op1_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10248,8 +10112,7 @@ function decode_BFDOT_Z_ZZZ__ (Zm, Zn, Zda) = {
       },
       2048 => {
           execute_BFDOT_Z_ZZZ__(2048, da, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10315,8 +10178,7 @@ function decode_BFDOT_Z_ZZZi__ (i2, Zm, Zn, Zda) = {
       },
       2048 => {
           execute_BFDOT_Z_ZZZi__(2048, da, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10379,8 +10241,7 @@ function decode_FDOT_Z_ZZZ__ (Zm, Zn, Zda) = {
       },
       2048 => {
           execute_FDOT_Z_ZZZ__(2048, da, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10446,8 +10307,7 @@ function decode_FDOT_Z_ZZZi__ (i2, Zm, Zn, Zda) = {
       },
       2048 => {
           execute_FDOT_Z_ZZZi__(2048, da, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10510,8 +10370,7 @@ function decode_BFCVT_Z_P_Z_S2BF (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_BFCVT_Z_P_Z_S2BF(2048, d, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10572,8 +10431,7 @@ function decode_BFCVTNT_Z_P_Z_S2BF (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_BFCVTNT_Z_P_Z_S2BF(2048, d, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10641,8 +10499,7 @@ function decode_FMMLA_Z_ZZZ_S (Zm, Zn, Zda) = {
       },
       2048 => {
           execute_FMMLA_Z_ZZZ_S(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10710,8 +10567,7 @@ function decode_FMMLA_Z_ZZZ_D (Zm, Zn, Zda) = {
       },
       2048 => {
           execute_FMMLA_Z_ZZZ_D(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10775,8 +10631,7 @@ function decode_BFMMLA_Z_ZZZ__ (Zm, Zn, Zda) = {
       },
       2048 => {
           execute_BFMMLA_Z_ZZZ__(2048, da, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10843,8 +10698,7 @@ function decode_FLOGB_Z_P_Z__ (size, U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FLOGB_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10909,8 +10763,7 @@ function decode_FCVTNT_Z_P_Z_D2S (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTNT_Z_P_Z_D2S(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10973,8 +10826,7 @@ function decode_FCVTNT_Z_P_Z_S2H (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTNT_Z_P_Z_S2H(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11037,8 +10889,7 @@ function decode_FCVTLT_Z_P_Z_S2D (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTLT_Z_P_Z_S2D(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11101,8 +10952,7 @@ function decode_FCVTLT_Z_P_Z_H2S (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTLT_Z_P_Z_H2S(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11168,8 +11018,7 @@ function decode_FCVTX_Z_P_Z_D2S (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTX_Z_P_Z_D2S(2048, d, d_esize, esize, g, n, s_esize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11232,8 +11081,7 @@ function decode_FCVTXNT_Z_P_Z_D2S (Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FCVTXNT_Z_P_Z_D2S(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11294,8 +11142,7 @@ function decode_FCLAMP_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FCLAMP_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11373,8 +11220,7 @@ function decode_FADDQV_Z_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FADDQV_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11452,8 +11298,7 @@ function decode_FMAXNMQV_Z_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FMAXNMQV_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11531,8 +11376,7 @@ function decode_FMINNMQV_Z_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FMINNMQV_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11610,8 +11454,7 @@ function decode_FMAXQV_Z_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FMAXQV_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11689,8 +11532,7 @@ function decode_FMINQV_Z_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_FMINQV_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11747,8 +11589,7 @@ function decode_BFADD_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BFADD_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11805,8 +11646,7 @@ function decode_BFMUL_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BFMUL_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11863,8 +11703,7 @@ function decode_BFSUB_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BFSUB_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11929,8 +11768,7 @@ function decode_BFADD_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_BFADD_Z_P_ZZ__(2048, dn, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11995,8 +11833,7 @@ function decode_BFMUL_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMUL_Z_P_ZZ__(2048, dn, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12061,8 +11898,7 @@ function decode_BFSUB_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_BFSUB_Z_P_ZZ__(2048, dn, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12140,8 +11976,7 @@ function decode_BFMLA_Z_P_ZZZ__ (size, Zm, op, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLA_Z_P_ZZZ__(2048, da, g, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12221,8 +12056,7 @@ function decode_BFMLS_Z_P_ZZZ__ (size, Zm, op, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLS_Z_P_ZZZ__(2048, da, g, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12295,8 +12129,7 @@ function decode_BFMLA_Z_ZZZi_H (i3h, i3l, Zm, op, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLA_Z_ZZZi_H(2048, da, index, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12369,8 +12202,7 @@ function decode_BFMLS_Z_ZZZi_H (i3h, i3l, Zm, op, Zn, Zda) = {
       },
       2048 => {
           execute_BFMLS_Z_ZZZi_H(2048, da, index, m, n, op1_neg, op3_neg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12434,8 +12266,7 @@ function decode_BFMUL_Z_ZZi_H (i3h, i3l, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BFMUL_Z_ZZi_H(2048, d, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12501,8 +12332,7 @@ function decode_BFMAXNM_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAXNM_Z_P_ZZ__(2048, dn, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12567,8 +12397,7 @@ function decode_BFMINNM_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMINNM_Z_P_ZZ__(2048, dn, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12633,8 +12462,7 @@ function decode_BFMAX_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAX_Z_P_ZZ__(2048, dn, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12699,8 +12527,7 @@ function decode_BFMIN_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMIN_Z_P_ZZ__(2048, dn, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12760,8 +12587,7 @@ function decode_BFCLAMP_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BFCLAMP_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12822,8 +12648,7 @@ function decode_ADR_Z_AZ_D_u32_scaled (Zm, msz, Zn, Zd) = {
       },
       2048 => {
           execute_ADR_Z_AZ_D_u32_scaled(2048, d, esize, m, mbytes, n, osize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12884,8 +12709,7 @@ function decode_ADR_Z_AZ_D_s32_scaled (Zm, msz, Zn, Zd) = {
       },
       2048 => {
           execute_ADR_Z_AZ_D_s32_scaled(2048, d, esize, m, mbytes, n, osize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12947,8 +12771,7 @@ function decode_ADR_Z_AZ_SD_same_scaled (sz, Zm, msz, Zn, Zd) = {
       },
       2048 => {
           execute_ADR_Z_AZ_SD_same_scaled(2048, d, esize, m, mbytes, n, osize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13011,8 +12834,7 @@ function decode_ADD_Z_ZI__ (size, sh, imm8, Zdn) = {
       },
       2048 => {
           execute_ADD_Z_ZI__(2048, dn, esize, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13074,8 +12896,7 @@ function decode_SUB_Z_ZI__ (size, sh, imm8, Zdn) = {
       },
       2048 => {
           execute_SUB_Z_ZI__(2048, dn, esize, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13137,8 +12958,7 @@ function decode_SUBR_Z_ZI__ (size, sh, imm8, Zdn) = {
       },
       2048 => {
           execute_SUBR_Z_ZI__(2048, dn, esize, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13193,8 +13013,7 @@ function decode_MUL_Z_ZI__ (size, imm8, Zdn) = {
       },
       2048 => {
           execute_MUL_Z_ZI__(2048, dn, esize, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13249,8 +13068,7 @@ function decode_UMAX_Z_ZI__ (size, U, imm8, Zdn) = {
       },
       2048 => {
           execute_UMAX_Z_ZI__(2048, dn, esize, imm, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13306,8 +13124,7 @@ function decode_SMAX_Z_ZI__ (size, U, imm8, Zdn) = {
       },
       2048 => {
           execute_SMAX_Z_ZI__(2048, dn, esize, imm, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13363,8 +13180,7 @@ function decode_UMIN_Z_ZI__ (size, U, imm8, Zdn) = {
       },
       2048 => {
           execute_UMIN_Z_ZI__(2048, dn, esize, imm, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13420,8 +13236,7 @@ function decode_SMIN_Z_ZI__ (size, U, imm8, Zdn) = {
       },
       2048 => {
           execute_SMIN_Z_ZI__(2048, dn, esize, imm, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13476,8 +13291,7 @@ function decode_ADDPL_R_RI__ (Rn, imm6, Rd) = {
       },
       2048 => {
           execute_ADDPL_R_RI__(2048, d, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13531,8 +13345,7 @@ function decode_ADDVL_R_RI__ (Rn, imm6, Rd) = {
       },
       2048 => {
           execute_ADDVL_R_RI__(2048, d, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13589,8 +13402,7 @@ function decode_ADD_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_ADD_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13640,8 +13452,7 @@ function decode_AND_Z_ZZ__ (Zm, Zn, Zd) = {
       },
       2048 => {
           execute_AND_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13690,8 +13501,7 @@ function decode_BIC_Z_ZZ__ (Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BIC_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13740,8 +13550,7 @@ function decode_EOR_Z_ZZ__ (Zm, Zn, Zd) = {
       },
       2048 => {
           execute_EOR_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13790,8 +13599,7 @@ function decode_ORR_Z_ZZ__ (Zm, Zn, Zd) = {
       },
       2048 => {
           execute_ORR_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13848,8 +13656,7 @@ function decode_SUB_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_SUB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13916,8 +13723,7 @@ function decode_ADD_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_ADD_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13984,8 +13790,7 @@ function decode_AND_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_AND_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14052,8 +13857,7 @@ function decode_BIC_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_BIC_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14120,8 +13924,7 @@ function decode_EOR_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_EOR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14189,8 +13992,7 @@ function decode_LSL_Z_P_ZZ__ (size, R, L, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_LSL_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14261,8 +14063,7 @@ function decode_LSLR_Z_P_ZZ__ (size, R, L, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_LSLR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14333,8 +14134,7 @@ function decode_MUL_Z_P_ZZ__ (size, H, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_MUL_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14403,8 +14203,7 @@ function decode_ORR_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_ORR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14471,8 +14270,7 @@ function decode_SUB_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SUB_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14539,8 +14337,7 @@ function decode_SUBR_Z_P_ZZ__ (size, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SUBR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14608,8 +14405,7 @@ function decode_LSR_Z_P_ZZ__ (size, R, L, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_LSR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14680,8 +14476,7 @@ function decode_ASR_Z_P_ZZ__ (size, R, L, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_ASR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14752,8 +14547,7 @@ function decode_LSRR_Z_P_ZZ__ (size, R, L, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_LSRR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14824,8 +14618,7 @@ function decode_ASRR_Z_P_ZZ__ (size, R, L, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_ASRR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14897,8 +14690,7 @@ function decode_UABD_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UABD_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14968,8 +14760,7 @@ function decode_SABD_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SABD_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15051,8 +14842,7 @@ function decode_UDIV_Z_P_ZZ__ (size, R, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UDIV_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15135,8 +14925,7 @@ function decode_SDIV_Z_P_ZZ__ (size, R, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SDIV_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15219,8 +15008,7 @@ function decode_UDIVR_Z_P_ZZ__ (size, R, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UDIVR_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15303,8 +15091,7 @@ function decode_SDIVR_Z_P_ZZ__ (size, R, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SDIVR_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15375,8 +15162,7 @@ function decode_UMAX_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UMAX_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15446,8 +15232,7 @@ function decode_SMAX_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SMAX_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15517,8 +15302,7 @@ function decode_UMIN_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UMIN_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15588,8 +15372,7 @@ function decode_SMIN_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SMIN_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15659,8 +15442,7 @@ function decode_UMULH_Z_P_ZZ__ (size, H, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UMULH_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15731,8 +15513,7 @@ function decode_SMULH_Z_P_ZZ__ (size, H, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SMULH_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15771,7 +15552,7 @@ function execute_WHILELO_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELO_P_P_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -15811,8 +15592,7 @@ function decode_WHILELO_P_P_RR__ (size, Rm, sf, U, lt, Rn, eq, Pd) = {
       },
       2048 => {
           execute_WHILELO_P_P_RR__(2048, d, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15853,7 +15633,7 @@ function execute_WHILELS_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELS_P_P_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -15893,8 +15673,7 @@ function decode_WHILELS_P_P_RR__ (size, Rm, sf, U, lt, Rn, eq, Pd) = {
       },
       2048 => {
           execute_WHILELS_P_P_RR__(2048, d, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15935,7 +15714,7 @@ function execute_WHILELT_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELT_P_P_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -15975,8 +15754,7 @@ function decode_WHILELT_P_P_RR__ (size, Rm, sf, U, lt, Rn, eq, Pd) = {
       },
       2048 => {
           execute_WHILELT_P_P_RR__(2048, d, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16017,7 +15795,7 @@ function execute_WHILELE_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELE_P_P_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -16057,8 +15835,7 @@ function decode_WHILELE_P_P_RR__ (size, Rm, sf, U, lt, Rn, eq, Pd) = {
       },
       2048 => {
           execute_WHILELE_P_P_RR__(2048, d, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16099,7 +15876,7 @@ function execute_WHILEHI_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEHI_P_P_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -16139,8 +15916,7 @@ function decode_WHILEHI_P_P_RR__ (size, Rm, sf, U, lt, Rn, eq, Pd) = {
       },
       2048 => {
           execute_WHILEHI_P_P_RR__(2048, d, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16181,7 +15957,7 @@ function execute_WHILEHS_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEHS_P_P_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -16221,8 +15997,7 @@ function decode_WHILEHS_P_P_RR__ (size, Rm, sf, U, lt, Rn, eq, Pd) = {
       },
       2048 => {
           execute_WHILEHS_P_P_RR__(2048, d, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16263,7 +16038,7 @@ function execute_WHILEGT_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEGT_P_P_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -16303,8 +16078,7 @@ function decode_WHILEGT_P_P_RR__ (size, Rm, sf, U, lt, Rn, eq, Pd) = {
       },
       2048 => {
           execute_WHILEGT_P_P_RR__(2048, d, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16345,7 +16119,7 @@ function execute_WHILEGE_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEGE_P_P_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -16385,8 +16159,7 @@ function decode_WHILEGE_P_P_RR__ (size, Rm, sf, U, lt, Rn, eq, Pd) = {
       },
       2048 => {
           execute_WHILEGE_P_P_RR__(2048, d, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16442,7 +16215,7 @@ function execute_CMPEQ_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPEQ_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -16483,8 +16256,7 @@ function decode_CMPEQ_P_P_ZI__ (size, imm5, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPEQ_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16538,7 +16310,7 @@ function execute_CMPNE_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPNE_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -16579,8 +16351,7 @@ function decode_CMPNE_P_P_ZI__ (size, imm5, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPNE_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16634,7 +16405,7 @@ function execute_CMPHS_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPHS_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -16675,8 +16446,7 @@ function decode_CMPHS_P_P_ZI__ (size, imm7, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPHS_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16731,7 +16501,7 @@ function execute_CMPHI_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPHI_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -16772,8 +16542,7 @@ function decode_CMPHI_P_P_ZI__ (size, imm7, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPHI_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16828,7 +16597,7 @@ function execute_CMPLO_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPLO_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -16869,8 +16638,7 @@ function decode_CMPLO_P_P_ZI__ (size, imm7, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPLO_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16925,7 +16693,7 @@ function execute_CMPLS_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPLS_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -16966,8 +16734,7 @@ function decode_CMPLS_P_P_ZI__ (size, imm7, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPLS_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17022,7 +16789,7 @@ function execute_CMPGE_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPGE_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17063,8 +16830,7 @@ function decode_CMPGE_P_P_ZI__ (size, imm5, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPGE_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17119,7 +16885,7 @@ function execute_CMPGT_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPGT_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17160,8 +16926,7 @@ function decode_CMPGT_P_P_ZI__ (size, imm5, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPGT_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17216,7 +16981,7 @@ function execute_CMPLT_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPLT_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17257,8 +17022,7 @@ function decode_CMPLT_P_P_ZI__ (size, imm5, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPLT_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17313,7 +17077,7 @@ function execute_CMPLE_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= imm
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPLE_P_P_ZI__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17354,8 +17118,7 @@ function decode_CMPLE_P_P_ZI__ (size, imm5, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPLE_P_P_ZI__(2048, d, esize, g, imm, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17415,7 +17178,7 @@ function execute_CMPEQ_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPEQ_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17459,8 +17222,7 @@ function decode_CMPEQ_P_P_ZW__ (size, Zm, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPEQ_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17519,7 +17281,7 @@ function execute_CMPNE_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPNE_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17563,8 +17325,7 @@ function decode_CMPNE_P_P_ZW__ (size, Zm, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPNE_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17623,7 +17384,7 @@ function execute_CMPHS_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPHS_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17667,8 +17428,7 @@ function decode_CMPHS_P_P_ZW__ (size, Zm, U, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPHS_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17729,7 +17489,7 @@ function execute_CMPHI_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPHI_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17773,8 +17533,7 @@ function decode_CMPHI_P_P_ZW__ (size, Zm, U, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPHI_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17835,7 +17594,7 @@ function execute_CMPLO_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPLO_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17879,8 +17638,7 @@ function decode_CMPLO_P_P_ZW__ (size, Zm, U, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPLO_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17941,7 +17699,7 @@ function execute_CMPLS_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPLS_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -17985,8 +17743,7 @@ function decode_CMPLS_P_P_ZW__ (size, Zm, U, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPLS_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18047,7 +17804,7 @@ function execute_CMPGE_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPGE_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -18091,8 +17848,7 @@ function decode_CMPGE_P_P_ZW__ (size, Zm, U, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPGE_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18153,7 +17909,7 @@ function execute_CMPGT_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPGT_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -18197,8 +17953,7 @@ function decode_CMPGT_P_P_ZW__ (size, Zm, U, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPGT_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18259,7 +18014,7 @@ function execute_CMPLT_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPLT_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -18303,8 +18058,7 @@ function decode_CMPLT_P_P_ZW__ (size, Zm, U, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPLT_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18365,7 +18119,7 @@ function execute_CMPLE_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPLE_P_P_ZW__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -18409,8 +18163,7 @@ function decode_CMPLE_P_P_ZW__ (size, Zm, U, lt, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPLE_P_P_ZW__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18471,7 +18224,7 @@ function execute_CMPEQ_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPEQ_P_P_ZZ__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -18512,8 +18265,7 @@ function decode_CMPEQ_P_P_ZZ__ (size, Zm, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPEQ_P_P_ZZ__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18572,7 +18324,7 @@ function execute_CMPNE_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPNE_P_P_ZZ__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -18613,8 +18365,7 @@ function decode_CMPNE_P_P_ZZ__ (size, Zm, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPNE_P_P_ZZ__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18673,7 +18424,7 @@ function execute_CMPGE_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPGE_P_P_ZZ__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -18714,8 +18465,7 @@ function decode_CMPGE_P_P_ZZ__ (size, Zm, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPGE_P_P_ZZ__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18774,7 +18524,7 @@ function execute_CMPGT_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPGT_P_P_ZZ__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -18815,8 +18565,7 @@ function decode_CMPGT_P_P_ZZ__ (size, Zm, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPGT_P_P_ZZ__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18875,7 +18624,7 @@ function execute_CMPHS_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPHS_P_P_ZZ__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -18916,8 +18665,7 @@ function decode_CMPHS_P_P_ZZ__ (size, Zm, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPHS_P_P_ZZ__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18976,7 +18724,7 @@ function execute_CMPHI_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
               Cmp_LE => {
                   cond = element1 <= element2
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_CMPHI_P_P_ZZ__")
             };
             let pbit : bits(1) = if cond then 0b1 else 0b0;
             result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
@@ -19017,8 +18765,7 @@ function decode_CMPHI_P_P_ZZ__ (size, Zm, Pg, Zn, ne, Pd) = {
       },
       2048 => {
           execute_CMPHI_P_P_ZZ__(2048, d, esize, g, m, n, op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19080,8 +18827,7 @@ function decode_DECP_R_P_R__ (size, D, Pm, Rdn) = {
       },
       2048 => {
           execute_DECP_R_P_R__(2048, dn, esize, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19141,8 +18887,7 @@ function decode_INCP_R_P_R__ (size, D, Pm, Rdn) = {
       },
       2048 => {
           execute_INCP_R_P_R__(2048, dn, esize, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19211,8 +18956,7 @@ function decode_UQINCP_R_P_R_UW (size, D, U, sf, Pm, Rdn) = {
       },
       2048 => {
           execute_UQINCP_R_P_R_UW(2048, dn, esize, m, ssize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19283,8 +19027,7 @@ function decode_SQINCP_R_P_R_SX (size, D, U, sf, Pm, Rdn) = {
       },
       2048 => {
           execute_SQINCP_R_P_R_SX(2048, dn, esize, m, ssize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19355,8 +19098,7 @@ function decode_UQINCP_R_P_R_X (size, D, U, sf, Pm, Rdn) = {
       },
       2048 => {
           execute_UQINCP_R_P_R_X(2048, dn, esize, m, ssize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19427,8 +19169,7 @@ function decode_SQINCP_R_P_R_X (size, D, U, sf, Pm, Rdn) = {
       },
       2048 => {
           execute_SQINCP_R_P_R_X(2048, dn, esize, m, ssize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19499,8 +19240,7 @@ function decode_UQDECP_R_P_R_UW (size, D, U, sf, Pm, Rdn) = {
       },
       2048 => {
           execute_UQDECP_R_P_R_UW(2048, dn, esize, m, ssize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19571,8 +19311,7 @@ function decode_SQDECP_R_P_R_SX (size, D, U, sf, Pm, Rdn) = {
       },
       2048 => {
           execute_SQDECP_R_P_R_SX(2048, dn, esize, m, ssize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19643,8 +19382,7 @@ function decode_UQDECP_R_P_R_X (size, D, U, sf, Pm, Rdn) = {
       },
       2048 => {
           execute_UQDECP_R_P_R_X(2048, dn, esize, m, ssize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19715,8 +19453,7 @@ function decode_SQDECP_R_P_R_X (size, D, U, sf, Pm, Rdn) = {
       },
       2048 => {
           execute_SQDECP_R_P_R_X(2048, dn, esize, m, ssize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19785,8 +19522,7 @@ function decode_DECP_Z_P_Z__ (size, D, Pm, Zdn) = {
       },
       2048 => {
           execute_DECP_Z_P_Z__(2048, dn, esize, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19853,8 +19589,7 @@ function decode_INCP_Z_P_Z__ (size, D, Pm, Zdn) = {
       },
       2048 => {
           execute_INCP_Z_P_Z__(2048, dn, esize, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19924,8 +19659,7 @@ function decode_UQINCP_Z_P_Z__ (size, D, U, Pm, Zdn) = {
       },
       2048 => {
           execute_UQINCP_Z_P_Z__(2048, dn, esize, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19996,8 +19730,7 @@ function decode_SQINCP_Z_P_Z__ (size, D, U, Pm, Zdn) = {
       },
       2048 => {
           execute_SQINCP_Z_P_Z__(2048, dn, esize, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20068,8 +19801,7 @@ function decode_UQDECP_Z_P_Z__ (size, D, U, Pm, Zdn) = {
       },
       2048 => {
           execute_UQDECP_Z_P_Z__(2048, dn, esize, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20140,8 +19872,7 @@ function decode_SQDECP_Z_P_Z__ (size, D, U, Pm, Zdn) = {
       },
       2048 => {
           execute_SQDECP_Z_P_Z__(2048, dn, esize, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20193,8 +19924,7 @@ function decode_DECB_R_RS__ (size, imm4, D, pattern, Rdn) = {
       },
       2048 => {
           execute_DECB_R_RS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20246,8 +19976,7 @@ function decode_DECH_R_RS__ (size, imm4, D, pattern, Rdn) = {
       },
       2048 => {
           execute_DECH_R_RS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20299,8 +20028,7 @@ function decode_DECW_R_RS__ (size, imm4, D, pattern, Rdn) = {
       },
       2048 => {
           execute_DECW_R_RS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20352,8 +20080,7 @@ function decode_DECD_R_RS__ (size, imm4, D, pattern, Rdn) = {
       },
       2048 => {
           execute_DECD_R_RS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20405,8 +20132,7 @@ function decode_INCB_R_RS__ (size, imm4, D, pattern, Rdn) = {
       },
       2048 => {
           execute_INCB_R_RS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20458,8 +20184,7 @@ function decode_INCH_R_RS__ (size, imm4, D, pattern, Rdn) = {
       },
       2048 => {
           execute_INCH_R_RS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20511,8 +20236,7 @@ function decode_INCW_R_RS__ (size, imm4, D, pattern, Rdn) = {
       },
       2048 => {
           execute_INCW_R_RS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20564,8 +20288,7 @@ function decode_INCD_R_RS__ (size, imm4, D, pattern, Rdn) = {
       },
       2048 => {
           execute_INCD_R_RS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22222,8 +21945,7 @@ function decode_DECH_Z_ZS__ (size, imm4, D, pattern, Zdn) = {
       },
       2048 => {
           execute_DECH_Z_ZS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22280,8 +22002,7 @@ function decode_DECW_Z_ZS__ (size, imm4, D, pattern, Zdn) = {
       },
       2048 => {
           execute_DECW_Z_ZS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22338,8 +22059,7 @@ function decode_DECD_Z_ZS__ (size, imm4, D, pattern, Zdn) = {
       },
       2048 => {
           execute_DECD_Z_ZS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22396,8 +22116,7 @@ function decode_INCH_Z_ZS__ (size, imm4, D, pattern, Zdn) = {
       },
       2048 => {
           execute_INCH_Z_ZS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22454,8 +22173,7 @@ function decode_INCW_Z_ZS__ (size, imm4, D, pattern, Zdn) = {
       },
       2048 => {
           execute_INCW_Z_ZS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22512,8 +22230,7 @@ function decode_INCD_Z_ZS__ (size, imm4, D, pattern, Zdn) = {
       },
       2048 => {
           execute_INCD_Z_ZS__(2048, dn, esize, imm, pat)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22573,8 +22290,7 @@ function decode_UQINCH_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_UQINCH_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22635,8 +22351,7 @@ function decode_UQINCW_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_UQINCW_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22697,8 +22412,7 @@ function decode_UQINCD_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_UQINCD_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22759,8 +22473,7 @@ function decode_SQINCH_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_SQINCH_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22821,8 +22534,7 @@ function decode_SQINCW_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_SQINCW_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22883,8 +22595,7 @@ function decode_SQINCD_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_SQINCD_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22945,8 +22656,7 @@ function decode_UQDECH_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_UQDECH_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23007,8 +22717,7 @@ function decode_UQDECW_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_UQDECW_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23069,8 +22778,7 @@ function decode_UQDECD_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_UQDECD_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23131,8 +22839,7 @@ function decode_SQDECH_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_SQDECH_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23193,8 +22900,7 @@ function decode_SQDECW_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_SQDECW_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23255,8 +22961,7 @@ function decode_SQDECD_Z_ZS__ (size, imm4, D, U, pattern, Zdn) = {
       },
       2048 => {
           execute_SQDECD_Z_ZS__(2048, dn, esize, imm, pat, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23289,7 +22994,7 @@ function execute_CTERMEQ_RR__ (esize, m, n, op) = {
       Cmp_NE => {
           term = element1 != element2
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_CTERMEQ_RR__")
     };
     if term then {
         PSTATE.N = 0b1;
@@ -23340,7 +23045,7 @@ function execute_CTERMNE_RR__ (esize, m, n, op) = {
       Cmp_NE => {
           term = element1 != element2
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_CTERMNE_RR__")
     };
     if term then {
         PSTATE.N = 0b1;
@@ -23417,8 +23122,7 @@ function decode_FDUP_Z_I__ (size, imm8, Zd) = {
       },
       2048 => {
           execute_FDUP_Z_I__(2048, d, esize, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23480,8 +23184,7 @@ function decode_FCPY_Z_P_I__ (size, Pg, imm8, Zd) = {
       },
       2048 => {
           execute_FCPY_Z_P_I__(2048, d, esize, g, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23538,8 +23241,7 @@ function decode_DUP_Z_I__ (size, sh, imm8, Zd) = {
       },
       2048 => {
           execute_DUP_Z_I__(2048, d, esize, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23610,8 +23312,7 @@ function decode_CPY_Z_P_I__ (size, Pg, M, sh, imm8, Zd) = {
       },
       2048 => {
           execute_CPY_Z_P_I__(2048, d, esize, g, imm, merging)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23684,8 +23385,7 @@ function decode_CPY_Z_O_I__ (size, Pg, M, sh, imm8, Zd) = {
       },
       2048 => {
           execute_CPY_Z_O_I__(2048, d, esize, g, imm, merging)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23742,8 +23442,7 @@ function decode_DUPM_Z_I__ (imm13, Zd) = {
       },
       2048 => {
           execute_DUPM_Z_I__(2048, d, esize, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23810,8 +23509,7 @@ function decode_UXTB_Z_P_Z__ (size, U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UXTB_Z_P_Z__(2048, d, esize, g, n, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23885,8 +23583,7 @@ function decode_UXTH_Z_P_Z__ (size, U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UXTH_Z_P_Z__(2048, d, esize, g, n, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23957,8 +23654,7 @@ function decode_UXTW_Z_P_Z__ (size, U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_UXTW_Z_P_Z__(2048, d, esize, g, n, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24028,8 +23724,7 @@ function decode_SXTB_Z_P_Z__ (size, U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SXTB_Z_P_Z__(2048, d, esize, g, n, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24103,8 +23798,7 @@ function decode_SXTH_Z_P_Z__ (size, U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SXTH_Z_P_Z__(2048, d, esize, g, n, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24175,8 +23869,7 @@ function decode_SXTW_Z_P_Z__ (size, U, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SXTW_Z_P_Z__(2048, d, esize, g, n, s_esize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24240,8 +23933,7 @@ function decode_ANDV_R_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_ANDV_R_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24304,8 +23996,7 @@ function decode_EORV_R_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_EORV_R_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24368,8 +24059,7 @@ function decode_ORV_R_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_ORV_R_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24434,8 +24124,7 @@ function decode_SADDV_R_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_SADDV_R_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24501,8 +24190,7 @@ function decode_UADDV_R_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_UADDV_R_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24569,8 +24257,7 @@ function decode_UMAXV_R_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_UMAXV_R_P_Z__(2048, d, esize, g, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24637,8 +24324,7 @@ function decode_SMAXV_R_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_SMAXV_R_P_Z__(2048, d, esize, g, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24705,8 +24391,7 @@ function decode_UMINV_R_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_UMINV_R_P_Z__(2048, d, esize, g, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24773,8 +24458,7 @@ function decode_SMINV_R_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_SMINV_R_P_Z__(2048, d, esize, g, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24831,8 +24515,7 @@ function decode_INDEX_Z_II__ (size, imm5b, imm5, Zd) = {
       },
       2048 => {
           execute_INDEX_Z_II__(2048, d, esize, imm1, imm2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24890,8 +24573,7 @@ function decode_INDEX_Z_IR__ (size, Rm, imm5, Zd) = {
       },
       2048 => {
           execute_INDEX_Z_IR__(2048, d, esize, imm, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24949,8 +24631,7 @@ function decode_INDEX_Z_RI__ (size, imm5, Rn, Zd) = {
       },
       2048 => {
           execute_INDEX_Z_RI__(2048, d, esize, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25010,8 +24691,7 @@ function decode_INDEX_Z_RR__ (size, Rm, Rn, Zd) = {
       },
       2048 => {
           execute_INDEX_Z_RR__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25072,8 +24752,7 @@ function decode_AND_Z_ZI__ (imm13, Zdn) = {
       },
       2048 => {
           execute_AND_Z_ZI__(2048, dn, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25132,8 +24811,7 @@ function decode_EOR_Z_ZI__ (imm13, Zdn) = {
       },
       2048 => {
           execute_EOR_Z_ZI__(2048, dn, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25192,8 +24870,7 @@ function decode_ORR_Z_ZI__ (imm13, Zdn) = {
       },
       2048 => {
           execute_ORR_Z_ZI__(2048, dn, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25269,8 +24946,7 @@ function decode_MAD_Z_P_ZZZ__ (size, Zm, op, Pg, Za, Zdn) = {
       },
       2048 => {
           execute_MAD_Z_P_ZZZ__(2048, a, dn, esize, g, m, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25350,8 +25026,7 @@ function decode_MSB_Z_P_ZZZ__ (size, Zm, op, Pg, Za, Zdn) = {
       },
       2048 => {
           execute_MSB_Z_P_ZZZ__(2048, a, dn, esize, g, m, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25431,8 +25106,7 @@ function decode_MLA_Z_P_ZZZ__ (size, Zm, op, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_MLA_Z_P_ZZZ__(2048, da, esize, g, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25512,8 +25186,7 @@ function decode_MLS_Z_P_ZZZ__ (size, Zm, op, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_MLS_Z_P_ZZZ__(2048, da, esize, g, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25564,8 +25237,7 @@ function decode_MOVPRFX_Z_Z__ (Zn, Zd) = {
       },
       2048 => {
           execute_MOVPRFX_Z_Z__(2048, d, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25632,8 +25304,7 @@ function decode_MOVPRFX_Z_P_Z__ (size, M, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_MOVPRFX_Z_P_Z__(2048, d, esize, g, merging, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25694,8 +25365,7 @@ function decode_CNTP_R_P_P__ (size, Pg, Pn, Rd) = {
       },
       2048 => {
           execute_CNTP_R_P_P__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25746,8 +25416,7 @@ function decode_REV_P_P__ (size, Pn, Pd) = {
       },
       2048 => {
           execute_REV_P_P__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25805,8 +25474,7 @@ function decode_TRN1_P_PP__ (size, Pm, H, Pn, Pd) = {
       },
       2048 => {
           execute_TRN1_P_PP__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25866,8 +25534,7 @@ function decode_TRN2_P_PP__ (size, Pm, H, Pn, Pd) = {
       },
       2048 => {
           execute_TRN2_P_PP__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25929,8 +25596,7 @@ function decode_UZP1_P_PP__ (size, Pm, H, Pn, Pd) = {
       },
       2048 => {
           execute_UZP1_P_PP__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25992,8 +25658,7 @@ function decode_UZP2_P_PP__ (size, Pm, H, Pn, Pd) = {
       },
       2048 => {
           execute_UZP2_P_PP__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26054,8 +25719,7 @@ function decode_ZIP1_P_PP__ (size, Pm, H, Pn, Pd) = {
       },
       2048 => {
           execute_ZIP1_P_PP__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26116,8 +25780,7 @@ function decode_ZIP2_P_PP__ (size, Pm, H, Pn, Pd) = {
       },
       2048 => {
           execute_ZIP2_P_PP__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26169,8 +25832,7 @@ function decode_REV_Z_Z__ (size, Zn, Zd) = {
       },
       2048 => {
           execute_REV_Z_Z__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26240,8 +25902,7 @@ function decode_TBL_Z_ZZ_1 (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_TBL_Z_ZZ_1(2048, d, double_table, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26312,8 +25973,7 @@ function decode_TBL_Z_ZZ_2 (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_TBL_Z_ZZ_2(2048, d, double_table, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26378,8 +26038,7 @@ function decode_TRN1_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_TRN1_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26445,8 +26104,7 @@ function decode_TRN2_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_TRN2_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26514,8 +26172,7 @@ function decode_UZP1_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_UZP1_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26583,8 +26240,7 @@ function decode_UZP2_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_UZP2_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26651,8 +26307,7 @@ function decode_ZIP1_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_ZIP1_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26719,8 +26374,7 @@ function decode_ZIP2_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_ZIP2_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26786,8 +26440,7 @@ function decode_TRN1_Z_ZZ_Q (Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_TRN1_Z_ZZ_Q(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26852,8 +26505,7 @@ function decode_TRN2_Z_ZZ_Q (Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_TRN2_Z_ZZ_Q(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26919,8 +26571,7 @@ function decode_ZIP1_Z_ZZ_Q (Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_ZIP1_Z_ZZ_Q(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26986,8 +26637,7 @@ function decode_ZIP2_Z_ZZ_Q (Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_ZIP2_Z_ZZ_Q(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27054,8 +26704,7 @@ function decode_UZP1_Z_ZZ_Q (Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_UZP1_Z_ZZ_Q(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27122,8 +26771,7 @@ function decode_UZP2_Z_ZZ_Q (Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_UZP2_Z_ZZ_Q(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27196,8 +26844,7 @@ function decode_CLASTA_R_P_Z__ (size, B, Pg, Zm, Rdn) = {
       },
       2048 => {
           execute_CLASTA_R_P_Z__(2048, csize, dn, esize, g, isBefore, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27271,8 +26918,7 @@ function decode_CLASTB_R_P_Z__ (size, B, Pg, Zm, Rdn) = {
       },
       2048 => {
           execute_CLASTB_R_P_Z__(2048, csize, dn, esize, g, isBefore, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27343,8 +26989,7 @@ function decode_CLASTA_V_P_Z__ (size, B, Pg, Zm, Vdn) = {
       },
       2048 => {
           execute_CLASTA_V_P_Z__(2048, dn, esize, g, isBefore, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27415,8 +27060,7 @@ function decode_CLASTB_V_P_Z__ (size, B, Pg, Zm, Vdn) = {
       },
       2048 => {
           execute_CLASTB_V_P_Z__(2048, dn, esize, g, isBefore, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27489,8 +27133,7 @@ function decode_CLASTA_Z_P_ZZ__ (size, B, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_CLASTA_Z_P_ZZ__(2048, dn, esize, g, isBefore, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27563,8 +27206,7 @@ function decode_CLASTB_Z_P_ZZ__ (size, B, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_CLASTB_Z_P_ZZ__(2048, dn, esize, g, isBefore, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27640,8 +27282,7 @@ function decode_COMPACT_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_COMPACT_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27724,8 +27365,7 @@ function decode_SPLICE_Z_P_ZZ_Des (size, Pv, Zm, Zdn) = {
       },
       2048 => {
           execute_SPLICE_Z_P_ZZ_Des(2048, dst, esize, s1, s2, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27808,8 +27448,7 @@ function decode_SPLICE_Z_P_ZZ_Con (size, Pv, Zn, Zd) = {
       },
       2048 => {
           execute_SPLICE_Z_P_ZZ_Con(2048, dst, esize, s1, s2, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27871,8 +27510,7 @@ function decode_EXT_Z_ZI_Des (imm8h, imm8l, Zm, Zdn) = {
       },
       2048 => {
           execute_EXT_Z_ZI_Des(2048, dst, esize, position, s1, s2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27934,8 +27572,7 @@ function decode_EXT_Z_ZI_Con (imm8h, imm8l, Zn, Zd) = {
       },
       2048 => {
           execute_EXT_Z_ZI_Con(2048, dst, esize, position, s1, s2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28002,8 +27639,7 @@ function decode_CPY_Z_P_R__ (size, Pg, Rn, Zd) = {
       },
       2048 => {
           execute_CPY_Z_P_R__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28066,8 +27702,7 @@ function decode_CPY_Z_P_V__ (size, Pg, Vn, Zd) = {
       },
       2048 => {
           execute_CPY_Z_P_V__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28154,8 +27789,7 @@ function decode_DUP_Z_Zi__ (imm2, tsz, Zn, Zd) = {
       },
       2048 => {
           execute_DUP_Z_Zi__(2048, d, esize, index, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28215,8 +27849,7 @@ function decode_DUP_Z_R__ (size, Rn, Zd) = {
       },
       2048 => {
           execute_DUP_Z_R__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28286,8 +27919,7 @@ function decode_LASTA_R_P_Z__ (size, B, Pg, Zn, Rd) = {
       },
       2048 => {
           execute_LASTA_R_P_Z__(2048, d, esize, g, isBefore, n, rsize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28359,8 +27991,7 @@ function decode_LASTB_R_P_Z__ (size, B, Pg, Zn, Rd) = {
       },
       2048 => {
           execute_LASTB_R_P_Z__(2048, d, esize, g, isBefore, n, rsize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28429,8 +28060,7 @@ function decode_LASTA_V_P_Z__ (size, B, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_LASTA_V_P_Z__(2048, d, esize, g, isBefore, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28499,8 +28129,7 @@ function decode_LASTB_V_P_Z__ (size, B, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_LASTB_V_P_Z__(2048, d, esize, g, isBefore, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28561,8 +28190,7 @@ function decode_PUNPKLO_P_P__ (H, Pn, Pd) = {
       },
       2048 => {
           execute_PUNPKLO_P_P__(2048, d, esize, hi, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28621,8 +28249,7 @@ function decode_PUNPKHI_P_P__ (H, Pn, Pd) = {
       },
       2048 => {
           execute_PUNPKHI_P_P__(2048, d, esize, hi, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28689,8 +28316,7 @@ function decode_REVW_Z_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_REVW_Z_Z__(2048, d, esize, g, n, swsize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28761,8 +28387,7 @@ function decode_REVH_Z_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_REVH_Z_Z__(2048, d, esize, g, n, swsize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28830,8 +28455,7 @@ function decode_REVB_Z_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_REVB_Z_Z__(2048, d, esize, g, n, swsize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28896,8 +28520,7 @@ function decode_UUNPKLO_Z_Z__ (size, U, H, Zn, Zd) = {
       },
       2048 => {
           execute_UUNPKLO_Z_Z__(2048, d, esize, hi, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28963,8 +28586,7 @@ function decode_UUNPKHI_Z_Z__ (size, U, H, Zn, Zd) = {
       },
       2048 => {
           execute_UUNPKHI_Z_Z__(2048, d, esize, hi, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29030,8 +28652,7 @@ function decode_SUNPKLO_Z_Z__ (size, U, H, Zn, Zd) = {
       },
       2048 => {
           execute_SUNPKLO_Z_Z__(2048, d, esize, hi, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29097,8 +28718,7 @@ function decode_SUNPKHI_Z_Z__ (size, U, H, Zn, Zd) = {
       },
       2048 => {
           execute_SUNPKHI_Z_Z__(2048, d, esize, hi, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29143,8 +28763,7 @@ function decode_SETFFR_F__ () = {
       },
       2048 => {
           execute_SETFFR_F__(2048)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29201,8 +28820,7 @@ function decode_PTRUE_P_S__ (size, S, pattern, Pd) = {
       },
       2048 => {
           execute_PTRUE_P_S__(2048, d, esize, pat, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29263,8 +28881,7 @@ function decode_PTRUES_P_S__ (size, S, pattern, Pd) = {
       },
       2048 => {
           execute_PTRUES_P_S__(2048, d, esize, pat, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29311,8 +28928,7 @@ function decode_PFALSE_P__ (S, Pd) = {
       },
       2048 => {
           execute_PFALSE_P__(2048, d)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29358,8 +28974,7 @@ function decode_RDFFR_P_F__ (S, Pd) = {
       },
       2048 => {
           execute_RDFFR_P_F__(2048, d)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29410,8 +29025,7 @@ function decode_WRFFR_F_P__ Pn = {
       },
       2048 => {
           execute_WRFFR_F_P__(2048, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29463,8 +29077,7 @@ function decode_RDFFR_P_P_F__ (S, Pg, Pd) = {
       },
       2048 => {
           execute_RDFFR_P_P_F__(2048, d, g, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29518,8 +29131,7 @@ function decode_RDFFRS_P_P_F__ (S, Pg, Pd) = {
       },
       2048 => {
           execute_RDFFRS_P_P_F__(2048, d, g, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29569,8 +29181,7 @@ function decode_PTEST__P_P__ (S, Pg, Pn) = {
       },
       2048 => {
           execute_PTEST__P_P__(2048, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29644,8 +29255,7 @@ function decode_BRKA_P_P_P__ (B, S, Pg, Pn, M, Pd) = {
       },
       2048 => {
           execute_BRKA_P_P_P__(2048, d, esize, g, merging, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29722,8 +29332,7 @@ function decode_BRKAS_P_P_P_Z (B, S, Pg, Pn, M, Pd) = {
       },
       2048 => {
           execute_BRKAS_P_P_P_Z(2048, d, esize, g, merging, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29800,8 +29409,7 @@ function decode_BRKB_P_P_P__ (B, S, Pg, Pn, M, Pd) = {
       },
       2048 => {
           execute_BRKB_P_P_P__(2048, d, esize, g, merging, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29878,8 +29486,7 @@ function decode_BRKBS_P_P_P_Z (B, S, Pg, Pn, M, Pd) = {
       },
       2048 => {
           execute_BRKBS_P_P_P_Z(2048, d, esize, g, merging, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29951,8 +29558,7 @@ function decode_AND_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_AND_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30023,8 +29629,7 @@ function decode_ANDS_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_ANDS_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30095,8 +29700,7 @@ function decode_BIC_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_BIC_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30167,8 +29771,7 @@ function decode_BICS_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_BICS_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30239,8 +29842,7 @@ function decode_EOR_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_EOR_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30311,8 +29913,7 @@ function decode_EORS_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_EORS_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30383,8 +29984,7 @@ function decode_NAND_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_NAND_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30455,8 +30055,7 @@ function decode_NANDS_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_NANDS_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30527,8 +30126,7 @@ function decode_NOR_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_NOR_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30599,8 +30197,7 @@ function decode_NORS_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_NORS_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30671,8 +30268,7 @@ function decode_ORN_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_ORN_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30743,8 +30339,7 @@ function decode_ORNS_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_ORNS_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30815,8 +30410,7 @@ function decode_ORR_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_ORR_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30887,8 +30481,7 @@ function decode_ORRS_P_P_PP_Z (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_ORRS_P_P_PP_Z(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30955,8 +30548,7 @@ function decode_SEL_P_P_PP__ (S, Pm, Pg, Pn, Pd) = {
       },
       2048 => {
           execute_SEL_P_P_PP__(2048, d, esize, g, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31022,8 +30614,7 @@ function decode_PFIRST_P_P_P__ (S, Pg, Pdn) = {
       },
       2048 => {
           execute_PFIRST_P_P_P__(2048, dn, esize, g)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31085,8 +30676,7 @@ function decode_PNEXT_P_P_P__ (size, Pv, Pdn) = {
       },
       2048 => {
           execute_PNEXT_P_P_P__(2048, dn, esize, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31133,8 +30723,7 @@ function decode_RDVL_R_I__ (imm6, Rd) = {
       },
       2048 => {
           execute_RDVL_R_I__(2048, d, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31201,8 +30790,7 @@ function decode_SEL_Z_P_ZZ__ (size, Zm, Pv, Zn, Zd) = {
       },
       2048 => {
           execute_SEL_Z_P_ZZ__(2048, d, esize, m, n, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31280,8 +30868,7 @@ function decode_LSL_Z_ZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_LSL_Z_ZI__(2048, d, 8, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -31300,8 +30887,7 @@ function decode_LSL_Z_ZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_LSL_Z_ZI__(2048, d, 16, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -31320,8 +30906,7 @@ function decode_LSL_Z_ZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_LSL_Z_ZI__(2048, d, 32, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -31340,8 +30925,7 @@ function decode_LSL_Z_ZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_LSL_Z_ZI__(2048, d, 64, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -31424,8 +31008,7 @@ function decode_LSR_Z_ZI__ (tszh, tszl, imm3, U, Zn, Zd) = {
             },
             2048 => {
                 execute_LSR_Z_ZI__(2048, d, 8, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -31444,8 +31027,7 @@ function decode_LSR_Z_ZI__ (tszh, tszl, imm3, U, Zn, Zd) = {
             },
             2048 => {
                 execute_LSR_Z_ZI__(2048, d, 16, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -31464,8 +31046,7 @@ function decode_LSR_Z_ZI__ (tszh, tszl, imm3, U, Zn, Zd) = {
             },
             2048 => {
                 execute_LSR_Z_ZI__(2048, d, 32, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -31484,8 +31065,7 @@ function decode_LSR_Z_ZI__ (tszh, tszl, imm3, U, Zn, Zd) = {
             },
             2048 => {
                 execute_LSR_Z_ZI__(2048, d, 64, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -31569,8 +31149,7 @@ function decode_ASR_Z_ZI__ (tszh, tszl, imm3, U, Zn, Zd) = {
             },
             2048 => {
                 execute_ASR_Z_ZI__(2048, d, 8, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -31589,8 +31168,7 @@ function decode_ASR_Z_ZI__ (tszh, tszl, imm3, U, Zn, Zd) = {
             },
             2048 => {
                 execute_ASR_Z_ZI__(2048, d, 16, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -31609,8 +31187,7 @@ function decode_ASR_Z_ZI__ (tszh, tszl, imm3, U, Zn, Zd) = {
             },
             2048 => {
                 execute_ASR_Z_ZI__(2048, d, 32, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -31629,8 +31206,7 @@ function decode_ASR_Z_ZI__ (tszh, tszl, imm3, U, Zn, Zd) = {
             },
             2048 => {
                 execute_ASR_Z_ZI__(2048, d, 64, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -31724,8 +31300,7 @@ function decode_ASRD_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_ASRD_Z_P_ZI__(2048, dn, 8, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -31744,8 +31319,7 @@ function decode_ASRD_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_ASRD_Z_P_ZI__(2048, dn, 16, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -31764,8 +31338,7 @@ function decode_ASRD_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_ASRD_Z_P_ZI__(2048, dn, 32, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -31784,8 +31357,7 @@ function decode_ASRD_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_ASRD_Z_P_ZI__(2048, dn, 64, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -31876,8 +31448,7 @@ function decode_LSL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_LSL_Z_P_ZI__(2048, dn, 8, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -31896,8 +31467,7 @@ function decode_LSL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_LSL_Z_P_ZI__(2048, dn, 16, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -31916,8 +31486,7 @@ function decode_LSL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_LSL_Z_P_ZI__(2048, dn, 32, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -31936,8 +31505,7 @@ function decode_LSL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_LSL_Z_P_ZI__(2048, dn, 64, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -32028,8 +31596,7 @@ function decode_LSR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_LSR_Z_P_ZI__(2048, dn, 8, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -32048,8 +31615,7 @@ function decode_LSR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_LSR_Z_P_ZI__(2048, dn, 16, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -32068,8 +31634,7 @@ function decode_LSR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_LSR_Z_P_ZI__(2048, dn, 32, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -32088,8 +31653,7 @@ function decode_LSR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_LSR_Z_P_ZI__(2048, dn, 64, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -32180,8 +31744,7 @@ function decode_ASR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_ASR_Z_P_ZI__(2048, dn, 8, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -32200,8 +31763,7 @@ function decode_ASR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_ASR_Z_P_ZI__(2048, dn, 16, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -32220,8 +31782,7 @@ function decode_ASR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_ASR_Z_P_ZI__(2048, dn, 32, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -32240,8 +31801,7 @@ function decode_ASR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_ASR_Z_P_ZI__(2048, dn, 64, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -32312,8 +31872,7 @@ function decode_LSL_Z_ZW__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_LSL_Z_ZW__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32376,8 +31935,7 @@ function decode_LSR_Z_ZW__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_LSR_Z_ZW__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32441,8 +31999,7 @@ function decode_ASR_Z_ZW__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_ASR_Z_ZW__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32514,8 +32071,7 @@ function decode_LSL_Z_P_ZW__ (size, R, L, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_LSL_Z_P_ZW__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32589,8 +32145,7 @@ function decode_LSR_Z_P_ZW__ (size, R, L, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_LSR_Z_P_ZW__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32664,8 +32219,7 @@ function decode_ASR_Z_P_ZW__ (size, R, L, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_ASR_Z_P_ZW__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32733,8 +32287,7 @@ function decode_ABS_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_ABS_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32798,8 +32351,7 @@ function decode_CLS_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_CLS_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32863,8 +32415,7 @@ function decode_CLZ_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_CLZ_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32928,8 +32479,7 @@ function decode_CNOT_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_CNOT_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32993,8 +32543,7 @@ function decode_CNT_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_CNT_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33062,8 +32611,7 @@ function decode_FABS_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FABS_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33131,8 +32679,7 @@ function decode_FNEG_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_FNEG_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33197,8 +32744,7 @@ function decode_NEG_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_NEG_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33262,8 +32808,7 @@ function decode_NOT_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_NOT_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33327,8 +32872,7 @@ function decode_RBIT_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_RBIT_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33388,8 +32932,7 @@ function decode_UQADD_Z_ZZ__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_UQADD_Z_ZZ__(2048, d, esize, m, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33450,8 +32993,7 @@ function decode_SQADD_Z_ZZ__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_SQADD_Z_ZZ__(2048, d, esize, m, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33512,8 +33054,7 @@ function decode_UQSUB_Z_ZZ__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_UQSUB_Z_ZZ__(2048, d, esize, m, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33574,8 +33115,7 @@ function decode_SQSUB_Z_ZZ__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_SQSUB_Z_ZZ__(2048, d, esize, m, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33640,8 +33180,7 @@ function decode_UQADD_Z_ZI__ (size, U, sh, imm8, Zdn) = {
       },
       2048 => {
           execute_UQADD_Z_ZI__(2048, dn, esize, imm, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33706,8 +33245,7 @@ function decode_SQADD_Z_ZI__ (size, U, sh, imm8, Zdn) = {
       },
       2048 => {
           execute_SQADD_Z_ZI__(2048, dn, esize, imm, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33772,8 +33310,7 @@ function decode_UQSUB_Z_ZI__ (size, U, sh, imm8, Zdn) = {
       },
       2048 => {
           execute_UQSUB_Z_ZI__(2048, dn, esize, imm, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33838,8 +33375,7 @@ function decode_SQSUB_Z_ZI__ (size, U, sh, imm8, Zdn) = {
       },
       2048 => {
           execute_SQSUB_Z_ZI__(2048, dn, esize, imm, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33910,8 +33446,7 @@ function decode_BRKPA_P_P_PP__ (S, Pm, Pg, Pn, B, Pd) = {
       },
       2048 => {
           execute_BRKPA_P_P_PP__(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33983,8 +33518,7 @@ function decode_BRKPAS_P_P_PP__ (S, Pm, Pg, Pn, B, Pd) = {
       },
       2048 => {
           execute_BRKPAS_P_P_PP__(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34056,8 +33590,7 @@ function decode_BRKPB_P_P_PP__ (S, Pm, Pg, Pn, B, Pd) = {
       },
       2048 => {
           execute_BRKPB_P_P_PP__(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34129,8 +33662,7 @@ function decode_BRKPBS_P_P_PP__ (S, Pm, Pg, Pn, B, Pd) = {
       },
       2048 => {
           execute_BRKPBS_P_P_PP__(2048, d, esize, g, m, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34194,8 +33726,7 @@ function decode_BRKN_P_P_PP__ (S, Pg, Pn, Pdm) = {
       },
       2048 => {
           execute_BRKN_P_P_PP__(2048, dm, g, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34257,8 +33788,7 @@ function decode_BRKNS_P_P_PP__ (S, Pg, Pn, Pdm) = {
       },
       2048 => {
           execute_BRKNS_P_P_PP__(2048, dm, g, n, setflags)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34309,8 +33839,7 @@ function decode_INSR_Z_V__ (size, Vm, Zdn) = {
       },
       2048 => {
           execute_INSR_Z_V__(2048, dn, esize, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34360,8 +33889,7 @@ function decode_INSR_Z_R__ (size, Rm, Zdn) = {
       },
       2048 => {
           execute_INSR_Z_R__(2048, dn, esize, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34430,8 +33958,7 @@ function decode_SDOT_Z_ZZZ__ (size, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_SDOT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34500,8 +34027,7 @@ function decode_SDOT_Z_ZZZi_S (size, i2, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_SDOT_Z_ZZZi_S(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34571,8 +34097,7 @@ function decode_SDOT_Z_ZZZi_D (size, i1, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_SDOT_Z_ZZZi_D(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34644,8 +34169,7 @@ function decode_UDOT_Z_ZZZ__ (size, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_UDOT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34714,8 +34238,7 @@ function decode_UDOT_Z_ZZZi_S (size, i2, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_UDOT_Z_ZZZi_S(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34785,8 +34308,7 @@ function decode_UDOT_Z_ZZZi_D (size, i1, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_UDOT_Z_ZZZi_D(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34852,8 +34374,7 @@ function decode_USDOT_Z_ZZZ_S (size, Zm, Zn, Zda) = {
       },
       2048 => {
           execute_USDOT_Z_ZZZ_S(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34921,8 +34442,7 @@ function decode_USDOT_Z_ZZZi_S (size, i2, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_USDOT_Z_ZZZi_S(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34992,8 +34512,7 @@ function decode_SUDOT_Z_ZZZi_S (size, i2, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_SUDOT_Z_ZZZi_S(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35059,8 +34578,7 @@ function decode_SDOT_Z32_ZZZ__ (Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_SDOT_Z32_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35128,8 +34646,7 @@ function decode_SDOT_Z32_ZZZi__ (i2, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_SDOT_Z32_ZZZi__(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35194,8 +34711,7 @@ function decode_UDOT_Z32_ZZZ__ (Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_UDOT_Z32_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35263,8 +34779,7 @@ function decode_UDOT_Z32_ZZZi__ (i2, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_UDOT_Z32_ZZZi__(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35330,8 +34845,7 @@ function decode_SQABS_Z_P_Z__ (size, Q, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SQABS_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35397,8 +34911,7 @@ function decode_SQNEG_Z_P_Z__ (size, Q, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_SQNEG_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35458,8 +34971,7 @@ function decode_SQDMULH_Z_ZZ__ (size, Zm, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULH_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35519,8 +35031,7 @@ function decode_SQRDMULH_Z_ZZ__ (size, Zm, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQRDMULH_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35582,8 +35093,7 @@ function decode_SQRDMLAH_Z_ZZZ__ (size, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDMLAH_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35645,8 +35155,7 @@ function decode_SQRDMLSH_Z_ZZZ__ (size, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDMLSH_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35722,8 +35231,7 @@ function decode_ADDP_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_ADDP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35799,8 +35307,7 @@ function decode_UMAXP_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UMAXP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35876,8 +35383,7 @@ function decode_SMAXP_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SMAXP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35953,8 +35459,7 @@ function decode_UMINP_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UMINP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36030,8 +35535,7 @@ function decode_SMINP_Z_P_ZZ__ (size, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SMINP_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36103,8 +35607,7 @@ function decode_SADALP_Z_P_Z__ (size, U, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_SADALP_Z_P_Z__(2048, da, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36176,8 +35679,7 @@ function decode_UADALP_Z_P_Z__ (size, U, Pg, Zn, Zda) = {
       },
       2048 => {
           execute_UADALP_Z_P_Z__(2048, da, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36253,8 +35755,7 @@ function decode_SHRNB_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SHRNB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36332,8 +35833,7 @@ function decode_SHRNT_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SHRNT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36412,8 +35912,7 @@ function decode_RSHRNB_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_RSHRNB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36491,8 +35990,7 @@ function decode_RSHRNT_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_RSHRNT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36571,8 +36069,7 @@ function decode_SQSHRNB_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQSHRNB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36650,8 +36147,7 @@ function decode_SQSHRNT_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQSHRNT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36730,8 +36226,7 @@ function decode_UQSHRNB_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_UQSHRNB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36809,8 +36304,7 @@ function decode_UQSHRNT_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_UQSHRNT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36889,8 +36383,7 @@ function decode_SQRSHRNB_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQRSHRNB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36968,8 +36461,7 @@ function decode_SQRSHRNT_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQRSHRNT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37048,8 +36540,7 @@ function decode_UQRSHRNB_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_UQRSHRNB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37127,8 +36618,7 @@ function decode_UQRSHRNT_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_UQRSHRNT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37207,8 +36697,7 @@ function decode_SQSHRUNB_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQSHRUNB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37286,8 +36775,7 @@ function decode_SQSHRUNT_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQSHRUNT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37366,8 +36854,7 @@ function decode_SQRSHRUNB_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQRSHRUNB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37445,8 +36932,7 @@ function decode_SQRSHRUNT_Z_ZI__ (tszh, tszl, imm3, U, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQRSHRUNT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37534,8 +37020,7 @@ function decode_SRSHR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SRSHR_Z_P_ZI__(2048, dn, 8, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -37554,8 +37039,7 @@ function decode_SRSHR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SRSHR_Z_P_ZI__(2048, dn, 16, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -37574,8 +37058,7 @@ function decode_SRSHR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SRSHR_Z_P_ZI__(2048, dn, 32, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -37594,8 +37077,7 @@ function decode_SRSHR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SRSHR_Z_P_ZI__(2048, dn, 64, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -37687,8 +37169,7 @@ function decode_URSHR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_URSHR_Z_P_ZI__(2048, dn, 8, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -37707,8 +37188,7 @@ function decode_URSHR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_URSHR_Z_P_ZI__(2048, dn, 16, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -37727,8 +37207,7 @@ function decode_URSHR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_URSHR_Z_P_ZI__(2048, dn, 32, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -37747,8 +37226,7 @@ function decode_URSHR_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_URSHR_Z_P_ZI__(2048, dn, 64, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -37840,8 +37318,7 @@ function decode_SQSHL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SQSHL_Z_P_ZI__(2048, dn, 8, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -37860,8 +37337,7 @@ function decode_SQSHL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SQSHL_Z_P_ZI__(2048, dn, 16, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -37880,8 +37356,7 @@ function decode_SQSHL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SQSHL_Z_P_ZI__(2048, dn, 32, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -37900,8 +37375,7 @@ function decode_SQSHL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SQSHL_Z_P_ZI__(2048, dn, 64, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -37993,8 +37467,7 @@ function decode_UQSHL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_UQSHL_Z_P_ZI__(2048, dn, 8, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -38013,8 +37486,7 @@ function decode_UQSHL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_UQSHL_Z_P_ZI__(2048, dn, 16, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -38033,8 +37505,7 @@ function decode_UQSHL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_UQSHL_Z_P_ZI__(2048, dn, 32, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -38053,8 +37524,7 @@ function decode_UQSHL_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_UQSHL_Z_P_ZI__(2048, dn, 64, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -38146,8 +37616,7 @@ function decode_SQSHLU_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SQSHLU_Z_P_ZI__(2048, dn, 8, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -38166,8 +37635,7 @@ function decode_SQSHLU_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SQSHLU_Z_P_ZI__(2048, dn, 16, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -38186,8 +37654,7 @@ function decode_SQSHLU_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SQSHLU_Z_P_ZI__(2048, dn, 32, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -38206,8 +37673,7 @@ function decode_SQSHLU_Z_P_ZI__ (tszh, L, U, Pg, tszl, imm3, Zdn) = {
             },
             2048 => {
                 execute_SQSHLU_Z_P_ZI__(2048, dn, 64, g, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -38289,8 +37755,7 @@ function decode_SSHLLB_Z_ZI__ (tszh, tszl, imm3, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SSHLLB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38367,8 +37832,7 @@ function decode_SSHLLT_Z_ZI__ (tszh, tszl, imm3, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SSHLLT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38445,8 +37909,7 @@ function decode_USHLLB_Z_ZI__ (tszh, tszl, imm3, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_USHLLB_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38523,8 +37986,7 @@ function decode_USHLLT_Z_ZI__ (tszh, tszl, imm3, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_USHLLT_Z_ZI__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38602,8 +38064,7 @@ function decode_SQXTNB_Z_ZZ__ (tszh, tszl, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQXTNB_Z_ZZ__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38680,8 +38141,7 @@ function decode_UQXTNB_Z_ZZ__ (tszh, tszl, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UQXTNB_Z_ZZ__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38758,8 +38218,7 @@ function decode_SQXTUNB_Z_ZZ__ (tszh, tszl, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQXTUNB_Z_ZZ__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38834,8 +38293,7 @@ function decode_SQXTNT_Z_ZZ__ (tszh, tszl, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQXTNT_Z_ZZ__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38911,8 +38369,7 @@ function decode_UQXTNT_Z_ZZ__ (tszh, tszl, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UQXTNT_Z_ZZ__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38988,8 +38445,7 @@ function decode_SQXTUNT_Z_ZZ__ (tszh, tszl, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQXTUNT_Z_ZZ__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39052,8 +38508,7 @@ function decode_SMULLT_Z_ZZ__ (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SMULLT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39117,8 +38572,7 @@ function decode_SMULLB_Z_ZZ__ (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SMULLB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39182,8 +38636,7 @@ function decode_UMULLT_Z_ZZ__ (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UMULLT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39247,8 +38700,7 @@ function decode_UMULLB_Z_ZZ__ (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UMULLB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39312,8 +38764,7 @@ function decode_SQDMULLT_Z_ZZ__ (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULLT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39377,8 +38828,7 @@ function decode_SQDMULLB_Z_ZZ__ (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULLB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39442,8 +38892,7 @@ function decode_SMLALT_Z_ZZZ__ (size, Zm, S, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLALT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39508,8 +38957,7 @@ function decode_SMLALB_Z_ZZZ__ (size, Zm, S, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLALB_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39574,8 +39022,7 @@ function decode_UMLALT_Z_ZZZ__ (size, Zm, S, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLALT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39640,8 +39087,7 @@ function decode_UMLALB_Z_ZZZ__ (size, Zm, S, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLALB_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39710,8 +39156,7 @@ function decode_SQDMLALT_Z_ZZZ__ (size, Zm, S, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLALT_Z_ZZZ__(2048, da, esize, m, n, sel1, sel2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39779,8 +39224,7 @@ function decode_SQDMLALB_Z_ZZZ__ (size, Zm, S, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLALB_Z_ZZZ__(2048, da, esize, m, n, sel1, sel2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39844,8 +39288,7 @@ function decode_SMLSLT_Z_ZZZ__ (size, Zm, S, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLSLT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39910,8 +39353,7 @@ function decode_SMLSLB_Z_ZZZ__ (size, Zm, S, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLSLB_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39976,8 +39418,7 @@ function decode_UMLSLT_Z_ZZZ__ (size, Zm, S, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLSLT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40042,8 +39483,7 @@ function decode_UMLSLB_Z_ZZZ__ (size, Zm, S, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLSLB_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40112,8 +39552,7 @@ function decode_SQDMLSLT_Z_ZZZ__ (size, Zm, S, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLSLT_Z_ZZZ__(2048, da, esize, m, n, sel1, sel2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40181,8 +39620,7 @@ function decode_SQDMLSLB_Z_ZZZ__ (size, Zm, S, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLSLB_Z_ZZZ__(2048, da, esize, m, n, sel1, sel2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40246,8 +39684,7 @@ function decode_SABALT_Z_ZZZ__ (size, Zm, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_SABALT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40311,8 +39748,7 @@ function decode_SABALB_Z_ZZZ__ (size, Zm, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_SABALB_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40376,8 +39812,7 @@ function decode_UABALT_Z_ZZZ__ (size, Zm, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_UABALT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40441,8 +39876,7 @@ function decode_UABALB_Z_ZZZ__ (size, Zm, U, T, Zn, Zda) = {
       },
       2048 => {
           execute_UABALB_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40505,8 +39939,7 @@ function decode_SABA_Z_ZZZ__ (size, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_SABA_Z_ZZZ__(2048, da, esize, m, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40568,8 +40001,7 @@ function decode_UABA_Z_ZZZ__ (size, Zm, U, Zn, Zda) = {
       },
       2048 => {
           execute_UABA_Z_ZZZ__(2048, da, esize, m, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40631,8 +40063,7 @@ function decode_SADDWT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SADDWT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40696,8 +40127,7 @@ function decode_SADDWB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SADDWB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40761,8 +40191,7 @@ function decode_UADDWT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UADDWT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40826,8 +40255,7 @@ function decode_UADDWB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UADDWB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40891,8 +40319,7 @@ function decode_SSUBWT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SSUBWT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40956,8 +40383,7 @@ function decode_SSUBWB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SSUBWB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41021,8 +40447,7 @@ function decode_USUBWT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_USUBWT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41086,8 +40511,7 @@ function decode_USUBWB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_USUBWB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41148,8 +40572,7 @@ function decode_PMUL_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_PMUL_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41223,8 +40646,7 @@ function decode_PMULLT_Z_ZZ__ (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_PMULLT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41300,8 +40722,7 @@ function decode_PMULLB_Z_ZZ__ (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_PMULLB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41365,8 +40786,7 @@ function decode_PMULLT_Z_ZZ_Q (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_PMULLT_Z_ZZ_Q(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41430,8 +40850,7 @@ function decode_PMULLB_Z_ZZ_Q (size, Zm, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_PMULLB_Z_ZZ_Q(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41508,8 +40927,7 @@ function decode_SQSHL_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SQSHL_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41588,8 +41006,7 @@ function decode_UQSHL_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UQSHL_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41668,8 +41085,7 @@ function decode_SRSHL_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SRSHL_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41748,8 +41164,7 @@ function decode_URSHL_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_URSHL_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41828,8 +41243,7 @@ function decode_SQRSHL_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SQRSHL_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41908,8 +41322,7 @@ function decode_UQRSHL_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UQRSHL_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41988,8 +41401,7 @@ function decode_SQSHLR_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SQSHLR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42068,8 +41480,7 @@ function decode_UQSHLR_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UQSHLR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42148,8 +41559,7 @@ function decode_SRSHLR_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SRSHLR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42228,8 +41638,7 @@ function decode_URSHLR_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_URSHLR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42308,8 +41717,7 @@ function decode_SQRSHLR_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SQRSHLR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42388,8 +41796,7 @@ function decode_UQRSHLR_Z_P_ZZ__ (size, Q, R, N, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UQRSHLR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42457,8 +41864,7 @@ function decode_ADDHNB_Z_ZZ__ (size, Zm, S, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_ADDHNB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42524,8 +41930,7 @@ function decode_ADDHNT_Z_ZZ__ (size, Zm, S, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_ADDHNT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42592,8 +41997,7 @@ function decode_SUBHNB_Z_ZZ__ (size, Zm, S, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SUBHNB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42659,8 +42063,7 @@ function decode_SUBHNT_Z_ZZ__ (size, Zm, S, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_SUBHNT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42727,8 +42130,7 @@ function decode_RADDHNB_Z_ZZ__ (size, Zm, S, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_RADDHNB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42794,8 +42196,7 @@ function decode_RADDHNT_Z_ZZ__ (size, Zm, S, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_RADDHNT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42862,8 +42263,7 @@ function decode_RSUBHNB_Z_ZZ__ (size, Zm, S, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_RSUBHNB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42929,8 +42329,7 @@ function decode_RSUBHNT_Z_ZZ__ (size, Zm, S, R, T, Zn, Zd) = {
       },
       2048 => {
           execute_RSUBHNT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42995,8 +42394,7 @@ function decode_SABDLB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SABDLB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43061,8 +42459,7 @@ function decode_SABDLT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SABDLT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43127,8 +42524,7 @@ function decode_UABDLB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UABDLB_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43193,8 +42589,7 @@ function decode_UABDLT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UABDLT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43262,8 +42657,7 @@ function decode_SADDLB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SADDLB_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43331,8 +42725,7 @@ function decode_SADDLT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SADDLT_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43400,8 +42793,7 @@ function decode_SSUBLB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SSUBLB_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43469,8 +42861,7 @@ function decode_SSUBLT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_SSUBLT_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43538,8 +42929,7 @@ function decode_UADDLB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UADDLB_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43607,8 +42997,7 @@ function decode_UADDLT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_UADDLT_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43676,8 +43065,7 @@ function decode_USUBLB_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_USUBLB_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43745,8 +43133,7 @@ function decode_USUBLT_Z_ZZ__ (size, Zm, S, U, T, Zn, Zd) = {
       },
       2048 => {
           execute_USUBLT_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43814,8 +43201,7 @@ function decode_SADDLBT_Z_ZZ__ (size, Zm, S, tb, Zn, Zd) = {
       },
       2048 => {
           execute_SADDLBT_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43882,8 +43268,7 @@ function decode_SSUBLBT_Z_ZZ__ (size, Zm, S, tb, Zn, Zd) = {
       },
       2048 => {
           execute_SSUBLBT_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -43950,8 +43335,7 @@ function decode_SSUBLTB_Z_ZZ__ (size, Zm, S, tb, Zn, Zd) = {
       },
       2048 => {
           execute_SSUBLTB_Z_ZZ__(2048, d, esize, m, n, sel1, sel2, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44026,8 +43410,7 @@ function decode_CADD_Z_ZZ__ (size, rot, Zm, Zdn) = {
       },
       2048 => {
           execute_CADD_Z_ZZ__(2048, dn, esize, m, sub_i, sub_r)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44100,8 +43483,7 @@ function decode_SQCADD_Z_ZZ__ (size, rot, Zm, Zdn) = {
       },
       2048 => {
           execute_SQCADD_Z_ZZ__(2048, dn, esize, m, sub_i, sub_r)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44179,8 +43561,7 @@ function decode_CMLA_Z_ZZZ__ (size, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_CMLA_Z_ZZZ__(2048, da, esize, m, n, sel_a, sel_b, sub_i, sub_r)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44263,8 +43644,7 @@ function decode_CMLA_Z_ZZZi_H (size, i2, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_CMLA_Z_ZZZi_H(2048, da, esize, index, m, n, sel_a, sel_b, sub_i, sub_r)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44348,8 +43728,7 @@ function decode_CMLA_Z_ZZZi_S (size, i1, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_CMLA_Z_ZZZi_S(2048, da, esize, index, m, n, sel_a, sel_b, sub_i, sub_r)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44435,8 +43814,7 @@ function decode_SQRDCMLAH_Z_ZZZ__ (size, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDCMLAH_Z_ZZZ__(2048, da, esize, m, n, sel_a, sel_b, sub_i, sub_r)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44525,8 +43903,7 @@ function decode_SQRDCMLAH_Z_ZZZi_H (size, i2, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDCMLAH_Z_ZZZi_H(2048, da, esize, index, m, n, sel_a, sel_b, sub_i, sub_r)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44616,8 +43993,7 @@ function decode_SQRDCMLAH_Z_ZZZi_S (size, i1, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDCMLAH_Z_ZZZi_S(2048, da, esize, index, m, n, sel_a, sel_b, sub_i, sub_r)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44678,8 +44054,7 @@ function decode_MUL_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_MUL_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44743,8 +44118,7 @@ function decode_MUL_Z_ZZi_H (i3h, i3l, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_MUL_Z_ZZi_H(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44809,8 +44183,7 @@ function decode_MUL_Z_ZZi_S (size, i2, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_MUL_Z_ZZi_S(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44875,8 +44248,7 @@ function decode_MUL_Z_ZZi_D (size, i1, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_MUL_Z_ZZi_D(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -44941,8 +44313,7 @@ function decode_MLA_Z_ZZZi_H (i3h, i3l, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_MLA_Z_ZZZi_H(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45008,8 +44379,7 @@ function decode_MLA_Z_ZZZi_S (size, i2, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_MLA_Z_ZZZi_S(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45075,8 +44445,7 @@ function decode_MLA_Z_ZZZi_D (size, i1, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_MLA_Z_ZZZi_D(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45142,8 +44511,7 @@ function decode_MLS_Z_ZZZi_H (i3h, i3l, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_MLS_Z_ZZZi_H(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45209,8 +44577,7 @@ function decode_MLS_Z_ZZZi_S (size, i2, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_MLS_Z_ZZZi_S(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45276,8 +44643,7 @@ function decode_MLS_Z_ZZZi_D (size, i1, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_MLS_Z_ZZZi_D(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45343,8 +44709,7 @@ function decode_SMULLB_Z_ZZi_S (size, i3h, Zm, U, i3l, T, Zn, Zd) = {
       },
       2048 => {
           execute_SMULLB_Z_ZZi_S(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45412,8 +44777,7 @@ function decode_SMULLB_Z_ZZi_D (size, i2h, Zm, U, i2l, T, Zn, Zd) = {
       },
       2048 => {
           execute_SMULLB_Z_ZZi_D(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45481,8 +44845,7 @@ function decode_SMULLT_Z_ZZi_S (size, i3h, Zm, U, i3l, T, Zn, Zd) = {
       },
       2048 => {
           execute_SMULLT_Z_ZZi_S(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45550,8 +44913,7 @@ function decode_SMULLT_Z_ZZi_D (size, i2h, Zm, U, i2l, T, Zn, Zd) = {
       },
       2048 => {
           execute_SMULLT_Z_ZZi_D(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45619,8 +44981,7 @@ function decode_UMULLB_Z_ZZi_S (size, i3h, Zm, U, i3l, T, Zn, Zd) = {
       },
       2048 => {
           execute_UMULLB_Z_ZZi_S(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45688,8 +45049,7 @@ function decode_UMULLB_Z_ZZi_D (size, i2h, Zm, U, i2l, T, Zn, Zd) = {
       },
       2048 => {
           execute_UMULLB_Z_ZZi_D(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45757,8 +45117,7 @@ function decode_UMULLT_Z_ZZi_S (size, i3h, Zm, U, i3l, T, Zn, Zd) = {
       },
       2048 => {
           execute_UMULLT_Z_ZZi_S(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45826,8 +45185,7 @@ function decode_UMULLT_Z_ZZi_D (size, i2h, Zm, U, i2l, T, Zn, Zd) = {
       },
       2048 => {
           execute_UMULLT_Z_ZZi_D(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45895,8 +45253,7 @@ function decode_SMLALB_Z_ZZZi_S (size, i3h, Zm, S, U, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLALB_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -45965,8 +45322,7 @@ function decode_SMLALB_Z_ZZZi_D (size, i2h, Zm, S, U, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLALB_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46035,8 +45391,7 @@ function decode_SMLALT_Z_ZZZi_S (size, i3h, Zm, S, U, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLALT_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46105,8 +45460,7 @@ function decode_SMLALT_Z_ZZZi_D (size, i2h, Zm, S, U, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLALT_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46175,8 +45529,7 @@ function decode_UMLALB_Z_ZZZi_S (size, i3h, Zm, S, U, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLALB_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46245,8 +45598,7 @@ function decode_UMLALB_Z_ZZZi_D (size, i2h, Zm, S, U, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLALB_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46315,8 +45667,7 @@ function decode_UMLALT_Z_ZZZi_S (size, i3h, Zm, S, U, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLALT_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46385,8 +45736,7 @@ function decode_UMLALT_Z_ZZZi_D (size, i2h, Zm, S, U, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLALT_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46455,8 +45805,7 @@ function decode_SMLSLB_Z_ZZZi_S (size, i3h, Zm, S, U, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLSLB_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46525,8 +45874,7 @@ function decode_SMLSLB_Z_ZZZi_D (size, i2h, Zm, S, U, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLSLB_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46595,8 +45943,7 @@ function decode_SMLSLT_Z_ZZZi_S (size, i3h, Zm, S, U, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLSLT_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46665,8 +46012,7 @@ function decode_SMLSLT_Z_ZZZi_D (size, i2h, Zm, S, U, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SMLSLT_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46735,8 +46081,7 @@ function decode_UMLSLB_Z_ZZZi_S (size, i3h, Zm, S, U, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLSLB_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46805,8 +46150,7 @@ function decode_UMLSLB_Z_ZZZi_D (size, i2h, Zm, S, U, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLSLB_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46875,8 +46219,7 @@ function decode_UMLSLT_Z_ZZZi_S (size, i3h, Zm, S, U, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLSLT_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -46945,8 +46288,7 @@ function decode_UMLSLT_Z_ZZZi_D (size, i2h, Zm, S, U, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_UMLSLT_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47015,8 +46357,7 @@ function decode_SQDMULLB_Z_ZZi_S (size, i3h, Zm, i3l, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULLB_Z_ZZi_S(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47083,8 +46424,7 @@ function decode_SQDMULLB_Z_ZZi_D (size, i2h, Zm, i2l, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULLB_Z_ZZi_D(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47151,8 +46491,7 @@ function decode_SQDMULLT_Z_ZZi_S (size, i3h, Zm, i3l, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULLT_Z_ZZi_S(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47219,8 +46558,7 @@ function decode_SQDMULLT_Z_ZZi_D (size, i2h, Zm, i2l, T, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULLT_Z_ZZi_D(2048, d, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47289,8 +46627,7 @@ function decode_SQDMLALB_Z_ZZZi_S (size, i3h, Zm, S, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLALB_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47360,8 +46697,7 @@ function decode_SQDMLALB_Z_ZZZi_D (size, i2h, Zm, S, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLALB_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47431,8 +46767,7 @@ function decode_SQDMLALT_Z_ZZZi_S (size, i3h, Zm, S, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLALT_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47502,8 +46837,7 @@ function decode_SQDMLALT_Z_ZZZi_D (size, i2h, Zm, S, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLALT_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47573,8 +46907,7 @@ function decode_SQDMLSLB_Z_ZZZi_S (size, i3h, Zm, S, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLSLB_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47644,8 +46977,7 @@ function decode_SQDMLSLB_Z_ZZZi_D (size, i2h, Zm, S, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLSLB_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47715,8 +47047,7 @@ function decode_SQDMLSLT_Z_ZZZi_S (size, i3h, Zm, S, i3l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLSLT_Z_ZZZi_S(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47786,8 +47117,7 @@ function decode_SQDMLSLT_Z_ZZZi_D (size, i2h, Zm, S, i2l, T, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLSLT_Z_ZZZi_D(2048, da, esize, index, m, n, sel)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47857,8 +47187,7 @@ function decode_SQDMLALBT_Z_ZZZ__ (size, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLALBT_Z_ZZZ__(2048, da, esize, m, n, sel1, sel2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47925,8 +47254,7 @@ function decode_SQDMLSLBT_Z_ZZZ__ (size, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQDMLSLBT_Z_ZZZ__(2048, da, esize, m, n, sel1, sel2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -47990,8 +47318,7 @@ function decode_SQRDMULH_Z_ZZi_H (i3h, i3l, Zm, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQRDMULH_Z_ZZi_H(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48056,8 +47383,7 @@ function decode_SQRDMULH_Z_ZZi_S (size, i2, Zm, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQRDMULH_Z_ZZi_S(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48122,8 +47448,7 @@ function decode_SQRDMULH_Z_ZZi_D (size, i1, Zm, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQRDMULH_Z_ZZi_D(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48190,8 +47515,7 @@ function decode_SQRDMLAH_Z_ZZZi_H (i3h, i3l, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDMLAH_Z_ZZZi_H(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48258,8 +47582,7 @@ function decode_SQRDMLAH_Z_ZZZi_S (size, i2, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDMLAH_Z_ZZZi_S(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48326,8 +47649,7 @@ function decode_SQRDMLAH_Z_ZZZi_D (size, i1, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDMLAH_Z_ZZZi_D(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48394,8 +47716,7 @@ function decode_SQRDMLSH_Z_ZZZi_H (i3h, i3l, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDMLSH_Z_ZZZi_H(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48462,8 +47783,7 @@ function decode_SQRDMLSH_Z_ZZZi_S (size, i2, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDMLSH_Z_ZZZi_S(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48530,8 +47850,7 @@ function decode_SQRDMLSH_Z_ZZZi_D (size, i1, Zm, S, Zn, Zda) = {
       },
       2048 => {
           execute_SQRDMLSH_Z_ZZZi_D(2048, da, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48601,8 +47920,7 @@ function decode_SHADD_Z_P_ZZ__ (size, R, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SHADD_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48673,8 +47991,7 @@ function decode_SHSUB_Z_P_ZZ__ (size, R, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SHSUB_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48745,8 +48062,7 @@ function decode_SHSUBR_Z_P_ZZ__ (size, R, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SHSUBR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48817,8 +48133,7 @@ function decode_SRHADD_Z_P_ZZ__ (size, R, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SRHADD_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48889,8 +48204,7 @@ function decode_UHADD_Z_P_ZZ__ (size, R, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UHADD_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -48961,8 +48275,7 @@ function decode_UHSUB_Z_P_ZZ__ (size, R, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UHSUB_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49033,8 +48346,7 @@ function decode_UHSUBR_Z_P_ZZ__ (size, R, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UHSUBR_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49105,8 +48417,7 @@ function decode_URHADD_Z_P_ZZ__ (size, R, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_URHADD_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49178,8 +48489,7 @@ function decode_SQADD_Z_P_ZZ__ (size, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SQADD_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49250,8 +48560,7 @@ function decode_UQADD_Z_P_ZZ__ (size, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UQADD_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49322,8 +48631,7 @@ function decode_SQSUB_Z_P_ZZ__ (size, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SQSUB_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49394,8 +48702,7 @@ function decode_UQSUB_Z_P_ZZ__ (size, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UQSUB_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49466,8 +48773,7 @@ function decode_SQSUBR_Z_P_ZZ__ (size, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SQSUBR_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49538,8 +48844,7 @@ function decode_UQSUBR_Z_P_ZZ__ (size, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_UQSUBR_Z_P_ZZ__(2048, dn, esize, g, m, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49608,8 +48913,7 @@ function decode_SUQADD_Z_P_ZZ__ (size, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_SUQADD_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49678,8 +48982,7 @@ function decode_USQADD_Z_P_ZZ__ (size, S, U, Pg, Zm, Zdn) = {
       },
       2048 => {
           execute_USQADD_Z_P_ZZ__(2048, dn, esize, g, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -49762,8 +49065,7 @@ function decode_SLI_Z_ZZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_SLI_Z_ZZI__(2048, d, 8, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -49782,8 +49084,7 @@ function decode_SLI_Z_ZZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_SLI_Z_ZZI__(2048, d, 16, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -49802,8 +49103,7 @@ function decode_SLI_Z_ZZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_SLI_Z_ZZI__(2048, d, 32, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -49822,8 +49122,7 @@ function decode_SLI_Z_ZZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_SLI_Z_ZZI__(2048, d, 64, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -49910,8 +49209,7 @@ function decode_SRI_Z_ZZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_SRI_Z_ZZI__(2048, d, 8, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -49930,8 +49228,7 @@ function decode_SRI_Z_ZZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_SRI_Z_ZZI__(2048, d, 16, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -49950,8 +49247,7 @@ function decode_SRI_Z_ZZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_SRI_Z_ZZI__(2048, d, 32, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -49970,8 +49266,7 @@ function decode_SRI_Z_ZZI__ (tszh, tszl, imm3, Zn, Zd) = {
             },
             2048 => {
                 execute_SRI_Z_ZZI__(2048, d, 64, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -50038,8 +49333,7 @@ function decode_TBX_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_TBX_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50106,8 +49400,7 @@ function decode_URECPE_Z_P_Z__ (size, Q, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_URECPE_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50175,8 +49468,7 @@ function decode_URSQRTE_Z_P_Z__ (size, Q, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_URSQRTE_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50268,8 +49560,7 @@ function decode_MATCH_P_P_ZZ__ (size, Zm, Pg, Zn, Pd) = {
       },
       2048 => {
           execute_MATCH_P_P_ZZ__(2048, d, esize, g, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50361,8 +49652,7 @@ function decode_NMATCH_P_P_ZZ__ (size, Zm, Pg, Zn, Pd) = {
       },
       2048 => {
           execute_NMATCH_P_P_ZZ__(2048, d, esize, g, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50449,8 +49739,7 @@ function decode_HISTCNT_Z_P_ZZ__ (size, Zm, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_HISTCNT_Z_P_ZZ__(2048, d, esize, g, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50525,8 +49814,7 @@ function decode_HISTSEG_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_HISTSEG_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50593,8 +49881,7 @@ function decode_WHILEWR_P_RR__ (size, Rm, Rn, rw, Pd) = {
       },
       2048 => {
           execute_WHILEWR_P_RR__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50662,8 +49949,7 @@ function decode_WHILERW_P_RR__ (size, Rm, Rn, rw, Pd) = {
       },
       2048 => {
           execute_WHILERW_P_RR__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50720,8 +50006,7 @@ function decode_BDEP_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BDEP_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50777,8 +50062,7 @@ function decode_BEXT_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BEXT_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50834,8 +50118,7 @@ function decode_BGRP_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BGRP_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50895,8 +50178,7 @@ function decode_EORBT_Z_ZZ__ (size, Zm, tb, Zn, Zd) = {
       },
       2048 => {
           execute_EORBT_Z_ZZ__(2048, d, esize, m, n, sel1, sel2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -50957,8 +50239,7 @@ function decode_EORTB_Z_ZZ__ (size, Zm, tb, Zn, Zd) = {
       },
       2048 => {
           execute_EORTB_Z_ZZ__(2048, d, esize, m, n, sel1, sel2)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51037,8 +50318,7 @@ function decode_CDOT_Z_ZZZ__ (size, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_CDOT_Z_ZZZ__(2048, da, esize, m, n, sel_a, sel_b, sub_i)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51115,8 +50395,7 @@ function decode_CDOT_Z_ZZZi_S (size, i2, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_CDOT_Z_ZZZi_S(2048, da, esize, index, m, n, sel_a, sel_b, sub_i)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51194,8 +50473,7 @@ function decode_CDOT_Z_ZZZi_D (size, i1, Zm, rot, Zn, Zda) = {
       },
       2048 => {
           execute_CDOT_Z_ZZZi_D(2048, da, esize, index, m, n, sel_a, sel_b, sub_i)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51263,8 +50541,7 @@ function decode_SMMLA_Z_ZZZ__ (uns, Zm, Zn, Zda) = {
       },
       2048 => {
           execute_SMMLA_Z_ZZZ__(2048, da, m, n, op1_unsigned, op2_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51330,8 +50607,7 @@ function decode_UMMLA_Z_ZZZ__ (uns, Zm, Zn, Zda) = {
       },
       2048 => {
           execute_UMMLA_Z_ZZZ__(2048, da, m, n, op1_unsigned, op2_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51397,8 +50673,7 @@ function decode_USMMLA_Z_ZZZ__ (uns, Zm, Zn, Zda) = {
       },
       2048 => {
           execute_USMMLA_Z_ZZZ__(2048, da, m, n, op1_unsigned, op2_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51461,8 +50736,7 @@ function decode_SQDMULH_Z_ZZi_H (i3h, i3l, Zm, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULH_Z_ZZi_H(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51527,8 +50801,7 @@ function decode_SQDMULH_Z_ZZi_S (size, i2, Zm, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULH_Z_ZZi_S(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51593,8 +50866,7 @@ function decode_SQDMULH_Z_ZZi_D (size, i1, Zm, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQDMULH_Z_ZZi_D(2048, d, esize, index, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -51674,8 +50946,7 @@ function decode_SRSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_SRSRA_Z_ZI__(2048, da, 8, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -51694,8 +50965,7 @@ function decode_SRSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_SRSRA_Z_ZI__(2048, da, 16, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -51714,8 +50984,7 @@ function decode_SRSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_SRSRA_Z_ZI__(2048, da, 32, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -51734,8 +51003,7 @@ function decode_SRSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_SRSRA_Z_ZI__(2048, da, 64, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -51821,8 +51089,7 @@ function decode_SSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_SSRA_Z_ZI__(2048, da, 8, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -51841,8 +51108,7 @@ function decode_SSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_SSRA_Z_ZI__(2048, da, 16, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -51861,8 +51127,7 @@ function decode_SSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_SSRA_Z_ZI__(2048, da, 32, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -51881,8 +51146,7 @@ function decode_SSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_SSRA_Z_ZI__(2048, da, 64, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -51968,8 +51232,7 @@ function decode_URSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_URSRA_Z_ZI__(2048, da, 8, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -51988,8 +51251,7 @@ function decode_URSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_URSRA_Z_ZI__(2048, da, 16, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -52008,8 +51270,7 @@ function decode_URSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_URSRA_Z_ZI__(2048, da, 32, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -52028,8 +51289,7 @@ function decode_URSRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_URSRA_Z_ZI__(2048, da, 64, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -52115,8 +51375,7 @@ function decode_USRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_USRA_Z_ZI__(2048, da, 8, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -52135,8 +51394,7 @@ function decode_USRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_USRA_Z_ZI__(2048, da, 16, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -52155,8 +51413,7 @@ function decode_USRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_USRA_Z_ZI__(2048, da, 32, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -52175,8 +51432,7 @@ function decode_USRA_Z_ZI__ (tszh, tszl, imm3, R, U, Zn, Zda) = {
             },
             2048 => {
                 execute_USRA_Z_ZI__(2048, da, 64, n, shift)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -52238,8 +51494,7 @@ function decode_AESD_Z_ZZ__ (size, Zm, Zdn) = {
       },
       2048 => {
           execute_AESD_Z_ZZ__(2048, dn, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52292,8 +51547,7 @@ function decode_AESE_Z_ZZ__ (size, Zm, Zdn) = {
       },
       2048 => {
           execute_AESE_Z_ZZ__(2048, dn, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52344,8 +51598,7 @@ function decode_AESIMC_Z_Z__ (size, Zdn) = {
       },
       2048 => {
           execute_AESIMC_Z_Z__(2048, dn)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52395,8 +51648,7 @@ function decode_AESMC_Z_Z__ (size, Zdn) = {
       },
       2048 => {
           execute_AESMC_Z_Z__(2048, dn)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52455,8 +51707,7 @@ function decode_RAX1_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_RAX1_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52528,8 +51779,7 @@ function decode_SM4E_Z_ZZ__ (size, Zm, Zdn) = {
       },
       2048 => {
           execute_SM4E_Z_ZZ__(2048, dn, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52601,8 +51851,7 @@ function decode_SM4EKEY_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_SM4EKEY_Z_ZZ__(2048, d, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52682,8 +51931,7 @@ function decode_XAR_Z_ZZI__ (tszh, tszl, imm3, Zm, Zdn) = {
             },
             2048 => {
                 execute_XAR_Z_ZZI__(2048, dn, 8, m, rot)
-            },
-            _ => ()
+            }
           }
       },
       16 => {
@@ -52702,8 +51950,7 @@ function decode_XAR_Z_ZZI__ (tszh, tszl, imm3, Zm, Zdn) = {
             },
             2048 => {
                 execute_XAR_Z_ZZI__(2048, dn, 16, m, rot)
-            },
-            _ => ()
+            }
           }
       },
       32 => {
@@ -52722,8 +51969,7 @@ function decode_XAR_Z_ZZI__ (tszh, tszl, imm3, Zm, Zdn) = {
             },
             2048 => {
                 execute_XAR_Z_ZZI__(2048, dn, 32, m, rot)
-            },
-            _ => ()
+            }
           }
       },
       64 => {
@@ -52742,8 +51988,7 @@ function decode_XAR_Z_ZZI__ (tszh, tszl, imm3, Zm, Zdn) = {
             },
             2048 => {
                 execute_XAR_Z_ZZI__(2048, dn, 64, m, rot)
-            },
-            _ => ()
+            }
           }
       },
       _ => {
@@ -52800,8 +52045,7 @@ function decode_BCAX_Z_ZZZ__ (Zm, Zk, Zdn) = {
       },
       2048 => {
           execute_BCAX_Z_ZZZ__(2048, dn, k, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52851,8 +52095,7 @@ function decode_EOR3_Z_ZZZ__ (Zm, Zk, Zdn) = {
       },
       2048 => {
           execute_EOR3_Z_ZZZ__(2048, dn, k, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52902,8 +52145,7 @@ function decode_BSL_Z_ZZZ__ (Zm, Zk, Zdn) = {
       },
       2048 => {
           execute_BSL_Z_ZZZ__(2048, dn, k, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -52953,8 +52195,7 @@ function decode_BSL1N_Z_ZZZ__ (Zm, Zk, Zdn) = {
       },
       2048 => {
           execute_BSL1N_Z_ZZZ__(2048, dn, k, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53004,8 +52245,7 @@ function decode_BSL2N_Z_ZZZ__ (Zm, Zk, Zdn) = {
       },
       2048 => {
           execute_BSL2N_Z_ZZZ__(2048, dn, k, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53055,8 +52295,7 @@ function decode_NBSL_Z_ZZZ__ (Zm, Zk, Zdn) = {
       },
       2048 => {
           execute_NBSL_Z_ZZZ__(2048, dn, k, m)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53120,8 +52359,7 @@ function decode_ADCLB_Z_ZZZ__ (sz, Zm, T, Zn, Zda) = {
       },
       2048 => {
           execute_ADCLB_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53187,8 +52425,7 @@ function decode_ADCLT_Z_ZZZ__ (sz, Zm, T, Zn, Zda) = {
       },
       2048 => {
           execute_ADCLT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53254,8 +52491,7 @@ function decode_SBCLB_Z_ZZZ__ (sz, Zm, T, Zn, Zda) = {
       },
       2048 => {
           execute_SBCLB_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53321,8 +52557,7 @@ function decode_SBCLT_Z_ZZZ__ (sz, Zm, T, Zn, Zda) = {
       },
       2048 => {
           execute_SBCLT_Z_ZZZ__(2048, da, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53383,8 +52618,7 @@ function decode_SMULH_Z_ZZ__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_SMULH_Z_ZZ__(2048, d, esize, m, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53445,8 +52679,7 @@ function decode_UMULH_Z_ZZ__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_UMULH_Z_ZZ__(2048, d, esize, m, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53508,8 +52741,7 @@ function decode_SCLAMP_Z_ZZ__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_SCLAMP_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53571,8 +52803,7 @@ function decode_UCLAMP_Z_ZZ__ (size, Zm, U, Zn, Zd) = {
       },
       2048 => {
           execute_UCLAMP_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53638,8 +52869,7 @@ function decode_REVD_Z_P_Z__ (size, Pg, Zn, Zd) = {
       },
       2048 => {
           execute_REVD_Z_P_Z__(2048, d, esize, g, n, swsize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53726,8 +52956,7 @@ function decode_PSEL_P_PPi__ (i1, tszh, tszl, Rv, Pn, S, Pm, Pd) = {
       },
       2048 => {
           execute_PSEL_P_PPi__(2048, d, esize, imm, m, n, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53768,7 +52997,7 @@ function execute_WHILELO_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELO_PP_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -53810,8 +53039,7 @@ function decode_WHILELO_PP_RR__ (size, Rm, U, lt, Rn, Pd, eq) = {
       },
       2048 => {
           execute_WHILELO_PP_RR__(2048, d0, d1, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53851,7 +53079,7 @@ function execute_WHILELS_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELS_PP_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -53893,8 +53121,7 @@ function decode_WHILELS_PP_RR__ (size, Rm, U, lt, Rn, Pd, eq) = {
       },
       2048 => {
           execute_WHILELS_PP_RR__(2048, d0, d1, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -53934,7 +53161,7 @@ function execute_WHILELT_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELT_PP_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -53976,8 +53203,7 @@ function decode_WHILELT_PP_RR__ (size, Rm, U, lt, Rn, Pd, eq) = {
       },
       2048 => {
           execute_WHILELT_PP_RR__(2048, d0, d1, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54017,7 +53243,7 @@ function execute_WHILELE_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELE_PP_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -54059,8 +53285,7 @@ function decode_WHILELE_PP_RR__ (size, Rm, U, lt, Rn, Pd, eq) = {
       },
       2048 => {
           execute_WHILELE_PP_RR__(2048, d0, d1, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54100,7 +53325,7 @@ function execute_WHILEHI_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEHI_PP_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -54142,8 +53367,7 @@ function decode_WHILEHI_PP_RR__ (size, Rm, U, lt, Rn, Pd, eq) = {
       },
       2048 => {
           execute_WHILEHI_PP_RR__(2048, d0, d1, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54183,7 +53407,7 @@ function execute_WHILEHS_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEHS_PP_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -54225,8 +53449,7 @@ function decode_WHILEHS_PP_RR__ (size, Rm, U, lt, Rn, Pd, eq) = {
       },
       2048 => {
           execute_WHILEHS_PP_RR__(2048, d0, d1, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54266,7 +53489,7 @@ function execute_WHILEGT_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEGT_PP_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -54308,8 +53531,7 @@ function decode_WHILEGT_PP_RR__ (size, Rm, U, lt, Rn, Pd, eq) = {
       },
       2048 => {
           execute_WHILEGT_PP_RR__(2048, d0, d1, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54349,7 +53571,7 @@ function execute_WHILEGE_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEGE_PP_RR__")
         };
         last = last & cond;
         let pbit : bits(1) = if last then 0b1 else 0b0;
@@ -54391,8 +53613,7 @@ function decode_WHILEGE_PP_RR__ (size, Rm, U, lt, Rn, Pd, eq) = {
       },
       2048 => {
           execute_WHILEGE_PP_RR__(2048, d0, d1, esize, m, n, op, rsize, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54455,8 +53676,7 @@ function decode_SQRSHRN_Z_MZ2__ (tszh, tszl, imm4, U, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQRSHRN_Z_MZ2__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54519,8 +53739,7 @@ function decode_SQRSHRUN_Z_MZ2__ (tszh, tszl, imm4, U, R, Zn, Zd) = {
       },
       2048 => {
           execute_SQRSHRUN_Z_MZ2__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54583,8 +53802,7 @@ function decode_UQRSHRN_Z_MZ2__ (tszh, tszl, imm4, U, R, Zn, Zd) = {
       },
       2048 => {
           execute_UQRSHRN_Z_MZ2__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54645,8 +53863,7 @@ function decode_SQCVTN_Z_MZ2__ (tszh, tszl, U, Zn, Zd) = {
       },
       2048 => {
           execute_SQCVTN_Z_MZ2__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54705,8 +53922,7 @@ function decode_SQCVTUN_Z_MZ2__ (tszh, tszl, Zn, Zd) = {
       },
       2048 => {
           execute_SQCVTUN_Z_MZ2__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54764,8 +53980,7 @@ function decode_UQCVTN_Z_MZ2__ (tszh, tszl, U, Zn, Zd) = {
       },
       2048 => {
           execute_UQCVTN_Z_MZ2__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54849,8 +54064,7 @@ function decode_DUPQ_Z_Zi__ (i1, tsz, Zn, Zd) = {
       },
       2048 => {
           execute_DUPQ_Z_Zi__(2048, d, esize, index, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54908,8 +54122,7 @@ function decode_EXTQ_Z_ZI_Des (imm4, Zm, Zdn) = {
       },
       2048 => {
           execute_EXTQ_Z_ZI_Des(2048, dn, m, position)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -54973,8 +54186,7 @@ function decode_TBLQ_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_TBLQ_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55038,8 +54250,7 @@ function decode_TBXQ_Z_ZZ__ (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_TBXQ_Z_ZZ__(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55104,8 +54315,7 @@ function decode_UZPQ1_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_UZPQ1_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55171,8 +54381,7 @@ function decode_UZPQ2_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_UZPQ2_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55237,8 +54446,7 @@ function decode_ZIPQ1_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_ZIPQ1_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55303,8 +54511,7 @@ function decode_ZIPQ2_Z_ZZ__ (size, Zm, H, Zn, Zd) = {
       },
       2048 => {
           execute_ZIPQ2_Z_ZZ__(2048, d, esize, m, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55376,8 +54583,7 @@ function decode_ANDQV_Z_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_ANDQV_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55448,8 +54654,7 @@ function decode_EORQV_Z_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_EORQV_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55520,8 +54725,7 @@ function decode_ORQV_Z_P_Z__ (size, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_ORQV_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55593,8 +54797,7 @@ function decode_ADDQV_Z_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_ADDQV_Z_P_Z__(2048, d, esize, g, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55667,8 +54870,7 @@ function decode_SMAXQV_Z_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_SMAXQV_Z_P_Z__(2048, d, esize, g, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55741,8 +54943,7 @@ function decode_UMAXQV_Z_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_UMAXQV_Z_P_Z__(2048, d, esize, g, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55815,8 +55016,7 @@ function decode_SMINQV_Z_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_SMINQV_Z_P_Z__(2048, d, esize, g, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55889,8 +55089,7 @@ function decode_UMINQV_Z_P_Z__ (size, U, Pg, Zn, Vd) = {
       },
       2048 => {
           execute_UMINQV_Z_P_Z__(2048, d, esize, g, n, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -55952,8 +55151,7 @@ function decode_PMOV_Z_PI_B (Pn, Zd) = {
       },
       2048 => {
           execute_PMOV_Z_PI_B(2048, d, esize, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56012,8 +55210,7 @@ function decode_PMOV_Z_PI_H (i1, Pn, Zd) = {
       },
       2048 => {
           execute_PMOV_Z_PI_H(2048, d, esize, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56073,8 +55270,7 @@ function decode_PMOV_Z_PI_S (i2, Pn, Zd) = {
       },
       2048 => {
           execute_PMOV_Z_PI_S(2048, d, esize, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56134,8 +55330,7 @@ function decode_PMOV_Z_PI_D (i3h, i3l, Pn, Zd) = {
       },
       2048 => {
           execute_PMOV_Z_PI_D(2048, d, esize, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56192,8 +55387,7 @@ function decode_PMOV_P_ZI_B (Zn, Pd) = {
       },
       2048 => {
           execute_PMOV_P_ZI_B(2048, d, esize, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56248,8 +55442,7 @@ function decode_PMOV_P_ZI_H (i1, Zn, Pd) = {
       },
       2048 => {
           execute_PMOV_P_ZI_H(2048, d, esize, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56305,8 +55498,7 @@ function decode_PMOV_P_ZI_S (i2, Zn, Pd) = {
       },
       2048 => {
           execute_PMOV_P_ZI_S(2048, d, esize, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56362,8 +55554,7 @@ function decode_PMOV_P_ZI_D (i3h, i3l, Zn, Pd) = {
       },
       2048 => {
           execute_PMOV_P_ZI_D(2048, d, esize, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56426,8 +55617,7 @@ function decode_PEXT_PN_RR__ (size, imm2, PNn, Pd) = {
       },
       2048 => {
           execute_PEXT_PN_RR__(2048, d, esize, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56497,8 +55687,7 @@ function decode_PEXT_PP_RR__ (size, i1, PNn, Pd) = {
       },
       2048 => {
           execute_PEXT_PP_RR__(2048, d0, d1, esize, n, part)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56552,8 +55741,7 @@ function decode_PTRUE_PN_I__ (size, PNd) = {
       },
       2048 => {
           execute_PTRUE_PN_I__(2048, d, esize)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56621,8 +55809,7 @@ function decode_CNTP_R_PN__ (size, vl, PNn, Rd) = {
       2048 => {
           assert(constraint(('width in {2, 4} & 0 <= 'n & 'n <= 15 & 'esize in {8, 16, 32, 64} & 0 <= 'd & 'd <= 31 & is_VL(2048))));
           execute_CNTP_R_PN__(2048, d, esize, n, width)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56661,7 +55848,7 @@ function execute_WHILELO_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELO_PN_RR__")
         };
         last = last & cond;
         if last then {
@@ -56711,8 +55898,7 @@ function decode_WHILELO_PN_RR__ (size, Rm, vl, U, lt, Rn, eq, PNd) = {
       2048 => {
           assert(constraint(('width in {2, 4} & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 'esize in {8, 16, 32, 64} & 0 <= 'd & 'd <= 15 & is_VL(2048))));
           execute_WHILELO_PN_RR__(2048, d, esize, invert, m, n, op, rsize, is_unsigned, width)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56755,7 +55941,7 @@ function execute_WHILELS_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELS_PN_RR__")
         };
         last = last & cond;
         if last then {
@@ -56805,8 +55991,7 @@ function decode_WHILELS_PN_RR__ (size, Rm, vl, U, lt, Rn, eq, PNd) = {
       2048 => {
           assert(constraint(('width in {2, 4} & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 'esize in {8, 16, 32, 64} & 0 <= 'd & 'd <= 15 & is_VL(2048))));
           execute_WHILELS_PN_RR__(2048, d, esize, invert, m, n, op, rsize, is_unsigned, width)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56849,7 +56034,7 @@ function execute_WHILELT_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELT_PN_RR__")
         };
         last = last & cond;
         if last then {
@@ -56899,8 +56084,7 @@ function decode_WHILELT_PN_RR__ (size, Rm, vl, U, lt, Rn, eq, PNd) = {
       2048 => {
           assert(constraint(('width in {2, 4} & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 'esize in {8, 16, 32, 64} & 0 <= 'd & 'd <= 15 & is_VL(2048))));
           execute_WHILELT_PN_RR__(2048, d, esize, invert, m, n, op, rsize, is_unsigned, width)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -56943,7 +56127,7 @@ function execute_WHILELE_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
           Cmp_LE => {
               cond = asl_Int(operand1, is_unsigned) <= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILELE_PN_RR__")
         };
         last = last & cond;
         if last then {
@@ -56993,8 +56177,7 @@ function decode_WHILELE_PN_RR__ (size, Rm, vl, U, lt, Rn, eq, PNd) = {
       2048 => {
           assert(constraint(('width in {2, 4} & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 'esize in {8, 16, 32, 64} & 0 <= 'd & 'd <= 15 & is_VL(2048))));
           execute_WHILELE_PN_RR__(2048, d, esize, invert, m, n, op, rsize, is_unsigned, width)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57037,7 +56220,7 @@ function execute_WHILEHI_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEHI_PN_RR__")
         };
         last = last & cond;
         if last then {
@@ -57087,8 +56270,7 @@ function decode_WHILEHI_PN_RR__ (size, Rm, vl, U, lt, Rn, eq, PNd) = {
       2048 => {
           assert(constraint(('width in {2, 4} & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 'esize in {8, 16, 32, 64} & 0 <= 'd & 'd <= 15 & is_VL(2048))));
           execute_WHILEHI_PN_RR__(2048, d, esize, invert, m, n, op, rsize, is_unsigned, width)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57131,7 +56313,7 @@ function execute_WHILEHS_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEHS_PN_RR__")
         };
         last = last & cond;
         if last then {
@@ -57181,8 +56363,7 @@ function decode_WHILEHS_PN_RR__ (size, Rm, vl, U, lt, Rn, eq, PNd) = {
       2048 => {
           assert(constraint(('width in {2, 4} & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 'esize in {8, 16, 32, 64} & 0 <= 'd & 'd <= 15 & is_VL(2048))));
           execute_WHILEHS_PN_RR__(2048, d, esize, invert, m, n, op, rsize, is_unsigned, width)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57225,7 +56406,7 @@ function execute_WHILEGT_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEGT_PN_RR__")
         };
         last = last & cond;
         if last then {
@@ -57275,8 +56456,7 @@ function decode_WHILEGT_PN_RR__ (size, Rm, vl, U, lt, Rn, eq, PNd) = {
       2048 => {
           assert(constraint(('width in {2, 4} & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 'esize in {8, 16, 32, 64} & 0 <= 'd & 'd <= 15 & is_VL(2048))));
           execute_WHILEGT_PN_RR__(2048, d, esize, invert, m, n, op, rsize, is_unsigned, width)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57319,7 +56499,7 @@ function execute_WHILEGE_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
           Cmp_GE => {
               cond = asl_Int(operand1, is_unsigned) >= asl_Int(operand2, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_WHILEGE_PN_RR__")
         };
         last = last & cond;
         if last then {
@@ -57369,8 +56549,7 @@ function decode_WHILEGE_PN_RR__ (size, Rm, vl, U, lt, Rn, eq, PNd) = {
       2048 => {
           assert(constraint(('width in {2, 4} & 0 <= 'n & 'n <= 31 & 0 <= 'm & 'm <= 31 & 'esize in {8, 16, 32, 64} & 0 <= 'd & 'd <= 15 & is_VL(2048))));
           execute_WHILEGE_PN_RR__(2048, d, esize, invert, m, n, op, rsize, is_unsigned, width)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57463,8 +56642,7 @@ function decode_LD1B_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57556,8 +56734,7 @@ function decode_LD1SB_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57673,8 +56850,7 @@ function decode_LDFF1B_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1B_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57790,8 +56966,7 @@ function decode_LDFF1SB_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SB_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57883,8 +57058,7 @@ function decode_LD1H_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -57976,8 +57150,7 @@ function decode_LD1SH_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58093,8 +57266,7 @@ function decode_LDFF1H_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58210,8 +57382,7 @@ function decode_LDFF1SH_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SH_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58303,8 +57474,7 @@ function decode_LD1W_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58420,8 +57590,7 @@ function decode_LDFF1W_Z_P_BZ_S_x32_unscaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1W_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58498,8 +57667,7 @@ function decode_PRFB_I_P_BZ_S_x32_scaled (xs, Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFB_I_P_BZ_S_x32_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58575,8 +57743,7 @@ function decode_PRFH_I_P_BZ_S_x32_scaled (xs, Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFH_I_P_BZ_S_x32_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58652,8 +57819,7 @@ function decode_PRFW_I_P_BZ_S_x32_scaled (xs, Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFW_I_P_BZ_S_x32_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58729,8 +57895,7 @@ function decode_PRFD_I_P_BZ_S_x32_scaled (xs, Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFD_I_P_BZ_S_x32_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58821,8 +57986,7 @@ function decode_LD1H_Z_P_BZ_S_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BZ_S_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -58914,8 +58078,7 @@ function decode_LD1SH_Z_P_BZ_S_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BZ_S_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59031,8 +58194,7 @@ function decode_LDFF1H_Z_P_BZ_S_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_BZ_S_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59148,8 +58310,7 @@ function decode_LDFF1SH_Z_P_BZ_S_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SH_Z_P_BZ_S_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59241,8 +58402,7 @@ function decode_LD1W_Z_P_BZ_S_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BZ_S_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59358,8 +58518,7 @@ function decode_LDFF1W_Z_P_BZ_S_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1W_Z_P_BZ_S_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59436,8 +58595,7 @@ function decode_LDR_P_BI__ (imm9h, imm9l, Rn, Pt) = {
       },
       2048 => {
           execute_LDR_P_BI__(2048, imm, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59511,8 +58669,7 @@ function decode_LDR_Z_BI__ (imm9h, imm9l, Rn, Zt) = {
       },
       2048 => {
           execute_LDR_Z_BI__(2048, imm, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59581,8 +58738,7 @@ function decode_PRFB_I_P_BI_S (imm6, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFB_I_P_BI_S(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59652,8 +58808,7 @@ function decode_PRFH_I_P_BI_S (imm6, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFH_I_P_BI_S(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59723,8 +58878,7 @@ function decode_PRFW_I_P_BI_S (imm6, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFW_I_P_BI_S(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59794,8 +58948,7 @@ function decode_PRFD_I_P_BI_S (imm6, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFD_I_P_BI_S(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59871,8 +59024,7 @@ function decode_PRFB_I_P_BR_S (msz, Rm, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFB_I_P_BR_S(2048, esize, g, level, m, n, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -59948,8 +59100,7 @@ function decode_PRFH_I_P_BR_S (msz, Rm, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFH_I_P_BR_S(2048, esize, g, level, m, n, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60025,8 +59176,7 @@ function decode_PRFW_I_P_BR_S (msz, Rm, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFW_I_P_BR_S(2048, esize, g, level, m, n, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60102,8 +59252,7 @@ function decode_PRFD_I_P_BR_S (msz, Rm, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFD_I_P_BR_S(2048, esize, g, level, m, n, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60172,8 +59321,7 @@ function decode_PRFB_I_P_AI_S (msz, imm5, Pg, Zn, prfop) = {
       },
       2048 => {
           execute_PRFB_I_P_AI_S(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60242,8 +59390,7 @@ function decode_PRFH_I_P_AI_S (msz, imm5, Pg, Zn, prfop) = {
       },
       2048 => {
           execute_PRFH_I_P_AI_S(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60312,8 +59459,7 @@ function decode_PRFW_I_P_AI_S (msz, imm5, Pg, Zn, prfop) = {
       },
       2048 => {
           execute_PRFW_I_P_AI_S(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60382,8 +59528,7 @@ function decode_PRFD_I_P_AI_S (msz, imm5, Pg, Zn, prfop) = {
       },
       2048 => {
           execute_PRFD_I_P_AI_S(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60460,8 +59605,7 @@ function decode_LD1B_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60540,8 +59684,7 @@ function decode_LD1SB_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60644,8 +59787,7 @@ function decode_LDFF1B_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1B_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60748,8 +59890,7 @@ function decode_LDFF1SB_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1SB_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60828,8 +59969,7 @@ function decode_LD1H_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -60908,8 +60048,7 @@ function decode_LD1SH_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61012,8 +60151,7 @@ function decode_LDFF1H_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61116,8 +60254,7 @@ function decode_LDFF1SH_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1SH_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61196,8 +60333,7 @@ function decode_LD1W_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61300,8 +60436,7 @@ function decode_LDFF1W_Z_P_AI_S (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1W_Z_P_AI_S(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61387,8 +60522,7 @@ function decode_LD1RB_Z_P_BI_U8 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RB_Z_P_BI_U8(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61473,8 +60607,7 @@ function decode_LD1RB_Z_P_BI_U16 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RB_Z_P_BI_U16(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61559,8 +60692,7 @@ function decode_LD1RB_Z_P_BI_U32 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RB_Z_P_BI_U32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61645,8 +60777,7 @@ function decode_LD1RB_Z_P_BI_U64 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RB_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61731,8 +60862,7 @@ function decode_LD1RSW_Z_P_BI_S64 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RSW_Z_P_BI_S64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61817,8 +60947,7 @@ function decode_LD1RH_Z_P_BI_U16 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RH_Z_P_BI_U16(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61903,8 +61032,7 @@ function decode_LD1RH_Z_P_BI_U32 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RH_Z_P_BI_U32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -61989,8 +61117,7 @@ function decode_LD1RH_Z_P_BI_U64 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RH_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62075,8 +61202,7 @@ function decode_LD1RSH_Z_P_BI_S64 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RSH_Z_P_BI_S64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62161,8 +61287,7 @@ function decode_LD1RSH_Z_P_BI_S32 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RSH_Z_P_BI_S32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62247,8 +61372,7 @@ function decode_LD1RW_Z_P_BI_U32 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RW_Z_P_BI_U32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62333,8 +61457,7 @@ function decode_LD1RW_Z_P_BI_U64 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RW_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62419,8 +61542,7 @@ function decode_LD1RSB_Z_P_BI_S64 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RSB_Z_P_BI_S64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62505,8 +61627,7 @@ function decode_LD1RSB_Z_P_BI_S32 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RSB_Z_P_BI_S32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62591,8 +61712,7 @@ function decode_LD1RSB_Z_P_BI_S16 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RSB_Z_P_BI_S16(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62677,8 +61797,7 @@ function decode_LD1RD_Z_P_BI_U64 (dtypeh, imm6, dtypel, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RD_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62768,8 +61887,7 @@ function decode_LD1B_Z_P_BR_U8 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BR_U8(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62858,8 +61976,7 @@ function decode_LD1B_Z_P_BR_U16 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BR_U16(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -62948,8 +62065,7 @@ function decode_LD1B_Z_P_BR_U32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BR_U32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63038,8 +62154,7 @@ function decode_LD1B_Z_P_BR_U64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BR_U64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63128,8 +62243,7 @@ function decode_LD1SW_Z_P_BR_S64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SW_Z_P_BR_S64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63218,8 +62332,7 @@ function decode_LD1H_Z_P_BR_U16 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BR_U16(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63308,8 +62421,7 @@ function decode_LD1H_Z_P_BR_U32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BR_U32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63398,8 +62510,7 @@ function decode_LD1H_Z_P_BR_U64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BR_U64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63488,8 +62599,7 @@ function decode_LD1SH_Z_P_BR_S64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BR_S64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63578,8 +62688,7 @@ function decode_LD1SH_Z_P_BR_S32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BR_S32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63672,8 +62781,7 @@ function decode_LD1W_Z_P_BR_U32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BR_U32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63766,8 +62874,7 @@ function decode_LD1W_Z_P_BR_U64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BR_U64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63856,8 +62963,7 @@ function decode_LD1SB_Z_P_BR_S64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_BR_S64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -63946,8 +63052,7 @@ function decode_LD1SB_Z_P_BR_S32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_BR_S32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64036,8 +63141,7 @@ function decode_LD1SB_Z_P_BR_S16 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_BR_S16(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64130,8 +63234,7 @@ function decode_LD1D_Z_P_BR_U64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1D_Z_P_BR_U64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64224,8 +63327,7 @@ function decode_LD1W_Z_P_BR_U128 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BR_U128(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64318,8 +63420,7 @@ function decode_LD1D_Z_P_BR_U128 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1D_Z_P_BR_U128(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64429,8 +63530,7 @@ function decode_LDFF1B_Z_P_BR_U8 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1B_Z_P_BR_U8(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64540,8 +63640,7 @@ function decode_LDFF1B_Z_P_BR_U16 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1B_Z_P_BR_U16(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64651,8 +63750,7 @@ function decode_LDFF1B_Z_P_BR_U32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1B_Z_P_BR_U32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64762,8 +63860,7 @@ function decode_LDFF1B_Z_P_BR_U64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1B_Z_P_BR_U64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64873,8 +63970,7 @@ function decode_LDFF1SW_Z_P_BR_S64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SW_Z_P_BR_S64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -64984,8 +64080,7 @@ function decode_LDFF1H_Z_P_BR_U16 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_BR_U16(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -65095,8 +64190,7 @@ function decode_LDFF1H_Z_P_BR_U32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_BR_U32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -65206,8 +64300,7 @@ function decode_LDFF1H_Z_P_BR_U64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_BR_U64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -65317,8 +64410,7 @@ function decode_LDFF1SH_Z_P_BR_S64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SH_Z_P_BR_S64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -65428,8 +64520,7 @@ function decode_LDFF1SH_Z_P_BR_S32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SH_Z_P_BR_S32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -65539,8 +64630,7 @@ function decode_LDFF1W_Z_P_BR_U32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1W_Z_P_BR_U32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -65650,8 +64740,7 @@ function decode_LDFF1W_Z_P_BR_U64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1W_Z_P_BR_U64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -65761,8 +64850,7 @@ function decode_LDFF1SB_Z_P_BR_S64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SB_Z_P_BR_S64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -65872,8 +64960,7 @@ function decode_LDFF1SB_Z_P_BR_S32 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SB_Z_P_BR_S32(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -65983,8 +65070,7 @@ function decode_LDFF1SB_Z_P_BR_S16 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SB_Z_P_BR_S16(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66094,8 +65180,7 @@ function decode_LDFF1D_Z_P_BR_U64 (dtype, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1D_Z_P_BR_U64(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66180,8 +65265,7 @@ function decode_LDNT1B_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNT1B_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66266,8 +65350,7 @@ function decode_LDNT1H_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNT1H_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66352,8 +65435,7 @@ function decode_LDNT1W_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNT1W_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66438,8 +65520,7 @@ function decode_LDNT1D_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNT1D_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66530,8 +65611,7 @@ function decode_LD2B_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2B_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66622,8 +65702,7 @@ function decode_LD2H_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2H_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66714,8 +65793,7 @@ function decode_LD2W_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2W_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66806,8 +65884,7 @@ function decode_LD2D_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2D_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66898,8 +65975,7 @@ function decode_LD3B_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3B_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -66990,8 +66066,7 @@ function decode_LD3H_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3H_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67082,8 +66157,7 @@ function decode_LD3W_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3W_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67174,8 +66248,7 @@ function decode_LD3D_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3D_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67266,8 +66339,7 @@ function decode_LD4B_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4B_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67358,8 +66430,7 @@ function decode_LD4H_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4H_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67450,8 +66521,7 @@ function decode_LD4W_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4W_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67542,8 +66612,7 @@ function decode_LD4D_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4D_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67634,8 +66703,7 @@ function decode_LD2Q_Z_P_BR_Contiguous (num, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2Q_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67726,8 +66794,7 @@ function decode_LD3Q_Z_P_BR_Contiguous (num, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3Q_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67818,8 +66885,7 @@ function decode_LD4Q_Z_P_BR_Contiguous (num, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4Q_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67905,8 +66971,7 @@ function decode_LD1RQB_Z_P_BR_Contiguous (msz, ssz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RQB_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -67993,8 +67058,7 @@ function decode_LD1RQH_Z_P_BR_Contiguous (msz, ssz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RQH_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68081,8 +67145,7 @@ function decode_LD1RQW_Z_P_BR_Contiguous (msz, ssz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RQW_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68169,8 +67232,7 @@ function decode_LD1RQD_Z_P_BR_Contiguous (msz, ssz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RQD_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68260,8 +67322,7 @@ function decode_LD1ROB_Z_P_BR_Contiguous (msz, ssz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1ROB_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68351,8 +67412,7 @@ function decode_LD1ROH_Z_P_BR_Contiguous (msz, ssz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1ROH_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68442,8 +67502,7 @@ function decode_LD1ROW_Z_P_BR_Contiguous (msz, ssz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1ROW_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68533,8 +67592,7 @@ function decode_LD1ROD_Z_P_BR_Contiguous (msz, ssz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1ROD_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68620,8 +67678,7 @@ function decode_LD1B_Z_P_BI_U8 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BI_U8(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68706,8 +67763,7 @@ function decode_LD1B_Z_P_BI_U16 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BI_U16(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68792,8 +67848,7 @@ function decode_LD1B_Z_P_BI_U32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BI_U32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68878,8 +67933,7 @@ function decode_LD1B_Z_P_BI_U64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -68964,8 +68018,7 @@ function decode_LD1SW_Z_P_BI_S64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SW_Z_P_BI_S64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69050,8 +68103,7 @@ function decode_LD1H_Z_P_BI_U16 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BI_U16(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69136,8 +68188,7 @@ function decode_LD1H_Z_P_BI_U32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BI_U32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69222,8 +68273,7 @@ function decode_LD1H_Z_P_BI_U64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69308,8 +68358,7 @@ function decode_LD1SH_Z_P_BI_S64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BI_S64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69394,8 +68443,7 @@ function decode_LD1SH_Z_P_BI_S32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BI_S32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69484,8 +68532,7 @@ function decode_LD1W_Z_P_BI_U32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BI_U32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69574,8 +68621,7 @@ function decode_LD1W_Z_P_BI_U64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69660,8 +68706,7 @@ function decode_LD1SB_Z_P_BI_S64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_BI_S64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69746,8 +68791,7 @@ function decode_LD1SB_Z_P_BI_S32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_BI_S32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69832,8 +68876,7 @@ function decode_LD1SB_Z_P_BI_S16 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_BI_S16(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -69922,8 +68965,7 @@ function decode_LD1D_Z_P_BI_U64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1D_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70026,8 +69068,7 @@ function decode_LDNF1B_Z_P_BI_U8 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1B_Z_P_BI_U8(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70130,8 +69171,7 @@ function decode_LDNF1B_Z_P_BI_U16 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1B_Z_P_BI_U16(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70234,8 +69274,7 @@ function decode_LDNF1B_Z_P_BI_U32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1B_Z_P_BI_U32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70338,8 +69377,7 @@ function decode_LDNF1B_Z_P_BI_U64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1B_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70442,8 +69480,7 @@ function decode_LDNF1SW_Z_P_BI_S64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1SW_Z_P_BI_S64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70546,8 +69583,7 @@ function decode_LDNF1H_Z_P_BI_U16 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1H_Z_P_BI_U16(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70650,8 +69686,7 @@ function decode_LDNF1H_Z_P_BI_U32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1H_Z_P_BI_U32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70754,8 +69789,7 @@ function decode_LDNF1H_Z_P_BI_U64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1H_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70858,8 +69892,7 @@ function decode_LDNF1SH_Z_P_BI_S64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1SH_Z_P_BI_S64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -70962,8 +69995,7 @@ function decode_LDNF1SH_Z_P_BI_S32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1SH_Z_P_BI_S32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71066,8 +70098,7 @@ function decode_LDNF1W_Z_P_BI_U32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1W_Z_P_BI_U32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71170,8 +70201,7 @@ function decode_LDNF1W_Z_P_BI_U64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1W_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71274,8 +70304,7 @@ function decode_LDNF1SB_Z_P_BI_S64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1SB_Z_P_BI_S64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71378,8 +70407,7 @@ function decode_LDNF1SB_Z_P_BI_S32 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1SB_Z_P_BI_S32(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71482,8 +70510,7 @@ function decode_LDNF1SB_Z_P_BI_S16 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1SB_Z_P_BI_S16(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71586,8 +70613,7 @@ function decode_LDNF1D_Z_P_BI_U64 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNF1D_Z_P_BI_U64(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71676,8 +70702,7 @@ function decode_LD1W_Z_P_BI_U128 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BI_U128(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71766,8 +70791,7 @@ function decode_LD1D_Z_P_BI_U128 (dtype, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1D_Z_P_BI_U128(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71848,8 +70872,7 @@ function decode_LDNT1B_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNT1B_Z_P_BI_Contiguous(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -71930,8 +70953,7 @@ function decode_LDNT1H_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNT1H_Z_P_BI_Contiguous(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72012,8 +71034,7 @@ function decode_LDNT1W_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNT1W_Z_P_BI_Contiguous(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72094,8 +71115,7 @@ function decode_LDNT1D_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDNT1D_Z_P_BI_Contiguous(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72181,8 +71201,7 @@ function decode_LD2B_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2B_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72268,8 +71287,7 @@ function decode_LD2H_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2H_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72355,8 +71373,7 @@ function decode_LD2W_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2W_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72442,8 +71459,7 @@ function decode_LD2D_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2D_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72529,8 +71545,7 @@ function decode_LD3B_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3B_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72616,8 +71631,7 @@ function decode_LD3H_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3H_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72703,8 +71717,7 @@ function decode_LD3W_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3W_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72790,8 +71803,7 @@ function decode_LD3D_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3D_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72877,8 +71889,7 @@ function decode_LD4B_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4B_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -72964,8 +71975,7 @@ function decode_LD4H_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4H_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73051,8 +72061,7 @@ function decode_LD4W_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4W_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73138,8 +72147,7 @@ function decode_LD4D_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4D_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73225,8 +72233,7 @@ function decode_LD2Q_Z_P_BI_Contiguous (num, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD2Q_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73312,8 +72319,7 @@ function decode_LD3Q_Z_P_BI_Contiguous (num, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD3Q_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73399,8 +72405,7 @@ function decode_LD4Q_Z_P_BI_Contiguous (num, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD4Q_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73480,8 +72485,7 @@ function decode_LD1RQB_Z_P_BI_U8 (msz, ssz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RQB_Z_P_BI_U8(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73562,8 +72566,7 @@ function decode_LD1RQH_Z_P_BI_U16 (msz, ssz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RQH_Z_P_BI_U16(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73644,8 +72647,7 @@ function decode_LD1RQW_Z_P_BI_U32 (msz, ssz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RQW_Z_P_BI_U32(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73726,8 +72728,7 @@ function decode_LD1RQD_Z_P_BI_U64 (msz, ssz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1RQD_Z_P_BI_U64(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73812,8 +72813,7 @@ function decode_LD1ROB_Z_P_BI_U8 (msz, ssz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1ROB_Z_P_BI_U8(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73898,8 +72898,7 @@ function decode_LD1ROH_Z_P_BI_U16 (msz, ssz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1ROH_Z_P_BI_U16(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -73984,8 +72983,7 @@ function decode_LD1ROW_Z_P_BI_U32 (msz, ssz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1ROW_Z_P_BI_U32(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -74070,8 +73068,7 @@ function decode_LD1ROD_Z_P_BI_U64 (msz, ssz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1ROD_Z_P_BI_U64(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -74162,8 +73159,7 @@ function decode_LD1B_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -74256,8 +73252,7 @@ function decode_LD1SB_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -74374,8 +73369,7 @@ function decode_LDFF1B_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = 
       },
       2048 => {
           execute_LDFF1B_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -74492,8 +73486,7 @@ function decode_LDFF1SB_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) =
       },
       2048 => {
           execute_LDFF1SB_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -74586,8 +73579,7 @@ function decode_LD1H_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -74680,8 +73672,7 @@ function decode_LD1SH_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -74798,8 +73789,7 @@ function decode_LDFF1H_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = 
       },
       2048 => {
           execute_LDFF1H_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -74916,8 +73906,7 @@ function decode_LDFF1SH_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) =
       },
       2048 => {
           execute_LDFF1SH_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75010,8 +73999,7 @@ function decode_LD1W_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75104,8 +74092,7 @@ function decode_LD1SW_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SW_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75222,8 +74209,7 @@ function decode_LDFF1W_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = 
       },
       2048 => {
           execute_LDFF1W_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75340,8 +74326,7 @@ function decode_LDFF1SW_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) =
       },
       2048 => {
           execute_LDFF1SW_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75434,8 +74419,7 @@ function decode_LD1D_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1D_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75552,8 +74536,7 @@ function decode_LDFF1D_Z_P_BZ_D_x32_unscaled (msz, xs, Zm, U, ff, Pg, Rn, Zt) = 
       },
       2048 => {
           execute_LDFF1D_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75631,8 +74614,7 @@ function decode_PRFB_I_P_BZ_D_x32_scaled (xs, Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFB_I_P_BZ_D_x32_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75708,8 +74690,7 @@ function decode_PRFH_I_P_BZ_D_x32_scaled (xs, Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFH_I_P_BZ_D_x32_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75785,8 +74766,7 @@ function decode_PRFW_I_P_BZ_D_x32_scaled (xs, Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFW_I_P_BZ_D_x32_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75862,8 +74842,7 @@ function decode_PRFD_I_P_BZ_D_x32_scaled (xs, Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFD_I_P_BZ_D_x32_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -75954,8 +74933,7 @@ function decode_LD1H_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76047,8 +75025,7 @@ function decode_LD1SH_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76164,8 +75141,7 @@ function decode_LDFF1H_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76281,8 +75257,7 @@ function decode_LDFF1SH_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SH_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76374,8 +75349,7 @@ function decode_LD1W_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76467,8 +75441,7 @@ function decode_LD1SW_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SW_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76584,8 +75557,7 @@ function decode_LDFF1W_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1W_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76701,8 +75673,7 @@ function decode_LDFF1SW_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SW_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76794,8 +75765,7 @@ function decode_LD1D_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1D_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76911,8 +75881,7 @@ function decode_LDFF1D_Z_P_BZ_D_x32_scaled (xs, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1D_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -76983,8 +75952,7 @@ function decode_PRFB_I_P_AI_D (msz, imm5, Pg, Zn, prfop) = {
       },
       2048 => {
           execute_PRFB_I_P_AI_D(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77053,8 +76021,7 @@ function decode_PRFH_I_P_AI_D (msz, imm5, Pg, Zn, prfop) = {
       },
       2048 => {
           execute_PRFH_I_P_AI_D(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77123,8 +76090,7 @@ function decode_PRFW_I_P_AI_D (msz, imm5, Pg, Zn, prfop) = {
       },
       2048 => {
           execute_PRFW_I_P_AI_D(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77193,8 +76159,7 @@ function decode_PRFD_I_P_AI_D (msz, imm5, Pg, Zn, prfop) = {
       },
       2048 => {
           execute_PRFD_I_P_AI_D(2048, esize, g, level, n, offset, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77271,8 +76236,7 @@ function decode_LD1B_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77351,8 +76315,7 @@ function decode_LD1SB_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77455,8 +76418,7 @@ function decode_LDFF1B_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1B_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77559,8 +76521,7 @@ function decode_LDFF1SB_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1SB_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77639,8 +76600,7 @@ function decode_LD1H_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77719,8 +76679,7 @@ function decode_LD1SH_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77823,8 +76782,7 @@ function decode_LDFF1H_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -77927,8 +76885,7 @@ function decode_LDFF1SH_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1SH_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78007,8 +76964,7 @@ function decode_LD1W_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78087,8 +77043,7 @@ function decode_LD1SW_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1SW_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78191,8 +77146,7 @@ function decode_LDFF1W_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1W_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78295,8 +77249,7 @@ function decode_LDFF1SW_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1SW_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78375,8 +77328,7 @@ function decode_LD1D_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1D_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78479,8 +77431,7 @@ function decode_LDFF1D_Z_P_AI_D (msz, imm5, U, ff, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDFF1D_Z_P_AI_D(2048, esize, g, msize, n, offset, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78572,8 +77523,7 @@ function decode_LD1B_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1B_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78665,8 +77615,7 @@ function decode_LD1SB_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SB_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78782,8 +77731,7 @@ function decode_LDFF1B_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1B_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78899,8 +77847,7 @@ function decode_LDFF1SB_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SB_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -78992,8 +77939,7 @@ function decode_LD1H_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -79085,8 +78031,7 @@ function decode_LD1SH_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -79202,8 +78147,7 @@ function decode_LDFF1H_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -79319,8 +78263,7 @@ function decode_LDFF1SH_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SH_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -79412,8 +78355,7 @@ function decode_LD1W_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -79505,8 +78447,7 @@ function decode_LD1SW_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SW_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -79622,8 +78563,7 @@ function decode_LDFF1W_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1W_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -79739,8 +78679,7 @@ function decode_LDFF1SW_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SW_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -79832,8 +78771,7 @@ function decode_LD1D_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1D_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -79949,8 +78887,7 @@ function decode_LDFF1D_Z_P_BZ_D_64_unscaled (msz, Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1D_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80027,8 +78964,7 @@ function decode_PRFB_I_P_BZ_D_64_scaled (Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFB_I_P_BZ_D_64_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80103,8 +79039,7 @@ function decode_PRFH_I_P_BZ_D_64_scaled (Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFH_I_P_BZ_D_64_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80179,8 +79114,7 @@ function decode_PRFW_I_P_BZ_D_64_scaled (Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFW_I_P_BZ_D_64_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80255,8 +79189,7 @@ function decode_PRFD_I_P_BZ_D_64_scaled (Zm, msz, Pg, Rn, prfop) = {
       },
       2048 => {
           execute_PRFD_I_P_BZ_D_64_scaled(2048, esize, g, level, m, n, offs_size, offs_unsigned, pref_hint, scale, stream)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80346,8 +79279,7 @@ function decode_LD1H_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1H_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80438,8 +79370,7 @@ function decode_LD1SH_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SH_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80554,8 +79485,7 @@ function decode_LDFF1H_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1H_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80670,8 +79600,7 @@ function decode_LDFF1SH_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SH_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80762,8 +79691,7 @@ function decode_LD1W_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1W_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80854,8 +79782,7 @@ function decode_LD1SW_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1SW_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -80970,8 +79897,7 @@ function decode_LDFF1W_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1W_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81086,8 +80012,7 @@ function decode_LDFF1SW_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1SW_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81178,8 +80103,7 @@ function decode_LD1D_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LD1D_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81294,8 +80218,7 @@ function decode_LDFF1D_Z_P_BZ_D_64_scaled (Zm, U, ff, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_LDFF1D_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81381,8 +80304,7 @@ function decode_ST1B_Z_P_BR__ (size, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1B_Z_P_BR__(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81471,8 +80393,7 @@ function decode_ST1H_Z_P_BR__ (size, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_BR__(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81561,8 +80482,7 @@ function decode_ST1W_Z_P_BR__ (sz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BR__(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81651,8 +80571,7 @@ function decode_ST1D_Z_P_BR__ (Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1D_Z_P_BR__(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81740,8 +80659,7 @@ function decode_ST1W_Z_P_BR_U128 (Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BR_U128(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81829,8 +80747,7 @@ function decode_ST1D_Z_P_BR_U128 (Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1D_Z_P_BR_U128(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81902,8 +80819,7 @@ function decode_STR_P_BI__ (imm9h, imm9l, Rn, Pt) = {
       },
       2048 => {
           execute_STR_P_BI__(2048, imm, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -81975,8 +80891,7 @@ function decode_STR_Z_BI__ (imm9h, imm9l, Rn, Zt) = {
       },
       2048 => {
           execute_STR_Z_BI__(2048, imm, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82059,8 +80974,7 @@ function decode_STNT1B_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_STNT1B_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82144,8 +81058,7 @@ function decode_STNT1H_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_STNT1H_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82229,8 +81142,7 @@ function decode_STNT1W_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_STNT1W_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82314,8 +81226,7 @@ function decode_STNT1D_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_STNT1D_Z_P_BR_Contiguous(2048, esize, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82405,8 +81316,7 @@ function decode_ST2B_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2B_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82496,8 +81406,7 @@ function decode_ST2H_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2H_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82587,8 +81496,7 @@ function decode_ST2W_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2W_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82678,8 +81586,7 @@ function decode_ST2D_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2D_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82769,8 +81676,7 @@ function decode_ST3B_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3B_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82860,8 +81766,7 @@ function decode_ST3H_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3H_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -82951,8 +81856,7 @@ function decode_ST3W_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3W_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83042,8 +81946,7 @@ function decode_ST3D_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3D_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83133,8 +82036,7 @@ function decode_ST4B_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4B_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83224,8 +82126,7 @@ function decode_ST4H_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4H_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83315,8 +82216,7 @@ function decode_ST4W_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4W_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83406,8 +82306,7 @@ function decode_ST4D_Z_P_BR_Contiguous (msz, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4D_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83497,8 +82396,7 @@ function decode_ST2Q_Z_P_BR_Contiguous (num, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2Q_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83588,8 +82486,7 @@ function decode_ST3Q_Z_P_BR_Contiguous (num, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3Q_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83679,8 +82576,7 @@ function decode_ST4Q_Z_P_BR_Contiguous (num, Rm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4Q_Z_P_BR_Contiguous(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83766,8 +82662,7 @@ function decode_ST1B_Z_P_BZ_D_x32_unscaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1B_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83854,8 +82749,7 @@ function decode_ST1H_Z_P_BZ_D_x32_unscaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -83942,8 +82836,7 @@ function decode_ST1W_Z_P_BZ_D_x32_unscaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84030,8 +82923,7 @@ function decode_ST1D_Z_P_BZ_D_x32_unscaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1D_Z_P_BZ_D_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84118,8 +83010,7 @@ function decode_ST1B_Z_P_BZ_S_x32_unscaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1B_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84206,8 +83097,7 @@ function decode_ST1H_Z_P_BZ_S_x32_unscaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84294,8 +83184,7 @@ function decode_ST1W_Z_P_BZ_S_x32_unscaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BZ_S_x32_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84382,8 +83271,7 @@ function decode_ST1H_Z_P_BZ_D_x32_scaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84470,8 +83358,7 @@ function decode_ST1W_Z_P_BZ_D_x32_scaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84558,8 +83445,7 @@ function decode_ST1D_Z_P_BZ_D_x32_scaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1D_Z_P_BZ_D_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84646,8 +83532,7 @@ function decode_ST1H_Z_P_BZ_S_x32_scaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_BZ_S_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84734,8 +83619,7 @@ function decode_ST1W_Z_P_BZ_S_x32_scaled (msz, Zm, xs, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BZ_S_x32_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84822,8 +83706,7 @@ function decode_ST1B_Z_P_BZ_D_64_unscaled (msz, Zm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1B_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84909,8 +83792,7 @@ function decode_ST1H_Z_P_BZ_D_64_unscaled (msz, Zm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -84996,8 +83878,7 @@ function decode_ST1W_Z_P_BZ_D_64_unscaled (msz, Zm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85083,8 +83964,7 @@ function decode_ST1D_Z_P_BZ_D_64_unscaled (msz, Zm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1D_Z_P_BZ_D_64_unscaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85170,8 +84050,7 @@ function decode_ST1H_Z_P_BZ_D_64_scaled (msz, Zm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85257,8 +84136,7 @@ function decode_ST1W_Z_P_BZ_D_64_scaled (msz, Zm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85344,8 +84222,7 @@ function decode_ST1D_Z_P_BZ_D_64_scaled (msz, Zm, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1D_Z_P_BZ_D_64_scaled(2048, esize, g, m, msize, n, offs_size, offs_unsigned, scale, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85419,8 +84296,7 @@ function decode_ST1B_Z_P_AI_D (msz, imm5, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_ST1B_Z_P_AI_D(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85494,8 +84370,7 @@ function decode_ST1H_Z_P_AI_D (msz, imm5, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_AI_D(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85569,8 +84444,7 @@ function decode_ST1W_Z_P_AI_D (msz, imm5, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_AI_D(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85644,8 +84518,7 @@ function decode_ST1D_Z_P_AI_D (msz, imm5, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_ST1D_Z_P_AI_D(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85719,8 +84592,7 @@ function decode_ST1B_Z_P_AI_S (msz, imm5, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_ST1B_Z_P_AI_S(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85794,8 +84666,7 @@ function decode_ST1H_Z_P_AI_S (msz, imm5, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_AI_S(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85869,8 +84740,7 @@ function decode_ST1W_Z_P_AI_S (msz, imm5, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_AI_S(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -85951,8 +84821,7 @@ function decode_ST1B_Z_P_BI__ (msz, size, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1B_Z_P_BI__(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86038,8 +84907,7 @@ function decode_ST1H_Z_P_BI__ (msz, size, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1H_Z_P_BI__(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86125,8 +84993,7 @@ function decode_ST1W_Z_P_BI__ (msz, sz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BI__(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86212,8 +85079,7 @@ function decode_ST1D_Z_P_BI__ (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1D_Z_P_BI__(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86298,8 +85164,7 @@ function decode_ST1W_Z_P_BI_U128 (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1W_Z_P_BI_U128(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86384,8 +85249,7 @@ function decode_ST1D_Z_P_BI_U128 (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST1D_Z_P_BI_U128(2048, esize, g, msize, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86465,8 +85329,7 @@ function decode_STNT1B_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_STNT1B_Z_P_BI_Contiguous(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86546,8 +85409,7 @@ function decode_STNT1H_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_STNT1H_Z_P_BI_Contiguous(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86627,8 +85489,7 @@ function decode_STNT1W_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_STNT1W_Z_P_BI_Contiguous(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86708,8 +85569,7 @@ function decode_STNT1D_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_STNT1D_Z_P_BI_Contiguous(2048, esize, g, n, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86794,8 +85654,7 @@ function decode_ST2B_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2B_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86880,8 +85739,7 @@ function decode_ST2H_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2H_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -86966,8 +85824,7 @@ function decode_ST2W_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2W_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87052,8 +85909,7 @@ function decode_ST2D_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2D_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87138,8 +85994,7 @@ function decode_ST3B_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3B_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87224,8 +86079,7 @@ function decode_ST3H_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3H_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87310,8 +86164,7 @@ function decode_ST3W_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3W_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87396,8 +86249,7 @@ function decode_ST3D_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3D_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87482,8 +86334,7 @@ function decode_ST4B_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4B_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87568,8 +86419,7 @@ function decode_ST4H_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4H_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87654,8 +86504,7 @@ function decode_ST4W_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4W_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87740,8 +86589,7 @@ function decode_ST4D_Z_P_BI_Contiguous (msz, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4D_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87826,8 +86674,7 @@ function decode_ST2Q_Z_P_BI_Contiguous (num, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST2Q_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87912,8 +86759,7 @@ function decode_ST3Q_Z_P_BI_Contiguous (num, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST3Q_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -87998,8 +86844,7 @@ function decode_ST4Q_Z_P_BI_Contiguous (num, imm4, Pg, Rn, Zt) = {
       },
       2048 => {
           execute_ST4Q_Z_P_BI_Contiguous(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88079,8 +86924,7 @@ function decode_LDNT1B_Z_P_AR_S_x32_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1B_Z_P_AR_S_x32_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88161,8 +87005,7 @@ function decode_LDNT1H_Z_P_AR_S_x32_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1H_Z_P_AR_S_x32_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88243,8 +87086,7 @@ function decode_LDNT1W_Z_P_AR_S_x32_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1W_Z_P_AR_S_x32_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88325,8 +87167,7 @@ function decode_LDNT1SB_Z_P_AR_S_x32_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1SB_Z_P_AR_S_x32_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88407,8 +87248,7 @@ function decode_LDNT1SH_Z_P_AR_S_x32_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1SH_Z_P_AR_S_x32_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88489,8 +87329,7 @@ function decode_LDNT1B_Z_P_AR_D_64_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1B_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88571,8 +87410,7 @@ function decode_LDNT1H_Z_P_AR_D_64_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1H_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88653,8 +87491,7 @@ function decode_LDNT1W_Z_P_AR_D_64_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1W_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88735,8 +87572,7 @@ function decode_LDNT1D_Z_P_AR_D_64_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1D_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88817,8 +87653,7 @@ function decode_LDNT1SB_Z_P_AR_D_64_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1SB_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88899,8 +87734,7 @@ function decode_LDNT1SH_Z_P_AR_D_64_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1SH_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -88981,8 +87815,7 @@ function decode_LDNT1SW_Z_P_AR_D_64_unscaled (msz, Rm, U, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LDNT1SW_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89060,8 +87893,7 @@ function decode_STNT1B_Z_P_AR_S_x32_unscaled (msz, Rm, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_STNT1B_Z_P_AR_S_x32_unscaled(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89138,8 +87970,7 @@ function decode_STNT1H_Z_P_AR_S_x32_unscaled (msz, Rm, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_STNT1H_Z_P_AR_S_x32_unscaled(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89216,8 +88047,7 @@ function decode_STNT1W_Z_P_AR_S_x32_unscaled (msz, Rm, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_STNT1W_Z_P_AR_S_x32_unscaled(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89294,8 +88124,7 @@ function decode_STNT1B_Z_P_AR_D_64_unscaled (msz, Rm, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_STNT1B_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89372,8 +88201,7 @@ function decode_STNT1H_Z_P_AR_D_64_unscaled (msz, Rm, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_STNT1H_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89450,8 +88278,7 @@ function decode_STNT1W_Z_P_AR_D_64_unscaled (msz, Rm, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_STNT1W_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89528,8 +88355,7 @@ function decode_STNT1D_Z_P_AR_D_64_unscaled (msz, Rm, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_STNT1D_Z_P_AR_D_64_unscaled(2048, esize, g, m, msize, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89603,8 +88429,7 @@ function decode_LD1Q_Z_P_AR_D_64_unscaled (Rm, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_LD1Q_Z_P_AR_D_64_unscaled(2048, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89677,8 +88502,7 @@ function decode_ST1Q_Z_P_AR_D_64_unscaled (Rm, Pg, Zn, Zt) = {
       },
       2048 => {
           execute_ST1Q_Z_P_AR_D_64_unscaled(2048, g, m, n, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89769,8 +88593,7 @@ function decode_LD1B_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1B_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89863,8 +88686,7 @@ function decode_LD1H_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1H_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -89957,8 +88779,7 @@ function decode_LD1W_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1W_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90051,8 +88872,7 @@ function decode_LD1D_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1D_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90145,8 +88965,7 @@ function decode_LD1B_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1B_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90239,8 +89058,7 @@ function decode_LD1H_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1H_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90333,8 +89151,7 @@ function decode_LD1W_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1W_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90427,8 +89244,7 @@ function decode_LD1D_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1D_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90521,8 +89337,7 @@ function decode_LDNT1B_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1B_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90615,8 +89430,7 @@ function decode_LDNT1H_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1H_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90709,8 +89523,7 @@ function decode_LDNT1W_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1W_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90803,8 +89616,7 @@ function decode_LDNT1D_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1D_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90897,8 +89709,7 @@ function decode_LDNT1B_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1B_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -90991,8 +89802,7 @@ function decode_LDNT1H_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1H_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91085,8 +89895,7 @@ function decode_LDNT1W_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1W_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91179,8 +89988,7 @@ function decode_LDNT1D_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1D_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91270,8 +90078,7 @@ function decode_ST1B_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1B_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91361,8 +90168,7 @@ function decode_ST1H_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1H_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91452,8 +90258,7 @@ function decode_ST1W_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1W_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91543,8 +90348,7 @@ function decode_ST1D_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1D_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91634,8 +90438,7 @@ function decode_ST1B_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1B_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91725,8 +90528,7 @@ function decode_ST1H_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1H_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91816,8 +90618,7 @@ function decode_ST1W_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1W_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91907,8 +90708,7 @@ function decode_ST1D_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1D_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -91998,8 +90798,7 @@ function decode_STNT1B_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1B_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92089,8 +90888,7 @@ function decode_STNT1H_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1H_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92180,8 +90978,7 @@ function decode_STNT1W_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1W_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92271,8 +91068,7 @@ function decode_STNT1D_MZ_P_BR_2 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1D_MZ_P_BR_2(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92362,8 +91158,7 @@ function decode_STNT1B_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1B_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92453,8 +91248,7 @@ function decode_STNT1H_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1H_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92544,8 +91338,7 @@ function decode_STNT1W_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1W_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92635,8 +91428,7 @@ function decode_STNT1D_MZ_P_BR_4 (Rm, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1D_MZ_P_BR_4(2048, esize, g, m, n, nreg, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92727,8 +91519,7 @@ function decode_LD1B_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1B_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92819,8 +91610,7 @@ function decode_LD1H_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1H_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -92911,8 +91701,7 @@ function decode_LD1W_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1W_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93003,8 +91792,7 @@ function decode_LD1D_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1D_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93095,8 +91883,7 @@ function decode_LD1B_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1B_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93187,8 +91974,7 @@ function decode_LD1H_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1H_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93279,8 +92065,7 @@ function decode_LD1W_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1W_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93371,8 +92156,7 @@ function decode_LD1D_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LD1D_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93463,8 +92247,7 @@ function decode_LDNT1B_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1B_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93555,8 +92338,7 @@ function decode_LDNT1H_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1H_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93647,8 +92429,7 @@ function decode_LDNT1W_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1W_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93739,8 +92520,7 @@ function decode_LDNT1D_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1D_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93831,8 +92611,7 @@ function decode_LDNT1B_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1B_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -93923,8 +92702,7 @@ function decode_LDNT1H_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1H_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94015,8 +92793,7 @@ function decode_LDNT1W_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1W_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94107,8 +92884,7 @@ function decode_LDNT1D_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_LDNT1D_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94196,8 +92972,7 @@ function decode_ST1B_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1B_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94285,8 +93060,7 @@ function decode_ST1H_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1H_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94374,8 +93148,7 @@ function decode_ST1W_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1W_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94463,8 +93236,7 @@ function decode_ST1D_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1D_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94552,8 +93324,7 @@ function decode_ST1B_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1B_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94641,8 +93412,7 @@ function decode_ST1H_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1H_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94730,8 +93500,7 @@ function decode_ST1W_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1W_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94819,8 +93588,7 @@ function decode_ST1D_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_ST1D_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94908,8 +93676,7 @@ function decode_STNT1B_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1B_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -94997,8 +93764,7 @@ function decode_STNT1H_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1H_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -95086,8 +93852,7 @@ function decode_STNT1W_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1W_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -95175,8 +93940,7 @@ function decode_STNT1D_MZ_P_BI_2 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1D_MZ_P_BI_2(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -95264,8 +94028,7 @@ function decode_STNT1B_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1B_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -95353,8 +94116,7 @@ function decode_STNT1H_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1H_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -95442,8 +94204,7 @@ function decode_STNT1W_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1W_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -95531,8 +94292,7 @@ function decode_STNT1D_MZ_P_BI_4 (imm4, msz, PNg, Rn, Zt, N) = {
       },
       2048 => {
           execute_STNT1D_MZ_P_BI_4(2048, esize, g, n, nreg, offset, t)
-      },
-      _ => ()
+      }
     }
 }
 

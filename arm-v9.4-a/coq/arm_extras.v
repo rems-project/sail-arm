@@ -1,7 +1,7 @@
 (******************************************************************************)
 (*  BSD 3-clause Clear License                                                *)
 (*                                                                            *)
-(*  Copyright (c) 2022                                                        *)
+(*  Copyright (c) 2023                                                        *)
 (*    Arm Limited (or its affiliates),                                        *)
 (*    Thomas Bauereiss,                                                       *)
 (*    Brian Campbell,                                                         *)

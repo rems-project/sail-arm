@@ -262,7 +262,7 @@ function __DecodeExecute (enc, instr) = {
     }
 }
 
-register __emulator_termination_opcode : option(bits(32)) = None()
+register __emulator_termination_opcode : option(bits(32)) = Some(0x00000000)
 
 val __CheckForEmulatorTermination : (__InstrEnc, bits(32)) -> unit
 

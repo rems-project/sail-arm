@@ -4,7 +4,16 @@
 /c.stamp
 /c/
 /isabelle.stamp
-/isabelle/
+/isabelle/Armv9.thy
+/isabelle/Armv9_lemmas.thy
+/isabelle/Decode_end.thy
+/isabelle/Event_clauses.thy
+/isabelle/Fetch.thy
+/isabelle/Map_clauses.thy
+/isabelle/base/
+/isabelle/instrs/
+/isabelle/system/
+/isabelle/vector_instrs/
 /lem.stamp
 /lem/
 /linux-6.0.7.tar.xz

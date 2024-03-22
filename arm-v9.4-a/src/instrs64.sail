@@ -10612,8 +10612,6 @@ function clause __DecodeA64_DataProcFPSIMD ((pc, ([bitone, bitone, bitzero, bitz
 val execute_aarch64_instrs_branch_unconditional_eret : forall ('pac : Bool) ('use_key_a : Bool).
   (bool('pac), bool('use_key_a)) -> unit
 
-val return_exception : bits(56) -> unit
-
 function execute_aarch64_instrs_branch_unconditional_eret (pac, use_key_a) = {
     AArch64_CheckForERetTrap(pac, use_key_a);
     target : bits(64) = ELR_read__1();

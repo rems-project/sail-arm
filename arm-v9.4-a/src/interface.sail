@@ -182,5 +182,7 @@ instantiation sail_return_exception
 instantiation sail_take_exception with
   'fault = option(FaultRecord)
 
+val return_exception : bits(56) -> unit
+
 function return_exception(x) = sail_return_exception(x)
 function take_exception(fault) = sail_take_exception(fault)

@@ -1,0 +1,35 @@
+session "Sail-Armv9-Base" in "base" = "Sail" +
+  options [document = false]
+  theories
+    Decode_start
+    V8_base
+
+session "Sail-Armv9-System" in "system" = "Sail-Armv9-Base" +
+  options [document = false]
+  theories
+    Stubs
+    Interrupts
+    Interface
+    No_devices
+    Impdefs
+    Sysregs_autogen
+    Sysregs
+    Reset
+
+session "Sail-Armv9-Instrs" in "instrs" = "Sail-Armv9-System" +
+  options [document = false]
+  theories
+    Instrs64
+    Instrs32
+
+session "Sail-Armv9-Vector-Instrs" in "vector_instrs" = "Sail-Armv9-Instrs" +
+  options [document = false]
+  theories
+    Instrs64_sve
+    Instrs64_sme
+
+session "Sail-Armv9" = "Sail-Armv9-Vector-Instrs" +
+  options [document = false]
+  theories
+    Armv9
+    Armv9_lemmas

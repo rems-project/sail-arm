@@ -17,9 +17,10 @@ ISLA_PREPROCESS=isla-preprocess
 ISLA_PREPROCESS_CONFIG=../../isla/configs/armv9p4.toml
 
 DEVICES=devices.sail
+DEVICES_LEM=$(addsuffix .lem,$(basename $(DEVICES)))
 DEVICES_PATH=src/$(DEVICES)
 
-SAIL_SRCS=src/prelude.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/sysregs_autogen.sail src/sysregs.sail src/instrs64.sail src/instrs64_sve.sail src/instrs64_sme.sail src/instrs32.sail src/interrupts.sail src/reset.sail src/fetch.sail src/interface.sail $(DEVICES_PATH) src/impdefs.sail src/mem.sail src/decode_end.sail src/map_clauses.sail src/event_clauses.sail src/stubs.sail
+SAIL_SRCS=src/prelude.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/stubs.sail src/interrupts.sail src/interface.sail $(DEVICES_PATH) src/impdefs.sail src/mem.sail src/sysregs_autogen.sail src/sysregs.sail src/reset.sail src/instrs32.sail src/instrs64.sail src/instrs64_sve.sail src/instrs64_sme.sail src/decode_end.sail src/fetch.sail src/map_clauses.sail src/event_clauses.sail
 SAIL_MAIN=src/elfmain.sail
 ISLA_MAIN=src/isla_main.sail
 ISLA_SPLICE=src/isla_splice.sail
@@ -29,38 +30,53 @@ SAIL_C_FLAGS = -O -Oconstant_fold
 # Extra monomorphisation splits
 SAIL_LEM_FLAGS = $(file < sail-lem-flags)
 
+LEM_BASE_FILES=armv9_types.lem builtins.lem decode_start.lem prelude.lem v8_base.lem
+LEM_SYSTEM_FILES=impdefs.lem interface.lem interrupts.lem $(DEVICES_LEM) reset.lem stubs.lem sysregs_autogen.lem sysregs.lem
+LEM_INSTRS_FILES=instrs32.lem instrs64.lem
+LEM_VECTOR_INSTRS_FILES=instrs64_sme.lem instrs64_sve.lem
+LEM_LIBS=-lib Sail=$(SAIL_DIR)/src/gen_lib -lib Sail-Armv9-Base=lem/base -lib Sail-Armv9-System=lem/system -lib Sail-Armv9-Instrs=lem/instrs -lib Sail-Armv9-Vector-Instrs=lem/vector_instrs
+
 all: lem.stamp isabelle.stamp coq.stamp
 
 .PHONY: all clean interactive gen_c gen_isabelle
 
-lem lem.stamp: $(SAIL_SRCS) $(LEM_SPLICES) lem/prelude.lem
+lem lem.stamp: $(SAIL_SRCS) $(LEM_SPLICES) lem/base/extra_defs.lem src/termination_measures.sail src/lem-patches/Feature.patch
 	mkdir -p isabelle
-	$(SAIL) -dprofile -verbose 1 -memo_z3 -grouped_regstate \
-	        -lem -lem_output_dir lem -isa_output_dir isabelle -o armv9 -lem_lib Prelude \
+	$(SAIL) -dprofile -verbose 1 -memo_z3 -grouped_regstate -lem_split_files \
+	        -lem -lem_output_dir lem -isa_output_dir isabelle -o armv9 -lem_lib Extra_defs \
 	        -lem_mwords -mono_rewrites -auto_mono -undefined_gen \
 	        $(foreach splice,$(LEM_SPLICES),-splice $(splice)) \
-	        $(SAIL_SRCS) $(SAIL_LEM_FLAGS) $(SAIL_FLAGS)
-	sed -i '/open import Sail2_monadic_combinators/a open import Prelude' lem/armv9_types.lem
-	sed -i -f src/lem-patches/ldr1ron_ty0_fixup.sed lem/armv9.lem
+	        $(SAIL_SRCS) src/termination_measures.sail $(SAIL_LEM_FLAGS) $(SAIL_FLAGS)
+	sed -i '/open import Sail2_monadic_combinators/a open import Extra_defs' lem/armv9_types.lem
+	sed -i -f src/lem-patches/ldr1ron_ty0_fixup.sed lem/instrs64_sve.lem
+	patch -p0 < src/lem-patches/Feature.patch
+	mkdir -p lem/base lem/system lem/instrs lem/vector_instrs
+	mv $(addprefix lem/,$(LEM_BASE_FILES)) lem/base
+	mv $(addprefix lem/,$(LEM_SYSTEM_FILES)) lem/system
+	mv $(addprefix lem/,$(LEM_INSTRS_FILES)) lem/instrs
+	mv $(addprefix lem/,$(LEM_VECTOR_INSTRS_FILES)) lem/vector_instrs
 	touch lem.stamp
 
-lem/prelude.lem: src/lem-patches/prelude.lem
-	mkdir -p lem
-	cp $^ lem
+lem/base/extra_defs.lem: src/lem-patches/extra_defs.lem
+	mkdir -p lem/base
+	cp $^ lem/base
 
 gen_isabelle isabelle isabelle.stamp: lem.stamp
-	mkdir -p isabelle
-	$(LEM) -isa -outdir isabelle -lib Sail=$(SAIL_DIR)/src/gen_lib \
-	    lem/prelude.lem lem/armv9_types.lem lem/armv9.lem
+	mkdir -p isabelle/base isabelle/system isabelle/instrs isabelle/vector_instrs
+	$(LEM) -isa $(LEM_LIBS) -outdir isabelle/base lem/base/*.lem
+	$(LEM) -isa $(LEM_LIBS) -outdir isabelle/system lem/system/*.lem
+	$(LEM) -isa $(LEM_LIBS) -outdir isabelle/instrs lem/instrs/*.lem
+	$(LEM) -isa $(LEM_LIBS) -outdir isabelle/vector_instrs lem/vector_instrs/*.lem
+	$(LEM) -isa $(LEM_LIBS) -outdir isabelle lem/*.lem
 	touch isabelle.stamp
 
-gen_coq coq coq.stamp: $(SAIL_SRCS) src/coq_termination.sail
+gen_coq coq coq.stamp: $(SAIL_SRCS) src/termination_measures.sail
 	$(SAIL) -dprofile -verbose 1 -memo_z3 \
 	        -coq -dcoq_undef_axioms \
 	        -coq_output_dir coq -o armv9 -coq_lib arm_extras \
 	        -undefined_gen \
 	        $(SAIL_SRCS) $(SAIL_FLAGS) \
-	        src/coq_termination.sail
+	        src/termination_measures.sail
 	touch coq.stamp
 
 c/armv9.c: $(SAIL_SRCS) $(SAIL_MAIN)
@@ -88,7 +104,7 @@ interface_types.sail: $(SAIL_SRCS)
 interactive:
 	$(SAIL) -i -memo_z3 -verbose 1 \
 	        $(SAIL_SRCS) $(SAIL_FLAGS) \
-	        src/coq_termination.sail
+	        src/termination_measures.sail
 
 clean:
 	rm -f lem.stamp lem/arm.lem lem/arm_types.lem

@@ -1,0 +1,1065 @@
+diff -ru lem.orig/armv9_types.lem lem/armv9_types.lem
+--- lem.orig/armv9_types.lem	2024-03-08 13:18:38.932479045 +0000
++++ lem/armv9_types.lem	2024-03-08 14:22:22.635417875 +0000
+@@ -47,265 +47,266 @@
+ type DormantCtl_Type  = mword ty32
+ 
+ 
+-type Feature =
+-  | FEAT_AA32EL0
+-  | FEAT_AA32EL1
+-  | FEAT_AA32EL2
+-  | FEAT_AA32EL3
+-  | FEAT_AA64EL0
+-  | FEAT_AA64EL1
+-  | FEAT_AA64EL2
+-  | FEAT_AA64EL3
+-  | FEAT_EL0
+-  | FEAT_EL1
+-  | FEAT_EL2
+-  | FEAT_EL3
+-  | FEAT_AES
+-  | FEAT_AdvSIMD
+-  | FEAT_CSV2_1p1
+-  | FEAT_CSV2_1p2
+-  | FEAT_CSV2_2
+-  | FEAT_CSV2_3
+-  | FEAT_DoubleLock
+-  | FEAT_ETMv4
+-  | FEAT_ETMv4p1
+-  | FEAT_ETMv4p2
+-  | FEAT_ETMv4p3
+-  | FEAT_ETMv4p4
+-  | FEAT_ETMv4p5
+-  | FEAT_ETMv4p6
+-  | FEAT_ETS2
+-  | FEAT_FP
+-  | FEAT_GICv3
+-  | FEAT_GICv3_LEGACY
+-  | FEAT_GICv3_TDIR
+-  | FEAT_GICv3p1
+-  | FEAT_GICv4
+-  | FEAT_GICv4p1
+-  | FEAT_IVIPT
+-  | FEAT_PCSRv8
+-  | FEAT_PMULL
+-  | FEAT_PMUv3
+-  | FEAT_PMUv3_EXT
+-  | FEAT_PMUv3_EXT32
+-  | FEAT_SHA1
+-  | FEAT_SHA256
+-  | FEAT_TRC_EXT
+-  | FEAT_TRC_SR
+-  | FEAT_nTLBPA
+-  | FEAT_CRC32
+-  | FEAT_Debugv8p1
+-  | FEAT_HAFDBS
+-  | FEAT_HPDS
+-  | FEAT_LOR
+-  | FEAT_LSE
+-  | FEAT_PAN
+-  | FEAT_PMUv3p1
+-  | FEAT_RDM
+-  | FEAT_VHE
+-  | FEAT_VMID16
+-  | FEAT_AA32BF16
+-  | FEAT_AA32HPD
+-  | FEAT_AA32I8MM
+-  | FEAT_ASMv8p2
+-  | FEAT_DPB
+-  | FEAT_Debugv8p2
+-  | FEAT_EDHSR
+-  | FEAT_F32MM
+-  | FEAT_F64MM
+-  | FEAT_FP16
+-  | FEAT_HPDS2
+-  | FEAT_I8MM
+-  | FEAT_IESB
+-  | FEAT_LPA
+-  | FEAT_LSMAOC
+-  | FEAT_LVA
+-  | FEAT_MPAM
+-  | FEAT_PAN2
+-  | FEAT_PCSRv8p2
+-  | FEAT_RAS
+-  | FEAT_SHA3
+-  | FEAT_SHA512
+-  | FEAT_SM3
+-  | FEAT_SM4
+-  | FEAT_SPE
+-  | FEAT_SVE
+-  | FEAT_TTCNP
+-  | FEAT_UAO
+-  | FEAT_VPIPT
+-  | FEAT_XNX
+-  | FEAT_CCIDX
+-  | FEAT_CONSTPACFIELD
+-  | FEAT_EPAC
+-  | FEAT_FCMA
+-  | FEAT_FPAC
+-  | FEAT_FPACCOMBINE
+-  | FEAT_JSCVT
+-  | FEAT_LRCPC
+-  | FEAT_NV
+-  | FEAT_PACIMP
+-  | FEAT_PACQARMA3
+-  | FEAT_PACQARMA5
+-  | FEAT_PAuth
+-  | FEAT_SPEv1p1
+-  | FEAT_AMUv1
+-  | FEAT_BBM
+-  | FEAT_CNTSC
+-  | FEAT_DIT
+-  | FEAT_Debugv8p4
+-  | FEAT_DotProd
+-  | FEAT_DoubleFault
+-  | FEAT_FHM
+-  | FEAT_FlagM
+-  | FEAT_IDST
+-  | FEAT_LRCPC2
+-  | FEAT_LSE2
+-  | FEAT_NV2
+-  | FEAT_PMUv3p4
+-  | FEAT_RASSAv1p1
+-  | FEAT_RASv1p1
+-  | FEAT_S2FWB
+-  | FEAT_SEL2
+-  | FEAT_TLBIOS
+-  | FEAT_TLBIRANGE
+-  | FEAT_TRF
+-  | FEAT_TTL
+-  | FEAT_TTST
+-  | FEAT_BTI
+-  | FEAT_CSV2
+-  | FEAT_CSV3
+-  | FEAT_DPB2
+-  | FEAT_E0PD
+-  | FEAT_EVT
+-  | FEAT_ExS
+-  | FEAT_FRINTTS
+-  | FEAT_FlagM2
+-  | FEAT_GTG
+-  | FEAT_MTE
+-  | FEAT_MTE2
+-  | FEAT_PMUv3p5
+-  | FEAT_RNG
+-  | FEAT_RNG_TRAP
+-  | FEAT_SB
+-  | FEAT_SPECRES
+-  | FEAT_SSBS
+-  | FEAT_SSBS2
+-  | FEAT_AMUv1p1
+-  | FEAT_BF16
+-  | FEAT_DGH
+-  | FEAT_ECV
+-  | FEAT_FGT
+-  | FEAT_HPMN0
+-  | FEAT_MPAMv0p1
+-  | FEAT_MPAMv1p1
+-  | FEAT_MTPMU
+-  | FEAT_PAuth2
+-  | FEAT_TWED
+-  | FEAT_AFP
+-  | FEAT_EBF16
+-  | FEAT_HCX
+-  | FEAT_LPA2
+-  | FEAT_LS64
+-  | FEAT_LS64_ACCDATA
+-  | FEAT_LS64_V
+-  | FEAT_MTE3
+-  | FEAT_PAN3
+-  | FEAT_PMUv3p7
+-  | FEAT_RPRES
+-  | FEAT_SPEv1p2
+-  | FEAT_WFxT
+-  | FEAT_XS
+-  | FEAT_CMOW
+-  | FEAT_Debugv8p8
+-  | FEAT_GICv3_NMI
+-  | FEAT_HBC
+-  | FEAT_MOPS
+-  | FEAT_NMI
+-  | FEAT_PMUv3_EXT64
+-  | FEAT_PMUv3_TH
+-  | FEAT_PMUv3p8
+-  | FEAT_SCTLR2
+-  | FEAT_SPEv1p3
+-  | FEAT_TCR2
+-  | FEAT_TIDCP1
+-  | FEAT_ADERR
+-  | FEAT_AIE
+-  | FEAT_ANERR
+-  | FEAT_CLRBHB
+-  | FEAT_CSSC
+-  | FEAT_Debugv8p9
+-  | FEAT_DoubleFault2
+-  | FEAT_ECBHB
+-  | FEAT_FGT2
+-  | FEAT_HAFT
+-  | FEAT_LRCPC3
+-  | FEAT_MTE4
+-  | FEAT_MTE_ASYM_FAULT
+-  | FEAT_MTE_ASYNC
+-  | FEAT_MTE_CANONICAL_TAGS
+-  | FEAT_MTE_NO_ADDRESS_TAGS
+-  | FEAT_MTE_PERM
+-  | FEAT_MTE_STORE_ONLY
+-  | FEAT_MTE_TAGGED_FAR
+-  | FEAT_PCSRv8p9
+-  | FEAT_PFAR
+-  | FEAT_PMUv3_EDGE
+-  | FEAT_PMUv3_ICNTR
+-  | FEAT_PMUv3_SS
+-  | FEAT_PMUv3p9
+-  | FEAT_PRFMSLC
+-  | FEAT_RASSAv2
+-  | FEAT_RASv2
+-  | FEAT_RPRFM
+-  | FEAT_S1PIE
+-  | FEAT_S1POE
+-  | FEAT_S2PIE
+-  | FEAT_S2POE
+-  | FEAT_SPECRES2
+-  | FEAT_SPE_CRR
+-  | FEAT_SPE_FDS
+-  | FEAT_SPEv1p4
+-  | FEAT_SPMU
+-  | FEAT_THE
+-  | FEAT_DoPD
+-  | FEAT_ETE
+-  | FEAT_SVE2
+-  | FEAT_SVE_AES
+-  | FEAT_SVE_BitPerm
+-  | FEAT_SVE_PMULL128
+-  | FEAT_SVE_SHA3
+-  | FEAT_SVE_SM4
+-  | FEAT_TME
+-  | FEAT_TRBE
+-  | FEAT_ETEv1p1
+-  | FEAT_BRBE
+-  | FEAT_ETEv1p2
+-  | FEAT_RME
+-  | FEAT_SME
+-  | FEAT_SME_F64F64
+-  | FEAT_SME_FA64
+-  | FEAT_SME_I16I64
+-  | FEAT_BRBEv1p1
+-  | FEAT_MEC
+-  | FEAT_SME2
+-  | FEAT_ABLE
+-  | FEAT_CHK
+-  | FEAT_D128
+-  | FEAT_EBEP
+-  | FEAT_ETEv1p3
+-  | FEAT_GCS
+-  | FEAT_ITE
+-  | FEAT_LSE128
+-  | FEAT_LVA3
+-  | FEAT_SEBEP
+-  | FEAT_SME2p1
+-  | FEAT_SME_F16F16
+-  | FEAT_SVE2p1
+-  | FEAT_SVE_B16B16
+-  | FEAT_SYSINSTR128
+-  | FEAT_SYSREG128
+-  | FEAT_TRBE_EXT
+-  | FEAT_TRBE_MPAM
++type Feature = integer
++
++let FEAT_AA32EL0 = (0 : Feature)
++let FEAT_AA32EL1 = (1 : Feature)
++let FEAT_AA32EL2 = (2 : Feature)
++let FEAT_AA32EL3 = (3 : Feature)
++let FEAT_AA64EL0 = (4 : Feature)
++let FEAT_AA64EL1 = (5 : Feature)
++let FEAT_AA64EL2 = (6 : Feature)
++let FEAT_AA64EL3 = (7 : Feature)
++let FEAT_EL0 = (8 : Feature)
++let FEAT_EL1 = (9 : Feature)
++let FEAT_EL2 = (10 : Feature)
++let FEAT_EL3 = (11 : Feature)
++let FEAT_AES = (12 : Feature)
++let FEAT_AdvSIMD = (13 : Feature)
++let FEAT_CSV2_1p1 = (14 : Feature)
++let FEAT_CSV2_1p2 = (15 : Feature)
++let FEAT_CSV2_2 = (16 : Feature)
++let FEAT_CSV2_3 = (17 : Feature)
++let FEAT_DoubleLock = (18 : Feature)
++let FEAT_ETMv4 = (19 : Feature)
++let FEAT_ETMv4p1 = (20 : Feature)
++let FEAT_ETMv4p2 = (21 : Feature)
++let FEAT_ETMv4p3 = (22 : Feature)
++let FEAT_ETMv4p4 = (23 : Feature)
++let FEAT_ETMv4p5 = (24 : Feature)
++let FEAT_ETMv4p6 = (25 : Feature)
++let FEAT_ETS2 = (26 : Feature)
++let FEAT_FP = (27 : Feature)
++let FEAT_GICv3 = (28 : Feature)
++let FEAT_GICv3_LEGACY = (29 : Feature)
++let FEAT_GICv3_TDIR = (30 : Feature)
++let FEAT_GICv3p1 = (31 : Feature)
++let FEAT_GICv4 = (32 : Feature)
++let FEAT_GICv4p1 = (33 : Feature)
++let FEAT_IVIPT = (34 : Feature)
++let FEAT_PCSRv8 = (35 : Feature)
++let FEAT_PMULL = (36 : Feature)
++let FEAT_PMUv3 = (37 : Feature)
++let FEAT_PMUv3_EXT = (38 : Feature)
++let FEAT_PMUv3_EXT32 = (39 : Feature)
++let FEAT_SHA1 = (40 : Feature)
++let FEAT_SHA256 = (41 : Feature)
++let FEAT_TRC_EXT = (42 : Feature)
++let FEAT_TRC_SR = (43 : Feature)
++let FEAT_nTLBPA = (44 : Feature)
++let FEAT_CRC32 = (45 : Feature)
++let FEAT_Debugv8p1 = (46 : Feature)
++let FEAT_HAFDBS = (47 : Feature)
++let FEAT_HPDS = (48 : Feature)
++let FEAT_LOR = (49 : Feature)
++let FEAT_LSE = (50 : Feature)
++let FEAT_PAN = (51 : Feature)
++let FEAT_PMUv3p1 = (52 : Feature)
++let FEAT_RDM = (53 : Feature)
++let FEAT_VHE = (54 : Feature)
++let FEAT_VMID16 = (55 : Feature)
++let FEAT_AA32BF16 = (56 : Feature)
++let FEAT_AA32HPD = (57 : Feature)
++let FEAT_AA32I8MM = (58 : Feature)
++let FEAT_ASMv8p2 = (59 : Feature)
++let FEAT_DPB = (60 : Feature)
++let FEAT_Debugv8p2 = (61 : Feature)
++let FEAT_EDHSR = (62 : Feature)
++let FEAT_F32MM = (63 : Feature)
++let FEAT_F64MM = (64 : Feature)
++let FEAT_FP16 = (65 : Feature)
++let FEAT_HPDS2 = (66 : Feature)
++let FEAT_I8MM = (67 : Feature)
++let FEAT_IESB = (68 : Feature)
++let FEAT_LPA = (69 : Feature)
++let FEAT_LSMAOC = (70 : Feature)
++let FEAT_LVA = (71 : Feature)
++let FEAT_MPAM = (72 : Feature)
++let FEAT_PAN2 = (73 : Feature)
++let FEAT_PCSRv8p2 = (74 : Feature)
++let FEAT_RAS = (75 : Feature)
++let FEAT_SHA3 = (76 : Feature)
++let FEAT_SHA512 = (77 : Feature)
++let FEAT_SM3 = (78 : Feature)
++let FEAT_SM4 = (79 : Feature)
++let FEAT_SPE = (80 : Feature)
++let FEAT_SVE = (81 : Feature)
++let FEAT_TTCNP = (82 : Feature)
++let FEAT_UAO = (83 : Feature)
++let FEAT_VPIPT = (84 : Feature)
++let FEAT_XNX = (85 : Feature)
++let FEAT_CCIDX = (86 : Feature)
++let FEAT_CONSTPACFIELD = (87 : Feature)
++let FEAT_EPAC = (88 : Feature)
++let FEAT_FCMA = (89 : Feature)
++let FEAT_FPAC = (90 : Feature)
++let FEAT_FPACCOMBINE = (91 : Feature)
++let FEAT_JSCVT = (92 : Feature)
++let FEAT_LRCPC = (93 : Feature)
++let FEAT_NV = (94 : Feature)
++let FEAT_PACIMP = (95 : Feature)
++let FEAT_PACQARMA3 = (96 : Feature)
++let FEAT_PACQARMA5 = (97 : Feature)
++let FEAT_PAuth = (98 : Feature)
++let FEAT_SPEv1p1 = (99 : Feature)
++let FEAT_AMUv1 = (100 : Feature)
++let FEAT_BBM = (101 : Feature)
++let FEAT_CNTSC = (102 : Feature)
++let FEAT_DIT = (103 : Feature)
++let FEAT_Debugv8p4 = (104 : Feature)
++let FEAT_DotProd = (105 : Feature)
++let FEAT_DoubleFault = (106 : Feature)
++let FEAT_FHM = (107 : Feature)
++let FEAT_FlagM = (108 : Feature)
++let FEAT_IDST = (109 : Feature)
++let FEAT_LRCPC2 = (110 : Feature)
++let FEAT_LSE2 = (111 : Feature)
++let FEAT_NV2 = (112 : Feature)
++let FEAT_PMUv3p4 = (113 : Feature)
++let FEAT_RASSAv1p1 = (114 : Feature)
++let FEAT_RASv1p1 = (115 : Feature)
++let FEAT_S2FWB = (116 : Feature)
++let FEAT_SEL2 = (117 : Feature)
++let FEAT_TLBIOS = (118 : Feature)
++let FEAT_TLBIRANGE = (119 : Feature)
++let FEAT_TRF = (120 : Feature)
++let FEAT_TTL = (121 : Feature)
++let FEAT_TTST = (122 : Feature)
++let FEAT_BTI = (123 : Feature)
++let FEAT_CSV2 = (124 : Feature)
++let FEAT_CSV3 = (125 : Feature)
++let FEAT_DPB2 = (126 : Feature)
++let FEAT_E0PD = (127 : Feature)
++let FEAT_EVT = (128 : Feature)
++let FEAT_ExS = (129 : Feature)
++let FEAT_FRINTTS = (130 : Feature)
++let FEAT_FlagM2 = (131 : Feature)
++let FEAT_GTG = (132 : Feature)
++let FEAT_MTE = (133 : Feature)
++let FEAT_MTE2 = (134 : Feature)
++let FEAT_PMUv3p5 = (135 : Feature)
++let FEAT_RNG = (136 : Feature)
++let FEAT_RNG_TRAP = (137 : Feature)
++let FEAT_SB = (138 : Feature)
++let FEAT_SPECRES = (139 : Feature)
++let FEAT_SSBS = (140 : Feature)
++let FEAT_SSBS2 = (141 : Feature)
++let FEAT_AMUv1p1 = (142 : Feature)
++let FEAT_BF16 = (143 : Feature)
++let FEAT_DGH = (144 : Feature)
++let FEAT_ECV = (145 : Feature)
++let FEAT_FGT = (146 : Feature)
++let FEAT_HPMN0 = (147 : Feature)
++let FEAT_MPAMv0p1 = (148 : Feature)
++let FEAT_MPAMv1p1 = (149 : Feature)
++let FEAT_MTPMU = (150 : Feature)
++let FEAT_PAuth2 = (151 : Feature)
++let FEAT_TWED = (152 : Feature)
++let FEAT_AFP = (153 : Feature)
++let FEAT_EBF16 = (154 : Feature)
++let FEAT_HCX = (155 : Feature)
++let FEAT_LPA2 = (156 : Feature)
++let FEAT_LS64 = (157 : Feature)
++let FEAT_LS64_ACCDATA = (158 : Feature)
++let FEAT_LS64_V = (159 : Feature)
++let FEAT_MTE3 = (160 : Feature)
++let FEAT_PAN3 = (161 : Feature)
++let FEAT_PMUv3p7 = (162 : Feature)
++let FEAT_RPRES = (163 : Feature)
++let FEAT_SPEv1p2 = (164 : Feature)
++let FEAT_WFxT = (165 : Feature)
++let FEAT_XS = (166 : Feature)
++let FEAT_CMOW = (167 : Feature)
++let FEAT_Debugv8p8 = (168 : Feature)
++let FEAT_GICv3_NMI = (169 : Feature)
++let FEAT_HBC = (170 : Feature)
++let FEAT_MOPS = (171 : Feature)
++let FEAT_NMI = (172 : Feature)
++let FEAT_PMUv3_EXT64 = (173 : Feature)
++let FEAT_PMUv3_TH = (174 : Feature)
++let FEAT_PMUv3p8 = (175 : Feature)
++let FEAT_SCTLR2 = (176 : Feature)
++let FEAT_SPEv1p3 = (177 : Feature)
++let FEAT_TCR2 = (178 : Feature)
++let FEAT_TIDCP1 = (179 : Feature)
++let FEAT_ADERR = (180 : Feature)
++let FEAT_AIE = (181 : Feature)
++let FEAT_ANERR = (182 : Feature)
++let FEAT_CLRBHB = (183 : Feature)
++let FEAT_CSSC = (184 : Feature)
++let FEAT_Debugv8p9 = (185 : Feature)
++let FEAT_DoubleFault2 = (186 : Feature)
++let FEAT_ECBHB = (187 : Feature)
++let FEAT_FGT2 = (188 : Feature)
++let FEAT_HAFT = (189 : Feature)
++let FEAT_LRCPC3 = (190 : Feature)
++let FEAT_MTE4 = (191 : Feature)
++let FEAT_MTE_ASYM_FAULT = (192 : Feature)
++let FEAT_MTE_ASYNC = (193 : Feature)
++let FEAT_MTE_CANONICAL_TAGS = (194 : Feature)
++let FEAT_MTE_NO_ADDRESS_TAGS = (195 : Feature)
++let FEAT_MTE_PERM = (196 : Feature)
++let FEAT_MTE_STORE_ONLY = (197 : Feature)
++let FEAT_MTE_TAGGED_FAR = (198 : Feature)
++let FEAT_PCSRv8p9 = (199 : Feature)
++let FEAT_PFAR = (200 : Feature)
++let FEAT_PMUv3_EDGE = (201 : Feature)
++let FEAT_PMUv3_ICNTR = (202 : Feature)
++let FEAT_PMUv3_SS = (203 : Feature)
++let FEAT_PMUv3p9 = (204 : Feature)
++let FEAT_PRFMSLC = (205 : Feature)
++let FEAT_RASSAv2 = (206 : Feature)
++let FEAT_RASv2 = (207 : Feature)
++let FEAT_RPRFM = (208 : Feature)
++let FEAT_S1PIE = (209 : Feature)
++let FEAT_S1POE = (210 : Feature)
++let FEAT_S2PIE = (211 : Feature)
++let FEAT_S2POE = (212 : Feature)
++let FEAT_SPECRES2 = (213 : Feature)
++let FEAT_SPE_CRR = (214 : Feature)
++let FEAT_SPE_FDS = (215 : Feature)
++let FEAT_SPEv1p4 = (216 : Feature)
++let FEAT_SPMU = (217 : Feature)
++let FEAT_THE = (218 : Feature)
++let FEAT_DoPD = (219 : Feature)
++let FEAT_ETE = (220 : Feature)
++let FEAT_SVE2 = (221 : Feature)
++let FEAT_SVE_AES = (222 : Feature)
++let FEAT_SVE_BitPerm = (223 : Feature)
++let FEAT_SVE_PMULL128 = (224 : Feature)
++let FEAT_SVE_SHA3 = (225 : Feature)
++let FEAT_SVE_SM4 = (226 : Feature)
++let FEAT_TME = (227 : Feature)
++let FEAT_TRBE = (228 : Feature)
++let FEAT_ETEv1p1 = (229 : Feature)
++let FEAT_BRBE = (230 : Feature)
++let FEAT_ETEv1p2 = (231 : Feature)
++let FEAT_RME = (232 : Feature)
++let FEAT_SME = (233 : Feature)
++let FEAT_SME_F64F64 = (234 : Feature)
++let FEAT_SME_FA64 = (235 : Feature)
++let FEAT_SME_I16I64 = (236 : Feature)
++let FEAT_BRBEv1p1 = (237 : Feature)
++let FEAT_MEC = (238 : Feature)
++let FEAT_SME2 = (239 : Feature)
++let FEAT_ABLE = (240 : Feature)
++let FEAT_CHK = (241 : Feature)
++let FEAT_D128 = (242 : Feature)
++let FEAT_EBEP = (243 : Feature)
++let FEAT_ETEv1p3 = (244 : Feature)
++let FEAT_GCS = (245 : Feature)
++let FEAT_ITE = (246 : Feature)
++let FEAT_LSE128 = (247 : Feature)
++let FEAT_LVA3 = (248 : Feature)
++let FEAT_SEBEP = (249 : Feature)
++let FEAT_SME2p1 = (250 : Feature)
++let FEAT_SME_F16F16 = (251 : Feature)
++let FEAT_SVE2p1 = (252 : Feature)
++let FEAT_SVE_B16B16 = (253 : Feature)
++let FEAT_SYSINSTR128 = (254 : Feature)
++let FEAT_SYSREG128 = (255 : Feature)
++let FEAT_TRBE_EXT = (256 : Feature)
++let FEAT_TRBE_MPAM = (257 : Feature)
+ 
+ 
+ 
+diff -ru lem.orig/v8_base.lem lem/v8_base.lem
+--- lem.orig/v8_base.lem	2024-03-08 13:18:37.894486036 +0000
++++ lem/v8_base.lem	2024-03-08 14:20:01.036484326 +0000
+@@ -408,530 +408,11 @@
+ 
+ val Feature_of_num : integer -> Feature
+ 
+-let Feature_of_num arg_ =
+-   let l__24028 = arg_ in
+-   if ((eq l__24028 (0:ii))) then FEAT_AA32EL0
+-   else if ((eq l__24028 (1:ii))) then FEAT_AA32EL1
+-   else if ((eq l__24028 (2:ii))) then FEAT_AA32EL2
+-   else if ((eq l__24028 (3:ii))) then FEAT_AA32EL3
+-   else if ((eq l__24028 (4:ii))) then FEAT_AA64EL0
+-   else if ((eq l__24028 (5:ii))) then FEAT_AA64EL1
+-   else if ((eq l__24028 (6:ii))) then FEAT_AA64EL2
+-   else if ((eq l__24028 (7:ii))) then FEAT_AA64EL3
+-   else if ((eq l__24028 (8:ii))) then FEAT_EL0
+-   else if ((eq l__24028 (9:ii))) then FEAT_EL1
+-   else if ((eq l__24028 (10:ii))) then FEAT_EL2
+-   else if ((eq l__24028 (11:ii))) then FEAT_EL3
+-   else if ((eq l__24028 (12:ii))) then FEAT_AES
+-   else if ((eq l__24028 (13:ii))) then FEAT_AdvSIMD
+-   else if ((eq l__24028 (14:ii))) then FEAT_CSV2_1p1
+-   else if ((eq l__24028 (15:ii))) then FEAT_CSV2_1p2
+-   else if ((eq l__24028 (16:ii))) then FEAT_CSV2_2
+-   else if ((eq l__24028 (17:ii))) then FEAT_CSV2_3
+-   else if ((eq l__24028 (18:ii))) then FEAT_DoubleLock
+-   else if ((eq l__24028 (19:ii))) then FEAT_ETMv4
+-   else if ((eq l__24028 (20:ii))) then FEAT_ETMv4p1
+-   else if ((eq l__24028 (21:ii))) then FEAT_ETMv4p2
+-   else if ((eq l__24028 (22:ii))) then FEAT_ETMv4p3
+-   else if ((eq l__24028 (23:ii))) then FEAT_ETMv4p4
+-   else if ((eq l__24028 (24:ii))) then FEAT_ETMv4p5
+-   else if ((eq l__24028 (25:ii))) then FEAT_ETMv4p6
+-   else if ((eq l__24028 (26:ii))) then FEAT_ETS2
+-   else if ((eq l__24028 (27:ii))) then FEAT_FP
+-   else if ((eq l__24028 (28:ii))) then FEAT_GICv3
+-   else if ((eq l__24028 (29:ii))) then FEAT_GICv3_LEGACY
+-   else if ((eq l__24028 (30:ii))) then FEAT_GICv3_TDIR
+-   else if ((eq l__24028 (31:ii))) then FEAT_GICv3p1
+-   else if ((eq l__24028 (32:ii))) then FEAT_GICv4
+-   else if ((eq l__24028 (33:ii))) then FEAT_GICv4p1
+-   else if ((eq l__24028 (34:ii))) then FEAT_IVIPT
+-   else if ((eq l__24028 (35:ii))) then FEAT_PCSRv8
+-   else if ((eq l__24028 (36:ii))) then FEAT_PMULL
+-   else if ((eq l__24028 (37:ii))) then FEAT_PMUv3
+-   else if ((eq l__24028 (38:ii))) then FEAT_PMUv3_EXT
+-   else if ((eq l__24028 (39:ii))) then FEAT_PMUv3_EXT32
+-   else if ((eq l__24028 (40:ii))) then FEAT_SHA1
+-   else if ((eq l__24028 (41:ii))) then FEAT_SHA256
+-   else if ((eq l__24028 (42:ii))) then FEAT_TRC_EXT
+-   else if ((eq l__24028 (43:ii))) then FEAT_TRC_SR
+-   else if ((eq l__24028 (44:ii))) then FEAT_nTLBPA
+-   else if ((eq l__24028 (45:ii))) then FEAT_CRC32
+-   else if ((eq l__24028 (46:ii))) then FEAT_Debugv8p1
+-   else if ((eq l__24028 (47:ii))) then FEAT_HAFDBS
+-   else if ((eq l__24028 (48:ii))) then FEAT_HPDS
+-   else if ((eq l__24028 (49:ii))) then FEAT_LOR
+-   else if ((eq l__24028 (50:ii))) then FEAT_LSE
+-   else if ((eq l__24028 (51:ii))) then FEAT_PAN
+-   else if ((eq l__24028 (52:ii))) then FEAT_PMUv3p1
+-   else if ((eq l__24028 (53:ii))) then FEAT_RDM
+-   else if ((eq l__24028 (54:ii))) then FEAT_VHE
+-   else if ((eq l__24028 (55:ii))) then FEAT_VMID16
+-   else if ((eq l__24028 (56:ii))) then FEAT_AA32BF16
+-   else if ((eq l__24028 (57:ii))) then FEAT_AA32HPD
+-   else if ((eq l__24028 (58:ii))) then FEAT_AA32I8MM
+-   else if ((eq l__24028 (59:ii))) then FEAT_ASMv8p2
+-   else if ((eq l__24028 (60:ii))) then FEAT_DPB
+-   else if ((eq l__24028 (61:ii))) then FEAT_Debugv8p2
+-   else if ((eq l__24028 (62:ii))) then FEAT_EDHSR
+-   else if ((eq l__24028 (63:ii))) then FEAT_F32MM
+-   else if ((eq l__24028 (64:ii))) then FEAT_F64MM
+-   else if ((eq l__24028 (65:ii))) then FEAT_FP16
+-   else if ((eq l__24028 (66:ii))) then FEAT_HPDS2
+-   else if ((eq l__24028 (67:ii))) then FEAT_I8MM
+-   else if ((eq l__24028 (68:ii))) then FEAT_IESB
+-   else if ((eq l__24028 (69:ii))) then FEAT_LPA
+-   else if ((eq l__24028 (70:ii))) then FEAT_LSMAOC
+-   else if ((eq l__24028 (71:ii))) then FEAT_LVA
+-   else if ((eq l__24028 (72:ii))) then FEAT_MPAM
+-   else if ((eq l__24028 (73:ii))) then FEAT_PAN2
+-   else if ((eq l__24028 (74:ii))) then FEAT_PCSRv8p2
+-   else if ((eq l__24028 (75:ii))) then FEAT_RAS
+-   else if ((eq l__24028 (76:ii))) then FEAT_SHA3
+-   else if ((eq l__24028 (77:ii))) then FEAT_SHA512
+-   else if ((eq l__24028 (78:ii))) then FEAT_SM3
+-   else if ((eq l__24028 (79:ii))) then FEAT_SM4
+-   else if ((eq l__24028 (80:ii))) then FEAT_SPE
+-   else if ((eq l__24028 (81:ii))) then FEAT_SVE
+-   else if ((eq l__24028 (82:ii))) then FEAT_TTCNP
+-   else if ((eq l__24028 (83:ii))) then FEAT_UAO
+-   else if ((eq l__24028 (84:ii))) then FEAT_VPIPT
+-   else if ((eq l__24028 (85:ii))) then FEAT_XNX
+-   else if ((eq l__24028 (86:ii))) then FEAT_CCIDX
+-   else if ((eq l__24028 (87:ii))) then FEAT_CONSTPACFIELD
+-   else if ((eq l__24028 (88:ii))) then FEAT_EPAC
+-   else if ((eq l__24028 (89:ii))) then FEAT_FCMA
+-   else if ((eq l__24028 (90:ii))) then FEAT_FPAC
+-   else if ((eq l__24028 (91:ii))) then FEAT_FPACCOMBINE
+-   else if ((eq l__24028 (92:ii))) then FEAT_JSCVT
+-   else if ((eq l__24028 (93:ii))) then FEAT_LRCPC
+-   else if ((eq l__24028 (94:ii))) then FEAT_NV
+-   else if ((eq l__24028 (95:ii))) then FEAT_PACIMP
+-   else if ((eq l__24028 (96:ii))) then FEAT_PACQARMA3
+-   else if ((eq l__24028 (97:ii))) then FEAT_PACQARMA5
+-   else if ((eq l__24028 (98:ii))) then FEAT_PAuth
+-   else if ((eq l__24028 (99:ii))) then FEAT_SPEv1p1
+-   else if ((eq l__24028 (100:ii))) then FEAT_AMUv1
+-   else if ((eq l__24028 (101:ii))) then FEAT_BBM
+-   else if ((eq l__24028 (102:ii))) then FEAT_CNTSC
+-   else if ((eq l__24028 (103:ii))) then FEAT_DIT
+-   else if ((eq l__24028 (104:ii))) then FEAT_Debugv8p4
+-   else if ((eq l__24028 (105:ii))) then FEAT_DotProd
+-   else if ((eq l__24028 (106:ii))) then FEAT_DoubleFault
+-   else if ((eq l__24028 (107:ii))) then FEAT_FHM
+-   else if ((eq l__24028 (108:ii))) then FEAT_FlagM
+-   else if ((eq l__24028 (109:ii))) then FEAT_IDST
+-   else if ((eq l__24028 (110:ii))) then FEAT_LRCPC2
+-   else if ((eq l__24028 (111:ii))) then FEAT_LSE2
+-   else if ((eq l__24028 (112:ii))) then FEAT_NV2
+-   else if ((eq l__24028 (113:ii))) then FEAT_PMUv3p4
+-   else if ((eq l__24028 (114:ii))) then FEAT_RASSAv1p1
+-   else if ((eq l__24028 (115:ii))) then FEAT_RASv1p1
+-   else if ((eq l__24028 (116:ii))) then FEAT_S2FWB
+-   else if ((eq l__24028 (117:ii))) then FEAT_SEL2
+-   else if ((eq l__24028 (118:ii))) then FEAT_TLBIOS
+-   else if ((eq l__24028 (119:ii))) then FEAT_TLBIRANGE
+-   else if ((eq l__24028 (120:ii))) then FEAT_TRF
+-   else if ((eq l__24028 (121:ii))) then FEAT_TTL
+-   else if ((eq l__24028 (122:ii))) then FEAT_TTST
+-   else if ((eq l__24028 (123:ii))) then FEAT_BTI
+-   else if ((eq l__24028 (124:ii))) then FEAT_CSV2
+-   else if ((eq l__24028 (125:ii))) then FEAT_CSV3
+-   else if ((eq l__24028 (126:ii))) then FEAT_DPB2
+-   else if ((eq l__24028 (127:ii))) then FEAT_E0PD
+-   else if ((eq l__24028 (128:ii))) then FEAT_EVT
+-   else if ((eq l__24028 (129:ii))) then FEAT_ExS
+-   else if ((eq l__24028 (130:ii))) then FEAT_FRINTTS
+-   else if ((eq l__24028 (131:ii))) then FEAT_FlagM2
+-   else if ((eq l__24028 (132:ii))) then FEAT_GTG
+-   else if ((eq l__24028 (133:ii))) then FEAT_MTE
+-   else if ((eq l__24028 (134:ii))) then FEAT_MTE2
+-   else if ((eq l__24028 (135:ii))) then FEAT_PMUv3p5
+-   else if ((eq l__24028 (136:ii))) then FEAT_RNG
+-   else if ((eq l__24028 (137:ii))) then FEAT_RNG_TRAP
+-   else if ((eq l__24028 (138:ii))) then FEAT_SB
+-   else if ((eq l__24028 (139:ii))) then FEAT_SPECRES
+-   else if ((eq l__24028 (140:ii))) then FEAT_SSBS
+-   else if ((eq l__24028 (141:ii))) then FEAT_SSBS2
+-   else if ((eq l__24028 (142:ii))) then FEAT_AMUv1p1
+-   else if ((eq l__24028 (143:ii))) then FEAT_BF16
+-   else if ((eq l__24028 (144:ii))) then FEAT_DGH
+-   else if ((eq l__24028 (145:ii))) then FEAT_ECV
+-   else if ((eq l__24028 (146:ii))) then FEAT_FGT
+-   else if ((eq l__24028 (147:ii))) then FEAT_HPMN0
+-   else if ((eq l__24028 (148:ii))) then FEAT_MPAMv0p1
+-   else if ((eq l__24028 (149:ii))) then FEAT_MPAMv1p1
+-   else if ((eq l__24028 (150:ii))) then FEAT_MTPMU
+-   else if ((eq l__24028 (151:ii))) then FEAT_PAuth2
+-   else if ((eq l__24028 (152:ii))) then FEAT_TWED
+-   else if ((eq l__24028 (153:ii))) then FEAT_AFP
+-   else if ((eq l__24028 (154:ii))) then FEAT_EBF16
+-   else if ((eq l__24028 (155:ii))) then FEAT_HCX
+-   else if ((eq l__24028 (156:ii))) then FEAT_LPA2
+-   else if ((eq l__24028 (157:ii))) then FEAT_LS64
+-   else if ((eq l__24028 (158:ii))) then FEAT_LS64_ACCDATA
+-   else if ((eq l__24028 (159:ii))) then FEAT_LS64_V
+-   else if ((eq l__24028 (160:ii))) then FEAT_MTE3
+-   else if ((eq l__24028 (161:ii))) then FEAT_PAN3
+-   else if ((eq l__24028 (162:ii))) then FEAT_PMUv3p7
+-   else if ((eq l__24028 (163:ii))) then FEAT_RPRES
+-   else if ((eq l__24028 (164:ii))) then FEAT_SPEv1p2
+-   else if ((eq l__24028 (165:ii))) then FEAT_WFxT
+-   else if ((eq l__24028 (166:ii))) then FEAT_XS
+-   else if ((eq l__24028 (167:ii))) then FEAT_CMOW
+-   else if ((eq l__24028 (168:ii))) then FEAT_Debugv8p8
+-   else if ((eq l__24028 (169:ii))) then FEAT_GICv3_NMI
+-   else if ((eq l__24028 (170:ii))) then FEAT_HBC
+-   else if ((eq l__24028 (171:ii))) then FEAT_MOPS
+-   else if ((eq l__24028 (172:ii))) then FEAT_NMI
+-   else if ((eq l__24028 (173:ii))) then FEAT_PMUv3_EXT64
+-   else if ((eq l__24028 (174:ii))) then FEAT_PMUv3_TH
+-   else if ((eq l__24028 (175:ii))) then FEAT_PMUv3p8
+-   else if ((eq l__24028 (176:ii))) then FEAT_SCTLR2
+-   else if ((eq l__24028 (177:ii))) then FEAT_SPEv1p3
+-   else if ((eq l__24028 (178:ii))) then FEAT_TCR2
+-   else if ((eq l__24028 (179:ii))) then FEAT_TIDCP1
+-   else if ((eq l__24028 (180:ii))) then FEAT_ADERR
+-   else if ((eq l__24028 (181:ii))) then FEAT_AIE
+-   else if ((eq l__24028 (182:ii))) then FEAT_ANERR
+-   else if ((eq l__24028 (183:ii))) then FEAT_CLRBHB
+-   else if ((eq l__24028 (184:ii))) then FEAT_CSSC
+-   else if ((eq l__24028 (185:ii))) then FEAT_Debugv8p9
+-   else if ((eq l__24028 (186:ii))) then FEAT_DoubleFault2
+-   else if ((eq l__24028 (187:ii))) then FEAT_ECBHB
+-   else if ((eq l__24028 (188:ii))) then FEAT_FGT2
+-   else if ((eq l__24028 (189:ii))) then FEAT_HAFT
+-   else if ((eq l__24028 (190:ii))) then FEAT_LRCPC3
+-   else if ((eq l__24028 (191:ii))) then FEAT_MTE4
+-   else if ((eq l__24028 (192:ii))) then FEAT_MTE_ASYM_FAULT
+-   else if ((eq l__24028 (193:ii))) then FEAT_MTE_ASYNC
+-   else if ((eq l__24028 (194:ii))) then FEAT_MTE_CANONICAL_TAGS
+-   else if ((eq l__24028 (195:ii))) then FEAT_MTE_NO_ADDRESS_TAGS
+-   else if ((eq l__24028 (196:ii))) then FEAT_MTE_PERM
+-   else if ((eq l__24028 (197:ii))) then FEAT_MTE_STORE_ONLY
+-   else if ((eq l__24028 (198:ii))) then FEAT_MTE_TAGGED_FAR
+-   else if ((eq l__24028 (199:ii))) then FEAT_PCSRv8p9
+-   else if ((eq l__24028 (200:ii))) then FEAT_PFAR
+-   else if ((eq l__24028 (201:ii))) then FEAT_PMUv3_EDGE
+-   else if ((eq l__24028 (202:ii))) then FEAT_PMUv3_ICNTR
+-   else if ((eq l__24028 (203:ii))) then FEAT_PMUv3_SS
+-   else if ((eq l__24028 (204:ii))) then FEAT_PMUv3p9
+-   else if ((eq l__24028 (205:ii))) then FEAT_PRFMSLC
+-   else if ((eq l__24028 (206:ii))) then FEAT_RASSAv2
+-   else if ((eq l__24028 (207:ii))) then FEAT_RASv2
+-   else if ((eq l__24028 (208:ii))) then FEAT_RPRFM
+-   else if ((eq l__24028 (209:ii))) then FEAT_S1PIE
+-   else if ((eq l__24028 (210:ii))) then FEAT_S1POE
+-   else if ((eq l__24028 (211:ii))) then FEAT_S2PIE
+-   else if ((eq l__24028 (212:ii))) then FEAT_S2POE
+-   else if ((eq l__24028 (213:ii))) then FEAT_SPECRES2
+-   else if ((eq l__24028 (214:ii))) then FEAT_SPE_CRR
+-   else if ((eq l__24028 (215:ii))) then FEAT_SPE_FDS
+-   else if ((eq l__24028 (216:ii))) then FEAT_SPEv1p4
+-   else if ((eq l__24028 (217:ii))) then FEAT_SPMU
+-   else if ((eq l__24028 (218:ii))) then FEAT_THE
+-   else if ((eq l__24028 (219:ii))) then FEAT_DoPD
+-   else if ((eq l__24028 (220:ii))) then FEAT_ETE
+-   else if ((eq l__24028 (221:ii))) then FEAT_SVE2
+-   else if ((eq l__24028 (222:ii))) then FEAT_SVE_AES
+-   else if ((eq l__24028 (223:ii))) then FEAT_SVE_BitPerm
+-   else if ((eq l__24028 (224:ii))) then FEAT_SVE_PMULL128
+-   else if ((eq l__24028 (225:ii))) then FEAT_SVE_SHA3
+-   else if ((eq l__24028 (226:ii))) then FEAT_SVE_SM4
+-   else if ((eq l__24028 (227:ii))) then FEAT_TME
+-   else if ((eq l__24028 (228:ii))) then FEAT_TRBE
+-   else if ((eq l__24028 (229:ii))) then FEAT_ETEv1p1
+-   else if ((eq l__24028 (230:ii))) then FEAT_BRBE
+-   else if ((eq l__24028 (231:ii))) then FEAT_ETEv1p2
+-   else if ((eq l__24028 (232:ii))) then FEAT_RME
+-   else if ((eq l__24028 (233:ii))) then FEAT_SME
+-   else if ((eq l__24028 (234:ii))) then FEAT_SME_F64F64
+-   else if ((eq l__24028 (235:ii))) then FEAT_SME_FA64
+-   else if ((eq l__24028 (236:ii))) then FEAT_SME_I16I64
+-   else if ((eq l__24028 (237:ii))) then FEAT_BRBEv1p1
+-   else if ((eq l__24028 (238:ii))) then FEAT_MEC
+-   else if ((eq l__24028 (239:ii))) then FEAT_SME2
+-   else if ((eq l__24028 (240:ii))) then FEAT_ABLE
+-   else if ((eq l__24028 (241:ii))) then FEAT_CHK
+-   else if ((eq l__24028 (242:ii))) then FEAT_D128
+-   else if ((eq l__24028 (243:ii))) then FEAT_EBEP
+-   else if ((eq l__24028 (244:ii))) then FEAT_ETEv1p3
+-   else if ((eq l__24028 (245:ii))) then FEAT_GCS
+-   else if ((eq l__24028 (246:ii))) then FEAT_ITE
+-   else if ((eq l__24028 (247:ii))) then FEAT_LSE128
+-   else if ((eq l__24028 (248:ii))) then FEAT_LVA3
+-   else if ((eq l__24028 (249:ii))) then FEAT_SEBEP
+-   else if ((eq l__24028 (250:ii))) then FEAT_SME2p1
+-   else if ((eq l__24028 (251:ii))) then FEAT_SME_F16F16
+-   else if ((eq l__24028 (252:ii))) then FEAT_SVE2p1
+-   else if ((eq l__24028 (253:ii))) then FEAT_SVE_B16B16
+-   else if ((eq l__24028 (254:ii))) then FEAT_SYSINSTR128
+-   else if ((eq l__24028 (255:ii))) then FEAT_SYSREG128
+-   else if ((eq l__24028 (256:ii))) then FEAT_TRBE_EXT
+-   else FEAT_TRBE_MPAM
++let Feature_of_num n = n
+ 
+ val num_of_Feature : Feature -> (integer)
+ 
+-let num_of_Feature arg_ =
+-   match arg_ with
+-   | FEAT_AA32EL0 -> (0:ii)
+-   | FEAT_AA32EL1 -> (1:ii)
+-   | FEAT_AA32EL2 -> (2:ii)
+-   | FEAT_AA32EL3 -> (3:ii)
+-   | FEAT_AA64EL0 -> (4:ii)
+-   | FEAT_AA64EL1 -> (5:ii)
+-   | FEAT_AA64EL2 -> (6:ii)
+-   | FEAT_AA64EL3 -> (7:ii)
+-   | FEAT_EL0 -> (8:ii)
+-   | FEAT_EL1 -> (9:ii)
+-   | FEAT_EL2 -> (10:ii)
+-   | FEAT_EL3 -> (11:ii)
+-   | FEAT_AES -> (12:ii)
+-   | FEAT_AdvSIMD -> (13:ii)
+-   | FEAT_CSV2_1p1 -> (14:ii)
+-   | FEAT_CSV2_1p2 -> (15:ii)
+-   | FEAT_CSV2_2 -> (16:ii)
+-   | FEAT_CSV2_3 -> (17:ii)
+-   | FEAT_DoubleLock -> (18:ii)
+-   | FEAT_ETMv4 -> (19:ii)
+-   | FEAT_ETMv4p1 -> (20:ii)
+-   | FEAT_ETMv4p2 -> (21:ii)
+-   | FEAT_ETMv4p3 -> (22:ii)
+-   | FEAT_ETMv4p4 -> (23:ii)
+-   | FEAT_ETMv4p5 -> (24:ii)
+-   | FEAT_ETMv4p6 -> (25:ii)
+-   | FEAT_ETS2 -> (26:ii)
+-   | FEAT_FP -> (27:ii)
+-   | FEAT_GICv3 -> (28:ii)
+-   | FEAT_GICv3_LEGACY -> (29:ii)
+-   | FEAT_GICv3_TDIR -> (30:ii)
+-   | FEAT_GICv3p1 -> (31:ii)
+-   | FEAT_GICv4 -> (32:ii)
+-   | FEAT_GICv4p1 -> (33:ii)
+-   | FEAT_IVIPT -> (34:ii)
+-   | FEAT_PCSRv8 -> (35:ii)
+-   | FEAT_PMULL -> (36:ii)
+-   | FEAT_PMUv3 -> (37:ii)
+-   | FEAT_PMUv3_EXT -> (38:ii)
+-   | FEAT_PMUv3_EXT32 -> (39:ii)
+-   | FEAT_SHA1 -> (40:ii)
+-   | FEAT_SHA256 -> (41:ii)
+-   | FEAT_TRC_EXT -> (42:ii)
+-   | FEAT_TRC_SR -> (43:ii)
+-   | FEAT_nTLBPA -> (44:ii)
+-   | FEAT_CRC32 -> (45:ii)
+-   | FEAT_Debugv8p1 -> (46:ii)
+-   | FEAT_HAFDBS -> (47:ii)
+-   | FEAT_HPDS -> (48:ii)
+-   | FEAT_LOR -> (49:ii)
+-   | FEAT_LSE -> (50:ii)
+-   | FEAT_PAN -> (51:ii)
+-   | FEAT_PMUv3p1 -> (52:ii)
+-   | FEAT_RDM -> (53:ii)
+-   | FEAT_VHE -> (54:ii)
+-   | FEAT_VMID16 -> (55:ii)
+-   | FEAT_AA32BF16 -> (56:ii)
+-   | FEAT_AA32HPD -> (57:ii)
+-   | FEAT_AA32I8MM -> (58:ii)
+-   | FEAT_ASMv8p2 -> (59:ii)
+-   | FEAT_DPB -> (60:ii)
+-   | FEAT_Debugv8p2 -> (61:ii)
+-   | FEAT_EDHSR -> (62:ii)
+-   | FEAT_F32MM -> (63:ii)
+-   | FEAT_F64MM -> (64:ii)
+-   | FEAT_FP16 -> (65:ii)
+-   | FEAT_HPDS2 -> (66:ii)
+-   | FEAT_I8MM -> (67:ii)
+-   | FEAT_IESB -> (68:ii)
+-   | FEAT_LPA -> (69:ii)
+-   | FEAT_LSMAOC -> (70:ii)
+-   | FEAT_LVA -> (71:ii)
+-   | FEAT_MPAM -> (72:ii)
+-   | FEAT_PAN2 -> (73:ii)
+-   | FEAT_PCSRv8p2 -> (74:ii)
+-   | FEAT_RAS -> (75:ii)
+-   | FEAT_SHA3 -> (76:ii)
+-   | FEAT_SHA512 -> (77:ii)
+-   | FEAT_SM3 -> (78:ii)
+-   | FEAT_SM4 -> (79:ii)
+-   | FEAT_SPE -> (80:ii)
+-   | FEAT_SVE -> (81:ii)
+-   | FEAT_TTCNP -> (82:ii)
+-   | FEAT_UAO -> (83:ii)
+-   | FEAT_VPIPT -> (84:ii)
+-   | FEAT_XNX -> (85:ii)
+-   | FEAT_CCIDX -> (86:ii)
+-   | FEAT_CONSTPACFIELD -> (87:ii)
+-   | FEAT_EPAC -> (88:ii)
+-   | FEAT_FCMA -> (89:ii)
+-   | FEAT_FPAC -> (90:ii)
+-   | FEAT_FPACCOMBINE -> (91:ii)
+-   | FEAT_JSCVT -> (92:ii)
+-   | FEAT_LRCPC -> (93:ii)
+-   | FEAT_NV -> (94:ii)
+-   | FEAT_PACIMP -> (95:ii)
+-   | FEAT_PACQARMA3 -> (96:ii)
+-   | FEAT_PACQARMA5 -> (97:ii)
+-   | FEAT_PAuth -> (98:ii)
+-   | FEAT_SPEv1p1 -> (99:ii)
+-   | FEAT_AMUv1 -> (100:ii)
+-   | FEAT_BBM -> (101:ii)
+-   | FEAT_CNTSC -> (102:ii)
+-   | FEAT_DIT -> (103:ii)
+-   | FEAT_Debugv8p4 -> (104:ii)
+-   | FEAT_DotProd -> (105:ii)
+-   | FEAT_DoubleFault -> (106:ii)
+-   | FEAT_FHM -> (107:ii)
+-   | FEAT_FlagM -> (108:ii)
+-   | FEAT_IDST -> (109:ii)
+-   | FEAT_LRCPC2 -> (110:ii)
+-   | FEAT_LSE2 -> (111:ii)
+-   | FEAT_NV2 -> (112:ii)
+-   | FEAT_PMUv3p4 -> (113:ii)
+-   | FEAT_RASSAv1p1 -> (114:ii)
+-   | FEAT_RASv1p1 -> (115:ii)
+-   | FEAT_S2FWB -> (116:ii)
+-   | FEAT_SEL2 -> (117:ii)
+-   | FEAT_TLBIOS -> (118:ii)
+-   | FEAT_TLBIRANGE -> (119:ii)
+-   | FEAT_TRF -> (120:ii)
+-   | FEAT_TTL -> (121:ii)
+-   | FEAT_TTST -> (122:ii)
+-   | FEAT_BTI -> (123:ii)
+-   | FEAT_CSV2 -> (124:ii)
+-   | FEAT_CSV3 -> (125:ii)
+-   | FEAT_DPB2 -> (126:ii)
+-   | FEAT_E0PD -> (127:ii)
+-   | FEAT_EVT -> (128:ii)
+-   | FEAT_ExS -> (129:ii)
+-   | FEAT_FRINTTS -> (130:ii)
+-   | FEAT_FlagM2 -> (131:ii)
+-   | FEAT_GTG -> (132:ii)
+-   | FEAT_MTE -> (133:ii)
+-   | FEAT_MTE2 -> (134:ii)
+-   | FEAT_PMUv3p5 -> (135:ii)
+-   | FEAT_RNG -> (136:ii)
+-   | FEAT_RNG_TRAP -> (137:ii)
+-   | FEAT_SB -> (138:ii)
+-   | FEAT_SPECRES -> (139:ii)
+-   | FEAT_SSBS -> (140:ii)
+-   | FEAT_SSBS2 -> (141:ii)
+-   | FEAT_AMUv1p1 -> (142:ii)
+-   | FEAT_BF16 -> (143:ii)
+-   | FEAT_DGH -> (144:ii)
+-   | FEAT_ECV -> (145:ii)
+-   | FEAT_FGT -> (146:ii)
+-   | FEAT_HPMN0 -> (147:ii)
+-   | FEAT_MPAMv0p1 -> (148:ii)
+-   | FEAT_MPAMv1p1 -> (149:ii)
+-   | FEAT_MTPMU -> (150:ii)
+-   | FEAT_PAuth2 -> (151:ii)
+-   | FEAT_TWED -> (152:ii)
+-   | FEAT_AFP -> (153:ii)
+-   | FEAT_EBF16 -> (154:ii)
+-   | FEAT_HCX -> (155:ii)
+-   | FEAT_LPA2 -> (156:ii)
+-   | FEAT_LS64 -> (157:ii)
+-   | FEAT_LS64_ACCDATA -> (158:ii)
+-   | FEAT_LS64_V -> (159:ii)
+-   | FEAT_MTE3 -> (160:ii)
+-   | FEAT_PAN3 -> (161:ii)
+-   | FEAT_PMUv3p7 -> (162:ii)
+-   | FEAT_RPRES -> (163:ii)
+-   | FEAT_SPEv1p2 -> (164:ii)
+-   | FEAT_WFxT -> (165:ii)
+-   | FEAT_XS -> (166:ii)
+-   | FEAT_CMOW -> (167:ii)
+-   | FEAT_Debugv8p8 -> (168:ii)
+-   | FEAT_GICv3_NMI -> (169:ii)
+-   | FEAT_HBC -> (170:ii)
+-   | FEAT_MOPS -> (171:ii)
+-   | FEAT_NMI -> (172:ii)
+-   | FEAT_PMUv3_EXT64 -> (173:ii)
+-   | FEAT_PMUv3_TH -> (174:ii)
+-   | FEAT_PMUv3p8 -> (175:ii)
+-   | FEAT_SCTLR2 -> (176:ii)
+-   | FEAT_SPEv1p3 -> (177:ii)
+-   | FEAT_TCR2 -> (178:ii)
+-   | FEAT_TIDCP1 -> (179:ii)
+-   | FEAT_ADERR -> (180:ii)
+-   | FEAT_AIE -> (181:ii)
+-   | FEAT_ANERR -> (182:ii)
+-   | FEAT_CLRBHB -> (183:ii)
+-   | FEAT_CSSC -> (184:ii)
+-   | FEAT_Debugv8p9 -> (185:ii)
+-   | FEAT_DoubleFault2 -> (186:ii)
+-   | FEAT_ECBHB -> (187:ii)
+-   | FEAT_FGT2 -> (188:ii)
+-   | FEAT_HAFT -> (189:ii)
+-   | FEAT_LRCPC3 -> (190:ii)
+-   | FEAT_MTE4 -> (191:ii)
+-   | FEAT_MTE_ASYM_FAULT -> (192:ii)
+-   | FEAT_MTE_ASYNC -> (193:ii)
+-   | FEAT_MTE_CANONICAL_TAGS -> (194:ii)
+-   | FEAT_MTE_NO_ADDRESS_TAGS -> (195:ii)
+-   | FEAT_MTE_PERM -> (196:ii)
+-   | FEAT_MTE_STORE_ONLY -> (197:ii)
+-   | FEAT_MTE_TAGGED_FAR -> (198:ii)
+-   | FEAT_PCSRv8p9 -> (199:ii)
+-   | FEAT_PFAR -> (200:ii)
+-   | FEAT_PMUv3_EDGE -> (201:ii)
+-   | FEAT_PMUv3_ICNTR -> (202:ii)
+-   | FEAT_PMUv3_SS -> (203:ii)
+-   | FEAT_PMUv3p9 -> (204:ii)
+-   | FEAT_PRFMSLC -> (205:ii)
+-   | FEAT_RASSAv2 -> (206:ii)
+-   | FEAT_RASv2 -> (207:ii)
+-   | FEAT_RPRFM -> (208:ii)
+-   | FEAT_S1PIE -> (209:ii)
+-   | FEAT_S1POE -> (210:ii)
+-   | FEAT_S2PIE -> (211:ii)
+-   | FEAT_S2POE -> (212:ii)
+-   | FEAT_SPECRES2 -> (213:ii)
+-   | FEAT_SPE_CRR -> (214:ii)
+-   | FEAT_SPE_FDS -> (215:ii)
+-   | FEAT_SPEv1p4 -> (216:ii)
+-   | FEAT_SPMU -> (217:ii)
+-   | FEAT_THE -> (218:ii)
+-   | FEAT_DoPD -> (219:ii)
+-   | FEAT_ETE -> (220:ii)
+-   | FEAT_SVE2 -> (221:ii)
+-   | FEAT_SVE_AES -> (222:ii)
+-   | FEAT_SVE_BitPerm -> (223:ii)
+-   | FEAT_SVE_PMULL128 -> (224:ii)
+-   | FEAT_SVE_SHA3 -> (225:ii)
+-   | FEAT_SVE_SM4 -> (226:ii)
+-   | FEAT_TME -> (227:ii)
+-   | FEAT_TRBE -> (228:ii)
+-   | FEAT_ETEv1p1 -> (229:ii)
+-   | FEAT_BRBE -> (230:ii)
+-   | FEAT_ETEv1p2 -> (231:ii)
+-   | FEAT_RME -> (232:ii)
+-   | FEAT_SME -> (233:ii)
+-   | FEAT_SME_F64F64 -> (234:ii)
+-   | FEAT_SME_FA64 -> (235:ii)
+-   | FEAT_SME_I16I64 -> (236:ii)
+-   | FEAT_BRBEv1p1 -> (237:ii)
+-   | FEAT_MEC -> (238:ii)
+-   | FEAT_SME2 -> (239:ii)
+-   | FEAT_ABLE -> (240:ii)
+-   | FEAT_CHK -> (241:ii)
+-   | FEAT_D128 -> (242:ii)
+-   | FEAT_EBEP -> (243:ii)
+-   | FEAT_ETEv1p3 -> (244:ii)
+-   | FEAT_GCS -> (245:ii)
+-   | FEAT_ITE -> (246:ii)
+-   | FEAT_LSE128 -> (247:ii)
+-   | FEAT_LVA3 -> (248:ii)
+-   | FEAT_SEBEP -> (249:ii)
+-   | FEAT_SME2p1 -> (250:ii)
+-   | FEAT_SME_F16F16 -> (251:ii)
+-   | FEAT_SVE2p1 -> (252:ii)
+-   | FEAT_SVE_B16B16 -> (253:ii)
+-   | FEAT_SYSINSTR128 -> (254:ii)
+-   | FEAT_SYSREG128 -> (255:ii)
+-   | FEAT_TRBE_EXT -> (256:ii)
+-   | FEAT_TRBE_MPAM -> (257:ii)
+-   end
++let num_of_Feature f = f
+ 
+ val undefined_ArchVersion : unit -> M ArchVersion
+ 

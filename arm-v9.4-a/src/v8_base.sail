@@ -6787,6 +6787,7 @@ function BranchTo (target, branch_type, branch_conditional) = {
     Hint_Branch(branch_type);
     if 'N == 32 then {
         assert(UsingAArch32());
+        sail_branch_announce(64, ZeroExtend(target, 64));
         _PC = ZeroExtend(target, 64)
     } else {
         assert('N == 64 & not_bool(UsingAArch32()));

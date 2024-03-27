@@ -262,19 +262,13 @@ function __DecodeExecute (enc, instr) = {
     }
 }
 
-register __emulator_termination_opcode : option(bits(32)) = Some(0x00000000)
-
 val __CheckForEmulatorTermination : (__InstrEnc, bits(32)) -> unit
 
 function __CheckForEmulatorTermination(enc, instr) = {
     // Check for magic opcode to terminate the emulator
-    match __emulator_termination_opcode {
-        Some(magic) =>
-            if instr == magic then {
-                print("[Sail] Terminating emulation at opcode " ++ bits_str(magic) ++ "\n");
-                exit()
-            },
-        None() => ()
+    if instr == 0x00000000 | instr == 0xfee1dead then {
+        print("[Sail] Terminating emulation at opcode " ++ bits_str(instr) ++ "\n");
+        exit()
     }
 }
 

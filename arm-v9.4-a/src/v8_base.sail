@@ -33516,7 +33516,7 @@ function AArch64_TakeReset cold_reset = {
     if HaveTME() then {
         TSTATE.depth = 0
     };
-    AArch64_ResetGeneralRegisters();
+    // AArch64_ResetGeneralRegisters();
     AArch64_ResetSIMDFPRegisters();
     AArch64_ResetSpecialRegisters();
     ResetExternalDebugRegisters(cold_reset);
@@ -42835,7 +42835,7 @@ function AArch32_TakeReset cold_reset = {
         PSTATE.E = SCTLR_read__2()[EE]
     };
     PSTATE.IL = 0b0;
-    AArch32_ResetGeneralRegisters();
+    // AArch32_ResetGeneralRegisters();
     AArch32_ResetSIMDFPRegisters();
     AArch32_ResetSpecialRegisters();
     ResetExternalDebugRegisters(cold_reset);

@@ -287,6 +287,7 @@ function __InstructionExecute () = {
         let pc : bits(64) = ThisInstrAddr(64);
         (enc, instr) = __FetchInstr(pc);
         __CheckForEmulatorTermination(enc, instr);
+        sail_instr_announce(instr);
         PMUEvent(PMU_EVENT_INST_SPEC);
         __BranchTaken = false;
         __ExclusiveMonitorSet = false;

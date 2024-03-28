@@ -1,7 +1,8 @@
-# Armv9-A Sail specification
+# Armv9-A Sail specification (Sail concurrency interface edition)
 
 This repository contains a Sail version of the [Armv9-A ISA
-specification][ARM_ARM].
+specification][ARM_ARM],
+patched to use the sail concurrency interface.
 
 The file `v8_base.sail` in the `src` directory contains the Sail translation of
 the shared pseudocode in [Arm's ASL specification][ARM_ASL], and the files
@@ -27,6 +28,19 @@ There are also handwritten Sail files that were not translated from ASL, like
 the `devices.sail` file providing the timer interrupts required by the Linux
 kernel, or the `mem.sail` and `interface.sail` files connecting ASL's memory
 accessor functions to the Sail memory interface.
+
+## Concurrency interface patch
+
+In order to support the sail concurrency interface and its new outcomes,
+we add the `src/interface.sail` file, which provides
+instantiations for the various Sail outcomes.
+
+We update `v8_base.sail` to use these interfaces,
+adding the outcomes and patching the memory events.
+This also involves moving some of the type definitions out of `v8_base.sail`
+and we place them in `src/types.sail` so they can be loaded first.
+
+Additionally, we patch some places to allow emulator termination in Isla.
 
 ## Building
 

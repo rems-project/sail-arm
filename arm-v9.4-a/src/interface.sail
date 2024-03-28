@@ -150,8 +150,6 @@ struct TLBIInfo = {
 instantiation sail_tlbi with
   'tlbi = TLBIInfo
 
-function report_tlbi(r, s) = sail_tlbi(struct { rec = r, shareability = s })
-
 // The details of a data memory/synchonisation barrier
 struct DxB = {
   domain : MBReqDomain,
@@ -172,6 +170,8 @@ union Barrier = {
 instantiation sail_cache_op with
   'cache_op = CacheRecord
 
+val CACHE_OP : CacheRecord -> unit
+
 function CACHE_OP(r) = sail_cache_op(r)
 
 instantiation sail_barrier with
@@ -181,6 +181,3 @@ instantiation sail_return_exception
 
 instantiation sail_take_exception with
   'fault = option(FaultRecord)
-
-function return_exception(x) = sail_return_exception(x)
-function take_exception(fault) = sail_take_exception(fault)

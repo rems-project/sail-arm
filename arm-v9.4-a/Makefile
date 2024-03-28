@@ -17,7 +17,7 @@ ISLA_SAIL=isla-sail
 DEVICES=devices.sail
 DEVICES_PATH=src/$(DEVICES)
 
-SAIL_SRCS=src/prelude.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/sysregs_autogen.sail src/sysregs.sail src/instrs64.sail src/instrs64_sve.sail src/instrs64_sme.sail src/instrs32.sail src/interrupts.sail src/reset.sail src/fetch.sail src/interface.sail $(DEVICES_PATH) src/impdefs.sail src/mem.sail src/decode_end.sail src/map_clauses.sail src/event_clauses.sail src/stubs.sail
+SAIL_SRCS=src/prelude.sail src/types.sail src/interface.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/sysregs_autogen.sail src/sysregs.sail src/instrs64.sail src/instrs64_sve.sail src/instrs64_sme.sail src/instrs32.sail src/interrupts.sail src/reset.sail src/fetch.sail $(DEVICES_PATH) src/impdefs.sail src/mem.sail src/decode_end.sail src/map_clauses.sail src/event_clauses.sail src/stubs.sail
 SAIL_MAIN=src/elfmain.sail
 ISLA_MAIN=src/isla_main.sail
 LEM_SPLICES=$(wildcard src/lem-patches/*.sail)

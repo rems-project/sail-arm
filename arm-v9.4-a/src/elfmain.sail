@@ -40,8 +40,6 @@
 
 $include <elf.sail>
 
-val isla_reset_registers = "reset_registers" : unit -> unit
-
 let COLD_RESET : bool = true
 
 val main : unit -> unit effect {configuration, escape, undef, wreg, rreg, rmem, wmem}
@@ -59,12 +57,15 @@ function step_model() = {
   ()
 }
 
+// Hook for Isla to do extra initialisation
+val isla_main_hook : unit -> unit
+function isla_main_hook() = ()
+
 function main() = {
   try {
     let verbosity = __GetVerbosity();
     __InitSystem();
-    isla_reset_registers();
-    _PC = Slice_int(elf_entry(), 0, 64);
+    isla_main_hook();
     check_cycle_count();
     while true do {
       if verbosity[0] == bitone then {

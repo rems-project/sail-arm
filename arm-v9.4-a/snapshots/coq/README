@@ -6,3 +6,7 @@ add their opam repository for the development branch.  Similarly, the stdpp
 version of coq-sail is required from https://github.com/rems-project/coq-sail,
 which can be installed by an opam pin (e.g., by cloning the repository and
 using opam install ./coq-sail-stdpp.opam.
+
+Once that is done, you can build this with the usual `make` and install is with
+`make install`. Alternatively, doing `opan pin coq-sail-arm .` at the root will
+intall this with opam

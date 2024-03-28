@@ -1,0 +1,25 @@
+opam-version: "2.0"
+maintainer: "Sail Devs <cl-sail-dev@lists.cam.ac.uk>"
+authors: [
+  "Arm Limited (or its affiliates)"
+  "Thomas Bauereiss"
+  "Brian Campbell"
+  "Alasdair Armstrong"
+  "Alastair Reid"
+  "Peter Sewell"
+]
+license: "BSD-3-Clause"
+homepage: "https://github.com/rems-project/sail-arm"
+bug-reports: "https://github.com/rems-project/sail-arm/issues"
+dev-repo: "git+https://github.com/rems-project/sail-arm.git"
+version: "9.4-1"
+
+synopsis: "The sail specification of the Arm architecture"
+
+depends: [
+  "coq" { (>= "8.15") }
+  "coq-sail-stdpp"
+]
+
+build: ["%{make}%" "-C" "arm-v9.4-a/snapshots/coq" "-j%{jobs}%"]
+install: ["%{make}%" "-C" "arm-v9.4-a/snapshots/coq" "install"]

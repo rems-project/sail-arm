@@ -20,6 +20,7 @@ DEVICES_PATH=src/$(DEVICES)
 SAIL_SRCS=src/prelude.sail src/types.sail src/interface.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/sysregs_autogen.sail src/sysregs.sail src/instrs64.sail src/instrs64_sve.sail src/instrs64_sme.sail src/instrs32.sail src/interrupts.sail src/reset.sail src/fetch.sail $(DEVICES_PATH) src/impdefs.sail src/mem.sail src/decode_end.sail src/map_clauses.sail src/event_clauses.sail src/stubs.sail
 SAIL_MAIN=src/elfmain.sail
 ISLA_MAIN=src/isla_main.sail
+ISLA_SPLICE=src/isla_splice.sail
 LEM_SPLICES=$(wildcard src/lem-patches/*.sail)
 SAIL_FLAGS=
 SAIL_C_FLAGS = -O -Oconstant_fold
@@ -70,9 +71,9 @@ gen_c c c.stamp: c/armv9.c
 	$(CC) -O2 -DHAVE_SETCONFIG c/armv9.c $(SAIL_DIR)/lib/*.c -lgmp -lz -I $(SAIL_DIR)/lib/ -o c/armv9
 	touch c.stamp
 
-gen_ir ir/armv9.ir: $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN)
+gen_ir ir/armv9.ir: $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN) $(ISLA_SPLICE)
 	mkdir -p ir
-	$(ISLA_SAIL) -v 1 -mono_rewrites $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN) -o ir/armv9
+	$(ISLA_SAIL) -v 1 -mono_rewrites $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN) -splice $(ISLA_SPLICE) -o ir/armv9
 
 interactive:
 	$(SAIL) -i -memo_z3 -verbose 1 \

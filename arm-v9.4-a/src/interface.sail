@@ -177,7 +177,15 @@ function CACHE_OP(r) = sail_cache_op(r)
 instantiation sail_barrier with
   'barrier = Barrier
 
-instantiation sail_return_exception
+instantiation sail_return_exception with
+  'pa = bits(56)  // TODO: should be va not pa?
 
 instantiation sail_take_exception with
   'fault = option(FaultRecord)
+
+
+val take_exception : option(FaultRecord) -> unit
+val return_exception : bits(56) -> unit
+
+function take_exception(fr) = sail_take_exception(fr)
+function return_exception(pa) = sail_return_exception(pa)

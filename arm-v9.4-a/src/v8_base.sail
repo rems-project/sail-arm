@@ -14171,8 +14171,6 @@ function AArch64_SyncExternalAbortTarget fault = {
     return(target_el)
 }
 
-val take_exception : option(FaultRecord) -> unit
-
 val AArch64_DataAbort : (bits(64), FaultRecord) -> unit
 
 function AArch64_DataAbort (vaddress, fault) = {
@@ -34940,6 +34938,7 @@ function AArch64_ExceptionReturn (new_pc_in, spsr) = {
     if HaveBRBExt() then {
         BRBEExceptionReturn(new_pc, source_el)
     };
+    sail_return_exception(new_pc[55 .. 0]);
     if UsingAArch32() then {
         if HaveSME() & PSTATE.SM == 0b1 then {
             ResetSVEState()
@@ -35107,12 +35106,10 @@ function Prefetch (address, prfop) = {
 
 val _TLBInvalidate : unit -> unit
 
-val report_tlbi : (TLBIRecord, Shareability) -> unit
-
 val TLBI : (TLBIRecord, Shareability) -> unit
 
 function TLBI (r, s) = {
-    report_tlbi(r, s);
+    sail_tlbi(struct { rec = r, shareability = s });
     _TLBInvalidate()
 }
 

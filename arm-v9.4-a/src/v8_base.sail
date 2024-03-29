@@ -19366,6 +19366,7 @@ function AlignmentFault accdesc = {
     fault.write = not_bool(accdesc.read) & accdesc.write;
     fault.gpcfs2walk = false;
     fault.gpcf = GPCNoFault();
+    fault.level = 0; // interface-v9: later ASL assumes uninit level is zero.
     return(fault)
 }
 

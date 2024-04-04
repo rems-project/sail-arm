@@ -29396,6 +29396,7 @@ function execute_aarch64_instrs_memory_exclusive_single (acqrel, datasize, elsiz
           } else if SPESampleInFlight then {
               SPESetDataVirtualAddress(address)
           } else ();
+          ignore_data_dependency(s);
           X_set(s, 32) = ZeroExtend(status, 32)
       },
       MemOp_LOAD => {

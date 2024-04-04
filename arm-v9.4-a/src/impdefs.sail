@@ -856,6 +856,7 @@ function MaxImplementedSVL() = __max_implemented_smeveclen
 function ProcessorID() = 0
 function IsExclusiveGlobal(paddress, processorid, size) = true
 function IsExclusiveLocal(paddress, processorid, size) = true
+
 function AArch64_IsExclusiveVA(address, processorid, size) = true
 function AArch64_MarkExclusiveVA(address, processorid, size) = ()
 function ExclusiveMonitorsStatus() = 0b0

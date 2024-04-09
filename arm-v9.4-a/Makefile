@@ -73,6 +73,7 @@ gen_isabelle isabelle isabelle.stamp: lem.stamp
 	touch isabelle.stamp
 
 gen_coq coq coq.stamp: $(SAIL_SRCS) src/termination_measures.sail
+	ulimit -s unlimited && \
 	$(SAIL) -dprofile $(VERBOSE_FLAG) -memo_z3 \
 	        -coq -dcoq_undef_axioms \
 	        -coq_output_dir coq -o armv9 -coq_lib arm_extras \

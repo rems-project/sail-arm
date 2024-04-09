@@ -4,8 +4,8 @@
 
 # Default target
 all: Makefile.coq
-	ulimit -s unlimited
-	+@$(MAKE) -f Makefile.coq all
+	+@ulimit -s unlimited && \
+	$(MAKE) -f Makefile.coq all
 .PHONY: all
 
 # Permit local customization

@@ -853,12 +853,9 @@ function HaveFP16Ext() = true
 function MaxImplementedVL() = MAX_VL
 function MaxImplementedSVL() = __max_implemented_smeveclen
 
-register __exclusive_always_succeeds: bool = false
-
 function ProcessorID() = 0
 function IsExclusiveGlobal(paddress, processorid, size) = true
-function IsExclusiveLocal(paddress, processorid, size) =
-    if __exclusive_always_succeeds then true else undefined
+function IsExclusiveLocal(paddress, processorid, size) = true
 
 function AArch64_IsExclusiveVA(address, processorid, size) = true
 function AArch64_MarkExclusiveVA(address, processorid, size) = ()

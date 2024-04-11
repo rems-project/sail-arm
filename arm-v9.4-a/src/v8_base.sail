@@ -28252,12 +28252,18 @@ function AArch64_SetExclusiveMonitors (address, size) = {
 }
 
 val AArch64_ExclusiveMonitorsPass : forall 'size. (bits(64), int('size)) -> bool
+register __exclusive_always_succeeds: bool = false
 
 function AArch64_ExclusiveMonitorsPass (address, size) = {
     let acqrel : bool = false;
     let tagchecked : bool = false;
     let accdesc : AccessDescriptor = CreateAccDescExLDST(MemOp_STORE, acqrel, tagchecked);
     let aligned : bool = IsAligned__1(address, size);
+
+    if not_bool(__exclusive_always_succeeds) then {
+        return(undefined);
+    };
+
     if not_bool(aligned) & AArch64_UnalignedAccessFaults(accdesc, address, size) then {
         AArch64_Abort(address, AlignmentFault(accdesc))
     };

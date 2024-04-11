@@ -61,10 +61,13 @@ function step_model() = {
 val isla_main_hook : unit -> unit
 function isla_main_hook() = ()
 
+val Init_Devices : unit -> unit effect {wreg}
+
 function main() = {
   try {
     let verbosity = __GetVerbosity();
     __InitSystem();
+    Init_Devices();
     isla_main_hook();
     check_cycle_count();
     while true do {

@@ -43,7 +43,7 @@
 val Init_Devices : unit -> unit
 
 function Init_Devices() = {
-    ISR_EL1 = ZeroExtend(0x0, 64);
+    ISR_EL1.bits = ZeroExtend(0x0, 64);
 }
 
 function IRQPending() = (ISR_EL1[I] == 0b1, false)

@@ -2670,6 +2670,21 @@ struct TranslationInfo = {
   memattrs : MemoryAttributes
 }
 
+struct TranslationStartInfo = {
+  ss : SecurityState,
+  regime : Regime,
+  vmid : bits(16),
+  asid : bits(16),
+  va : bits(64),
+  cnp : bits(1),
+  accdesc : AccessDescriptor,
+  size : int
+}
+
+val start_translation : TranslationStartInfo -> unit
+
+val end_translation : AddressDescriptor -> unit
+
 let FINAL_LEVEL : int(3) = 3
 
 register RC : vector(5, bits(64))
@@ -25043,6 +25058,23 @@ function AArch64_GetS1TLBContext (regime, ss, va, tg) = {
     return(tlbcontext)
 }
 
+val AArch64_GetTranslationStartInfo : (Regime, SecurityState, AccessDescriptor, bits(64), int) -> TranslationStartInfo
+
+function AArch64_GetTranslationStartInfo (regime, ss, accdesc, va, size) = {
+    let tlbcontext : TLBContext = AArch64_GetS1TLBContext(regime, ss, va, undefined /* TGx unused */);
+    let tsi : TranslationStartInfo = struct {
+        ss = ss,
+        regime = regime,
+        vmid = tlbcontext.vmid,
+        asid = tlbcontext.asid,
+        va = va,
+        cnp = tlbcontext.cnp,
+        accdesc = accdesc,
+        size = size
+    };
+    return(tsi)
+}
+
 val AArch64_PhysicalAddressSize : (bits(1), bits(3), TGx) -> int
 
 function AArch64_PhysicalAddressSize (d128, encoded_ps, tgx) = {
@@ -27783,6 +27815,11 @@ function AArch64_TranslateAddress (va, accdesc, aligned, size) = {
     if SPESampleInFlight & not_bool(accdesc.acctype == AccessType_IFETCH | accdesc.acctype == AccessType_SPE) then {
         SPEStartCounter(SPECounterPosTranslationLatency)
     };
+    // Determine translation context and announce translation start
+    let regime : Regime = TranslationRegime(accdesc.el);
+    let tsi = AArch64_GetTranslationStartInfo(regime, accdesc.ss, accdesc, va, size);
+    start_translation(tsi);
+    //
     result : AddressDescriptor = AArch64_FullTranslate(va, accdesc, aligned);
     if not_bool(IsFault(result)) & accdesc.acctype != AccessType_IFETCH then {
         result.fault = AArch64_CheckDebug(va, accdesc, size)
@@ -27802,6 +27839,9 @@ function AArch64_TranslateAddress (va, accdesc, aligned, size) = {
         SPEStopCounter(SPECounterPosTranslationLatency)
     };
     result.vaddress = ZeroExtend(va, 64);
+    // Announce result
+    end_translation(result);
+    //
     return(result)
 }
 
@@ -37624,6 +37664,23 @@ function AArch32_GetS1TLBContext (regime, ss, va) = {
     return(tlbcontext)
 }
 
+val AArch32_GetTranslationStartInfo : (Regime, SecurityState, AccessDescriptor, bits(32), int) -> TranslationStartInfo
+
+function AArch32_GetTranslationStartInfo (regime, ss, accdesc, va, size) = {
+    let tlbcontext : TLBContext = AArch32_GetS1TLBContext(regime, ss, va);
+    let tsi : TranslationStartInfo = struct {
+        ss = ss,
+        regime = regime,
+        vmid = tlbcontext.vmid,
+        asid = tlbcontext.asid,
+        va = ZeroExtend(va, 64),
+        cnp = tlbcontext.cnp,
+        accdesc = accdesc,
+        size = size
+    };
+    return(tsi)
+}
+
 val AArch32_MAIRAttr : forall 'index. (int('index), MAIRType) -> bits(8)
 
 function AArch32_MAIRAttr (index, mair) = {
@@ -39280,6 +39337,10 @@ function AArch64_AT (address, stage_in, el_in, ataccess) = {
     };
     addrdesc : AddressDescriptor = undefined;
     if el == EL0 & ELUsingAArch32(EL1) | el != EL0 & ELUsingAArch32(el) then {
+        // Determine AArch32 translation info and announce translation start
+        let tsi = AArch32_GetTranslationStartInfo(regime, ss, accdesc, address[31 .. 0], 1);
+        start_translation(tsi);
+        //
         if regime == Regime_EL2 | TTBCR_read()[EAE] == 0b1 then {
             (fault, addrdesc) = AArch32_S1TranslateLD(fault, regime, address[31 .. 0], aligned, accdesc)
         } else {
@@ -39288,6 +39349,10 @@ function AArch64_AT (address, stage_in, el_in, ataccess) = {
             addrdesc = __tup_1
         }
     } else {
+        // Determine AArch64 translation info and announce translation start
+        let tsi = AArch64_GetTranslationStartInfo(regime, ss, accdesc, address, 1);
+        start_translation(tsi);
+        //
         (fault, addrdesc) = AArch64_S1Translate(fault, regime, address, aligned, accdesc)
     };
     if stage == TranslationStage_12 & fault.statuscode == Fault_None then {
@@ -39310,6 +39375,9 @@ function AArch64_AT (address, stage_in, el_in, ataccess) = {
         ()
     };
     let addrdesc = addrdesc;
+    // Announce result
+    end_translation(addrdesc);
+    //
     AArch64_EncodePAR(regime, is_ATS1Ex, addrdesc);
     return()
 }
@@ -40782,11 +40850,19 @@ function AArch32_TranslateAddress (va, accdesc, aligned, size) = {
     if not_bool(RegimeUsingAArch32(regime)) then {
         return(AArch64_TranslateAddress(ZeroExtend(va, 64), accdesc, aligned, size))
     };
+    // Determine translation context and announce translation start
+    let regime : Regime = TranslationRegime(accdesc.el);
+    let tsi = AArch32_GetTranslationStartInfo(regime, accdesc.ss, accdesc, va, size);
+    start_translation(tsi);
+    //
     result : AddressDescriptor = AArch32_FullTranslate(va, accdesc, aligned);
     if not_bool(IsFault(result)) then {
         result.fault = AArch32_CheckDebug(va, accdesc, size)
     };
     result.vaddress = ZeroExtend(va, 64);
+    // Announce result
+    end_translation(result);
+    //
     return(result)
 }
 

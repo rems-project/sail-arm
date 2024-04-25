@@ -33670,13 +33670,15 @@ function AArch64_IncrementCycleCounter () = {
 val AArch64_PMUCycle : unit -> unit
 
 function AArch64_PMUCycle () = {
+    // interface-v9: need to check for existence of PMUv3
+    // before accessing PMCR_EL0
+    if not_bool(HavePMUv3()) then {
+        return()
+    };
     if PMCR_EL0[E] == 0b0 & MDCR_EL2[HPME] == 0b0 then {
         if ShouldBRBEFreeze() then {
             BRBEFreeze()
         };
-        return()
-    };
-    if not_bool(HavePMUv3()) then {
         return()
     };
     PMUEvent(PMU_EVENT_CPU_CYCLES);

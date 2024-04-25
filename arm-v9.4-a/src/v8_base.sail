@@ -25024,6 +25024,7 @@ function AArch64_NSS2TTWParams s1aarch64 = {
     } else {
         walkparams.haft = 0b0
     };
+    walkparams.emec = 0b0; // v9-interface: missing init
     return(walkparams)
 }
 
@@ -25193,6 +25194,7 @@ function AArch64_S2DirectBasePermissions (permissions, accdesc) = {
     s2perms.w_rcw = w;
     s2perms.r_mmu = r;
     s2perms.w_mmu = w;
+    s2perms.overlay = false; // interface-v9: later ASL assumes overlay is zero.
     return(s2perms)
 }
 

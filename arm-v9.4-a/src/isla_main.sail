@@ -81,6 +81,7 @@ function isla_footprint(opcode) = {
   TakeReset(COLD_RESET);
   AArch64_ResetGeneralRegisters();
   PSTATE.EL = EL0;
+  PSTATE.SP = 0b0;
 
   isla_footprint_common(opcode)
 }

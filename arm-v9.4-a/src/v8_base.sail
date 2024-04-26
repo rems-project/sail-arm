@@ -9719,6 +9719,7 @@ function ExceptionSyndrome exceptype = {
     r.syndrome2 = Zeros(24);
     r.vaddress = Zeros(64);
     r.ipavalid = false;
+    r.pavalid = false; // interface-v9: missing init
     r.NS = 0b0;
     r.ipaddress = Zeros(56);
     r.paddress.paspace = __UNKNOWN_PASpace();

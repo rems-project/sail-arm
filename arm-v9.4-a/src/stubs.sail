@@ -59,7 +59,7 @@ function AArch32_SetLSInstructionSyndrome (size, sign_extend, Rt, acq_rel) = {
 }
 
 function AArch64_CheckNVCondsIfCurrentEL (op0, op1, crn, crm, op2) = {
-    return(__UNKNOWN_boolean())
+    return(false) // interface-v9: hardcode no FEAT_NV
 }
 
 function ActionRequired () = {

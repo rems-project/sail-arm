@@ -13,6 +13,8 @@ SAIL:=sail
 endif
 
 ISLA_SAIL=isla-sail
+ISLA_PREPROCESS=isla-preprocess
+ISLA_PREPROCESS_CONFIG=../../isla/configs/armv9p4.toml
 
 DEVICES=devices.sail
 DEVICES_PATH=src/$(DEVICES)
@@ -74,6 +76,9 @@ gen_c c c.stamp: c/armv9.c
 gen_ir ir/armv9.ir: $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN) $(ISLA_SPLICE)
 	mkdir -p ir
 	$(ISLA_SAIL) -v 1 -mono_rewrites $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN) -splice $(ISLA_SPLICE) -o ir/armv9
+
+gen_irx ir/armv9.irx: ir/armv9.ir
+	$(ISLA_PREPROCESS) -A ir/armv9.ir -C $(ISLA_PREPROCESS_CONFIG) -o ir/armv9
 
 interactive:
 	$(SAIL) -i -memo_z3 -verbose 1 \

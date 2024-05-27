@@ -57025,8 +57025,7 @@ function __get_TTBR1_EL2 value_name = {
     return(tmp)
 }
 
-val ZeroUnsignedSatQ : forall 'M 'N 'i,
-  (0 <= 'N - 1 & 'N - 1 < 'M).
+val ZeroUnsignedSatQ : forall 'M 'N 'i, 'M >= 0.
   (int('i), int('N), int('M)) -> (bits('M), bool)
 
 function ZeroUnsignedSatQ (i, N, M) = {
@@ -57044,7 +57043,10 @@ function ZeroUnsignedSatQ (i, N, M) = {
     };
     let 'result = result;
     fullresult : bits('M) = Zeros();
-    fullresult[N - 1 .. 0] = result[N - 1 .. 0];
+    if N > 0 then {
+        assert(constraint((0 <= 'N - 1 & 'N - 1 < 'M)));
+        fullresult[N - 1 .. 0] = result[N - 1 .. 0]
+    };
     return((fullresult, saturated))
 }
 

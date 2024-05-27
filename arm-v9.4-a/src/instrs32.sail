@@ -18517,7 +18517,6 @@ function execute_aarch32_instrs_USAT16_Op_A_txt (d, n, saturate_to) = {
     result2 : bits(16) = undefined;
     sat1 : bool = undefined;
     sat2 : bool = undefined;
-    assert(constraint(0 <= 'saturate_to - 1));
     (result1, sat1) = ZeroUnsignedSatQ(SInt(R_read(n)[15 .. 0]), saturate_to, 16);
     (result2, sat2) = ZeroUnsignedSatQ(SInt(R_read(n)[31 .. 16]), saturate_to, 16);
     R_set(d) = [R_read(d) with 15 .. 0 = result1];
@@ -18592,7 +18591,6 @@ function execute_aarch32_instrs_USAT_Op_A_txt (d, n, saturate_to, shift_n, shift
     result : bits(32) = undefined;
     sat : bool = undefined;
     let operand : bits(32) = Shift(R_read(n), shift_t, shift_n, PSTATE.C);
-    assert(constraint(0 <= 'saturate_to - 1));
     (result, sat) = ZeroUnsignedSatQ(SInt(operand), saturate_to, 32);
     R_set(d) = result;
     if sat then {

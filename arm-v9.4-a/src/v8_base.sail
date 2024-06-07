@@ -19921,6 +19921,8 @@ function GranuleProtectionCheck (addrdesc, accdesc) = {
     return(GPCNoFault())
 }
 
+register __monomorphize_descriptors : bool = false
+
 val FetchDescriptor : forall 'N, 'N in {32, 64, 128}.
   (bits(1), AddressDescriptor, AccessDescriptor, FaultRecord, int('N), TranslationInfo) -> (FaultRecord, bits('N))
 
@@ -19940,6 +19942,9 @@ function FetchDescriptor (ee, walkaddress, walkaccess, fault_in, N, translation_
     };
     memstatus : PhysMemRetStatus = undefined;
     (memstatus, descriptor) = PhysMemRead(walkaddress, DIV(N, 8), walkaccess, Some(translation_info));
+    if __monomorphize_descriptors then {
+        descriptor = __monomorphize(descriptor);
+    };
     if IsFault__2(memstatus) then {
         let iswrite : bool = false;
         fault = HandleExternalTTWAbort(memstatus, iswrite, walkaddress, walkaccess, DIV(N, 8), fault);

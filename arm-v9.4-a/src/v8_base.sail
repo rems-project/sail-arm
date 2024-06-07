@@ -10509,6 +10509,7 @@ function ExceptionSyndrome exceptype = {
     r.syndrome2 = Zeros(24);
     r.vaddress = Zeros(64);
     r.ipavalid = false;
+    r.pavalid = false; // interface-v9: missing init
     r.NS = 0b0;
     r.ipaddress = Zeros(56);
     r.paddress.paspace = __UNKNOWN_PASpace();
@@ -11202,8 +11203,12 @@ function MPAM1_EL1_read () = {
 }
 
 val MPAMisEnabled : unit -> bool
+val HaveMPAMExt : unit -> bool
 
 function MPAMisEnabled () = {
+    if not_bool(HaveMPAMExt()) then {
+        return false;
+    };
     let el : bits(2) = HighestEL();
     match el {
       ? if ? == EL3 => {
@@ -18447,8 +18452,6 @@ function GenericCounterTick () = {
     return()
 }
 
-val HaveMPAMExt : unit -> bool
-
 function HaveMPAMExt () = {
     return(IsFeatureImplemented(FEAT_MPAM))
 }
@@ -20158,6 +20161,7 @@ function AlignmentFault accdesc = {
     fault.write = not_bool(accdesc.read) & accdesc.write;
     fault.gpcfs2walk = false;
     fault.gpcf = GPCNoFault();
+    fault.level = 0; // interface-v9: later ASL assumes uninit level is zero.
     return(fault)
 }
 
@@ -25118,6 +25122,9 @@ val AArch64_S1AMECFault : forall 'N, 'N in {64, 128}.
 
 function AArch64_S1AMECFault (walkparams, paspace, regime, descriptor) = {
     assert('N == 64 | 'N == 128);
+    if not_bool(HaveFeatMEC()) then {
+        return false;
+    };
     let descriptor_amec : bits(1) = if walkparams.d128 == 0b1 then {
         assert(constraint(103 < 'N));
         [descriptor[103]]
@@ -25815,6 +25822,7 @@ function AArch64_NSS2TTWParams s1aarch64 = {
     } else {
         walkparams.haft = 0b0
     };
+    walkparams.emec = 0b0; // v9-interface: missing init
     return(walkparams)
 }
 
@@ -25984,6 +25992,7 @@ function AArch64_S2DirectBasePermissions (permissions, accdesc) = {
     s2perms.w_rcw = w;
     s2perms.r_mmu = r;
     s2perms.w_mmu = w;
+    s2perms.overlay = false; // interface-v9: later ASL assumes overlay is zero.
     return(s2perms)
 }
 
@@ -34453,13 +34462,15 @@ function AArch64_IncrementCycleCounter () = {
 val AArch64_PMUCycle : unit -> unit
 
 function AArch64_PMUCycle () = {
+    // interface-v9: need to check for existence of PMUv3
+    // before accessing PMCR_EL0
+    if not_bool(HavePMUv3()) then {
+        return()
+    };
     if PMCR_EL0[E] == 0b0 & MDCR_EL2[HPME] == 0b0 then {
         if ShouldBRBEFreeze() then {
             BRBEFreeze()
         };
-        return()
-    };
-    if not_bool(HavePMUv3()) then {
         return()
     };
     PMUEvent(PMU_EVENT_CPU_CYCLES);

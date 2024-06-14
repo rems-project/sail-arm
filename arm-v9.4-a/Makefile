@@ -89,5 +89,5 @@ clean:
 	rm -f lem.stamp lem/arm.lem lem/arm_types.lem
 	rm -f isabelle.stamp isabelle/Arm_lemmas.thy isabelle/Arm.thy isabelle/Arm_types.thy \
 	  isabelle/Prelude.thy isabelle/ArmAuxiliary.thy
-	rm -f coq.stamp coq/{arm_extras,arm,arm_types}.{v,vo,vok,vos,glob}
+	rm -f coq.stamp coq/{arm_extras,armv9,armv9_types}.{v,vo,vok,vos,glob}
 	rm -f ir/armv9.ir

@@ -1,14 +1,19 @@
 // Keep GPRs at their original values.
 
 val AArch64_ResetGeneralRegisters : unit -> unit
-
 function AArch64_ResetGeneralRegisters () = ()
+
+val AArch32_ResetGeneralRegisters : unit -> unit
+function AArch32_ResetGeneralRegisters () = ()
 
 // Avoid a Constrained Unpredictable choice in the SIMD reset.
 
 val AArch64_ResetSIMDFPRegisters : unit -> unit
-
 function AArch64_ResetSIMDFPRegisters () = ()
+
+val AArch32_ResetSIMDFPRegisters : unit -> unit
+function AArch32_ResetSIMDFPRegisters () = ()
+
 
 val isla_reset_registers = "reset_registers" : unit -> unit
 

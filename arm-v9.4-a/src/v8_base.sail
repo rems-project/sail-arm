@@ -2670,6 +2670,21 @@ struct TranslationInfo = {
   memattrs : MemoryAttributes
 }
 
+struct TranslationStartInfo = {
+  ss : SecurityState,
+  regime : Regime,
+  vmid : bits(16),
+  asid : bits(16),
+  va : bits(64),
+  cnp : bits(1),
+  accdesc : AccessDescriptor,
+  size : int
+}
+
+val start_translation : TranslationStartInfo -> unit
+
+val end_translation : AddressDescriptor -> unit
+
 let FINAL_LEVEL : int(3) = 3
 
 register RC : vector(5, bits(64))
@@ -27783,6 +27798,21 @@ function AArch64_TranslateAddress (va, accdesc, aligned, size) = {
     if SPESampleInFlight & not_bool(accdesc.acctype == AccessType_IFETCH | accdesc.acctype == AccessType_SPE) then {
         SPEStartCounter(SPECounterPosTranslationLatency)
     };
+    // Determine translation context and announce translation start
+    let regime : Regime = TranslationRegime(accdesc.el);
+    let tlbcontext : TLBContext = AArch64_GetS1TLBContext(regime, accdesc.ss, va, undefined /* TGx unused */);
+    let tsi : TranslationStartInfo = struct {
+        ss = accdesc.ss,
+        regime = regime,
+        vmid = tlbcontext.vmid,
+        asid = tlbcontext.asid,
+        va = va,
+        cnp = tlbcontext.cnp,
+        accdesc = accdesc,
+        size = size
+    };
+    start_translation(tsi);
+    //
     result : AddressDescriptor = AArch64_FullTranslate(va, accdesc, aligned);
     if not_bool(IsFault(result)) & accdesc.acctype != AccessType_IFETCH then {
         result.fault = AArch64_CheckDebug(va, accdesc, size)
@@ -27802,6 +27832,9 @@ function AArch64_TranslateAddress (va, accdesc, aligned, size) = {
         SPEStopCounter(SPECounterPosTranslationLatency)
     };
     result.vaddress = ZeroExtend(va, 64);
+    // Announce result
+    end_translation(result);
+    //
     return(result)
 }
 

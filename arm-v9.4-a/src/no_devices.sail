@@ -42,7 +42,18 @@ val Init_Devices : unit -> unit
 
 function Init_Devices() = ()
 
+$ifdef SYMBOLIC
+
+val isla_interrupt_pending = "interrupt_pending" : unit -> bool
+
+function IRQPending() = (isla_interrupt_pending(), false)
+
+$else
+
 function IRQPending() = (false, false)
+
+$endif
+
 function FIQPending() = (false, false)
 function IsPhysicalSErrorPending() = false
 function ClearPendingPhysicalSError() = ()

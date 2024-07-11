@@ -38934,6 +38934,8 @@ function clause __DecodeA64_BranchExcSys ((pc, ([bitone, bitone, bitzero, bitone
     decode_msrr_aarch64_instrs_system_register_system_128(Rt, op2, CRm, CRn, op1, o0, L)
 }
 
+val MSR_OP : unit -> unit
+
 val execute_aarch64_instrs_system_register_system : forall ('read : Bool) 'sys_crm 'sys_crn 'sys_op0 'sys_op1 'sys_op2 't,
   (0 <= 't & 't <= 31 & 'sys_op2 in {0, 1, 2, 3, 4, 5, 6, 7} & 'sys_op1 in {0, 1, 2, 3, 4, 5, 6, 7} & 'sys_op0 in {2, 3} & 0 <= 'sys_crn & 'sys_crn <= 15 & 0 <= 'sys_crm & 'sys_crm <= 15).
   (bool('read), int('sys_crm), int('sys_crn), int('sys_op0), int('sys_op1), int('sys_op2), int('t)) -> unit
@@ -38942,6 +38944,7 @@ function execute_aarch64_instrs_system_register_system (read, sys_crm, sys_crn, 
     if read then {
         AArch64_SysRegRead(sys_op0, sys_op1, sys_crn, sys_crm, sys_op2, t)
     } else {
+        MSR_OP();
         AArch64_SysRegWrite(sys_op0, sys_op1, sys_crn, sys_crm, sys_op2, t)
     }
 }

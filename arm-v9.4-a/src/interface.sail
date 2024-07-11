@@ -180,8 +180,17 @@ instantiation sail_barrier with
 instantiation sail_return_exception with
   'pa = bits(56)  // TODO: should be va not pa?
 
+struct ExceptionInfo = {
+  exception : ExceptionRecord,
+  fault : option(FaultRecord),
+}
+
 instantiation sail_take_exception with
-  'fault = option(FaultRecord)
+  'fault = ExceptionInfo
+
+instantiation sail_system_register_write
+
+function MSR_OP() = sail_system_register_write()
 
 function return_exception(x) = sail_return_exception(x)
-function take_exception(fault) = sail_take_exception(fault)
+function take_exception(exception, fault) = sail_take_exception(struct { exception, fault })

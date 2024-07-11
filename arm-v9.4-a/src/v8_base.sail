@@ -10498,7 +10498,7 @@ function AArch64_TakeException (target_el, exception_in, preferred_exception_ret
     EndOfInstruction()
 }
 
-val take_exception : option(FaultRecord) -> unit
+val take_exception : (ExceptionRecord, option(FaultRecord)) -> unit
 
 val ExceptionSyndrome : Exception -> ExceptionRecord
 
@@ -10532,7 +10532,7 @@ function AArch64_BranchTargetException vaddress = {
     } else if (PSTATE.EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1 then {
         target_el = EL2
     } else ();
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -10652,7 +10652,7 @@ function AArch64_WFxTrap (wfxtype, target_el) = {
           except.syndrome[9 .. 5] = ThisInstr()[4 .. 0]
       }
     };
-    take_exception(None());
+    take_exception(except, None());
     if (target_el == EL1 & EL2Enabled()) & HCR_EL2[TGE] == 0b1 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
@@ -14835,7 +14835,7 @@ function AArch64_BreakpointException fault = {
       EL1;
     let vaddress : bits(64) = __UNKNOWN_bits(64);
     let except : ExceptionRecord = AArch64_AbortSyndrome(Exception_Breakpoint, fault, vaddress, target_el);
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -14999,7 +14999,7 @@ function AArch64_DataAbort (vaddress, fault) = {
     } else {
         except = AArch64_AbortSyndrome(Exception_DataAbort, fault, vaddress, target_el)
     };
-    take_exception(Some(fault));
+    take_exception(except, Some(fault));
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -15032,7 +15032,7 @@ function AArch64_InstructionAbort (vaddress, fault) = {
     };
     let 'vect_offset = vect_offset;
     let except : ExceptionRecord = AArch64_AbortSyndrome(Exception_InstructionAbort, fault, vaddress, target_el);
-    take_exception(Some(fault));
+    take_exception(except, Some(fault));
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -15045,7 +15045,7 @@ function AArch64_VectorCatchException fault = {
     let 'vect_offset = UInt(0x0);
     let vaddress : bits(64) = __UNKNOWN_bits(64);
     let except : ExceptionRecord = AArch64_AbortSyndrome(Exception_VectorCatch, fault, vaddress, EL2);
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
 }
 
@@ -15064,7 +15064,7 @@ function AArch64_WatchpointException (vaddress, fault) = {
     } else {
         except = AArch64_AbortSyndrome(Exception_Watchpoint, fault, vaddress, target_el)
     };
-    take_exception(Some(fault));
+    take_exception(except, Some(fault));
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -15198,7 +15198,7 @@ function TakeGPCException (vaddress, fault) = {
         vect_offset = UInt(0x0)
     };
     let 'vect_offset = vect_offset;
-    take_exception(Some(fault));
+    take_exception(except, Some(fault));
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -15443,7 +15443,7 @@ function AArch64_FPTrappedException (is_ase, accumulated_exceptions) = {
     let route_to_el2 : bool = EL2Enabled() & HCR_EL2[TGE] == 0b1;
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
-    take_exception(None());
+    take_exception(except, None());
     if UInt(PSTATE.EL) > UInt(EL1) then {
         AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
@@ -21590,7 +21590,7 @@ function AArch64_PACFailException syndrome = {
     except : ExceptionRecord = ExceptionSyndrome(Exception_PACFail);
     except.syndrome[1 .. 0] = syndrome;
     except.syndrome[24 .. 2] = Zeros(23);
-    take_exception(None());
+    take_exception(except, None());
     if UInt(PSTATE.EL) > UInt(EL0) then {
         AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
@@ -21699,7 +21699,7 @@ function TrapPACUse target_el = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = 0;
     let except : ExceptionRecord = ExceptionSyndrome(Exception_PACTrap);
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -22752,7 +22752,7 @@ function AArch64_SPAlignmentFault () = {
     } else if EL2Enabled() & HCR_EL2[TGE] == 0b1 then {
         target_el = EL2
     } else ();
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -22961,7 +22961,7 @@ function AArch64_RaiseTagCheckFault (va, fault) = {
         target_el = EL2
     } else ();
     let except : ExceptionRecord = AArch64_AbortSyndrome(Exception_DataAbort, fault, va, target_el);
-    take_exception(Some(fault));
+    take_exception(except, Some(fault));
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -25244,6 +25244,7 @@ function AArch64_S1InitialTTWState (walkparams, va, regime, ss) = {
     walkstate : TTWState = undefined;
     tablebase : FullAddress = undefined;
     permissions : Permissions = undefined;
+    permissions.ap = 0b000;
     let ttbr : bits(128) = AArch64_S1TTBR(regime, va);
     match ss {
       SS_Secure => {
@@ -27059,7 +27060,7 @@ function AArch64_S2Walk (fault_in, ipa, walkparams, accdesc, s1level, N) = {
         walkstate = AArch64_S2InitialTTWState(accdesc.ss, walkparams)
     };
     let 'startlevel = walkstate.level;
-    descriptor : bits('N) = undefined;
+    descriptor : bits('N) = Zeros(N);
     let walkaccess : AccessDescriptor = CreateAccDescS2TTW(accdesc);
     walkaddress : AddressDescriptor = undefined;
     skl : bits(2) = 0b00;
@@ -27098,7 +27099,7 @@ function AArch64_S2Walk (fault_in, ipa, walkparams, accdesc, s1level, N) = {
         if fault.statuscode != Fault_None then {
             return((fault, __UNKNOWN_AddressDescriptor(), __UNKNOWN_TTWState(), __UNKNOWN_bits(N)))
         };
-        new_descriptor : bits('N) = undefined;
+        new_descriptor : bits('N) = Zeros(N);
         repeat {
             new_descriptor = descriptor;
             desctype = AArch64_DecodeDescriptorType(descriptor, walkparams.d128, walkparams.ds, walkparams.tgx, walkstate.level);
@@ -27243,9 +27244,9 @@ function AArch64_S2Translate (fault_in, ipa, s1aarch64, s1level, aligned, accdes
     };
     descpaddr : AddressDescriptor = undefined;
     walkstate : TTWState = undefined;
-    descriptor : bits(128) = undefined;
-    new_desc : bits(128) = undefined;
-    mem_desc : bits(128) = undefined;
+    descriptor : bits(128) = Zeros(128);
+    new_desc : bits(128) = Zeros(128);
+    mem_desc : bits(128) = Zeros(128);
     repeat {
         if walkparams.d128 == 0b1 then {
             (fault, descpaddr, walkstate, descriptor) = AArch64_S2Walk(fault, ipa, walkparams, accdesc, s1level, 128)
@@ -27384,7 +27385,7 @@ function AArch64_S1Walk (fault_in, walkparams, va, regime, accdesc, N) = {
     };
     walkstate : TTWState = AArch64_S1InitialTTWState(walkparams, va, regime, accdesc.ss);
     let 'startlevel = walkstate.level;
-    descriptor : bits('N) = undefined;
+    descriptor : bits('N) = Zeros(N);
     walkaddress : AddressDescriptor = undefined;
     skl : bits(2) = 0b00;
     walkaddress.vaddress = va;
@@ -27445,7 +27446,7 @@ function AArch64_S1Walk (fault_in, walkparams, va, regime, accdesc, N) = {
         if fault.statuscode != Fault_None then {
             return((fault, __UNKNOWN_AddressDescriptor(), __UNKNOWN_TTWState(), __UNKNOWN_bits(N)))
         };
-        new_descriptor : bits('N) = undefined;
+        new_descriptor : bits('N) = Zeros(N);
         repeat {
             new_descriptor = descriptor;
             desctype = AArch64_DecodeDescriptorType(descriptor, walkparams.d128, walkparams.ds, walkparams.tgx, walkstate.level);
@@ -27623,9 +27624,9 @@ function AArch64_S1Translate (fault_in, regime, va, aligned, accdesc) = {
     };
     descipaddr : AddressDescriptor = undefined;
     walkstate : TTWState = undefined;
-    descriptor : bits(128) = undefined;
-    new_desc : bits(128) = undefined;
-    mem_desc : bits(128) = undefined;
+    descriptor : bits(128) = Zeros(128);
+    new_desc : bits(128) = Zeros(128);
+    mem_desc : bits(128) = Zeros(128);
     repeat {
         if walkparams.d128 == 0b1 then {
             (fault, descipaddr, walkstate, descriptor) = AArch64_S1Walk(fault, walkparams, va, regime, accdesc, 128)
@@ -29210,7 +29211,7 @@ function AArch64_AdvSIMDFPAccessTrap target_el = {
     except : ExceptionRecord = undefined;
     let 'vect_offset = UInt(0x0);
     let route_to_el2 : bool = (target_el == EL1 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
-    take_exception(None());
+    take_exception(except, None());
     if route_to_el2 then {
         let except : ExceptionRecord = ExceptionSyndrome(Exception_Uncategorized);
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
@@ -29230,7 +29231,7 @@ function SVEAccessTrap target_el = {
     let except : ExceptionRecord = ExceptionSyndrome(Exception_SVEAccessTrap);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
-    take_exception(None());
+    take_exception(except, None());
     if route_to_el2 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
@@ -29367,7 +29368,7 @@ function SMEAccessTrap (etype, target_el_in) = {
           except.syndrome[2 .. 0] = 0b100
       }
     };
-    take_exception(None());
+    take_exception(except, None());
     if route_to_el2 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
@@ -31575,7 +31576,7 @@ function GCSDataCheckException gcsinst_type = {
     };
     except.syndrome[24 .. 10] = Zeros();
     except.vaddress = __UNKNOWN_bits(64);
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -31626,7 +31627,7 @@ function EXLOCKException () = {
     except.syndrome[24] = Bit(Zeros());
     except.syndrome[23 .. 20] = 0b0001;
     except.syndrome[19 .. 0] = Zeros();
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
 }
 
@@ -31642,7 +31643,7 @@ function GCSSTRTrapException target_el = {
     except.syndrome[14 .. 10] = ThisInstr()[9 .. 5];
     except.syndrome[9 .. 5] = ThisInstr()[4 .. 0];
     except.syndrome[4 .. 0] = Zeros();
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -31913,7 +31914,7 @@ function MismatchedMemCpyException (option_a_name, destreg, srcreg, sizereg, wro
     except.syndrome[14 .. 10] = destreg[4 .. 0];
     except.syndrome[9 .. 5] = srcreg[4 .. 0];
     except.syndrome[4 .. 0] = sizereg[4 .. 0];
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -31934,7 +31935,7 @@ function MismatchedMemSetException (option_a_name, destreg, datareg, sizereg, wr
     except.syndrome[14 .. 10] = destreg[4 .. 0];
     except.syndrome[9 .. 5] = datareg[4 .. 0];
     except.syndrome[4 .. 0] = sizereg[4 .. 0];
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -33476,7 +33477,7 @@ function TransactionStartTrap dreg = {
     } else {
         targetEL = EL1
     };
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(targetEL, except, preferred_exception_return, vect_offset)
 }
 
@@ -33575,7 +33576,7 @@ function AArch64_CallSecureMonitor immediate = {
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_MonitorCall);
     except.syndrome[15 .. 0] = immediate;
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(EL3, except, preferred_exception_return, vect_offset)
 }
 
@@ -33591,7 +33592,7 @@ function AArch64_CallHypervisor immediate = {
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_HypervisorCall);
     except.syndrome[15 .. 0] = immediate;
-    take_exception(None());
+    take_exception(except, None());
     if PSTATE.EL == EL3 then {
         AArch64_TakeException(EL3, except, preferred_exception_return, vect_offset)
     } else {
@@ -33612,7 +33613,7 @@ function AArch64_CallSupervisor immediate_in = {
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_SupervisorCall);
     except.syndrome[15 .. 0] = immediate;
-    take_exception(None());
+    take_exception(except, None());
     if UInt(PSTATE.EL) > UInt(EL1) then {
         AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
@@ -33629,7 +33630,7 @@ function AArch64_UndefinedFault () = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_Uncategorized);
-    take_exception(None());
+    take_exception(except, None());
     if UInt(PSTATE.EL) > UInt(EL1) then {
         AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
@@ -33650,7 +33651,7 @@ function AArch64_CheckIllegalState () = {
         let preferred_exception_return : bits(64) = ThisInstrAddr(64);
         let 'vect_offset = UInt(0x0);
         let except : ExceptionRecord = ExceptionSyndrome(Exception_IllegalState);
-        take_exception(None());
+        take_exception(except, None());
         if UInt(PSTATE.EL) > UInt(EL1) then {
             AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
         } else if route_to_el2 then {
@@ -33669,7 +33670,7 @@ function LDST64BTrap (target_el, iss) = {
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_LDST64BTrap);
     except.syndrome = iss;
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset);
     return()
 }
@@ -33786,7 +33787,7 @@ function AArch64_CheckForERetTrap (eret_with_pac, pac_uses_key_a) = {
                 except.syndrome[0] = Bit(0b1)
             }
         };
-        take_exception(None());
+        take_exception(except, None());
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     };
     ()
@@ -33811,7 +33812,7 @@ function AArch64_CheckForSVCTrap immediate = {
             except.trappedsyscallinst = true;
             let preferred_exception_return : bits(64) = ThisInstrAddr(64);
             let 'vect_offset = UInt(0x0);
-            take_exception(None());
+            take_exception(except, None());
             AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
         };
         ()
@@ -33851,7 +33852,7 @@ function AArch64_CheckForSMCUndefOrTrap imm = {
         except : ExceptionRecord = ExceptionSyndrome(Exception_MonitorCall);
         except.syndrome[15 .. 0] = imm;
         except.trappedsyscallinst = true;
-        take_exception(None());
+        take_exception(except, None());
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     };
     ()
@@ -33863,7 +33864,7 @@ function AArch64_MonitorModeTrap () = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_Uncategorized);
-    take_exception(None());
+    take_exception(except, None());
     if IsSecureEL2Enabled() then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     };
@@ -33926,7 +33927,7 @@ function AArch64_SystemAccessTrap (target_el, ec) = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     let except : ExceptionRecord = AArch64_SystemAccessTrapSyndrome(ThisInstr(), ec);
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -34022,7 +34023,7 @@ function AArch64_AArch32SystemAccessTrap (target_el, ec) = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     let except : ExceptionRecord = AArch64_AArch32SystemAccessTrapSyndrome(ThisInstr(), ec);
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -34190,7 +34191,7 @@ function AArch64_TakePhysicalSErrorException implicit_esb = {
         ClearPendingPhysicalSError()
     };
     except.syndrome = syndrome;
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -34215,7 +34216,7 @@ function AArch64_TakeVirtualSErrorException () = {
         ()
     };
     ClearPendingVirtualSError();
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(EL1, except, preferred_exception_return, vect_offset)
 }
 
@@ -34227,7 +34228,7 @@ function AArch64_TakePhysicalIRQException () = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x80);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_IRQ);
-    take_exception(None());
+    take_exception(except, None());
     if route_to_el3 then {
         AArch64_TakeException(EL3, except, preferred_exception_return, vect_offset)
     } else if PSTATE.EL == EL2 | route_to_el2 then {
@@ -34247,7 +34248,7 @@ function AArch64_TakeVirtualIRQException () = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x80);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_IRQ);
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(EL1, except, preferred_exception_return, vect_offset)
 }
 
@@ -34259,7 +34260,7 @@ function AArch64_TakePhysicalFIQException () = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x100);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_FIQ);
-    take_exception(None());
+    take_exception(except, None());
     if route_to_el3 then {
         AArch64_TakeException(EL3, except, preferred_exception_return, vect_offset)
     } else if PSTATE.EL == EL2 | route_to_el2 then {
@@ -34279,7 +34280,7 @@ function AArch64_TakeVirtualFIQException () = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x100);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_FIQ);
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(EL1, except, preferred_exception_return, vect_offset)
 }
 
@@ -34291,7 +34292,7 @@ function AArch64_SoftwareBreakpoint immediate = {
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_SoftwareBreakpoint);
     except.syndrome[15 .. 0] = immediate;
-    take_exception(None());
+    take_exception(except, None());
     if UInt(PSTATE.EL) > UInt(EL1) then {
         AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
@@ -34320,7 +34321,7 @@ function AArch64_SoftwareStepException () = {
         except.syndrome[6] = Bit(if SoftwareStep_SteppedEX() then 0b1 else 0b0)
     };
     except.syndrome[5 .. 0] = 0b100010;
-    take_exception(None());
+    take_exception(except, None());
     if PSTATE.EL == EL2 | route_to_el2 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
@@ -34341,7 +34342,7 @@ function AArch64_PCAlignmentFault () = {
     } else if EL2Enabled() & HCR_EL2[TGE] == 0b1 then {
         target_el = EL2
     } else ();
-    take_exception(None());
+    take_exception(except, None());
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
 }
 
@@ -43014,7 +43015,7 @@ function AArch32_CheckForSVCTrap immediate = {
             except.trappedsyscallinst = true;
             let preferred_exception_return : bits(64) = ThisInstrAddr(64);
             let 'vect_offset = UInt(0x0);
-            take_exception(None());
+            take_exception(except, None());
             AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
         };
         ()

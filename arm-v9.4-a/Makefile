@@ -80,6 +80,11 @@ gen_ir ir/armv9.ir: $(SAIL_SRCS) $(SAIL_MAIN) $(ISLA_MAIN) $(ISLA_SPLICE)
 gen_irx ir/armv9.irx: ir/armv9.ir
 	$(ISLA_PREPROCESS) -A ir/armv9.ir -C $(ISLA_PREPROCESS_CONFIG) -o ir/armv9
 
+interface_types.sail: $(SAIL_SRCS)
+	$(SAIL) --slice-instantiation-types -o interface_types.sail.in $(SAIL_SRCS) $(SAIL_FLAGS)
+	grep -v '^\(\$$\|default Order\|infix\)' interface_types.sail.in > interface_types.sail
+	rm interface_types.sail.in
+
 interactive:
 	$(SAIL) -i -memo_z3 -verbose 1 \
 	        $(SAIL_SRCS) $(SAIL_FLAGS) \
@@ -91,3 +96,4 @@ clean:
 	  isabelle/Prelude.thy isabelle/ArmAuxiliary.thy
 	rm -f coq.stamp coq/{arm_extras,armv9,armv9_types}.{v,vo,vok,vos,glob}
 	rm -f ir/armv9.ir
+	rm -f interface_types.sail

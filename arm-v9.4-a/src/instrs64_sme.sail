@@ -100,8 +100,7 @@ function decode_FMOPA_ZA_PP_ZZ_32 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_FMOPA_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -178,8 +177,7 @@ function decode_FMOPS_ZA_PP_ZZ_32 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_FMOPS_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -256,8 +254,7 @@ function decode_FMOPA_ZA_PP_ZZ_64 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_FMOPA_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -334,8 +331,7 @@ function decode_FMOPS_ZA_PP_ZZ_64 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_FMOPS_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -435,8 +431,7 @@ function decode_BFMOPA_ZA32_PP_ZZ__ (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_BFMOPA_ZA32_PP_ZZ__(2048, DIV(2048, 32) * DIV(2048, 32) * 32, a, b, da, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -536,8 +531,7 @@ function decode_BFMOPS_ZA32_PP_ZZ__ (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_BFMOPS_ZA32_PP_ZZ__(2048, DIV(2048, 32) * DIV(2048, 32) * 32, a, b, da, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -636,8 +630,7 @@ function decode_FMOPA_ZA32_PP_ZZ_16 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_FMOPA_ZA32_PP_ZZ_16(2048, DIV(2048, 32) * DIV(2048, 32) * 32, a, b, da, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -736,8 +729,7 @@ function decode_FMOPS_ZA32_PP_ZZ_16 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_FMOPS_ZA32_PP_ZZ_16(2048, DIV(2048, 32) * DIV(2048, 32) * 32, a, b, da, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -818,8 +810,7 @@ function decode_SMOPA_ZA_PP_ZZ_32 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SMOPA_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -902,8 +893,7 @@ function decode_SUMOPA_ZA_PP_ZZ_32 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SUMOPA_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -986,8 +976,7 @@ function decode_USMOPA_ZA_PP_ZZ_32 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_USMOPA_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1070,8 +1059,7 @@ function decode_UMOPA_ZA_PP_ZZ_32 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_UMOPA_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1154,8 +1142,7 @@ function decode_SMOPS_ZA_PP_ZZ_32 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SMOPS_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1238,8 +1225,7 @@ function decode_SUMOPS_ZA_PP_ZZ_32 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SUMOPS_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1322,8 +1308,7 @@ function decode_USMOPS_ZA_PP_ZZ_32 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_USMOPS_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1406,8 +1391,7 @@ function decode_UMOPS_ZA_PP_ZZ_32 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_UMOPS_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1490,8 +1474,7 @@ function decode_SMOPA_ZA_PP_ZZ_64 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SMOPA_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1574,8 +1557,7 @@ function decode_SUMOPA_ZA_PP_ZZ_64 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SUMOPA_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1658,8 +1640,7 @@ function decode_USMOPA_ZA_PP_ZZ_64 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_USMOPA_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1742,8 +1723,7 @@ function decode_UMOPA_ZA_PP_ZZ_64 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_UMOPA_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1826,8 +1806,7 @@ function decode_SMOPS_ZA_PP_ZZ_64 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SMOPS_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1910,8 +1889,7 @@ function decode_SUMOPS_ZA_PP_ZZ_64 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SUMOPS_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -1994,8 +1972,7 @@ function decode_USMOPS_ZA_PP_ZZ_64 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_USMOPS_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2078,8 +2055,7 @@ function decode_UMOPS_ZA_PP_ZZ_64 (u0, u1, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_UMOPS_ZA_PP_ZZ_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, op1_unsigned, op2_unsigned, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2149,8 +2125,7 @@ function decode_MOVA_ZA_P_RZ_B (size, Q, V, Rs, Pg, Zn, off4) = {
       },
       2048 => {
           execute_MOVA_ZA_P_RZ_B(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2219,8 +2194,7 @@ function decode_MOVA_ZA_P_RZ_H (size, Q, V, Rs, Pg, Zn, ZAd, off3) = {
       },
       2048 => {
           execute_MOVA_ZA_P_RZ_H(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2290,8 +2264,7 @@ function decode_MOVA_ZA_P_RZ_W (size, Q, V, Rs, Pg, Zn, ZAd, off2) = {
       },
       2048 => {
           execute_MOVA_ZA_P_RZ_W(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2361,8 +2334,7 @@ function decode_MOVA_ZA_P_RZ_D (size, Q, V, Rs, Pg, Zn, ZAd, o1) = {
       },
       2048 => {
           execute_MOVA_ZA_P_RZ_D(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2432,8 +2404,7 @@ function decode_MOVA_ZA_P_RZ_Q (size, Q, V, Rs, Pg, Zn, ZAd) = {
       },
       2048 => {
           execute_MOVA_ZA_P_RZ_Q(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2502,8 +2473,7 @@ function decode_MOVA_Z_P_RZA_B (size, Q, V, Rs, Pg, off4, Zd) = {
       },
       2048 => {
           execute_MOVA_Z_P_RZA_B(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2572,8 +2542,7 @@ function decode_MOVA_Z_P_RZA_H (size, Q, V, Rs, Pg, ZAn, off3, Zd) = {
       },
       2048 => {
           execute_MOVA_Z_P_RZA_H(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2643,8 +2612,7 @@ function decode_MOVA_Z_P_RZA_W (size, Q, V, Rs, Pg, ZAn, off2, Zd) = {
       },
       2048 => {
           execute_MOVA_Z_P_RZA_W(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2714,8 +2682,7 @@ function decode_MOVA_Z_P_RZA_D (size, Q, V, Rs, Pg, ZAn, o1, Zd) = {
       },
       2048 => {
           execute_MOVA_Z_P_RZA_D(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2785,8 +2752,7 @@ function decode_MOVA_Z_P_RZA_Q (size, Q, V, Rs, Pg, ZAn, Zd) = {
       },
       2048 => {
           execute_MOVA_Z_P_RZA_Q(2048, d, esize, g, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2867,8 +2833,7 @@ function decode_LDR_ZA_RI__ (Rv, Rn, off4) = {
       },
       2048 => {
           execute_LDR_ZA_RI__(2048, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -2944,8 +2909,7 @@ function decode_STR_ZA_RI__ (Rv, Rn, off4) = {
       },
       2048 => {
           execute_STR_ZA_RI__(2048, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3028,8 +2992,7 @@ function decode_LD1B_ZA_P_RRR__ (msz, Rm, V, Rs, Pg, Rn, off4) = {
       },
       2048 => {
           execute_LD1B_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3116,8 +3079,7 @@ function decode_LD1H_ZA_P_RRR__ (msz, Rm, V, Rs, Pg, Rn, ZAt, off3) = {
       },
       2048 => {
           execute_LD1H_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3205,8 +3167,7 @@ function decode_LD1W_ZA_P_RRR__ (msz, Rm, V, Rs, Pg, Rn, ZAt, off2) = {
       },
       2048 => {
           execute_LD1W_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3294,8 +3255,7 @@ function decode_LD1D_ZA_P_RRR__ (msz, Rm, V, Rs, Pg, Rn, ZAt, o1) = {
       },
       2048 => {
           execute_LD1D_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3383,8 +3343,7 @@ function decode_LD1Q_ZA_P_RRR__ (Rm, V, Rs, Pg, Rn, ZAt) = {
       },
       2048 => {
           execute_LD1Q_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3467,8 +3426,7 @@ function decode_ST1B_ZA_P_RRR__ (msz, Rm, V, Rs, Pg, Rn, off4) = {
       },
       2048 => {
           execute_ST1B_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3552,8 +3510,7 @@ function decode_ST1H_ZA_P_RRR__ (msz, Rm, V, Rs, Pg, Rn, ZAt, off3) = {
       },
       2048 => {
           execute_ST1H_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3638,8 +3595,7 @@ function decode_ST1W_ZA_P_RRR__ (msz, Rm, V, Rs, Pg, Rn, ZAt, off2) = {
       },
       2048 => {
           execute_ST1W_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3724,8 +3680,7 @@ function decode_ST1D_ZA_P_RRR__ (msz, Rm, V, Rs, Pg, Rn, ZAt, o1) = {
       },
       2048 => {
           execute_ST1D_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3810,8 +3765,7 @@ function decode_ST1Q_ZA_P_RRR__ (Rm, V, Rs, Pg, Rn, ZAt) = {
       },
       2048 => {
           execute_ST1Q_ZA_P_RRR__(2048, esize, g, m, n, offset, s, t, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3880,8 +3834,7 @@ function decode_ADDHA_ZA_PP_Z_32 (V, Pm, Pn, Zn, ZAda) = {
       },
       2048 => {
           execute_ADDHA_ZA_PP_Z_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -3949,8 +3902,7 @@ function decode_ADDHA_ZA_PP_Z_64 (V, Pm, Pn, Zn, ZAda) = {
       },
       2048 => {
           execute_ADDHA_ZA_PP_Z_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4018,8 +3970,7 @@ function decode_ADDVA_ZA_PP_Z_32 (V, Pm, Pn, Zn, ZAda) = {
       },
       2048 => {
           execute_ADDVA_ZA_PP_Z_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4087,8 +4038,7 @@ function decode_ADDVA_ZA_PP_Z_64 (V, Pm, Pn, Zn, ZAda) = {
       },
       2048 => {
           execute_ADDVA_ZA_PP_Z_64(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4146,8 +4096,7 @@ function decode_ZERO_ZA_I__ imm8 = {
       },
       2048 => {
           execute_ZERO_ZA_I__(2048, DIV(2048, esize) * DIV(2048, esize) * esize, esize, mask)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4205,8 +4154,7 @@ function decode_MOVA_ZA2_Z_B1 (size, V, Rs, Zn, off3) = {
       },
       2048 => {
           execute_MOVA_ZA2_Z_B1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4268,8 +4216,7 @@ function decode_MOVA_ZA2_Z_H1 (size, V, Rs, Zn, ZAd, off2) = {
       },
       2048 => {
           execute_MOVA_ZA2_Z_H1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4332,8 +4279,7 @@ function decode_MOVA_ZA2_Z_W1 (size, V, Rs, Zn, ZAd, o1) = {
       },
       2048 => {
           execute_MOVA_ZA2_Z_W1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4396,8 +4342,7 @@ function decode_MOVA_ZA2_Z_D1 (size, V, Rs, Zn, ZAd) = {
       },
       2048 => {
           execute_MOVA_ZA2_Z_D1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4459,8 +4404,7 @@ function decode_MOVA_ZA4_Z_B1 (size, V, Rs, Zn, off2) = {
       },
       2048 => {
           execute_MOVA_ZA4_Z_B1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4522,8 +4466,7 @@ function decode_MOVA_ZA4_Z_H1 (size, V, Rs, Zn, ZAd, o1) = {
       },
       2048 => {
           execute_MOVA_ZA4_Z_H1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4586,8 +4529,7 @@ function decode_MOVA_ZA4_Z_W1 (size, V, Rs, Zn, ZAd) = {
       },
       2048 => {
           execute_MOVA_ZA4_Z_W1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4649,8 +4591,7 @@ function decode_MOVA_ZA4_Z_D1 (size, V, Rs, Zn, ZAd) = {
       },
       2048 => {
           execute_MOVA_ZA4_Z_D1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4711,8 +4652,7 @@ function decode_MOVA_ZA_MZ2_1 (Rv, Zn, off3) = {
       },
       2048 => {
           execute_MOVA_ZA_MZ2_1(2048, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4771,8 +4711,7 @@ function decode_MOVA_ZA_MZ4_1 (Rv, Zn, off3) = {
       },
       2048 => {
           execute_MOVA_ZA_MZ4_1(2048, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4832,8 +4771,7 @@ function decode_MOVA_MZ2_ZA_B1 (size, V, Rs, off3, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ2_ZA_B1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4895,8 +4833,7 @@ function decode_MOVA_MZ2_ZA_H1 (size, V, Rs, ZAn, off2, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ2_ZA_H1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -4959,8 +4896,7 @@ function decode_MOVA_MZ2_ZA_W1 (size, V, Rs, ZAn, o1, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ2_ZA_W1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5023,8 +4959,7 @@ function decode_MOVA_MZ2_ZA_D1 (size, V, Rs, ZAn, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ2_ZA_D1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5086,8 +5021,7 @@ function decode_MOVA_MZ4_ZA_B1 (size, V, Rs, off2, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ4_ZA_B1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5149,8 +5083,7 @@ function decode_MOVA_MZ4_ZA_H1 (size, V, Rs, ZAn, o1, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ4_ZA_H1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5213,8 +5146,7 @@ function decode_MOVA_MZ4_ZA_W1 (size, V, Rs, ZAn, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ4_ZA_W1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5276,8 +5208,7 @@ function decode_MOVA_MZ4_ZA_D1 (size, V, Rs, ZAn, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ4_ZA_D1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5338,8 +5269,7 @@ function decode_MOVA_MZ_ZA2_1 (Rv, off3, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ_ZA2_1(2048, d, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5398,8 +5328,7 @@ function decode_MOVA_MZ_ZA4_1 (Rv, off3, Zd) = {
       },
       2048 => {
           execute_MOVA_MZ_ZA4_1(2048, d, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5488,8 +5417,7 @@ function decode_LD1B_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1B_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5582,8 +5510,7 @@ function decode_LD1H_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1H_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5676,8 +5603,7 @@ function decode_LD1W_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1W_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5770,8 +5696,7 @@ function decode_LD1D_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1D_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5864,8 +5789,7 @@ function decode_LD1B_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1B_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -5958,8 +5882,7 @@ function decode_LD1H_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1H_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6052,8 +5975,7 @@ function decode_LD1W_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1W_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6146,8 +6068,7 @@ function decode_LD1D_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1D_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6240,8 +6161,7 @@ function decode_LDNT1B_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1B_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6334,8 +6254,7 @@ function decode_LDNT1H_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1H_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6428,8 +6347,7 @@ function decode_LDNT1W_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1W_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6522,8 +6440,7 @@ function decode_LDNT1D_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1D_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6616,8 +6533,7 @@ function decode_LDNT1B_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1B_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6710,8 +6626,7 @@ function decode_LDNT1H_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1H_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6804,8 +6719,7 @@ function decode_LDNT1W_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1W_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6898,8 +6812,7 @@ function decode_LDNT1D_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1D_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -6989,8 +6902,7 @@ function decode_ST1B_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1B_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7080,8 +6992,7 @@ function decode_ST1H_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1H_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7171,8 +7082,7 @@ function decode_ST1W_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1W_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7262,8 +7172,7 @@ function decode_ST1D_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1D_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7353,8 +7262,7 @@ function decode_ST1B_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1B_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7444,8 +7352,7 @@ function decode_ST1H_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1H_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7535,8 +7442,7 @@ function decode_ST1W_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1W_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7626,8 +7532,7 @@ function decode_ST1D_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1D_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7717,8 +7622,7 @@ function decode_STNT1B_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1B_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7808,8 +7712,7 @@ function decode_STNT1H_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1H_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7899,8 +7802,7 @@ function decode_STNT1W_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1W_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -7990,8 +7892,7 @@ function decode_STNT1D_MZx_P_BR_2x8 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1D_MZx_P_BR_2x8(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8081,8 +7982,7 @@ function decode_STNT1B_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1B_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8172,8 +8072,7 @@ function decode_STNT1H_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1H_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8263,8 +8162,7 @@ function decode_STNT1W_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1W_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8354,8 +8252,7 @@ function decode_STNT1D_MZx_P_BR_4x4 (Rm, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1D_MZx_P_BR_4x4(2048, esize, g, m, n, nreg, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8446,8 +8343,7 @@ function decode_LD1B_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1B_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8538,8 +8434,7 @@ function decode_LD1H_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1H_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8630,8 +8525,7 @@ function decode_LD1W_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1W_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8722,8 +8616,7 @@ function decode_LD1D_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1D_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8814,8 +8707,7 @@ function decode_LDNT1B_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1B_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8906,8 +8798,7 @@ function decode_LDNT1H_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1H_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -8998,8 +8889,7 @@ function decode_LDNT1W_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1W_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9090,8 +8980,7 @@ function decode_LDNT1D_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1D_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9182,8 +9071,7 @@ function decode_LD1B_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1B_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9274,8 +9162,7 @@ function decode_LD1H_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1H_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9366,8 +9253,7 @@ function decode_LD1W_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1W_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9458,8 +9344,7 @@ function decode_LD1D_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LD1D_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9550,8 +9435,7 @@ function decode_LDNT1B_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1B_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9642,8 +9526,7 @@ function decode_LDNT1H_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1H_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9734,8 +9617,7 @@ function decode_LDNT1W_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1W_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9826,8 +9708,7 @@ function decode_LDNT1D_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_LDNT1D_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -9915,8 +9796,7 @@ function decode_ST1B_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1B_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10004,8 +9884,7 @@ function decode_ST1H_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1H_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10093,8 +9972,7 @@ function decode_ST1W_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1W_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10182,8 +10060,7 @@ function decode_ST1D_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1D_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10271,8 +10148,7 @@ function decode_ST1B_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1B_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10360,8 +10236,7 @@ function decode_ST1H_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1H_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10449,8 +10324,7 @@ function decode_ST1W_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1W_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10538,8 +10412,7 @@ function decode_ST1D_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_ST1D_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10627,8 +10500,7 @@ function decode_STNT1B_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1B_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10716,8 +10588,7 @@ function decode_STNT1H_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1H_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10805,8 +10676,7 @@ function decode_STNT1W_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1W_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10894,8 +10764,7 @@ function decode_STNT1D_MZx_P_BI_2x8 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1D_MZx_P_BI_2x8(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -10983,8 +10852,7 @@ function decode_STNT1B_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1B_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11072,8 +10940,7 @@ function decode_STNT1H_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1H_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11161,8 +11028,7 @@ function decode_STNT1W_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1W_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11250,8 +11116,7 @@ function decode_STNT1D_MZx_P_BI_4x4 (imm4, msz, PNg, Rn, T, N, Zt) = {
       },
       2048 => {
           execute_STNT1D_MZx_P_BI_4x4(2048, esize, g, n, nreg, offset, t, tstride)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11329,8 +11194,7 @@ function decode_FADD_ZA_ZW_2x2 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_FADD_ZA_ZW_2x2(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11406,8 +11270,7 @@ function decode_FSUB_ZA_ZW_2x2 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_FSUB_ZA_ZW_2x2(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11483,8 +11346,7 @@ function decode_FADD_ZA_ZW_4x4 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_FADD_ZA_ZW_4x4(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11560,8 +11422,7 @@ function decode_FSUB_ZA_ZW_4x4 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_FSUB_ZA_ZW_4x4(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11644,8 +11505,7 @@ function decode_FMLA_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11729,8 +11589,7 @@ function decode_FMLS_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11814,8 +11673,7 @@ function decode_FMLA_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11899,8 +11757,7 @@ function decode_FMLS_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -11984,8 +11841,7 @@ function decode_FMLA_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12069,8 +11925,7 @@ function decode_FMLS_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12154,8 +12009,7 @@ function decode_FMLA_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12239,8 +12093,7 @@ function decode_FMLS_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12325,8 +12178,7 @@ function decode_FMLA_ZA_ZZi_S2xi (Zm, Rv, i2, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12411,8 +12263,7 @@ function decode_FMLS_ZA_ZZi_S2xi (Zm, Rv, i2, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12497,8 +12348,7 @@ function decode_FMLA_ZA_ZZi_D2xi (Zm, Rv, i1, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZi_D2xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12583,8 +12433,7 @@ function decode_FMLS_ZA_ZZi_D2xi (Zm, Rv, i1, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZi_D2xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12669,8 +12518,7 @@ function decode_FMLA_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12755,8 +12603,7 @@ function decode_FMLS_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12841,8 +12688,7 @@ function decode_FMLA_ZA_ZZi_D4xi (Zm, Rv, i1, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZi_D4xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -12927,8 +12773,7 @@ function decode_FMLS_ZA_ZZi_D4xi (Zm, Rv, i1, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZi_D4xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13007,8 +12852,7 @@ function decode_BFDOT_ZA_ZZW_2x2 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_BFDOT_ZA_ZZW_2x2(2048, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13085,8 +12929,7 @@ function decode_BFDOT_ZA_ZZV_2x1 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_BFDOT_ZA_ZZV_2x1(2048, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13163,8 +13006,7 @@ function decode_FDOT_ZA_ZZW_2x2 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_FDOT_ZA_ZZW_2x2(2048, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13241,8 +13083,7 @@ function decode_FDOT_ZA_ZZV_2x1 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_FDOT_ZA_ZZV_2x1(2048, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13319,8 +13160,7 @@ function decode_BFDOT_ZA_ZZW_4x4 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_BFDOT_ZA_ZZW_4x4(2048, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13397,8 +13237,7 @@ function decode_BFDOT_ZA_ZZV_4x1 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_BFDOT_ZA_ZZV_4x1(2048, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13475,8 +13314,7 @@ function decode_FDOT_ZA_ZZW_4x4 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_FDOT_ZA_ZZW_4x4(2048, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13553,8 +13391,7 @@ function decode_FDOT_ZA_ZZV_4x1 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_FDOT_ZA_ZZV_4x1(2048, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13635,8 +13472,7 @@ function decode_BFDOT_ZA_ZZi_2xi (Zm, Rv, i2, Zn, off3) = {
       },
       2048 => {
           execute_BFDOT_ZA_ZZi_2xi(2048, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13718,8 +13554,7 @@ function decode_BFDOT_ZA_ZZi_4xi (Zm, Rv, i2, Zn, off3) = {
       },
       2048 => {
           execute_BFDOT_ZA_ZZi_4xi(2048, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13801,8 +13636,7 @@ function decode_FDOT_ZA_ZZi_2xi (Zm, Rv, i2, Zn, off3) = {
       },
       2048 => {
           execute_FDOT_ZA_ZZi_2xi(2048, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13884,8 +13718,7 @@ function decode_FDOT_ZA_ZZi_4xi (Zm, Rv, i2, Zn, off3) = {
       },
       2048 => {
           execute_FDOT_ZA_ZZi_4xi(2048, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -13967,8 +13800,7 @@ function decode_BFVDOT_ZA_ZZi_2xi (Zm, Rv, i2, Zn, off3) = {
       },
       2048 => {
           execute_BFVDOT_ZA_ZZi_2xi(2048, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14050,8 +13882,7 @@ function decode_FVDOT_ZA_ZZi_2xi (Zm, Rv, i2, Zn, off3) = {
       },
       2048 => {
           execute_FVDOT_ZA_ZZi_2xi(2048, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14130,8 +13961,7 @@ function decode_BFMLAL_ZA_ZZV_1 (Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLAL_ZA_ZZV_1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14210,8 +14040,7 @@ function decode_BFMLAL_ZA_ZZW_2x2 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_BFMLAL_ZA_ZZW_2x2(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14290,8 +14119,7 @@ function decode_BFMLAL_ZA_ZZV_2x1 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_BFMLAL_ZA_ZZV_2x1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14370,8 +14198,7 @@ function decode_BFMLAL_ZA_ZZW_4x4 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_BFMLAL_ZA_ZZW_4x4(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14450,8 +14277,7 @@ function decode_BFMLAL_ZA_ZZV_4x1 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_BFMLAL_ZA_ZZV_4x1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14530,8 +14356,7 @@ function decode_BFMLSL_ZA_ZZV_1 (Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLSL_ZA_ZZV_1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14610,8 +14435,7 @@ function decode_BFMLSL_ZA_ZZW_2x2 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_BFMLSL_ZA_ZZW_2x2(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14690,8 +14514,7 @@ function decode_BFMLSL_ZA_ZZV_2x1 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_BFMLSL_ZA_ZZV_2x1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14770,8 +14593,7 @@ function decode_BFMLSL_ZA_ZZW_4x4 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_BFMLSL_ZA_ZZW_4x4(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14850,8 +14672,7 @@ function decode_BFMLSL_ZA_ZZV_4x1 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_BFMLSL_ZA_ZZV_4x1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -14934,8 +14755,7 @@ function decode_BFMLAL_ZA_ZZi_1 (Zm, i3h, Rv, i3l, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLAL_ZA_ZZi_1(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15020,8 +14840,7 @@ function decode_BFMLAL_ZA_ZZi_2xi (Zm, Rv, i3h, Zn, S, i3l, off2) = {
       },
       2048 => {
           execute_BFMLAL_ZA_ZZi_2xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15106,8 +14925,7 @@ function decode_BFMLAL_ZA_ZZi_4xi (Zm, Rv, i3h, Zn, S, i3l, off2) = {
       },
       2048 => {
           execute_BFMLAL_ZA_ZZi_4xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15192,8 +15010,7 @@ function decode_BFMLSL_ZA_ZZi_1 (Zm, i3h, Rv, i3l, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLSL_ZA_ZZi_1(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15278,8 +15095,7 @@ function decode_BFMLSL_ZA_ZZi_2xi (Zm, Rv, i3h, Zn, S, i3l, off2) = {
       },
       2048 => {
           execute_BFMLSL_ZA_ZZi_2xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15364,8 +15180,7 @@ function decode_BFMLSL_ZA_ZZi_4xi (Zm, Rv, i3h, Zn, S, i3l, off2) = {
       },
       2048 => {
           execute_BFMLSL_ZA_ZZi_4xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15446,8 +15261,7 @@ function decode_FMLAL_ZA_ZZV_1 (Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLAL_ZA_ZZV_1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15526,8 +15340,7 @@ function decode_FMLAL_ZA_ZZW_2x2 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_FMLAL_ZA_ZZW_2x2(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15606,8 +15419,7 @@ function decode_FMLAL_ZA_ZZV_2x1 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_FMLAL_ZA_ZZV_2x1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15686,8 +15498,7 @@ function decode_FMLAL_ZA_ZZW_4x4 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_FMLAL_ZA_ZZW_4x4(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15766,8 +15577,7 @@ function decode_FMLAL_ZA_ZZV_4x1 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_FMLAL_ZA_ZZV_4x1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15850,8 +15660,7 @@ function decode_FMLAL_ZA_ZZi_1 (Zm, i3h, Rv, i3l, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLAL_ZA_ZZi_1(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -15936,8 +15745,7 @@ function decode_FMLAL_ZA_ZZi_2xi (Zm, Rv, i3h, Zn, S, i3l, off2) = {
       },
       2048 => {
           execute_FMLAL_ZA_ZZi_2xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16022,8 +15830,7 @@ function decode_FMLAL_ZA_ZZi_4xi (Zm, Rv, i3h, Zn, S, i3l, off2) = {
       },
       2048 => {
           execute_FMLAL_ZA_ZZi_4xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16104,8 +15911,7 @@ function decode_FMLSL_ZA_ZZV_1 (Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLSL_ZA_ZZV_1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16184,8 +15990,7 @@ function decode_FMLSL_ZA_ZZW_2x2 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_FMLSL_ZA_ZZW_2x2(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16264,8 +16069,7 @@ function decode_FMLSL_ZA_ZZV_2x1 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_FMLSL_ZA_ZZV_2x1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16344,8 +16148,7 @@ function decode_FMLSL_ZA_ZZW_4x4 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_FMLSL_ZA_ZZW_4x4(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16424,8 +16227,7 @@ function decode_FMLSL_ZA_ZZV_4x1 (Zm, Rv, Zn, S, off2) = {
       },
       2048 => {
           execute_FMLSL_ZA_ZZV_4x1(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16508,8 +16310,7 @@ function decode_FMLSL_ZA_ZZi_1 (Zm, i3h, Rv, i3l, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLSL_ZA_ZZi_1(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16594,8 +16395,7 @@ function decode_FMLSL_ZA_ZZi_2xi (Zm, Rv, i3h, Zn, S, i3l, off2) = {
       },
       2048 => {
           execute_FMLSL_ZA_ZZi_2xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16680,8 +16480,7 @@ function decode_FMLSL_ZA_ZZi_4xi (Zm, Rv, i3h, Zn, S, i3l, off2) = {
       },
       2048 => {
           execute_FMLSL_ZA_ZZi_4xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16747,8 +16546,7 @@ function decode_FMAX_MZ_ZZW_2x2 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAX_MZ_ZZW_2x2(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16810,8 +16608,7 @@ function decode_FMAX_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAX_MZ_ZZV_2x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16873,8 +16670,7 @@ function decode_FMIN_MZ_ZZW_2x2 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMIN_MZ_ZZW_2x2(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16936,8 +16732,7 @@ function decode_FMIN_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMIN_MZ_ZZV_2x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -16999,8 +16794,7 @@ function decode_FMAX_MZ_ZZW_4x4 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAX_MZ_ZZW_4x4(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17062,8 +16856,7 @@ function decode_FMAX_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAX_MZ_ZZV_4x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17125,8 +16918,7 @@ function decode_FMIN_MZ_ZZW_4x4 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMIN_MZ_ZZW_4x4(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17188,8 +16980,7 @@ function decode_FMIN_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMIN_MZ_ZZV_4x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17251,8 +17042,7 @@ function decode_FMAXNM_MZ_ZZW_2x2 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAXNM_MZ_ZZW_2x2(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17314,8 +17104,7 @@ function decode_FMAXNM_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAXNM_MZ_ZZV_2x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17377,8 +17166,7 @@ function decode_FMINNM_MZ_ZZW_2x2 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMINNM_MZ_ZZW_2x2(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17440,8 +17228,7 @@ function decode_FMINNM_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMINNM_MZ_ZZV_2x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17503,8 +17290,7 @@ function decode_FMAXNM_MZ_ZZW_4x4 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAXNM_MZ_ZZW_4x4(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17566,8 +17352,7 @@ function decode_FMAXNM_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMAXNM_MZ_ZZV_4x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17629,8 +17414,7 @@ function decode_FMINNM_MZ_ZZW_4x4 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMINNM_MZ_ZZW_4x4(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17692,8 +17476,7 @@ function decode_FMINNM_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_FMINNM_MZ_ZZV_4x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17758,8 +17541,7 @@ function decode_FCLAMP_MZ_ZZ_2 (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FCLAMP_MZ_ZZ_2(2048, d, esize, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17825,8 +17607,7 @@ function decode_FCLAMP_MZ_ZZ_4 (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_FCLAMP_MZ_ZZ_4(2048, d, esize, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17885,8 +17666,7 @@ function decode_BFCVT_Z_MZ2__ (Zn, N, Zd) = {
       },
       2048 => {
           execute_BFCVT_Z_MZ2__(2048, d, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -17944,8 +17724,7 @@ function decode_FCVT_Z_MZ2__ (Zn, N, Zd) = {
       },
       2048 => {
           execute_FCVT_Z_MZ2__(2048, d, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18003,8 +17782,7 @@ function decode_BFCVTN_Z_MZ2__ (Zn, N, Zd) = {
       },
       2048 => {
           execute_BFCVTN_Z_MZ2__(2048, d, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18062,8 +17840,7 @@ function decode_FCVTN_Z_MZ2__ (Zn, N, Zd) = {
       },
       2048 => {
           execute_FCVTN_Z_MZ2__(2048, d, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18123,8 +17900,7 @@ function decode_FCVTZU_MZ_Z_2 (Zn, U, Zd) = {
       },
       2048 => {
           execute_FCVTZU_MZ_Z_2(2048, d, n, nreg, rounding, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18184,8 +17960,7 @@ function decode_FCVTZU_MZ_Z_4 (Zn, U, Zd) = {
       },
       2048 => {
           execute_FCVTZU_MZ_Z_4(2048, d, n, nreg, rounding, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18245,8 +18020,7 @@ function decode_FCVTZS_MZ_Z_2 (Zn, U, Zd) = {
       },
       2048 => {
           execute_FCVTZS_MZ_Z_2(2048, d, n, nreg, rounding, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18306,8 +18080,7 @@ function decode_FCVTZS_MZ_Z_4 (Zn, U, Zd) = {
       },
       2048 => {
           execute_FCVTZS_MZ_Z_4(2048, d, n, nreg, rounding, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18367,8 +18140,7 @@ function decode_UCVTF_MZ_Z_2 (Zn, U, Zd) = {
       },
       2048 => {
           execute_UCVTF_MZ_Z_2(2048, d, n, nreg, rounding, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18428,8 +18200,7 @@ function decode_UCVTF_MZ_Z_4 (Zn, U, Zd) = {
       },
       2048 => {
           execute_UCVTF_MZ_Z_4(2048, d, n, nreg, rounding, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18489,8 +18260,7 @@ function decode_SCVTF_MZ_Z_2 (Zn, U, Zd) = {
       },
       2048 => {
           execute_SCVTF_MZ_Z_2(2048, d, n, nreg, rounding, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18550,8 +18320,7 @@ function decode_SCVTF_MZ_Z_4 (Zn, U, Zd) = {
       },
       2048 => {
           execute_SCVTF_MZ_Z_4(2048, d, n, nreg, rounding, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18611,8 +18380,7 @@ function decode_FRINTA_MZ_Z_2 (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTA_MZ_Z_2(2048, d, exact, n, nreg, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18672,8 +18440,7 @@ function decode_FRINTM_MZ_Z_2 (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTM_MZ_Z_2(2048, d, exact, n, nreg, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18733,8 +18500,7 @@ function decode_FRINTN_MZ_Z_2 (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTN_MZ_Z_2(2048, d, exact, n, nreg, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18794,8 +18560,7 @@ function decode_FRINTP_MZ_Z_2 (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTP_MZ_Z_2(2048, d, exact, n, nreg, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18855,8 +18620,7 @@ function decode_FRINTA_MZ_Z_4 (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTA_MZ_Z_4(2048, d, exact, n, nreg, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18916,8 +18680,7 @@ function decode_FRINTM_MZ_Z_4 (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTM_MZ_Z_4(2048, d, exact, n, nreg, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -18977,8 +18740,7 @@ function decode_FRINTN_MZ_Z_4 (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTN_MZ_Z_4(2048, d, exact, n, nreg, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19038,8 +18800,7 @@ function decode_FRINTP_MZ_Z_4 (size, Zn, Zd) = {
       },
       2048 => {
           execute_FRINTP_MZ_Z_4(2048, d, exact, n, nreg, rounding)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19113,8 +18874,7 @@ function decode_ADD_ZA_ZW_2x2 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_ADD_ZA_ZW_2x2(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19190,8 +18950,7 @@ function decode_SUB_ZA_ZW_2x2 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_SUB_ZA_ZW_2x2(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19267,8 +19026,7 @@ function decode_ADD_ZA_ZW_4x4 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_ADD_ZA_ZW_4x4(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19344,8 +19102,7 @@ function decode_SUB_ZA_ZW_4x4 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_SUB_ZA_ZW_4x4(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19419,8 +19176,7 @@ function decode_ADD_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_ADD_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19495,8 +19251,7 @@ function decode_SUB_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_SUB_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19571,8 +19326,7 @@ function decode_ADD_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_ADD_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19647,8 +19401,7 @@ function decode_SUB_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_SUB_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19723,8 +19476,7 @@ function decode_ADD_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_ADD_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19799,8 +19551,7 @@ function decode_SUB_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_SUB_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19875,8 +19626,7 @@ function decode_ADD_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_ADD_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -19951,8 +19701,7 @@ function decode_SUB_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_SUB_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20035,8 +19784,7 @@ function decode_UDOT_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20119,8 +19867,7 @@ function decode_SDOT_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20200,8 +19947,7 @@ function decode_USDOT_ZA_ZZW_S2x2 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_USDOT_ZA_ZZW_S2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20282,8 +20028,7 @@ function decode_UDOT_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20366,8 +20111,7 @@ function decode_SDOT_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20447,8 +20191,7 @@ function decode_USDOT_ZA_ZZV_S2x1 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_USDOT_ZA_ZZV_S2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20527,8 +20270,7 @@ function decode_SUDOT_ZA_ZZV_S2x1 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SUDOT_ZA_ZZV_S2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20610,8 +20352,7 @@ function decode_UDOT_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20694,8 +20435,7 @@ function decode_SDOT_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20775,8 +20515,7 @@ function decode_USDOT_ZA_ZZW_S4x4 (Zm, Rv, Zn, off3) = {
       },
       2048 => {
           execute_USDOT_ZA_ZZW_S4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20857,8 +20596,7 @@ function decode_UDOT_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -20941,8 +20679,7 @@ function decode_SDOT_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21022,8 +20759,7 @@ function decode_USDOT_ZA_ZZV_S4x1 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_USDOT_ZA_ZZV_S4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21102,8 +20838,7 @@ function decode_SUDOT_ZA_ZZV_S4x1 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SUDOT_ZA_ZZV_S4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21186,8 +20921,7 @@ function decode_UDOT_ZA_ZZi_S2xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21271,8 +21005,7 @@ function decode_SDOT_ZA_ZZi_S2xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21356,8 +21089,7 @@ function decode_USDOT_ZA_ZZi_S2xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_USDOT_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21441,8 +21173,7 @@ function decode_SUDOT_ZA_ZZi_S2xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_SUDOT_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21526,8 +21257,7 @@ function decode_UDOT_ZA_ZZi_D2xi (Zm, Rv, i1, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA_ZZi_D2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21611,8 +21341,7 @@ function decode_SDOT_ZA_ZZi_D2xi (Zm, Rv, i1, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA_ZZi_D2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21696,8 +21425,7 @@ function decode_UDOT_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21781,8 +21509,7 @@ function decode_SDOT_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21866,8 +21593,7 @@ function decode_USDOT_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_USDOT_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -21951,8 +21677,7 @@ function decode_SUDOT_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_SUDOT_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22036,8 +21761,7 @@ function decode_UDOT_ZA_ZZi_D4xi (Zm, Rv, i1, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA_ZZi_D4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22121,8 +21845,7 @@ function decode_SDOT_ZA_ZZi_D4xi (Zm, Rv, i1, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA_ZZi_D4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22205,8 +21928,7 @@ function decode_UVDOT_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_UVDOT_ZA_ZZi_S4xi(2048, esize, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22289,8 +22011,7 @@ function decode_SVDOT_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_SVDOT_ZA_ZZi_S4xi(2048, esize, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22373,8 +22094,7 @@ function decode_USVDOT_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_USVDOT_ZA_ZZi_S4xi(2048, esize, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22457,8 +22177,7 @@ function decode_SUVDOT_ZA_ZZi_S4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_SUVDOT_ZA_ZZi_S4xi(2048, esize, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22541,8 +22260,7 @@ function decode_UVDOT_ZA_ZZi_D4xi (Zm, Rv, i1, Zn, U, off3) = {
       },
       2048 => {
           execute_UVDOT_ZA_ZZi_D4xi(2048, esize, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22625,8 +22343,7 @@ function decode_SVDOT_ZA_ZZi_D4xi (Zm, Rv, i1, Zn, U, off3) = {
       },
       2048 => {
           execute_SVDOT_ZA_ZZi_D4xi(2048, esize, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22706,8 +22423,7 @@ function decode_UDOT_ZA32_ZZW_2x2 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA32_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22786,8 +22502,7 @@ function decode_SDOT_ZA32_ZZW_2x2 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA32_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22866,8 +22581,7 @@ function decode_UDOT_ZA32_ZZV_2x1 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA32_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -22946,8 +22660,7 @@ function decode_SDOT_ZA32_ZZV_2x1 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA32_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23026,8 +22739,7 @@ function decode_UDOT_ZA32_ZZW_4x4 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA32_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23106,8 +22818,7 @@ function decode_SDOT_ZA32_ZZW_4x4 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA32_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23186,8 +22897,7 @@ function decode_UDOT_ZA32_ZZV_4x1 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA32_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23266,8 +22976,7 @@ function decode_SDOT_ZA32_ZZV_4x1 (Zm, Rv, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA32_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23350,8 +23059,7 @@ function decode_UDOT_ZA32_ZZi_2xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA32_ZZi_2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23435,8 +23143,7 @@ function decode_SDOT_ZA32_ZZi_2xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA32_ZZi_2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23520,8 +23227,7 @@ function decode_UDOT_ZA32_ZZi_4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_UDOT_ZA32_ZZi_4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23605,8 +23311,7 @@ function decode_SDOT_ZA32_ZZi_4xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_SDOT_ZA32_ZZi_4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23689,8 +23394,7 @@ function decode_UVDOT_ZA32_ZZi_2xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_UVDOT_ZA32_ZZi_2xi(2048, esize, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23773,8 +23477,7 @@ function decode_SVDOT_ZA32_ZZi_2xi (Zm, Rv, i2, Zn, U, off3) = {
       },
       2048 => {
           execute_SVDOT_ZA32_ZZi_2xi(2048, esize, index, m, n, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23854,8 +23557,7 @@ function decode_UMLALL_ZA_ZZV_1 (sz, Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZV_1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -23936,8 +23638,7 @@ function decode_UMLSLL_ZA_ZZV_1 (sz, Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZV_1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24018,8 +23719,7 @@ function decode_SMLALL_ZA_ZZV_1 (sz, Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZV_1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24100,8 +23800,7 @@ function decode_SMLSLL_ZA_ZZV_1 (sz, Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZV_1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24179,8 +23878,7 @@ function decode_USMLALL_ZA_ZZV_S (sz, Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_USMLALL_ZA_ZZV_S(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24261,8 +23959,7 @@ function decode_UMLALL_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24343,8 +24040,7 @@ function decode_UMLSLL_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24425,8 +24121,7 @@ function decode_SMLALL_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24507,8 +24202,7 @@ function decode_SMLSLL_ZA_ZZW_2x2 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24586,8 +24280,7 @@ function decode_USMLALL_ZA_ZZW_S2x2 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_USMLALL_ZA_ZZW_S2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24668,8 +24361,7 @@ function decode_UMLALL_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24750,8 +24442,7 @@ function decode_UMLSLL_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24832,8 +24523,7 @@ function decode_SMLALL_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24914,8 +24604,7 @@ function decode_SMLSLL_ZA_ZZV_2x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -24993,8 +24682,7 @@ function decode_USMLALL_ZA_ZZV_S2x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_USMLALL_ZA_ZZV_S2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25072,8 +24760,7 @@ function decode_SUMLALL_ZA_ZZV_S2x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SUMLALL_ZA_ZZV_S2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25154,8 +24841,7 @@ function decode_UMLALL_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25236,8 +24922,7 @@ function decode_UMLSLL_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25318,8 +25003,7 @@ function decode_SMLALL_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25400,8 +25084,7 @@ function decode_SMLSLL_ZA_ZZW_4x4 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25479,8 +25162,7 @@ function decode_USMLALL_ZA_ZZW_S4x4 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_USMLALL_ZA_ZZW_S4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25561,8 +25243,7 @@ function decode_UMLALL_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25643,8 +25324,7 @@ function decode_UMLSLL_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25725,8 +25405,7 @@ function decode_SMLALL_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25807,8 +25486,7 @@ function decode_SMLSLL_ZA_ZZV_4x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25886,8 +25564,7 @@ function decode_USMLALL_ZA_ZZV_S4x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_USMLALL_ZA_ZZV_S4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -25965,8 +25642,7 @@ function decode_SUMLALL_ZA_ZZV_S4x1 (sz, Zm, Rv, Zn, U, S, o1) = {
       },
       2048 => {
           execute_SUMLALL_ZA_ZZV_S4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26048,8 +25724,7 @@ function decode_UMLALL_ZA_ZZi_S (Zm, i4h, Rv, i4l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZi_S(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26132,8 +25807,7 @@ function decode_UMLSLL_ZA_ZZi_S (Zm, i4h, Rv, i4l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZi_S(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26216,8 +25890,7 @@ function decode_SMLALL_ZA_ZZi_S (Zm, i4h, Rv, i4l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZi_S(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26300,8 +25973,7 @@ function decode_SMLSLL_ZA_ZZi_S (Zm, i4h, Rv, i4l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZi_S(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26384,8 +26056,7 @@ function decode_USMLALL_ZA_ZZi_S (Zm, i4h, Rv, i4l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_USMLALL_ZA_ZZi_S(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26468,8 +26139,7 @@ function decode_SUMLALL_ZA_ZZi_S (Zm, i4h, Rv, i4l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SUMLALL_ZA_ZZi_S(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26552,8 +26222,7 @@ function decode_UMLALL_ZA_ZZi_D (Zm, i3h, Rv, i3l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZi_D(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26636,8 +26305,7 @@ function decode_UMLSLL_ZA_ZZi_D (Zm, i3h, Rv, i3l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZi_D(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26720,8 +26388,7 @@ function decode_SMLALL_ZA_ZZi_D (Zm, i3h, Rv, i3l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZi_D(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26804,8 +26471,7 @@ function decode_SMLSLL_ZA_ZZi_D (Zm, i3h, Rv, i3l, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZi_D(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26888,8 +26554,7 @@ function decode_UMLALL_ZA_ZZi_S2xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -26972,8 +26637,7 @@ function decode_UMLSLL_ZA_ZZi_S2xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27056,8 +26720,7 @@ function decode_SMLALL_ZA_ZZi_S2xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27140,8 +26803,7 @@ function decode_SMLSLL_ZA_ZZi_S2xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27224,8 +26886,7 @@ function decode_USMLALL_ZA_ZZi_S2xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_USMLALL_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27308,8 +26969,7 @@ function decode_SUMLALL_ZA_ZZi_S2xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_SUMLALL_ZA_ZZi_S2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27392,8 +27052,7 @@ function decode_UMLALL_ZA_ZZi_D2xi (Zm, Rv, i3h, Zn, U, S, i3l, o1) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZi_D2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27476,8 +27135,7 @@ function decode_UMLSLL_ZA_ZZi_D2xi (Zm, Rv, i3h, Zn, U, S, i3l, o1) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZi_D2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27560,8 +27218,7 @@ function decode_SMLALL_ZA_ZZi_D2xi (Zm, Rv, i3h, Zn, U, S, i3l, o1) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZi_D2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27644,8 +27301,7 @@ function decode_SMLSLL_ZA_ZZi_D2xi (Zm, Rv, i3h, Zn, U, S, i3l, o1) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZi_D2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27728,8 +27384,7 @@ function decode_UMLALL_ZA_ZZi_S4xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27812,8 +27467,7 @@ function decode_UMLSLL_ZA_ZZi_S4xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27896,8 +27550,7 @@ function decode_SMLALL_ZA_ZZi_S4xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -27980,8 +27633,7 @@ function decode_SMLSLL_ZA_ZZi_S4xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28064,8 +27716,7 @@ function decode_USMLALL_ZA_ZZi_S4xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_USMLALL_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28148,8 +27799,7 @@ function decode_SUMLALL_ZA_ZZi_S4xi (Zm, Rv, i4h, Zn, U, S, i4l, o1) = {
       },
       2048 => {
           execute_SUMLALL_ZA_ZZi_S4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28232,8 +27882,7 @@ function decode_UMLALL_ZA_ZZi_D4xi (Zm, Rv, i3h, Zn, U, S, i3l, o1) = {
       },
       2048 => {
           execute_UMLALL_ZA_ZZi_D4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28316,8 +27965,7 @@ function decode_UMLSLL_ZA_ZZi_D4xi (Zm, Rv, i3h, Zn, U, S, i3l, o1) = {
       },
       2048 => {
           execute_UMLSLL_ZA_ZZi_D4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28400,8 +28048,7 @@ function decode_SMLALL_ZA_ZZi_D4xi (Zm, Rv, i3h, Zn, U, S, i3l, o1) = {
       },
       2048 => {
           execute_SMLALL_ZA_ZZi_D4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28484,8 +28131,7 @@ function decode_SMLSLL_ZA_ZZi_D4xi (Zm, Rv, i3h, Zn, U, S, i3l, o1) = {
       },
       2048 => {
           execute_SMLSLL_ZA_ZZi_D4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28564,8 +28210,7 @@ function decode_UMLAL_ZA_ZZV_1 (Zm, Rv, Zn, U, S, off3) = {
       },
       2048 => {
           execute_UMLAL_ZA_ZZV_1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28642,8 +28287,7 @@ function decode_UMLSL_ZA_ZZV_1 (Zm, Rv, Zn, U, S, off3) = {
       },
       2048 => {
           execute_UMLSL_ZA_ZZV_1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28720,8 +28364,7 @@ function decode_SMLAL_ZA_ZZV_1 (Zm, Rv, Zn, U, S, off3) = {
       },
       2048 => {
           execute_SMLAL_ZA_ZZV_1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28798,8 +28441,7 @@ function decode_SMLSL_ZA_ZZV_1 (Zm, Rv, Zn, U, S, off3) = {
       },
       2048 => {
           execute_SMLSL_ZA_ZZV_1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28876,8 +28518,7 @@ function decode_UMLAL_ZA_ZZW_2x2 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLAL_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -28954,8 +28595,7 @@ function decode_UMLSL_ZA_ZZW_2x2 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLSL_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29032,8 +28672,7 @@ function decode_SMLAL_ZA_ZZW_2x2 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLAL_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29110,8 +28749,7 @@ function decode_SMLSL_ZA_ZZW_2x2 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLSL_ZA_ZZW_2x2(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29188,8 +28826,7 @@ function decode_UMLAL_ZA_ZZV_2x1 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLAL_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29266,8 +28903,7 @@ function decode_UMLSL_ZA_ZZV_2x1 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLSL_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29344,8 +28980,7 @@ function decode_SMLAL_ZA_ZZV_2x1 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLAL_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29422,8 +29057,7 @@ function decode_SMLSL_ZA_ZZV_2x1 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLSL_ZA_ZZV_2x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29500,8 +29134,7 @@ function decode_UMLAL_ZA_ZZW_4x4 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLAL_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29578,8 +29211,7 @@ function decode_UMLSL_ZA_ZZW_4x4 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLSL_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29656,8 +29288,7 @@ function decode_SMLAL_ZA_ZZW_4x4 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLAL_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29734,8 +29365,7 @@ function decode_SMLSL_ZA_ZZW_4x4 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLSL_ZA_ZZW_4x4(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29812,8 +29442,7 @@ function decode_UMLAL_ZA_ZZV_4x1 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLAL_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29890,8 +29519,7 @@ function decode_UMLSL_ZA_ZZV_4x1 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_UMLSL_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -29968,8 +29596,7 @@ function decode_SMLAL_ZA_ZZV_4x1 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLAL_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30046,8 +29673,7 @@ function decode_SMLSL_ZA_ZZV_4x1 (Zm, Rv, Zn, U, S, off2) = {
       },
       2048 => {
           execute_SMLSL_ZA_ZZV_4x1(2048, esize, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30128,8 +29754,7 @@ function decode_UMLAL_ZA_ZZi_1 (Zm, i3h, Rv, i3l, Zn, U, S, off3) = {
       },
       2048 => {
           execute_UMLAL_ZA_ZZi_1(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30212,8 +29837,7 @@ function decode_UMLSL_ZA_ZZi_1 (Zm, i3h, Rv, i3l, Zn, U, S, off3) = {
       },
       2048 => {
           execute_UMLSL_ZA_ZZi_1(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30296,8 +29920,7 @@ function decode_SMLAL_ZA_ZZi_1 (Zm, i3h, Rv, i3l, Zn, U, S, off3) = {
       },
       2048 => {
           execute_SMLAL_ZA_ZZi_1(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30380,8 +30003,7 @@ function decode_SMLSL_ZA_ZZi_1 (Zm, i3h, Rv, i3l, Zn, U, S, off3) = {
       },
       2048 => {
           execute_SMLSL_ZA_ZZi_1(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30464,8 +30086,7 @@ function decode_UMLAL_ZA_ZZi_2xi (Zm, Rv, i3h, Zn, U, S, i3l, off2) = {
       },
       2048 => {
           execute_UMLAL_ZA_ZZi_2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30548,8 +30169,7 @@ function decode_UMLSL_ZA_ZZi_2xi (Zm, Rv, i3h, Zn, U, S, i3l, off2) = {
       },
       2048 => {
           execute_UMLSL_ZA_ZZi_2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30632,8 +30252,7 @@ function decode_SMLAL_ZA_ZZi_2xi (Zm, Rv, i3h, Zn, U, S, i3l, off2) = {
       },
       2048 => {
           execute_SMLAL_ZA_ZZi_2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30716,8 +30335,7 @@ function decode_SMLSL_ZA_ZZi_2xi (Zm, Rv, i3h, Zn, U, S, i3l, off2) = {
       },
       2048 => {
           execute_SMLSL_ZA_ZZi_2xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30800,8 +30418,7 @@ function decode_UMLAL_ZA_ZZi_4xi (Zm, Rv, i3h, Zn, U, S, i3l, off2) = {
       },
       2048 => {
           execute_UMLAL_ZA_ZZi_4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30884,8 +30501,7 @@ function decode_UMLSL_ZA_ZZi_4xi (Zm, Rv, i3h, Zn, U, S, i3l, off2) = {
       },
       2048 => {
           execute_UMLSL_ZA_ZZi_4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -30968,8 +30584,7 @@ function decode_SMLAL_ZA_ZZi_4xi (Zm, Rv, i3h, Zn, U, S, i3l, off2) = {
       },
       2048 => {
           execute_SMLAL_ZA_ZZi_4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31052,8 +30667,7 @@ function decode_SMLSL_ZA_ZZi_4xi (Zm, Rv, i3h, Zn, U, S, i3l, off2) = {
       },
       2048 => {
           execute_SMLSL_ZA_ZZi_4xi(2048, esize, index, m, n, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31121,8 +30735,7 @@ function decode_UMAX_MZ_ZZW_2x2 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_UMAX_MZ_ZZW_2x2(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31186,8 +30799,7 @@ function decode_SMAX_MZ_ZZW_2x2 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SMAX_MZ_ZZW_2x2(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31251,8 +30863,7 @@ function decode_UMAX_MZ_ZZV_2x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_UMAX_MZ_ZZV_2x1(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31316,8 +30927,7 @@ function decode_SMAX_MZ_ZZV_2x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SMAX_MZ_ZZV_2x1(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31381,8 +30991,7 @@ function decode_UMAX_MZ_ZZW_4x4 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_UMAX_MZ_ZZW_4x4(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31446,8 +31055,7 @@ function decode_SMAX_MZ_ZZW_4x4 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SMAX_MZ_ZZW_4x4(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31511,8 +31119,7 @@ function decode_UMAX_MZ_ZZV_4x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_UMAX_MZ_ZZV_4x1(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31576,8 +31183,7 @@ function decode_SMAX_MZ_ZZV_4x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SMAX_MZ_ZZV_4x1(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31641,8 +31247,7 @@ function decode_UMIN_MZ_ZZW_2x2 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_UMIN_MZ_ZZW_2x2(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31706,8 +31311,7 @@ function decode_SMIN_MZ_ZZW_2x2 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SMIN_MZ_ZZW_2x2(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31771,8 +31375,7 @@ function decode_UMIN_MZ_ZZV_2x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_UMIN_MZ_ZZV_2x1(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31836,8 +31439,7 @@ function decode_SMIN_MZ_ZZV_2x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SMIN_MZ_ZZV_2x1(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31901,8 +31503,7 @@ function decode_UMIN_MZ_ZZW_4x4 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_UMIN_MZ_ZZW_4x4(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -31966,8 +31567,7 @@ function decode_SMIN_MZ_ZZW_4x4 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SMIN_MZ_ZZW_4x4(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32031,8 +31631,7 @@ function decode_UMIN_MZ_ZZV_4x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_UMIN_MZ_ZZV_4x1(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32096,8 +31695,7 @@ function decode_SMIN_MZ_ZZV_4x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SMIN_MZ_ZZV_4x1(2048, dn, esize, m, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32167,8 +31765,7 @@ function decode_URSHL_MZ_ZZW_2x2 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_URSHL_MZ_ZZW_2x2(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32238,8 +31835,7 @@ function decode_SRSHL_MZ_ZZW_2x2 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SRSHL_MZ_ZZW_2x2(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32309,8 +31905,7 @@ function decode_URSHL_MZ_ZZV_2x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_URSHL_MZ_ZZV_2x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32380,8 +31975,7 @@ function decode_SRSHL_MZ_ZZV_2x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SRSHL_MZ_ZZV_2x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32451,8 +32045,7 @@ function decode_URSHL_MZ_ZZW_4x4 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_URSHL_MZ_ZZW_4x4(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32522,8 +32115,7 @@ function decode_SRSHL_MZ_ZZW_4x4 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SRSHL_MZ_ZZW_4x4(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32593,8 +32185,7 @@ function decode_URSHL_MZ_ZZV_4x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_URSHL_MZ_ZZV_4x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32664,8 +32255,7 @@ function decode_SRSHL_MZ_ZZV_4x1 (size, Zm, Zdn, U) = {
       },
       2048 => {
           execute_SRSHL_MZ_ZZV_4x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32728,8 +32318,7 @@ function decode_SQDMULH_MZ_ZZW_2x2 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_SQDMULH_MZ_ZZW_2x2(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32791,8 +32380,7 @@ function decode_SQDMULH_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_SQDMULH_MZ_ZZV_2x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32854,8 +32442,7 @@ function decode_SQDMULH_MZ_ZZW_4x4 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_SQDMULH_MZ_ZZW_4x4(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32917,8 +32504,7 @@ function decode_SQDMULH_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_SQDMULH_MZ_ZZV_4x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -32979,8 +32565,7 @@ function decode_ADD_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_ADD_MZ_ZZV_2x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33041,8 +32626,7 @@ function decode_ADD_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_ADD_MZ_ZZV_4x1(2048, dn, esize, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33107,8 +32691,7 @@ function decode_UCLAMP_MZ_ZZ_2 (size, Zm, Zn, Zd, U) = {
       },
       2048 => {
           execute_UCLAMP_MZ_ZZ_2(2048, d, esize, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33175,8 +32758,7 @@ function decode_SCLAMP_MZ_ZZ_2 (size, Zm, Zn, Zd, U) = {
       },
       2048 => {
           execute_SCLAMP_MZ_ZZ_2(2048, d, esize, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33243,8 +32825,7 @@ function decode_UCLAMP_MZ_ZZ_4 (size, Zm, Zn, Zd, U) = {
       },
       2048 => {
           execute_UCLAMP_MZ_ZZ_4(2048, d, esize, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33311,8 +32892,7 @@ function decode_SCLAMP_MZ_ZZ_4 (size, Zm, Zn, Zd, U) = {
       },
       2048 => {
           execute_SCLAMP_MZ_ZZ_4(2048, d, esize, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33381,8 +32961,7 @@ function decode_UUNPK_MZ_Z_2 (size, Zn, Zd, U) = {
       },
       2048 => {
           execute_UUNPK_MZ_Z_2(2048, d, esize, n, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33450,8 +33029,7 @@ function decode_SUNPK_MZ_Z_2 (size, Zn, Zd, U) = {
       },
       2048 => {
           execute_SUNPK_MZ_Z_2(2048, d, esize, n, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33519,8 +33097,7 @@ function decode_UUNPK_MZ_Z_4 (size, Zn, Zd, U) = {
       },
       2048 => {
           execute_UUNPK_MZ_Z_4(2048, d, esize, n, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33588,8 +33165,7 @@ function decode_SUNPK_MZ_Z_4 (size, Zn, Zd, U) = {
       },
       2048 => {
           execute_SUNPK_MZ_Z_4(2048, d, esize, n, nreg, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33648,8 +33224,7 @@ function decode_SQRSHR_Z_MZ2__ (imm4, Zn, U, Zd) = {
       },
       2048 => {
           execute_SQRSHR_Z_MZ2__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33708,8 +33283,7 @@ function decode_UQRSHR_Z_MZ2__ (imm4, Zn, U, Zd) = {
       },
       2048 => {
           execute_UQRSHR_Z_MZ2__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33768,8 +33342,7 @@ function decode_SQRSHRU_Z_MZ2__ (imm4, Zn, U, Zd) = {
       },
       2048 => {
           execute_SQRSHRU_Z_MZ2__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33840,8 +33413,7 @@ function decode_SQRSHRN_Z_MZ4__ (tsize, imm5, N, Zn, U, Zd) = {
       },
       2048 => {
           execute_SQRSHRN_Z_MZ4__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33914,8 +33486,7 @@ function decode_UQRSHRN_Z_MZ4__ (tsize, imm5, N, Zn, U, Zd) = {
       },
       2048 => {
           execute_UQRSHRN_Z_MZ4__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -33988,8 +33559,7 @@ function decode_SQRSHRUN_Z_MZ4__ (tsize, imm5, N, Zn, U, Zd) = {
       },
       2048 => {
           execute_SQRSHRUN_Z_MZ4__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34062,8 +33632,7 @@ function decode_SQRSHR_Z_MZ4__ (tsize, imm5, N, Zn, U, Zd) = {
       },
       2048 => {
           execute_SQRSHR_Z_MZ4__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34136,8 +33705,7 @@ function decode_UQRSHR_Z_MZ4__ (tsize, imm5, N, Zn, U, Zd) = {
       },
       2048 => {
           execute_UQRSHR_Z_MZ4__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34210,8 +33778,7 @@ function decode_SQRSHRU_Z_MZ4__ (tsize, imm5, N, Zn, U, Zd) = {
       },
       2048 => {
           execute_SQRSHRU_Z_MZ4__(2048, d, esize, n, shift)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34270,8 +33837,7 @@ function decode_SQCVT_Z_MZ2__ (Zn, U, Zd) = {
       },
       2048 => {
           execute_SQCVT_Z_MZ2__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34327,8 +33893,7 @@ function decode_UQCVT_Z_MZ2__ (Zn, U, Zd) = {
       },
       2048 => {
           execute_UQCVT_Z_MZ2__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34384,8 +33949,7 @@ function decode_SQCVTU_Z_MZ2__ (Zn, U, Zd) = {
       },
       2048 => {
           execute_SQCVTU_Z_MZ2__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34446,8 +34010,7 @@ function decode_SQCVTN_Z_MZ4__ (sz, Zn, N, U, Zd) = {
       2048 => {
           assert(constraint((0 <= 'n & 'n <= 31 & 'esize in {8, 16} & 0 <= 'd & 'd <= 31 & is_VL(2048))));
           execute_SQCVTN_Z_MZ4__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34510,8 +34073,7 @@ function decode_UQCVTN_Z_MZ4__ (sz, Zn, N, U, Zd) = {
       2048 => {
           assert(constraint((0 <= 'n & 'n <= 31 & 'esize in {8, 16} & 0 <= 'd & 'd <= 31 & is_VL(2048))));
           execute_UQCVTN_Z_MZ4__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34574,8 +34136,7 @@ function decode_SQCVTUN_Z_MZ4__ (sz, Zn, N, U, Zd) = {
       2048 => {
           assert(constraint((0 <= 'n & 'n <= 31 & 'esize in {8, 16} & 0 <= 'd & 'd <= 31 & is_VL(2048))));
           execute_SQCVTUN_Z_MZ4__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34638,8 +34199,7 @@ function decode_SQCVT_Z_MZ4__ (sz, Zn, N, U, Zd) = {
       2048 => {
           assert(constraint((0 <= 'n & 'n <= 31 & 'esize in {8, 16} & 0 <= 'd & 'd <= 31 & is_VL(2048))));
           execute_SQCVT_Z_MZ4__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34702,8 +34262,7 @@ function decode_UQCVT_Z_MZ4__ (sz, Zn, N, U, Zd) = {
       2048 => {
           assert(constraint((0 <= 'n & 'n <= 31 & 'esize in {8, 16} & 0 <= 'd & 'd <= 31 & is_VL(2048))));
           execute_UQCVT_Z_MZ4__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34766,8 +34325,7 @@ function decode_SQCVTU_Z_MZ4__ (sz, Zn, N, U, Zd) = {
       2048 => {
           assert(constraint((0 <= 'n & 'n <= 31 & 'esize in {8, 16} & 0 <= 'd & 'd <= 31 & is_VL(2048))));
           execute_SQCVTU_Z_MZ4__(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34831,8 +34389,7 @@ function decode_ZIP_MZ_ZZ_2 (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_ZIP_MZ_ZZ_2(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34897,8 +34454,7 @@ function decode_UZP_MZ_ZZ_2 (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_UZP_MZ_ZZ_2(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -34961,8 +34517,7 @@ function decode_ZIP_MZ_ZZ_2Q (Zm, Zn, Zd) = {
       },
       2048 => {
           execute_ZIP_MZ_ZZ_2Q(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35026,8 +34581,7 @@ function decode_UZP_MZ_ZZ_2Q (Zm, Zn, Zd) = {
       },
       2048 => {
           execute_UZP_MZ_ZZ_2Q(2048, d, esize, m, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35092,8 +34646,7 @@ function decode_ZIP_MZ_Z_4 (size, Zn, Zd) = {
       },
       2048 => {
           execute_ZIP_MZ_Z_4(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35161,8 +34714,7 @@ function decode_UZP_MZ_Z_4 (size, Zn, Zd) = {
       },
       2048 => {
           execute_UZP_MZ_Z_4(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35227,8 +34779,7 @@ function decode_ZIP_MZ_Z_4Q (Zn, Zd) = {
       },
       2048 => {
           execute_ZIP_MZ_Z_4Q(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35295,8 +34846,7 @@ function decode_UZP_MZ_Z_4Q (Zn, Zd) = {
       },
       2048 => {
           execute_UZP_MZ_Z_4Q(2048, d, esize, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35363,8 +34913,7 @@ function decode_SEL_MZ_P_ZZ_2 (size, Zm, PNg, Zn, Zd) = {
       },
       2048 => {
           execute_SEL_MZ_P_ZZ_2(2048, d, esize, g, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35434,8 +34983,7 @@ function decode_SEL_MZ_P_ZZ_4 (size, Zm, PNg, Zn, Zd) = {
       },
       2048 => {
           execute_SEL_MZ_P_ZZ_4(2048, d, esize, g, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35513,8 +35061,7 @@ function decode_BMOPA_ZA_PP_ZZ_32 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_BMOPA_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35593,8 +35140,7 @@ function decode_BMOPS_ZA_PP_ZZ_32 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_BMOPS_ZA_PP_ZZ_32(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35674,8 +35220,7 @@ function decode_SMOPA_ZA32_PP_ZZ_16 (u0, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SMOPA_ZA32_PP_ZZ_16(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35756,8 +35301,7 @@ function decode_UMOPA_ZA32_PP_ZZ_16 (u0, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_UMOPA_ZA32_PP_ZZ_16(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35838,8 +35382,7 @@ function decode_SMOPS_ZA32_PP_ZZ_16 (u0, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_SMOPS_ZA32_PP_ZZ_16(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35920,8 +35463,7 @@ function decode_UMOPS_ZA32_PP_ZZ_16 (u0, Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_UMOPS_ZA32_PP_ZZ_16(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op, is_unsigned)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -35993,8 +35535,7 @@ function decode_LUTI2_Z_ZTZ__ (i4, size, Zn, Zd) = {
       },
       2048 => {
           execute_LUTI2_Z_ZTZ__(2048, d, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36063,8 +35604,7 @@ function decode_LUTI4_Z_ZTZ__ (i3, size, Zn, Zd) = {
       },
       2048 => {
           execute_LUTI4_Z_ZTZ__(2048, d, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36136,8 +35676,7 @@ function decode_LUTI2_MZ2_ZTZ_1 (i3, size, Zn, Zd) = {
       },
       2048 => {
           execute_LUTI2_MZ2_ZTZ_1(2048, d, dstride, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36209,8 +35748,7 @@ function decode_LUTI4_MZ2_ZTZ_1 (i2, size, Zn, Zd) = {
       },
       2048 => {
           execute_LUTI4_MZ2_ZTZ_1(2048, d, dstride, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36282,8 +35820,7 @@ function decode_LUTI2_MZ4_ZTZ_1 (i2, size, Zn, Zd) = {
       },
       2048 => {
           execute_LUTI2_MZ4_ZTZ_1(2048, d, dstride, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36355,8 +35892,7 @@ function decode_LUTI4_MZ4_ZTZ_1 (i1, size, Zn, Zd) = {
       },
       2048 => {
           execute_LUTI4_MZ4_ZTZ_1(2048, d, dstride, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36581,8 +36117,7 @@ function decode_RDSVL_R_I__ (imm6, Rd) = {
       },
       2048 => {
           execute_RDSVL_R_I__(2048, d, imm)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36635,8 +36170,7 @@ function decode_ADDSPL_R_RI__ (Rn, imm6, Rd) = {
       },
       2048 => {
           execute_ADDSPL_R_RI__(2048, d, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36690,8 +36224,7 @@ function decode_ADDSVL_R_RI__ (Rn, imm6, Rd) = {
       },
       2048 => {
           execute_ADDSVL_R_RI__(2048, d, imm, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36748,8 +36281,7 @@ function decode_ZERO_ZA1_RI_2 (Rv, off3) = {
       },
       2048 => {
           execute_ZERO_ZA1_RI_2(2048, ngrp, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36805,8 +36337,7 @@ function decode_ZERO_ZA1_RI_4 (Rv, off3) = {
       },
       2048 => {
           execute_ZERO_ZA1_RI_4(2048, ngrp, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36866,8 +36397,7 @@ function decode_ZERO_ZA2_RI_1 (Rv, off3) = {
       },
       2048 => {
           execute_ZERO_ZA2_RI_1(2048, ngrp, nvec, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36927,8 +36457,7 @@ function decode_ZERO_ZA2_RI_2 (Rv, off2) = {
       },
       2048 => {
           execute_ZERO_ZA2_RI_2(2048, ngrp, nvec, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -36988,8 +36517,7 @@ function decode_ZERO_ZA2_RI_4 (Rv, off2) = {
       },
       2048 => {
           execute_ZERO_ZA2_RI_4(2048, ngrp, nvec, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37049,8 +36577,7 @@ function decode_ZERO_ZA4_RI_1 (Rv, off2) = {
       },
       2048 => {
           execute_ZERO_ZA4_RI_1(2048, ngrp, nvec, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37110,8 +36637,7 @@ function decode_ZERO_ZA4_RI_2 (Rv, o1) = {
       },
       2048 => {
           execute_ZERO_ZA4_RI_2(2048, ngrp, nvec, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37171,8 +36697,7 @@ function decode_ZERO_ZA4_RI_4 (Rv, o1) = {
       },
       2048 => {
           execute_ZERO_ZA4_RI_4(2048, ngrp, nvec, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37242,8 +36767,7 @@ function decode_LUTI2_MZ2_ZTZ_8 (i3, size, Zn, D, Zd) = {
       },
       2048 => {
           execute_LUTI2_MZ2_ZTZ_8(2048, d, dstride, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37316,8 +36840,7 @@ function decode_LUTI4_MZ2_ZTZ_8 (i2, size, Zn, D, Zd) = {
       },
       2048 => {
           execute_LUTI4_MZ2_ZTZ_8(2048, d, dstride, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37390,8 +36913,7 @@ function decode_LUTI2_MZ4_ZTZ_4 (i2, size, Zn, D, Zd) = {
       },
       2048 => {
           execute_LUTI2_MZ4_ZTZ_4(2048, d, dstride, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37464,8 +36986,7 @@ function decode_LUTI4_MZ4_ZTZ_4 (i1, size, Zn, D, Zd) = {
       },
       2048 => {
           execute_LUTI4_MZ4_ZTZ_4(2048, d, dstride, esize, imm, isize, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37523,8 +37044,7 @@ function decode_MOVAZ_Z_RZA_B (size, Q, V, Rs, off4, Zd) = {
       },
       2048 => {
           execute_MOVAZ_Z_RZA_B(2048, d, esize, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37583,8 +37103,7 @@ function decode_MOVAZ_Z_RZA_H (size, Q, V, Rs, ZAn, off3, Zd) = {
       },
       2048 => {
           execute_MOVAZ_Z_RZA_H(2048, d, esize, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37644,8 +37163,7 @@ function decode_MOVAZ_Z_RZA_W (size, Q, V, Rs, ZAn, off2, Zd) = {
       },
       2048 => {
           execute_MOVAZ_Z_RZA_W(2048, d, esize, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37705,8 +37223,7 @@ function decode_MOVAZ_Z_RZA_D (size, Q, V, Rs, ZAn, o1, Zd) = {
       },
       2048 => {
           execute_MOVAZ_Z_RZA_D(2048, d, esize, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37766,8 +37283,7 @@ function decode_MOVAZ_Z_RZA_Q (size, Q, V, Rs, ZAn, Zd) = {
       },
       2048 => {
           execute_MOVAZ_Z_RZA_Q(2048, d, esize, n, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37831,8 +37347,7 @@ function decode_MOVAZ_MZ2_ZA_B1 (size, V, Rs, off3, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ2_ZA_B1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37895,8 +37410,7 @@ function decode_MOVAZ_MZ2_ZA_H1 (size, V, Rs, ZAn, off2, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ2_ZA_H1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -37960,8 +37474,7 @@ function decode_MOVAZ_MZ2_ZA_W1 (size, V, Rs, ZAn, o1, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ2_ZA_W1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38025,8 +37538,7 @@ function decode_MOVAZ_MZ2_ZA_D1 (size, V, Rs, ZAn, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ2_ZA_D1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38089,8 +37601,7 @@ function decode_MOVAZ_MZ4_ZA_B1 (size, V, Rs, off2, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ4_ZA_B1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38153,8 +37664,7 @@ function decode_MOVAZ_MZ4_ZA_H1 (size, V, Rs, ZAn, o1, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ4_ZA_H1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38218,8 +37728,7 @@ function decode_MOVAZ_MZ4_ZA_W1 (size, V, Rs, ZAn, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ4_ZA_W1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38282,8 +37791,7 @@ function decode_MOVAZ_MZ4_ZA_D1 (size, V, Rs, ZAn, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ4_ZA_D1(2048, d, esize, n, nreg, offset, s, vertical)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38348,8 +37856,7 @@ function decode_MOVAZ_MZ_ZA2_1 (Rv, off3, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ_ZA2_1(2048, d, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38412,8 +37919,7 @@ function decode_MOVAZ_MZ_ZA4_1 (Rv, off3, Zd) = {
       },
       2048 => {
           execute_MOVAZ_MZ_ZA4_1(2048, d, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38487,8 +37993,7 @@ function decode_FMOPA_ZA_PP_ZZ_16 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_FMOPA_ZA_PP_ZZ_16(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38565,8 +38070,7 @@ function decode_FMOPS_ZA_PP_ZZ_16 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_FMOPS_ZA_PP_ZZ_16(2048, DIV(2048, esize) * DIV(2048, esize) * esize, a, b, da, esize, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38642,8 +38146,7 @@ function decode_BFMOPA_ZA_PP_ZZ_16 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_BFMOPA_ZA_PP_ZZ_16(2048, DIV(2048, 16) * DIV(2048, 16) * 16, a, b, da, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38719,8 +38222,7 @@ function decode_BFMOPS_ZA_PP_ZZ_16 (Zm, Pm, Pn, Zn, S, ZAda) = {
       },
       2048 => {
           execute_BFMOPS_ZA_PP_ZZ_16(2048, DIV(2048, 16) * DIV(2048, 16) * 16, a, b, da, m, n, sub_op)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38794,8 +38296,7 @@ function decode_FADD_ZA_ZW_2x2_16 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_FADD_ZA_ZW_2x2_16(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38868,8 +38369,7 @@ function decode_FSUB_ZA_ZW_2x2_16 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_FSUB_ZA_ZW_2x2_16(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -38941,8 +38441,7 @@ function decode_BFADD_ZA_ZW_2x2_16 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_BFADD_ZA_ZW_2x2_16(2048, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39014,8 +38513,7 @@ function decode_BFSUB_ZA_ZW_2x2_16 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_BFSUB_ZA_ZW_2x2_16(2048, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39088,8 +38586,7 @@ function decode_FADD_ZA_ZW_4x4_16 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_FADD_ZA_ZW_4x4_16(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39162,8 +38659,7 @@ function decode_FSUB_ZA_ZW_4x4_16 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_FSUB_ZA_ZW_4x4_16(2048, esize, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39235,8 +38731,7 @@ function decode_BFADD_ZA_ZW_4x4_16 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_BFADD_ZA_ZW_4x4_16(2048, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39308,8 +38803,7 @@ function decode_BFSUB_ZA_ZW_4x4_16 (sz, Rv, Zm, S, off3) = {
       },
       2048 => {
           execute_BFSUB_ZA_ZW_4x4_16(2048, m, nreg, offset, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39389,8 +38883,7 @@ function decode_FMLA_ZA_ZZW_2x2_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZW_2x2_16(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39471,8 +38964,7 @@ function decode_FMLS_ZA_ZZW_2x2_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZW_2x2_16(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39552,8 +39044,7 @@ function decode_BFMLA_ZA_ZZW_2x2_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLA_ZA_ZZW_2x2_16(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39633,8 +39124,7 @@ function decode_BFMLS_ZA_ZZW_2x2_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLS_ZA_ZZW_2x2_16(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39715,8 +39205,7 @@ function decode_FMLA_ZA_ZZV_2x1_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZV_2x1_16(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39797,8 +39286,7 @@ function decode_FMLS_ZA_ZZV_2x1_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZV_2x1_16(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39878,8 +39366,7 @@ function decode_BFMLA_ZA_ZZV_2x1_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLA_ZA_ZZV_2x1_16(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -39959,8 +39446,7 @@ function decode_BFMLS_ZA_ZZV_2x1_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLS_ZA_ZZV_2x1_16(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40041,8 +39527,7 @@ function decode_FMLA_ZA_ZZW_4x4_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZW_4x4_16(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40123,8 +39608,7 @@ function decode_FMLS_ZA_ZZW_4x4_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZW_4x4_16(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40204,8 +39688,7 @@ function decode_BFMLA_ZA_ZZW_4x4_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLA_ZA_ZZW_4x4_16(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40285,8 +39768,7 @@ function decode_BFMLS_ZA_ZZW_4x4_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLS_ZA_ZZW_4x4_16(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40367,8 +39849,7 @@ function decode_FMLA_ZA_ZZV_4x1_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZV_4x1_16(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40449,8 +39930,7 @@ function decode_FMLS_ZA_ZZV_4x1_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZV_4x1_16(2048, esize, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40530,8 +40010,7 @@ function decode_BFMLA_ZA_ZZV_4x1_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLA_ZA_ZZV_4x1_16(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40611,8 +40090,7 @@ function decode_BFMLS_ZA_ZZV_4x1_16 (sz, Zm, Rv, Zn, S, off3) = {
       },
       2048 => {
           execute_BFMLS_ZA_ZZV_4x1_16(2048, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40697,8 +40175,7 @@ function decode_FMLA_ZA_ZZi_H2xi (Zm, Rv, i3h, Zn, S, i3l, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZi_H2xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40784,8 +40261,7 @@ function decode_FMLS_ZA_ZZi_H2xi (Zm, Rv, i3h, Zn, S, i3l, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZi_H2xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40871,8 +40347,7 @@ function decode_BFMLA_ZA_ZZi_H2xi (Zm, Rv, i3h, Zn, S, i3l, off3) = {
       },
       2048 => {
           execute_BFMLA_ZA_ZZi_H2xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -40958,8 +40433,7 @@ function decode_BFMLS_ZA_ZZi_H2xi (Zm, Rv, i3h, Zn, S, i3l, off3) = {
       },
       2048 => {
           execute_BFMLS_ZA_ZZi_H2xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41045,8 +40519,7 @@ function decode_FMLA_ZA_ZZi_H4xi (Zm, Rv, i3h, Zn, S, i3l, off3) = {
       },
       2048 => {
           execute_FMLA_ZA_ZZi_H4xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41132,8 +40605,7 @@ function decode_FMLS_ZA_ZZi_H4xi (Zm, Rv, i3h, Zn, S, i3l, off3) = {
       },
       2048 => {
           execute_FMLS_ZA_ZZi_H4xi(2048, esize, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41219,8 +40691,7 @@ function decode_BFMLA_ZA_ZZi_H4xi (Zm, Rv, i3h, Zn, S, i3l, off3) = {
       },
       2048 => {
           execute_BFMLA_ZA_ZZi_H4xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41306,8 +40777,7 @@ function decode_BFMLS_ZA_ZZi_H4xi (Zm, Rv, i3h, Zn, S, i3l, off3) = {
       },
       2048 => {
           execute_BFMLS_ZA_ZZi_H4xi(2048, index, m, n, nreg, offset, sub_op, v)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41371,8 +40841,7 @@ function decode_BFMAX_MZ_ZZW_2x2 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAX_MZ_ZZW_2x2(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41432,8 +40901,7 @@ function decode_BFMAX_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAX_MZ_ZZV_2x1(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41493,8 +40961,7 @@ function decode_BFMIN_MZ_ZZW_2x2 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMIN_MZ_ZZW_2x2(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41554,8 +41021,7 @@ function decode_BFMIN_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMIN_MZ_ZZV_2x1(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41615,8 +41081,7 @@ function decode_BFMAX_MZ_ZZW_4x4 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAX_MZ_ZZW_4x4(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41676,8 +41141,7 @@ function decode_BFMAX_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAX_MZ_ZZV_4x1(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41737,8 +41201,7 @@ function decode_BFMIN_MZ_ZZW_4x4 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMIN_MZ_ZZW_4x4(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41798,8 +41261,7 @@ function decode_BFMIN_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMIN_MZ_ZZV_4x1(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41859,8 +41321,7 @@ function decode_BFMAXNM_MZ_ZZW_2x2 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAXNM_MZ_ZZW_2x2(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41920,8 +41381,7 @@ function decode_BFMAXNM_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAXNM_MZ_ZZV_2x1(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -41981,8 +41441,7 @@ function decode_BFMINNM_MZ_ZZW_2x2 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMINNM_MZ_ZZW_2x2(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42042,8 +41501,7 @@ function decode_BFMINNM_MZ_ZZV_2x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMINNM_MZ_ZZV_2x1(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42103,8 +41561,7 @@ function decode_BFMAXNM_MZ_ZZW_4x4 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAXNM_MZ_ZZW_4x4(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42164,8 +41621,7 @@ function decode_BFMAXNM_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMAXNM_MZ_ZZV_4x1(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42225,8 +41681,7 @@ function decode_BFMINNM_MZ_ZZW_4x4 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMINNM_MZ_ZZW_4x4(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42286,8 +41741,7 @@ function decode_BFMINNM_MZ_ZZV_4x1 (size, Zm, Zdn) = {
       },
       2048 => {
           execute_BFMINNM_MZ_ZZV_4x1(2048, dn, m, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42342,8 +41796,7 @@ function decode_FCVT_MZ2_Z__ (Zn, Zd, L) = {
       },
       2048 => {
           execute_FCVT_MZ2_Z__(2048, d, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42402,8 +41855,7 @@ function decode_FCVTL_MZ2_Z__ (Zn, Zd, L) = {
       },
       2048 => {
           execute_FCVTL_MZ2_Z__(2048, d, n)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42466,8 +41918,7 @@ function decode_BFCLAMP_MZ_ZZ_2 (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BFCLAMP_MZ_ZZ_2(2048, d, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 
@@ -42531,8 +41982,7 @@ function decode_BFCLAMP_MZ_ZZ_4 (size, Zm, Zn, Zd) = {
       },
       2048 => {
           execute_BFCLAMP_MZ_ZZ_4(2048, d, m, n, nreg)
-      },
-      _ => ()
+      }
     }
 }
 

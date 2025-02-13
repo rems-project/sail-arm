@@ -5089,7 +5089,7 @@ function CountPMUEvents idx = {
             SS_Realm => {
                 filtered = U != RLU
             },
-            _ => ()
+            _ => PatternMatchFailure("CountPMUEvents")
           }
       },
       ? if ? == EL1 => {
@@ -5103,7 +5103,7 @@ function CountPMUEvents idx = {
             SS_Realm => {
                 filtered = P != RLK
             },
-            _ => ()
+            _ => PatternMatchFailure("CountPMUEvents")
           }
       },
       ? if ? == EL2 => {
@@ -5117,7 +5117,7 @@ function CountPMUEvents idx = {
             SS_Realm => {
                 filtered = NSH == RLH
             },
-            _ => ()
+            _ => PatternMatchFailure("CountPMUEvents")
           }
       },
       ? if ? == EL3 => {
@@ -5127,7 +5127,7 @@ function CountPMUEvents idx = {
               filtered = P == 0b1
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("CountPMUEvents")
     };
     return((((not_bool(debug) & enabled) & not_bool(prohibited)) & not_bool(filtered)) & not_bool(frozen))
 }
@@ -5443,7 +5443,7 @@ function PMUCountValue (n, Vb) = {
       0b11 => {
           Vc = Vb < T
       },
-      _ => ()
+      _ => PatternMatchFailure("PMUCountValue")
     };
     Vt : int = undefined;
     if [PMEVTYPER_EL0[n][TC][0]] == 0b0 then {
@@ -5882,9 +5882,7 @@ function BranchRecordAllowed el = {
               return(BRBCR_EL1[E0BRE] == 0b1)
           }
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("BranchRecordAllowed")
     }
 }
 
@@ -6113,7 +6111,7 @@ function EffectiveTBI (address, IsInstr, el) = {
           };
           ()
       },
-      _ => ()
+      _ => PatternMatchFailure("EffectiveTBI")
     };
     return(if tbi == 0b1 & ((not_bool(HavePACExt()) | tbid == 0b0) | not_bool(IsInstr)) then
       0b1
@@ -6603,7 +6601,7 @@ function ProfilingBufferOwner () = {
           [bitone, bitone, _] => {
               owning_ss = SS_Realm
           },
-          _ => ()
+          _ => PatternMatchFailure("ProfilingBufferOwner")
         }
     } else {
         owning_ss = if SecureOnlyImplementation() then SS_Secure else
@@ -6644,7 +6642,7 @@ function ProfilingBufferEnabled () = {
       SS_Realm => {
           state_match = state_bits == 0b11
       },
-      _ => ()
+      _ => PatternMatchFailure("ProfilingBufferEnabled")
     };
     return(((not_bool(ELUsingAArch32(owning_el)) & state_match) & PMBLIMITR_EL1[E] == 0b1) & PMBSR_EL1[S] == 0b0)
 }
@@ -6682,7 +6680,7 @@ function StatisticalProfilingEnabled__1 el = {
       ? if ? == EL0 => {
           spe_bit = if tge_set then PMSCR_EL2[E0HSPE] else PMSCR_EL1[E0SPE]
       },
-      _ => ()
+      _ => PatternMatchFailure("StatisticalProfilingEnabled__1")
     };
     return(spe_bit == 0b1)
 }
@@ -7405,7 +7403,7 @@ function SP_set value_name = {
           ? if ? == EL3 => {
               SP_EL3 = value_name
           },
-          _ => ()
+          _ => PatternMatchFailure("SP_set")
         }
     };
     return()
@@ -7497,7 +7495,7 @@ function RestoreTransactionCheckpointParameterised (vl, pl) = {
           ? if ? == EL3 => {
               GCSPR_EL3 = Mk_GCSPR_EL3_Type(TSTATE.GCSPR_ELx)
           },
-          _ => ()
+          _ => PatternMatchFailure("RestoreTransactionCheckpointParameterised")
         }
     };
     return()
@@ -7978,9 +7976,6 @@ function HaltingAllowed () = {
       },
       SS_Realm => {
           return(ExternalRealmInvasiveDebugEnabled())
-      },
-      _ => {
-          return(undefined : bool)
       }
     }
 }
@@ -8227,9 +8222,7 @@ function GetCurrentEXLOCKEN () = {
       ? if ? == EL3 => {
           return(GCSCR_EL3[EXLOCKEN] == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("GetCurrentEXLOCKEN")
     }
 }
 
@@ -8937,9 +8930,7 @@ function PLOfEL el = {
       ? if ? == EL0 => {
           return(PL0)
       },
-      _ => {
-          return(undefined : PrivilegeLevel)
-      }
+      _ => PatternMatchFailure("PLOfEL")
     }
 }
 
@@ -9976,7 +9967,7 @@ function BRBEException (erec, preferred_exception_return, target_address_in, tar
           };
           ()
       },
-      _ => ()
+      _ => PatternMatchFailure("BRBEException")
     };
     let source_valid : bool = BranchRecordAllowed(PSTATE.EL);
     let target_valid : bool = BranchRecordAllowed(target_el);
@@ -10686,7 +10677,7 @@ function AArch64_CheckForWFxTrap (target_el, wfxtype) = {
       ? if ? == EL3 => {
           trap = (if is_wfe then SCR_EL3[TWE] else SCR_EL3[TWI]) == 0b1
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_CheckForWFxTrap")
     };
     if trap then {
         AArch64_WFxTrap(wfxtype, target_el)
@@ -10745,7 +10736,7 @@ function WFETrapDelay target_el = {
           delay_enabled = SCR_EL3[TWEDEn] == 0b1;
           delay = (1 << (UInt(SCR_EL3[TWEDEL]) + 8))
       },
-      _ => ()
+      _ => PatternMatchFailure("WFETrapDelay")
     };
     let 'delay = delay;
     return((delay_enabled, delay))
@@ -10954,7 +10945,7 @@ function GCSPCRSelected el = {
       ? if ? == EL3 => {
           return(GCSCR_EL3[PCRSEL] == 0b1)
       },
-      _ => ()
+      _ => PatternMatchFailure("GCSPCRSelected")
     };
     Unreachable();
     return(true)
@@ -11090,7 +11081,7 @@ function EffectiveTCMA (address, el) = {
       ? if ? == EL3 => {
           tcma = TCR_EL3[TCMA]
       },
-      _ => ()
+      _ => PatternMatchFailure("EffectiveTCMA")
     };
     return(tcma)
 }
@@ -11128,7 +11119,7 @@ function EffectiveMTX (address, is_instr, el) = {
           ? if ? == EL3 => {
               mtx = TCR_EL3[MTX]
           },
-          _ => ()
+          _ => PatternMatchFailure("EffectiveMTX")
         }
     };
     return(mtx)
@@ -11225,9 +11216,7 @@ function MPAMisEnabled () = {
       ? if ? == EL1 => {
           return(MPAM1_EL1_read()[MPAMEN] == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("MPAMisEnabled")
     }
 }
 
@@ -12428,9 +12417,6 @@ function CPASAtPAS pas = {
       },
       PAS_Realm => {
           return(CPAS_Realm)
-      },
-      _ => {
-          return(undefined : CachePASpace)
       }
     }
 }
@@ -12450,9 +12436,6 @@ function CPASAtSecurityState ss = {
       },
       SS_Realm => {
           return(CPAS_RealmNonSecure)
-      },
-      _ => {
-          return(undefined : CachePASpace)
       }
     }
 }
@@ -12798,9 +12781,6 @@ function TargetSecurityState (NS, NSE) = {
           },
           0b1 => {
               return(SS_NonSecure)
-          },
-          _ => {
-              return(undefined : SecurityState)
           }
         }
     } else if HaveRME() then {
@@ -12817,9 +12797,6 @@ function TargetSecurityState (NS, NSE) = {
               },
               0b10 => {
                   return(SS_Root)
-              },
-              _ => {
-                  return(undefined : SecurityState)
               }
             }
         } else if curr_ss == SS_Realm then {
@@ -14924,7 +14901,7 @@ function AArch64_RouteToSErrorOffset target_el = {
               ease_bit = 0b0
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_RouteToSErrorOffset")
     };
     return(ease_bit == 0b1)
 }
@@ -15091,9 +15068,7 @@ function ReportAsGPCException fault = {
       GPCF_Fail => {
           return(SCR_EL3[GPF] == 0b1 & PSTATE.EL != EL3)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("ReportAsGPCException")
     }
 }
 
@@ -15114,9 +15089,7 @@ function EncodeGPCSC gpcf = {
       GPCF_EABT => {
           return(0b01010 @ [gpcf.level[0]])
       },
-      _ => {
-          return(undefined : bits(6))
-      }
+      _ => PatternMatchFailure("EncodeGPCSC")
     }
 }
 
@@ -15749,7 +15722,7 @@ function FPRoundBase__1 (op, fpcr, rounding, isbfloat16, fpexc, N) = {
               round_up = false;
               overflow_to_inf = false
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRoundBase__1")
         };
         if round_up_unconstrained then {
             int_mant_unconstrained = int_mant_unconstrained + 1;
@@ -15798,7 +15771,7 @@ function FPRoundBase__1 (op, fpcr, rounding, isbfloat16, fpexc, N) = {
               round_up = false;
               overflow_to_inf = false
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRoundBase__1")
         }
     };
     if round_up then {
@@ -15865,9 +15838,6 @@ function FPDecodeRounding rmode = {
       },
       0b11 => {
           return(FPRounding_ZERO)
-      },
-      _ => {
-          return(undefined : FPRounding)
       }
     }
 }
@@ -16172,7 +16142,7 @@ function FPProcessNaN__1 (fptype, op, fpcr, fpexc) = {
       64 => {
           topfrac = 51
       },
-      _ => ()
+      _ => PatternMatchFailure("FPProcessNaN__1")
     };
     let 'topfrac = topfrac;
     result : bits('N) = op;
@@ -16441,7 +16411,7 @@ function FPConvertNaN (op, M) = {
       16 => {
           frac = op[8 .. 0] @ Zeros(42)
       },
-      _ => ()
+      _ => PatternMatchFailure("FPConvertNaN")
     };
     match M {
       64 => {
@@ -16453,7 +16423,7 @@ function FPConvertNaN (op, M) = {
       16 => {
           result = (sign @ Ones(M - 10)) @ frac[50 .. 42]
       },
-      _ => ()
+      _ => PatternMatchFailure("FPConvertNaN")
     };
     return(result)
 }
@@ -17302,7 +17272,7 @@ function FPRecipEstimate (operand, fpcr_in) = {
           FPRounding_ZERO => {
               overflow_to_inf = false
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRecipEstimate")
         };
         result = if overflow_to_inf then FPInfinity(sign, 'N) else
           FPMaxNormal(sign, 'N);
@@ -17337,7 +17307,7 @@ function FPRecipEstimate (operand, fpcr_in) = {
               fraction = operand[51 .. 0];
               exp = UInt(operand[62 .. 52])
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRecipEstimate")
         };
         if exp == 0 then {
             if [fraction[51]] == 0b0 then {
@@ -17367,7 +17337,7 @@ function FPRecipEstimate (operand, fpcr_in) = {
           64 => {
               result_exp = 2045 - exp
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRecipEstimate")
         };
         let 'estimate = RecipEstimate(scaled, increasedprecision_name);
         if not_bool(increasedprecision_name) then {
@@ -17392,7 +17362,7 @@ function FPRecipEstimate (operand, fpcr_in) = {
           64 => {
               result = (sign @ result_exp['N - 54 .. 0]) @ fraction[51 .. 0]
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRecipEstimate")
         }
     };
     return(result)
@@ -17417,7 +17387,7 @@ function FPRecpX (op, fpcr_in) = {
       64 => {
           esize = 11
       },
-      _ => ()
+      _ => PatternMatchFailure("FPRecpX")
     };
     let 'esize = esize;
     result : bits('N) = undefined;
@@ -17441,7 +17411,7 @@ function FPRecpX (op, fpcr_in) = {
       64 => {
           exp = op[52 + esize - 1 .. 52]
       },
-      _ => ()
+      _ => PatternMatchFailure("FPRecpX")
     };
     let max_exp : bits('esize) = Ones(esize) - 1;
     if fptype == FPType_SNaN | fptype == FPType_QNaN then {
@@ -17499,7 +17469,7 @@ function FPRoundInt (op, fpcr, rounding, exact) = {
           FPRounding_TIEAWAY => {
               round_up = error > 0.5 | error == 0.5 & int_result >= 0
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRoundInt")
         };
         if round_up then {
             int_result = int_result + 1
@@ -17571,7 +17541,7 @@ function FPRoundIntN (op, fpcr, rounding, intsize) = {
           FPRounding_TIEAWAY => {
               round_up = error > 0.5 | error == 0.5 & int_result >= 0
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRoundIntN")
         };
         if round_up then {
             int_result = int_result + 1
@@ -17653,7 +17623,7 @@ function FPRSqrtEstimate (operand, fpcr_in) = {
               fraction = operand[51 .. 0];
               exp = UInt(operand[62 .. 52])
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRSqrtEstimate")
         };
         if exp == 0 then {
             while [fraction[51]] == 0b0 do {
@@ -17691,7 +17661,7 @@ function FPRSqrtEstimate (operand, fpcr_in) = {
           64 => {
               result_exp = DIV(3068 - exp, 2)
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRSqrtEstimate")
         };
         let 'result_exp = result_exp;
         let 'estimate = RecipSqrtEstimate(scaled, increasedprecision_name);
@@ -17709,7 +17679,7 @@ function FPRSqrtEstimate (operand, fpcr_in) = {
           64 => {
               result = ((0b0 @ result_exp['N - 54 .. 0]) @ estimate[7 .. 0]) @ Zeros(44)
           },
-          _ => ()
+          _ => PatternMatchFailure("FPRSqrtEstimate")
         }
     };
     return(result)
@@ -17871,7 +17841,7 @@ function FPToFixed (op, fbits, is_unsigned, fpcr, rounding, M) = {
       FPRounding_TIEAWAY => {
           round_up = error > 0.5 | error == 0.5 & int_result >= 0
       },
-      _ => ()
+      _ => PatternMatchFailure("FPToFixed")
     };
     if round_up then {
         int_result = int_result + 1
@@ -18899,9 +18869,6 @@ function PAREncodeShareability memattrs = {
       },
       Shareability_OSH => {
           return(0b10)
-      },
-      _ => {
-          return(undefined : bits(2))
       }
     }
 }
@@ -18996,9 +18963,7 @@ function DecodeShareability sh = {
             Constraint_NSH => {
                 return(Shareability_NSH)
             },
-            _ => {
-                return(undefined : Shareability)
-            }
+            _ => PatternMatchFailure("DecodeShareability")
           }
       }
     }
@@ -19041,9 +19006,6 @@ function DecodeDevice device = {
       },
       0b11 => {
           return(DeviceType_GRE)
-      },
-      _ => {
-          return(undefined : DeviceType)
       }
     }
 }
@@ -19153,7 +19115,7 @@ function S2DecodeCacheability attr = {
             Constraint_WB => {
                 s2attr.attrs = MemAttr_WB
             },
-            _ => ()
+            _ => PatternMatchFailure("S2DecodeCacheability")
           }
       }
     };
@@ -19981,9 +19943,6 @@ function ContiguousSize (d128, tgx, level) = {
           TGx_64KB => {
               assert(level == 2 | level == 3);
               return(if level == 2 then 6 else 4)
-          },
-          _ => {
-              return(undefined : int)
           }
         }
     } else {
@@ -19999,9 +19958,6 @@ function ContiguousSize (d128, tgx, level) = {
           TGx_64KB => {
               assert(level == 2 | level == 3);
               return(5)
-          },
-          _ => {
-              return(undefined : int)
           }
         }
     }
@@ -20019,9 +19975,6 @@ function TGxGranuleBits tgx = {
       },
       TGx_64KB => {
           return(16)
-      },
-      _ => {
-          return(undefined : int)
       }
     }
 }
@@ -20073,9 +20026,6 @@ function RegimeUsingAArch32 regime = {
       },
       Regime_EL3 => {
           return(false)
-      },
-      _ => {
-          return(undefined : bool)
       }
     }
 }
@@ -20098,9 +20048,6 @@ function SecurityStateForRegime regime = {
       },
       Regime_EL10 => {
           return(SecurityStateAtEL(EL1))
-      },
-      _ => {
-          return(undefined : SecurityState)
       }
     }
 }
@@ -20120,9 +20067,6 @@ function DecodePASpace (nse, ns) = {
       },
       0b11 => {
           return(PAS_Realm)
-      },
-      _ => {
-          return(undefined : PASpace)
       }
     }
 }
@@ -20277,9 +20221,6 @@ function AArch64_HaveS1TG tgx = {
       },
       TGx_64KB => {
           return(__IMPDEF_boolean("Has 64K Translation Granule"))
-      },
-      _ => {
-          return(undefined : bool)
       }
     }
 }
@@ -20302,7 +20243,7 @@ function AArch64_S1DecodeTG0 tg0_in = {
       0b10 => {
           tgx = TGx_16KB
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_S1DecodeTG0")
     };
     if not_bool(AArch64_HaveS1TG(tgx)) then {
         match __IMPDEF_bits(2, "TG0 encoded granule size") {
@@ -20315,7 +20256,7 @@ function AArch64_S1DecodeTG0 tg0_in = {
           0b10 => {
               tgx = TGx_16KB
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch64_S1DecodeTG0")
         }
     };
     return(tgx)
@@ -20339,7 +20280,7 @@ function AArch64_S1DecodeTG1 tg1_in = {
       0b01 => {
           tgx = TGx_16KB
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_S1DecodeTG1")
     };
     if not_bool(AArch64_HaveS1TG(tgx)) then {
         match __IMPDEF_bits(2, "TG1 encoded granule size") {
@@ -20352,7 +20293,7 @@ function AArch64_S1DecodeTG1 tg1_in = {
           0b01 => {
               tgx = TGx_16KB
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch64_S1DecodeTG1")
         }
     };
     return(tgx)
@@ -20541,7 +20482,7 @@ function AArch64_S1TTWParamsEL10 varange = {
               Constraint_NVNV1_11 => {
                   walkparams.nv1 = 0b1
               },
-              _ => ()
+              _ => PatternMatchFailure("AArch64_S1TTWParamsEL10")
             }
         } else {
             walkparams.nv1 = HCR_EL2[NV1]
@@ -21017,7 +20958,7 @@ function AArch64_GetS1TTWParams (regime, ss, va) = {
       Regime_EL10 => {
           walkparams = AArch64_S1TTWParamsEL10(varange)
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_GetS1TTWParams")
     };
     return(walkparams)
 }
@@ -21207,7 +21148,7 @@ function PACInvSub Tinput = {
           0b1111 => {
               Toutput[4 * i + 3 .. 4 * i] = 0b0011
           },
-          _ => ()
+          _ => PatternMatchFailure("PACInvSub")
         }
     };
     return(Toutput)
@@ -21303,7 +21244,7 @@ function PACSub Tinput = {
           0b1111 => {
               Toutput[4 * i + 3 .. 4 * i] = 0b1010
           },
-          _ => ()
+          _ => PatternMatchFailure("PACSub")
         }
     };
     return(Toutput)
@@ -21363,7 +21304,7 @@ function PACSub1 Tinput = {
           0b1111 => {
               Toutput[4 * i + 3 .. 4 * i] = 0b0100
           },
-          _ => ()
+          _ => PatternMatchFailure("PACSub1")
         }
     };
     return(Toutput)
@@ -21843,7 +21784,7 @@ function AddPACIA (x, y) = {
           TrapEL2 = false;
           TrapEL3 = false
       },
-      _ => ()
+      _ => PatternMatchFailure("AddPACIA")
     };
     if Enable == 0b0 then {
         return(x)
@@ -21903,7 +21844,7 @@ function AddPACIB (x, y) = {
           TrapEL2 = false;
           TrapEL3 = false
       },
-      _ => ()
+      _ => PatternMatchFailure("AddPACIB")
     };
     if Enable == 0b0 then {
         return(x)
@@ -21963,7 +21904,7 @@ function AddPACDA (x, y) = {
           TrapEL2 = false;
           TrapEL3 = false
       },
-      _ => ()
+      _ => PatternMatchFailure("AddPACDA")
     };
     if Enable == 0b0 then {
         return(x)
@@ -22023,7 +21964,7 @@ function AddPACDB (x, y) = {
           TrapEL2 = false;
           TrapEL3 = false
       },
-      _ => ()
+      _ => PatternMatchFailure("AddPACDB")
     };
     if Enable == 0b0 then {
         return(x)
@@ -22078,7 +22019,7 @@ function AddPACGA (x, y) = {
           TrapEL2 = false;
           TrapEL3 = false
       },
-      _ => ()
+      _ => PatternMatchFailure("AddPACGA")
     };
     if TrapEL3 & EL3SDDUndefPriority() then {
         throw(Error_Undefined());
@@ -22129,7 +22070,7 @@ function AuthIA (x, y, is_combined) = {
           TrapEL2 = false;
           TrapEL3 = false
       },
-      _ => ()
+      _ => PatternMatchFailure("AuthIA")
     };
     if Enable == 0b0 then {
         return(x)
@@ -22182,7 +22123,7 @@ function AuthIB (x, y, is_combined) = {
           TrapEL2 = false;
           TrapEL3 = false
       },
-      _ => ()
+      _ => PatternMatchFailure("AuthIB")
     };
     if Enable == 0b0 then {
         return(x)
@@ -22235,7 +22176,7 @@ function AuthDA (x, y, is_combined) = {
           TrapEL2 = false;
           TrapEL3 = false
       },
-      _ => ()
+      _ => PatternMatchFailure("AuthDA")
     };
     if Enable == 0b0 then {
         return(x)
@@ -22288,7 +22229,7 @@ function AuthDB (x, y, is_combined) = {
           TrapEL2 = false;
           TrapEL3 = false
       },
-      _ => ()
+      _ => PatternMatchFailure("AuthDB")
     };
     if Enable == 0b0 then {
         return(x)
@@ -22603,9 +22544,6 @@ function BTypeCompatible_BTI hintcode = {
       },
       0b11 => {
           return(true)
-      },
-      _ => {
-          return(undefined : bool)
       }
     }
 }
@@ -22770,9 +22708,7 @@ function SP_read () = {
           ? if ? == EL3 => {
               return(SP_EL3)
           },
-          _ => {
-              return(undefined : bits(64))
-          }
+          _ => PatternMatchFailure("SP_read")
         }
     }
 }
@@ -23004,7 +22940,7 @@ function AArch64_ReportTagCheckFault (el, ttbr) = {
               TFSRE0_EL1[TF1] = 0b1
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_ReportTagCheckFault")
     }
 }
 
@@ -23332,7 +23268,7 @@ function AArch64_BreakpointValueMatch (n_in, vaddress, linked_to, isbreakpnt) = 
               Constraint_NONE => {
                   mask = 0
               },
-              _ => ()
+              _ => PatternMatchFailure("AArch64_BreakpointValueMatch")
             }
         };
         if mask != 0 then {
@@ -23543,7 +23479,7 @@ function AArch64_StateMatch (ssc_in, ssce_in, hmc_in, pxc_in, linked_in, linked_
       ? if ? == EL0 => {
           priv_match = EL0_match
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_StateMatch")
     };
     ss_match : bool = undefined;
     match ssce @ ssc {
@@ -23562,7 +23498,7 @@ function AArch64_StateMatch (ssc_in, ssce_in, hmc_in, pxc_in, linked_in, linked_
       0b101 => {
           ss_match = accdesc.ss == SS_Realm
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_StateMatch")
     };
     linked_match : bool = false;
     is_linked_mismatch : bool = false;
@@ -23580,7 +23516,7 @@ function AArch64_StateMatch (ssc_in, ssce_in, hmc_in, pxc_in, linked_in, linked_
               Constraint_NONE => {
                   linked = false
               },
-              _ => ()
+              _ => PatternMatchFailure("AArch64_StateMatch")
             }
         };
         ()
@@ -23737,7 +23673,7 @@ function AArch64_WatchpointByteMatch (n, vaddress) = {
           Constraint_NONE => {
               mask = 0
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch64_WatchpointByteMatch")
         }
     };
     let 'mask = mask;
@@ -23796,7 +23732,7 @@ function AArch64_WatchpointMatch (n, vaddress, size, accdesc) = {
       0b11 => {
           ls_match = true
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_WatchpointMatch")
     };
     value_match_name : bool = false;
     foreach (byte from 0 to (size - 1) by 1 in inc) {
@@ -24033,9 +23969,7 @@ function AArch64_S1E0POEnabled (regime, nv1) = {
       Regime_EL10 => {
           return((IsTCR2EL1Enabled() & nv1 == 0b0) & TCR2_EL1[E0POE] == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("AArch64_S1E0POEnabled")
     }
 }
 
@@ -24289,9 +24223,7 @@ function AArch64_S1POR regime = {
       Regime_EL10 => {
           return(Mk_S1PORType(POR_EL1.bits))
       },
-      _ => {
-          return(undefined : S1PORType)
-      }
+      _ => PatternMatchFailure("AArch64_S1POR")
     }
 }
 
@@ -24421,9 +24353,7 @@ function AArch64_S1POEnabled regime = {
       Regime_EL10 => {
           return(IsTCR2EL1Enabled() & TCR2_EL1[POE] == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("AArch64_S1POEnabled")
     }
 }
 
@@ -24558,9 +24488,7 @@ function AArch64_S1DCacheEnabled regime = {
       Regime_EL10 => {
           return(SCTLR_EL1[C] == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("AArch64_S1DCacheEnabled")
     }
 }
 
@@ -24637,9 +24565,7 @@ function AArch64_S1ICacheEnabled regime = {
       Regime_EL10 => {
           return(SCTLR_EL1[I] == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("AArch64_S1ICacheEnabled")
     }
 }
 
@@ -24761,9 +24687,7 @@ function AArch64_S1Enabled (regime, acctype) = {
       Regime_EL10 => {
           return((not_bool(EL2Enabled()) | (HCR_EL2[DC] @ HCR_EL2[TGE]) == 0b00) & SCTLR_EL1[M] == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("AArch64_S1Enabled")
     }
 }
 
@@ -24827,9 +24751,7 @@ function AArch64_S1OutputMECID (walkparams, regime, varange, paspace, descriptor
       Regime_EL10 => {
           return(VMECID_P_EL2[MECID])
       },
-      _ => {
-          return(undefined : bits(16))
-      }
+      _ => PatternMatchFailure("AArch64_S1OutputMECID")
     }
 }
 
@@ -25050,7 +24972,7 @@ function AArch64_GetS1TLBContext (regime, ss, va, tg) = {
       Regime_EL10 => {
           tlbcontext = AArch64_TLBContextEL10(ss, va, tg)
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_GetS1TLBContext")
     };
     tlbcontext.includes_s1_name = true;
     tlbcontext.includes_s2_name = false;
@@ -25159,9 +25081,7 @@ function AArch64_S1EPD (regime, va) = {
           return(if varange == VARange_LOWER then TCR_EL1[EPD0] else
             TCR_EL1[EPD1])
       },
-      _ => {
-          return(undefined : bits(1))
-      }
+      _ => PatternMatchFailure("AArch64_S1EPD")
     }
 }
 
@@ -25205,9 +25125,7 @@ function AArch64_S1TTBR (regime, va) = {
               return(ZeroExtend(TTBR1_EL1_read().bits, 128))
           }
       },
-      _ => {
-          return(undefined : bits(128))
-      }
+      _ => PatternMatchFailure("AArch64_S1TTBR")
     }
 }
 
@@ -25711,9 +25629,6 @@ function AArch64_HaveS2TG tgx = {
           },
           TGx_64KB => {
               return(__IMPDEF_boolean("Has Stage 2 64K Translation Granule"))
-          },
-          _ => {
-              return(undefined : bool)
           }
         }
     } else {
@@ -25739,7 +25654,7 @@ function AArch64_S2DecodeTG0 tg0_in = {
       0b10 => {
           tgx = TGx_16KB
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_S2DecodeTG0")
     };
     if not_bool(AArch64_HaveS2TG(tgx)) then {
         match __IMPDEF_bits(2, "TG0 encoded granule size") {
@@ -25752,7 +25667,7 @@ function AArch64_S2DecodeTG0 tg0_in = {
           0b10 => {
               tgx = TGx_16KB
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch64_S2DecodeTG0")
         }
     };
     return(tgx)
@@ -26429,9 +26344,7 @@ function AArch64_S2StartLevel walkparams = {
             0b100 => {
                 return(negate(1))
             },
-            _ => {
-                return(undefined : int)
-            }
+            _ => PatternMatchFailure("AArch64_S2StartLevel")
           }
       },
       TGx_16KB => {
@@ -26447,9 +26360,6 @@ function AArch64_S2StartLevel walkparams = {
             },
             0b11 => {
                 return(0)
-            },
-            _ => {
-                return(undefined : int)
             }
           }
       },
@@ -26464,13 +26374,8 @@ function AArch64_S2StartLevel walkparams = {
             0b10 => {
                 return(1)
             },
-            _ => {
-                return(undefined : int)
-            }
+            _ => PatternMatchFailure("AArch64_S2StartLevel")
           }
-      },
-      _ => {
-          return(undefined : int)
       }
     }
 }
@@ -26537,9 +26442,6 @@ function AArch64_S2InvalidSL walkparams = {
                 return(false)
             }
           }
-      },
-      _ => {
-          return(undefined : bool)
       }
     }
 }
@@ -26742,7 +26644,7 @@ function AArch64_S2InitialTTWState (ss, walkparams) = {
       SS_Realm => {
           tablebase.paspace = PAS_Realm
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_S2InitialTTWState")
     };
     tablebase.address = AArch64_S2TTBaseAddress(walkparams, tablebase.paspace, ttbr);
     walkstate.baseaddress = tablebase;
@@ -28406,7 +28308,7 @@ function MemAtomic (address, cmpoperand, operand, accdesc_in) = {
           newvalue = operand;
           cmpfail = cmpoperand != oldvalue
       },
-      _ => ()
+      _ => PatternMatchFailure("MemAtomic")
     };
     if HaveMTEStoreOnlyExt() & StoreOnlyTagCheckingEnabled(accdesc.el) then {
         if accdesc.tagchecked & cmpfail then {
@@ -28461,7 +28363,7 @@ function IsD128Enabled el = {
           ? if ? == EL3 => {
               d128enabled = TCR_EL3[D128] == 0b1
           },
-          _ => ()
+          _ => PatternMatchFailure("IsD128Enabled")
         }
     } else {
         d128enabled = false
@@ -28486,7 +28388,7 @@ function ProtectionEnabled el = {
           ? if ? == EL3 => {
               return(TCR_EL3[PnCH] == 0b1)
           },
-          _ => ()
+          _ => PatternMatchFailure("ProtectionEnabled")
         }
     } else {
         return(true)
@@ -28633,7 +28535,7 @@ function MemAtomicRCW (address, cmpoperand, operand, accdesc_in) = {
           newvalue = operand;
           cmpfail = oldvalue != cmpoperand
       },
-      _ => ()
+      _ => PatternMatchFailure("MemAtomicRCW")
     };
     if cmpfail then {
         nzcv = 0b1010
@@ -28948,7 +28850,7 @@ function AArch64_IsUnprivAccessPriv () = {
       ? if ? == EL3 => {
           privileged = true
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_IsUnprivAccessPriv")
     };
     if HaveUAOExt() & PSTATE.UAO == 0b1 then {
         privileged = PSTATE.EL != EL0
@@ -30083,7 +29985,7 @@ function FPTrigMAddCoefficient_read (index, N) = {
           15 => {
               result = UInt(0x0000)
           },
-          _ => ()
+          _ => PatternMatchFailure("FPTrigMAddCoefficient_read")
         }
     } else if N == 32 then {
         match index {
@@ -30135,7 +30037,7 @@ function FPTrigMAddCoefficient_read (index, N) = {
           15 => {
               result = UInt(0x00000000)
           },
-          _ => ()
+          _ => PatternMatchFailure("FPTrigMAddCoefficient_read")
         }
     } else {
         match index {
@@ -30187,7 +30089,7 @@ function FPTrigMAddCoefficient_read (index, N) = {
           15 => {
               result = UInt(0xbda8f76380fbb401)
           },
-          _ => ()
+          _ => PatternMatchFailure("FPTrigMAddCoefficient_read")
         }
     };
     let 'result = result;
@@ -30319,7 +30221,7 @@ function FPExpCoefficient_read (index, N) = {
           31 => {
               result = UInt(0x03d4)
           },
-          _ => ()
+          _ => PatternMatchFailure("FPExpCoefficient_read")
         }
     } else if N == 32 then {
         match index {
@@ -30515,7 +30417,7 @@ function FPExpCoefficient_read (index, N) = {
           63 => {
               result = UInt(0x7d3e0c)
           },
-          _ => ()
+          _ => PatternMatchFailure("FPExpCoefficient_read")
         }
     } else {
         match index {
@@ -30711,7 +30613,7 @@ function FPExpCoefficient_read (index, N) = {
           63 => {
               result = UInt(0xFA7C1819E90D8)
           },
-          _ => ()
+          _ => PatternMatchFailure("FPExpCoefficient_read")
         }
     };
     let 'result = result;
@@ -31344,7 +31246,7 @@ function CounterToPredicate (pred, width) = {
           count = UInt(pred[maxbit .. 4]);
           esize = 64
       },
-      _ => ()
+      _ => PatternMatchFailure("CounterToPredicate")
     };
     let 'esize = esize;
     let 'count = count;
@@ -31398,7 +31300,7 @@ function EncodePredCount (esize, elements, count_in, invert_in, width) = {
       64 => {
           pred = (inv @ count[10 .. 0]) @ 0b1000
       },
-      _ => ()
+      _ => PatternMatchFailure("EncodePredCount")
     };
     return(ZeroExtend(pred, width))
 }
@@ -31452,9 +31354,7 @@ function GCSReturnValueCheckEnabled el = {
       ? if ? == EL3 => {
           return(GCSCR_EL3[RVCHKEN] == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("GCSReturnValueCheckEnabled")
     }
 }
 
@@ -31475,7 +31375,7 @@ function GetCurrentGCSPointer () = {
       ? if ? == EL3 => {
           ptr = GCSPR_EL3[PTR] @ 0b000
       },
-      _ => ()
+      _ => PatternMatchFailure("GetCurrentGCSPointer")
     };
     return(ptr)
 }
@@ -31496,7 +31396,7 @@ function SetCurrentGCSPointer ptr = {
       ? if ? == EL3 => {
           GCSPR_EL3[PTR] = ptr[63 .. 3]
       },
-      _ => ()
+      _ => PatternMatchFailure("SetCurrentGCSPointer")
     };
     return()
 }
@@ -31862,7 +31762,7 @@ function CheckGCSSTREnabled () = {
           };
           ()
       },
-      _ => ()
+      _ => PatternMatchFailure("CheckGCSSTREnabled")
     };
     return()
 }
@@ -33141,7 +33041,7 @@ function AArch64_PhysicalSErrorTarget () = {
       ? if ? == EL0 => {
           masked = (not_bool(route_to_el3) & not_bool(route_to_el2)) & PSTATE.A == 0b1
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_PhysicalSErrorTarget")
     };
     if HaveDoubleFault2Ext() then {
         nmea_bit : bits(1) = undefined;
@@ -33164,7 +33064,7 @@ function AArch64_PhysicalSErrorTarget () = {
                     0b0
               }
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch64_PhysicalSErrorTarget")
         };
         masked = masked & nmea_bit == 0b0
     } else if HaveDoubleFaultExt() & PSTATE.EL == EL3 then {
@@ -33272,7 +33172,7 @@ function ExternalDebugInterruptsDisabled target = {
                   int_dis = EDSCR_read()[INTdis] != 0b00 & ExternalInvasiveDebugEnabled()
               }
           },
-          _ => ()
+          _ => PatternMatchFailure("ExternalDebugInterruptsDisabled")
         }
     };
     return(int_dis)
@@ -33437,7 +33337,7 @@ function TakeTransactionCheckpoint (vl, pl) = {
           ? if ? == EL3 => {
               TSTATE.GCSPR_ELx = GCSPR_EL3.bits
           },
-          _ => ()
+          _ => PatternMatchFailure("TakeTransactionCheckpoint")
         }
     };
     return()
@@ -35578,7 +35478,7 @@ function BRBEExceptionReturn (target_address_in, source_el) = {
           };
           ()
       },
-      _ => ()
+      _ => PatternMatchFailure("BRBEExceptionReturn")
     };
     let source_valid : bool = BranchRecordAllowed(source_el);
     let target_valid : bool = BranchRecordAllowed(PSTATE.EL);
@@ -35767,9 +35667,6 @@ function DecodeRegExtend op = {
       },
       0b111 => {
           return(ExtendType_SXTX)
-      },
-      _ => {
-          return(undefined : ExtendType)
       }
     }
 }
@@ -35838,9 +35735,6 @@ function DecodeShift op = {
       },
       0b11 => {
           return(ShiftType_ROR)
-      },
-      _ => {
-          return(undefined : ShiftType)
       }
     }
 }
@@ -36572,7 +36466,7 @@ function AArch64_TLBI_RPA (level, Xt, shareability) = {
       0b01 => {
           BaseADDR[51 .. 16] = Xt[39 .. 4]
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch64_TLBI_RPA")
     };
     assert(constraint('range_bits >= 0));
     assert(constraint(52 >= 'range_bits));
@@ -37290,7 +37184,7 @@ function AArch32_GetS1TTWParams (regime, va) = {
       Regime_EL30 => {
           walkparams = AArch32_S1TTWParamsEL30(va)
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch32_GetS1TTWParams")
     };
     return(walkparams)
 }
@@ -37309,9 +37203,7 @@ function AArch32_S1DCacheEnabled regime = {
           return((if HaveAArch32EL(EL3) then SCTLR_NS_read()[C] else
             SCTLR_read__2()[C]) == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("AArch32_S1DCacheEnabled")
     }
 }
 
@@ -37344,9 +37236,7 @@ function AArch32_S1ICacheEnabled regime = {
           return((if HaveAArch32EL(EL3) then SCTLR_NS_read()[I] else
             SCTLR_read__2()[I]) == 0b1)
       },
-      _ => {
-          return(undefined : bool)
-      }
+      _ => PatternMatchFailure("AArch32_S1ICacheEnabled")
     }
 }
 
@@ -37414,7 +37304,7 @@ function AArch32_S1DisabledOutput (fault_in, regime, va, aligned, accdesc) = {
               ntlsmd = if HaveAArch32EL(EL3) then SCTLR_NS_read()[nTLSMD] else
                 SCTLR_read__2()[nTLSMD]
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch32_S1DisabledOutput")
         }
     } else {
         ntlsmd = 0b1
@@ -37657,7 +37547,7 @@ function AArch32_GetS1TLBContext (regime, ss, va) = {
       Regime_EL30 => {
           tlbcontext = AArch32_TLBContextEL30(va)
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch32_GetS1TLBContext")
     };
     tlbcontext.includes_s1_name = true;
     tlbcontext.includes_s2_name = false;
@@ -38449,7 +38339,7 @@ function AArch32_S1SDHasPermissionsFault (regime, perms_in, memtype, paspace, ac
           0b111 => {
               (pr, pw, ur, uw) = (0b1, 0b0, 0b1, 0b0)
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch32_S1SDHasPermissionsFault")
         }
     } else {
         match perms.ap[2 .. 1] {
@@ -38465,7 +38355,7 @@ function AArch32_S1SDHasPermissionsFault (regime, perms_in, memtype, paspace, ac
           0b11 => {
               (pr, pw, ur, uw) = (0b1, 0b0, 0b1, 0b0)
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch32_S1SDHasPermissionsFault")
         }
     };
     let ux : bits(1) = ur & not_vec(perms.xn | uw & sctlr[WXN]);
@@ -38679,7 +38569,7 @@ function AArch32_RemappedTEXDecode (regime, TEX, C, B, s) = {
       0b11 => {
           Unreachable()
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch32_RemappedTEXDecode")
     };
     memattrs.inner.transient = false;
     memattrs.outer.transient = false;
@@ -38709,7 +38599,7 @@ function AArch32_TranslationSizeSD sdftype = {
       SDFType_Supersection => {
           tsize = 24
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch32_TranslationSizeSD")
     };
     let 'tsize = tsize;
     return(tsize)
@@ -38983,7 +38873,7 @@ function AArch32_SDStageOA (baseaddress, va, sdftype) = {
       SDFType_Supersection => {
           tsize = 24
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch32_SDStageOA")
     };
     let 'tsize = tsize;
     oa : FullAddress = undefined;
@@ -39020,7 +38910,7 @@ function AArch32_S1TranslateSD (fault_in, regime, va, aligned, accdesc) = {
               ntlsmd = if HaveAArch32EL(EL3) then SCTLR_NS_read()[nTLSMD] else
                 SCTLR_read__2()[nTLSMD]
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch32_S1TranslateSD")
         }
     } else {
         ntlsmd = 0b1
@@ -39096,7 +38986,7 @@ function AArch64_isPARFormatD128 (regime, is_ATS1Ex) = {
                   isPARFormatD128 = VTCR_EL2[D128] == 0b1
               }
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch64_isPARFormatD128")
         }
     };
     return(isPARFormatD128)
@@ -39544,7 +39434,7 @@ function DCPSInstruction target_el = {
               };
               ()
           },
-          _ => ()
+          _ => PatternMatchFailure("DCPSInstruction")
         };
         if handle_el == EL2 then {
             ELR_hyp_write() = __UNKNOWN_bits(32);
@@ -40389,7 +40279,7 @@ function AArch32_StateMatch (ssc_in, hmc_in, pxc_in, linked_in, linked_n_in, isb
           ? if ? == EL0 => {
               priv_match = pl0_match
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch32_StateMatch")
         }
     };
     ss_match : bool = undefined;
@@ -40406,7 +40296,7 @@ function AArch32_StateMatch (ssc_in, hmc_in, pxc_in, linked_in, linked_n_in, isb
       0b11 => {
           ss_match = hmc == 0b1 | accdesc.ss == SS_Secure
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch32_StateMatch")
     };
     linked_match : bool = false;
     if linked then {
@@ -40423,7 +40313,7 @@ function AArch32_StateMatch (ssc_in, hmc_in, pxc_in, linked_in, linked_n_in, isb
               Constraint_NONE => {
                   linked = false
               },
-              _ => ()
+              _ => PatternMatchFailure("AArch32_StateMatch")
             }
         };
         let 'linked_n = linked_n;
@@ -40698,7 +40588,7 @@ function AArch32_WatchpointByteMatch (n, vaddress) = {
           Constraint_NONE => {
               mask = 0
           },
-          _ => ()
+          _ => PatternMatchFailure("AArch32_WatchpointByteMatch")
         }
     };
     let 'mask = mask;
@@ -40741,7 +40631,7 @@ function AArch32_WatchpointMatch (n, vaddress, size, accdesc) = {
       0b11 => {
           ls_match = true
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch32_WatchpointMatch")
     };
     value_match_name : bool = false;
     foreach (byte from 0 to (size - 1) by 1 in inc) {
@@ -42349,7 +42239,7 @@ function ALUExceptionReturn address = {
           Constraint_NOP => {
               EndOfInstruction()
           },
-          _ => ()
+          _ => PatternMatchFailure("ALUExceptionReturn")
         }
     } else {
         AArch32_ExceptionReturn(address, SPSR_read(32))
@@ -43083,7 +42973,7 @@ function AArch32_CheckForWFxTrap (target_el, wfxtype) = {
       ? if ? == EL3 => {
           trap = (if is_wfe then SCR[TWE] else SCR[TWI]) == 0b1
       },
-      _ => ()
+      _ => PatternMatchFailure("AArch32_CheckForWFxTrap")
     };
     if trap then {
         if ((target_el == EL1 & EL2Enabled()) & not_bool(ELUsingAArch32(EL2))) & HCR_EL2[TGE] == 0b1 then {
@@ -43101,7 +42991,7 @@ function AArch32_CheckForWFxTrap (target_el, wfxtype) = {
               WFxType_WFE => {
                   except.syndrome[0] = Bit(0b1)
               },
-              _ => ()
+              _ => PatternMatchFailure("AArch32_CheckForWFxTrap")
             };
             AArch32_TakeHypTrapException__1(except)
         } else {

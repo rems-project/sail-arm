@@ -79,6 +79,15 @@ gen_coq coq coq.stamp: $(SAIL_SRCS) src/termination_measures.sail
 	        src/termination_measures.sail
 	touch coq.stamp
 
+gen_lean lean lean.stamp: $(SAIL_SRCS) src/termination_measures.sail
+	$(SAIL) -dprofile -verbose 1 -memo_z3 \
+	        -lean --lean-force-output \
+	        -lean_output_dir lean -o armv9 \
+	        -undefined_gen \
+	        -lean-noncomputable \
+	        $(SAIL_SRCS) $(SAIL_FLAGS) \
+	        src/termination_measures.sail
+
 c/armv9.c: $(SAIL_SRCS) $(SAIL_MAIN)
 	mkdir -p c
 	$(SAIL) -dprofile -verbose 1 -memo_z3 \

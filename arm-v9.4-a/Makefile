@@ -85,6 +85,7 @@ gen_lean lean lean.stamp: $(SAIL_SRCS) src/termination_measures.sail
 	        -lean_output_dir lean -o armv9 \
 	        -undefined_gen \
 	        -lean-noncomputable \
+	        -lean-real-numbers \
 	        $(SAIL_SRCS) $(SAIL_FLAGS) \
 	        src/termination_measures.sail
 

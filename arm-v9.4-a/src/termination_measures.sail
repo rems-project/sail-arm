@@ -40,6 +40,8 @@
 
 termination_measure Reduce__1(op,input,esize,altfp) = 'N
 
+$iftarget coq
+
 termination_measure BranchEncCycleCount
   while cc
 
@@ -110,3 +112,5 @@ termination_measure AArch32_S1WalkSD repeat 100
 termination_measure decode_max_smeveclen while svl
 
 termination_measure SPEConstructRecord while 64
+
+$endif

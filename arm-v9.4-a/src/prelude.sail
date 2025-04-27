@@ -98,7 +98,8 @@ val ediv_nat = pure {
   interpreter: "quotient",
   lem: "integerDiv",
   c: "ediv_int",
-  coq: "ZEuclid.div"
+  coq: "ZEuclid.div",
+  lean: "Int.ediv"
 } : forall 'n 'm, 'n >= 0 & 'm > 0. (int('n), int('m)) -> int(div('n, 'm))
 
 val emod_nat = pure {
@@ -106,7 +107,8 @@ val emod_nat = pure {
   interpreter: "modulus",
   lem: "integerMod",
   c: "emod_int",
-  coq: "ZEuclid.modulo"
+  coq: "ZEuclid.modulo",
+  lean: "Nat.div"
 } : forall 'n 'm, 'n >= 0 & 'm > 0. (int('n), int('m)) -> int(mod('n, 'm))
 
 overload DIV = {ediv_nat, fdiv_int}
@@ -125,7 +127,8 @@ val UInt0 = pure {
   lem: "uint",
   interpreter: "uint",
   c: "sail_unsigned",
-  coq: "uint"
+  coq: "uint",
+  lean: "BitVec.toNat",
 } : forall 'n. bits('n) -> {'m, 0 <= 'm < 2 ^ 'n. int('m)}
 
 val UInt1 = pure { coq: "uint" } : forall 'n. (int('n), bits('n)) -> {'m, 0 <= 'm < 2 ^ 'n. int('m)}
@@ -135,6 +138,7 @@ overload UInt = {UInt0, UInt1}
 
 val SInt0 = pure {
   c: "sail_signed",
+  lean: "BitVec.toInt",
   _: "sint"
 } : forall 'n, 'n > 0. bits('n) -> {'m, - (2 ^ ('n - 1)) <= 'm < 2 ^ ('n - 1). int('m)}
 
@@ -186,7 +190,8 @@ val array_access = pure {
   interpreter: "access",
   lem: "access_list_inc",
   coq: "vec_access_inc",
-  c: "vector_access"
+  lean: "GetElem?.getElem!",
+  c: "vector_access",
 } : forall ('n : Int) ('m : Int) ('a : Type), 0 <= 'm < 'n. (vector('n, inc, 'a), int('m)) -> 'a
 
 overload vector_access = {array_access}
@@ -196,12 +201,13 @@ val array_update = pure {
   interpreter: "update",
   lem: "update_list_inc",
   coq: "vec_update_inc",
+  lean: "BitVec.update",
   c: "vector_update"
 } : forall 'n 'm ('a : Type), 0 <= 'm < 'n. (vector('n, inc, 'a), int('m), 'a) -> vector('n, inc, 'a)
 
 overload vector_update = {array_update}
 
-val sub_bits_int = pure {c:"sub_bits_int", _: "sub_vec_int"} : forall 'n, 'n > 0. (bits('n), int) -> bits('n)
+val sub_bits_int = pure {c:"sub_bits_int", lean: "BitVec.subInt", _: "sub_vec_int"} : forall 'n, 'n > 0. (bits('n), int) -> bits('n)
 
 overload operator - = {sub_bits, sub_bits_int}
 
@@ -218,7 +224,7 @@ function SignExtend1(m, x) = SignExtend0(x, m)
 
 overload SignExtend = {SignExtend0, SignExtend1}
 
-val ZeroExtend0 = pure "zero_extend" : forall 'n 'm, 'n >= 0 & 'm >= 'n.
+val ZeroExtend0 = pure { lean: "Sail.BitVec.zeroExtend", _: "zero_extend" } : forall 'n 'm, 'n >= 0 & 'm >= 'n.
   (bits('n), int('m)) -> bits('m)
 
 val ZeroExtend1 : forall 'n 'm, 'n >= 0 & 'm >= 'n.
@@ -293,7 +299,7 @@ val HexStr = pure "hex_str" : int -> string
 val BoolStr : bool -> string
 function BoolStr b = match b { true => "true", false => "false" }
 
-val append_str = pure {ocaml: "concat_str", interpreter: "concat_str", lem: "stringAppend", c: "concat_str", coq: "String.append" } :
+val append_str = pure {ocaml: "concat_str", interpreter: "concat_str", lem: "stringAppend", c: "concat_str", coq: "String.append", lean: "String.append" } :
   (string, string) -> string
 
 function append_int(str: string, n: int) -> string = {
@@ -321,7 +327,8 @@ val putchar = pure {
   lem: "putchar",
   interpreter: "putchar",
   c: "sail_putchar",
-  coq: "putchar"
+  coq: "putchar",
+  lean: "putchar"
 } : int -> unit
 
 val __IMPDEF_boolean : string -> bool
@@ -352,17 +359,17 @@ val PL_of_VL : forall 'vl, 'vl >= 0. int('vl) -> int(div('vl, 8))
 
 function PL_of_VL(vl) = DIV(vl, 8)
 
-val __SleepRequest = monadic {ocaml: "sleep_request", lem: "sleep_request", smt: "sleep_request", interpreter: "sleep_request", c: "sleep_request"}: unit -> unit
+val __SleepRequest = monadic {ocaml: "sleep_request", lem: "sleep_request", smt: "sleep_request", interpreter: "sleep_request", c: "sleep_request", lean: "sleep_request"}: unit -> unit
 
-val __WakeupRequest = monadic {ocaml: "wakeup_request", lem: "wakeup_request", smt: "wakeup_request", interpreter: "wakeup_request", c: "wakeup_request"}: unit -> unit
+val __WakeupRequest = monadic {ocaml: "wakeup_request", lem: "wakeup_request", smt: "wakeup_request", interpreter: "wakeup_request", c: "wakeup_request", lean: "wakeup_request"}: unit -> unit
 
 /* C emulator support functions */
 
 val __GetVerbosity = monadic {c: "sail_get_verbosity"} : unit -> bits(64)
 function __GetVerbosity() = 0x0000_0000_0000_0000
 
-val check_cycle_count = monadic { c: "cycle_count" } : unit -> unit
+val check_cycle_count = monadic { c: "cycle_count", lean: "cycle_count" } : unit -> unit
 function check_cycle_count() = ()
 
-val get_cycle_count = monadic { c: "get_cycle_count" } : unit -> int
+val get_cycle_count = monadic { c: "get_cycle_count", lean: "get_cycle_count" } : unit -> int
 function get_cycle_count() = 0

@@ -6830,7 +6830,7 @@ val FloorPow2 : forall 'x. int('x) -> nat
 
 function FloorPow2 x = {
     assert(x >= 0);
-    n : {'n, 'n >= 0. int('n)} = 1;
+    n : {'n, 'n > 0. int('n)} = 1;
     if x == 0 then {
         return(0)
     };
@@ -40135,7 +40135,7 @@ val decode_max_smeveclen : forall 'value_name. int('value_name) -> int
 
 function decode_max_smeveclen value_name = {
     svl : int = (value_name >> 1);
-    bitpos : int = 0;
+    bitpos : {'n, 'n >= 0. int('n)} = 0;
     while svl != 0 do {
         svl = (svl >> 1);
         bitpos = bitpos + 1
@@ -57108,7 +57108,7 @@ function __get_TTBR1_EL2 value_name = {
     return(tmp)
 }
 
-val ZeroUnsignedSatQ : forall 'M 'N 'i, 'M >= 0.
+val ZeroUnsignedSatQ : forall 'M 'N 'i, 'M >= 0 & 'N >= 0.
   (int('i), int('N), int('M)) -> (bits('M), bool)
 
 function ZeroUnsignedSatQ (i, N, M) = {

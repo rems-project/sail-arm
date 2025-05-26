@@ -19814,7 +19814,7 @@ function execute_aarch32_instrs_VABS_Op_A_txt (advsimd, d__arg, elements, esize,
           64 => {
               D_set(d) = FPAbs(D_read(m))
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VABS_Op_A_txt")
         }
     }
 }
@@ -19896,7 +19896,7 @@ function decode_aarch32_instrs_VABS_A2enc_A_txt (cond, D, Vd, size, M, Vm) = {
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VABS_A2enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -19996,7 +19996,7 @@ function decode_aarch32_instrs_VABS_T2enc_A_txt (D, Vd, size, M, Vm) = {
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VABS_T2enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -20166,7 +20166,7 @@ function execute_aarch32_instrs_VADD_f_Op_A_txt (advsimd, d__arg, elements, esiz
           64 => {
               D_set(d) = FPAdd(D_read(n), D_read(m), FPSCR_read())
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VADD_f_Op_A_txt")
         }
     }
 }
@@ -20260,7 +20260,7 @@ function decode_aarch32_instrs_VADD_f_A2enc_A_txt (cond, D, Vn, Vd, size, N, M, 
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VADD_f_A2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -20375,7 +20375,7 @@ function decode_aarch32_instrs_VADD_f_T2enc_A_txt (D, Vn, Vd, size, N, M, Vm) = 
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VADD_f_T2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -22295,7 +22295,7 @@ function execute_aarch32_instrs_VCMP_Op_A_txt (d, esize, m, quiet_nan_exc, with_
           let op64 : bits(64) = if with_zero then FPZero(0b0, 64) else D_read(m);
           nzcv = FPCompare(D_read(d), op64, quiet_nan_exc, FPSCR_read())
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VCMP_Op_A_txt")
     };
     FPSCR_write() = Mk_FPSCR_Type([FPSCR_read__1().bits with 31 .. 28 = nzcv])
 }
@@ -22332,7 +22332,7 @@ function decode_aarch32_instrs_VCMP_A1enc_A_txt (cond, D, Vd, size, E, M, Vm) = 
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VCMP_A1enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -22384,7 +22384,7 @@ function decode_aarch32_instrs_VCMP_A2enc_A_txt (cond, D, Vd, size, E) = {
               esize = 64;
               d = UInt(D @ Vd)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VCMP_A2enc_A_txt")
         };
         let 'esize = esize;
         let 'd = d;
@@ -22438,7 +22438,7 @@ function decode_aarch32_instrs_VCMP_T1enc_A_txt (D, Vd, size, E, M, Vm) = {
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VCMP_T1enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -22488,7 +22488,7 @@ function decode_aarch32_instrs_VCMP_T2enc_A_txt (D, Vd, size, E) = {
               esize = 64;
               d = UInt(D @ Vd)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VCMP_T2enc_A_txt")
         };
         let 'esize = esize;
         let 'd = d;
@@ -22882,7 +22882,7 @@ function decode_aarch32_instrs_VCVT_is_A1enc_A_txt (D, size, Vd, op, Q, M, Vm) =
               esize = 32;
               elements = 2
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VCVT_is_A1enc_A_txt")
         };
         let 'esize = esize;
         let 'elements = elements;
@@ -22932,7 +22932,7 @@ function decode_aarch32_instrs_VCVT_is_T1enc_A_txt (D, size, Vd, op, Q, M, Vm) =
               esize = 32;
               elements = 2
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VCVT_is_T1enc_A_txt")
         };
         let 'esize = esize;
         let 'elements = elements;
@@ -22973,7 +22973,7 @@ function execute_aarch32_instrs_VCVT_iv_Op_A_txt (d, esize, m, rounding, to_inte
           64 => {
               S_set(d) = FPToFixed(D_read(m), 0, is_unsigned, FPSCR_read(), rounding, 32)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VCVT_iv_Op_A_txt")
         }
     } else {
         match esize {
@@ -22987,7 +22987,7 @@ function execute_aarch32_instrs_VCVT_iv_Op_A_txt (d, esize, m, rounding, to_inte
           64 => {
               D_set(d) = FixedToFP(S_read(m), 0, is_unsigned, FPSCR_read(), rounding, 64)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VCVT_iv_Op_A_txt")
         }
     }
 }
@@ -23033,7 +23033,7 @@ function decode_aarch32_instrs_VCVT_iv_A1enc_A_txt (cond, D, opc2, Vd, size, op,
                   esize = 64;
                   m = UInt(M @ Vm)
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_aarch32_instrs_VCVT_iv_A1enc_A_txt")
             }
         } else {
             is_unsigned = op == 0b0;
@@ -23052,7 +23052,7 @@ function decode_aarch32_instrs_VCVT_iv_A1enc_A_txt (cond, D, opc2, Vd, size, op,
                   esize = 64;
                   d = UInt(D @ Vd)
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_aarch32_instrs_VCVT_iv_A1enc_A_txt")
             }
         };
         let 'm = m;
@@ -23116,7 +23116,7 @@ function decode_aarch32_instrs_VCVT_iv_T1enc_A_txt (D, opc2, Vd, size, op, M, Vm
                   esize = 64;
                   m = UInt(M @ Vm)
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_aarch32_instrs_VCVT_iv_T1enc_A_txt")
             }
         } else {
             is_unsigned = op == 0b0;
@@ -23135,7 +23135,7 @@ function decode_aarch32_instrs_VCVT_iv_T1enc_A_txt (D, opc2, Vd, size, op, M, Vm
                   esize = 64;
                   d = UInt(D @ Vd)
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_aarch32_instrs_VCVT_iv_T1enc_A_txt")
             }
         };
         let 'm = m;
@@ -23333,7 +23333,7 @@ function execute_aarch32_instrs_VCVT_xv_Op_A_txt (d, fp_size, frac_bits, size, t
               let result : bits('size) = FPToFixed(D_read(d), frac_bits, is_unsigned, FPSCR_read(), FPRounding_ZERO, size);
               D_set(d) = Extend(result, 64, is_unsigned)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VCVT_xv_Op_A_txt")
         }
     } else {
         match fp_size {
@@ -23347,7 +23347,7 @@ function execute_aarch32_instrs_VCVT_xv_Op_A_txt (d, fp_size, frac_bits, size, t
           64 => {
               D_set(d) = FixedToFP(D_read(d)[size - 1 .. 0], frac_bits, is_unsigned, FPSCR_read(), FPRounding_TIEEVEN, 64)
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VCVT_xv_Op_A_txt")
         }
     }
 }
@@ -23382,7 +23382,7 @@ function decode_aarch32_instrs_VCVT_xv_A1enc_A_txt (cond, D, op, U, Vd, sf, sx, 
               fp_size = 64;
               d = UInt(D @ Vd)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VCVT_xv_A1enc_A_txt")
         };
         let 'fp_size = fp_size;
         let 'd = d;
@@ -23438,7 +23438,7 @@ function decode_aarch32_instrs_VCVT_xv_T1enc_A_txt (D, op, U, Vd, sf, sx, i, imm
               fp_size = 64;
               d = UInt(D @ Vd)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VCVT_xv_T1enc_A_txt")
         };
         let 'fp_size = fp_size;
         let 'd = d;
@@ -23480,7 +23480,7 @@ function execute_aarch32_instrs_VDIV_Op_A_txt (d, esize, m, n) = {
       64 => {
           D_set(d) = FPDiv(D_read(n), D_read(m), FPSCR_read())
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VDIV_Op_A_txt")
     }
 }
 
@@ -23521,7 +23521,7 @@ function decode_aarch32_instrs_VDIV_A1enc_A_txt (cond, D, Vn, Vd, size, N, M, Vm
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VDIV_A1enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -23581,7 +23581,7 @@ function decode_aarch32_instrs_VDIV_T1enc_A_txt (D, Vn, Vd, size, N, M, Vm) = {
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VDIV_T1enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -23776,7 +23776,7 @@ function decode_aarch32_instrs_VDUP_s_A1enc_A_txt (D, imm4, Vd, Q, M, Vm) = {
               elements = 2;
               index = UInt([imm4[3]])
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VDUP_s_A1enc_A_txt")
         };
         let 'index = index;
         let 'esize = esize;
@@ -23832,7 +23832,7 @@ function decode_aarch32_instrs_VDUP_s_T1enc_A_txt (D, imm4, Vd, Q, M, Vm) = {
               elements = 2;
               index = UInt([imm4[3]])
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VDUP_s_T1enc_A_txt")
         };
         let 'index = index;
         let 'esize = esize;
@@ -24041,7 +24041,7 @@ function execute_aarch32_instrs_VFMA_Op_A_txt (advsimd, d__arg, elements, esize,
                 D_read(n);
               D_set(d) = FPMulAdd(D_read(d), op64, D_read(m), FPSCR_read())
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VFMA_Op_A_txt")
         }
     }
 }
@@ -24140,7 +24140,7 @@ function decode_aarch32_instrs_VFMA_A2enc_A_txt (cond, D, Vn, Vd, size, N, op, M
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VFMA_A2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -24261,7 +24261,7 @@ function decode_aarch32_instrs_VFMA_T2enc_A_txt (D, Vn, Vd, size, N, op, M, Vm) 
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VFMA_T2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -24308,7 +24308,7 @@ function execute_aarch32_instrs_VFNMA_Op_A_txt (d, esize, m, n, op1_neg) = {
           let op64 : bits(64) = if op1_neg then FPNeg(D_read(n)) else D_read(n);
           D_set(d) = FPMulAdd(FPNeg(D_read(d)), op64, D_read(m), FPSCR_read())
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VFNMA_Op_A_txt")
     }
 }
 
@@ -24350,7 +24350,7 @@ function decode_aarch32_instrs_VFNMA_A1enc_A_txt (cond, D, Vn, Vd, size, N, op, 
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VFNMA_A1enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -24412,7 +24412,7 @@ function decode_aarch32_instrs_VFNMA_T1enc_A_txt (D, Vn, Vd, size, N, op, M, Vm)
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VFNMA_T1enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -27025,7 +27025,7 @@ function execute_aarch32_instrs_VLDR_Op_A_txt (add, d, esize, imm32, n) = {
           D_set(d) = if BigEndian(AccessType_ASIMD) then word1 @ word2 else
             word2 @ word1
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VLDR_Op_A_txt")
     }
 }
 
@@ -27056,7 +27056,7 @@ function decode_aarch32_instrs_VLDR_A1enc_A_txt (cond, U, D, Rn, Vd, size, imm8)
           0b11 => {
               d = UInt(D @ Vd)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VLDR_A1enc_A_txt")
         };
         let 'd = d;
         let 'n = UInt(Rn);
@@ -27103,7 +27103,7 @@ function decode_aarch32_instrs_VLDR_T1enc_A_txt (U, D, Rn, Vd, size, imm8) = {
           0b11 => {
               d = UInt(D @ Vd)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VLDR_T1enc_A_txt")
         };
         let 'd = d;
         let 'n = UInt(Rn);
@@ -27383,7 +27383,7 @@ function execute_aarch32_instrs_VMLA_f_Op_A_txt (add, advsimd, d__arg, elements,
                 FPNeg(FPMul(D_read(n), D_read(m), FPSCR_read()));
               D_set(d) = FPAdd(D_read(d), addend64, FPSCR_read())
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VMLA_f_Op_A_txt")
         }
     }
 }
@@ -27482,7 +27482,7 @@ function decode_aarch32_instrs_VMLA_f_A2enc_A_txt (cond, D, Vn, Vd, size, N, op,
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VMLA_f_A2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -27603,7 +27603,7 @@ function decode_aarch32_instrs_VMLA_f_T2enc_A_txt (D, Vn, Vd, size, N, op, M, Vm
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VMLA_f_T2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -28367,7 +28367,7 @@ function decode_aarch32_instrs_VMOV_i_A2enc_A_txt (cond, D, imm4H, Vd, size, imm
               imm64 = VFPExpandImm(imm4H @ imm4L, 64);
               regs = 1
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VMOV_i_A2enc_A_txt")
         };
         let 'regs = regs;
         let 'd = d;
@@ -28578,7 +28578,7 @@ function decode_aarch32_instrs_VMOV_i_T2enc_A_txt (D, imm4H, Vd, size, imm4L) = 
               imm64 = VFPExpandImm(imm4H @ imm4L, 64);
               regs = 1
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VMOV_i_T2enc_A_txt")
         };
         let 'regs = regs;
         let 'd = d;
@@ -29520,7 +29520,7 @@ function execute_aarch32_instrs_VMUL_f_Op_A_txt (advsimd, d__arg, elements, esiz
           64 => {
               D_set(d) = FPMul(D_read(n), D_read(m), FPSCR_read())
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VMUL_f_Op_A_txt")
         }
     }
 }
@@ -29616,7 +29616,7 @@ function decode_aarch32_instrs_VMUL_f_A2enc_A_txt (cond, D, Vn, Vd, size, N, M, 
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VMUL_f_A2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -29733,7 +29733,7 @@ function decode_aarch32_instrs_VMUL_f_T2enc_A_txt (D, Vn, Vd, size, N, M, Vm) = 
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VMUL_f_T2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -30523,7 +30523,7 @@ function execute_aarch32_instrs_VNEG_Op_A_txt (advsimd, d__arg, elements, esize,
           64 => {
               D_set(d) = FPNeg(D_read(m))
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VNEG_Op_A_txt")
         }
     }
 }
@@ -30605,7 +30605,7 @@ function decode_aarch32_instrs_VNEG_A2enc_A_txt (cond, D, Vd, size, M, Vm) = {
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VNEG_A2enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -30705,7 +30705,7 @@ function decode_aarch32_instrs_VNEG_T2enc_A_txt (D, Vd, size, M, Vm) = {
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VNEG_T2enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -30777,7 +30777,7 @@ function execute_aarch32_instrs_VNMLA_Op_A_txt (d, esize, m, n, vtype) = {
             }
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VNMLA_Op_A_txt")
     }
 }
 
@@ -30820,7 +30820,7 @@ function decode_aarch32_instrs_VNMLA_A1enc_A_txt (cond, D, Vn, Vd, size, N, op, 
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VNMLA_A1enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -30883,7 +30883,7 @@ function decode_aarch32_instrs_VNMLA_A2enc_A_txt (cond, D, Vn, Vd, size, N, M, V
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VNMLA_A2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -30945,7 +30945,7 @@ function decode_aarch32_instrs_VNMLA_T1enc_A_txt (D, Vn, Vd, size, N, op, M, Vm)
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VNMLA_T1enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -31006,7 +31006,7 @@ function decode_aarch32_instrs_VNMLA_T2enc_A_txt (D, Vn, Vd, size, N, M, Vm) = {
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VNMLA_T2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -33909,7 +33909,7 @@ function decode_aarch32_instrs_VQRSHRN_A1enc_A_txt (U, D, imm6, Vd, op, M, Vm) =
               elements = 2;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VQRSHRN_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -33970,7 +33970,7 @@ function decode_aarch32_instrs_VQRSHRN_T1enc_A_txt (U, D, imm6, Vd, op, M, Vm) =
               elements = 2;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VQRSHRN_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -34059,7 +34059,7 @@ function decode_aarch32_instrs_VQSHL_i_A1enc_A_txt (U, D, imm6, Vd, op, L, Q, M,
               elements = 1;
               shift_amount = UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VQSHL_i_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -34144,7 +34144,7 @@ function decode_aarch32_instrs_VQSHL_i_T1enc_A_txt (U, D, imm6, Vd, op, L, Q, M,
               elements = 1;
               shift_amount = UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VQSHL_i_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -34340,7 +34340,7 @@ function decode_aarch32_instrs_VQSHRN_A1enc_A_txt (U, D, imm6, Vd, op, M, Vm) = 
               elements = 2;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VQSHRN_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -34401,7 +34401,7 @@ function decode_aarch32_instrs_VQSHRN_T1enc_A_txt (U, D, imm6, Vd, op, M, Vm) = 
               elements = 2;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VQSHRN_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -34640,7 +34640,7 @@ function decode_aarch32_instrs_VRECPE_A1enc_A_txt (D, size, Vd, F, Q, M, Vm) = {
               esize = 32;
               elements = 2
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRECPE_A1enc_A_txt")
         };
         let 'esize = esize;
         let 'elements = elements;
@@ -34689,7 +34689,7 @@ function decode_aarch32_instrs_VRECPE_T1enc_A_txt (D, size, Vd, F, Q, M, Vm) = {
               esize = 32;
               elements = 2
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRECPE_T1enc_A_txt")
         };
         let 'esize = esize;
         let 'elements = elements;
@@ -34871,7 +34871,7 @@ function decode_aarch32_instrs_VREV16_A1enc_A_txt (D, size, Vd, op, Q, M, Vm) = 
           0b00 => {
               container_size = 64
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VREV16_A1enc_A_txt")
         };
         let 'container_size = container_size;
         let 'containers = DIV(64, container_size);
@@ -34918,7 +34918,7 @@ function decode_aarch32_instrs_VREV16_T1enc_A_txt (D, size, Vd, op, Q, M, Vm) = 
           0b00 => {
               container_size = 64
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VREV16_T1enc_A_txt")
         };
         let 'container_size = container_size;
         let 'containers = DIV(64, container_size);
@@ -35178,7 +35178,7 @@ function decode_aarch32_instrs_VRSHR_A1enc_A_txt (U, D, imm6, Vd, L, Q, M, Vm) =
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRSHR_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -35258,7 +35258,7 @@ function decode_aarch32_instrs_VRSHR_T1enc_A_txt (U, D, imm6, Vd, L, Q, M, Vm) =
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRSHR_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -35348,7 +35348,7 @@ function decode_aarch32_instrs_VRSHRN_A1enc_A_txt (D, imm6, Vd, M, Vm) = {
               elements = 2;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRSHRN_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -35402,7 +35402,7 @@ function decode_aarch32_instrs_VRSHRN_T1enc_A_txt (D, imm6, Vd, M, Vm) = {
               elements = 2;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRSHRN_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -35465,7 +35465,7 @@ function decode_aarch32_instrs_VRSQRTE_A1enc_A_txt (D, size, Vd, F, Q, M, Vm) = 
               esize = 32;
               elements = 2
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRSQRTE_A1enc_A_txt")
         };
         let 'esize = esize;
         let 'elements = elements;
@@ -35514,7 +35514,7 @@ function decode_aarch32_instrs_VRSQRTE_T1enc_A_txt (D, size, Vd, F, Q, M, Vm) = 
               esize = 32;
               elements = 2
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRSQRTE_T1enc_A_txt")
         };
         let 'esize = esize;
         let 'elements = elements;
@@ -35701,7 +35701,7 @@ function decode_aarch32_instrs_VRSRA_A1enc_A_txt (U, D, imm6, Vd, L, Q, M, Vm) =
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRSRA_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -35781,7 +35781,7 @@ function decode_aarch32_instrs_VRSRA_T1enc_A_txt (U, D, imm6, Vd, L, Q, M, Vm) =
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRSRA_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -35954,7 +35954,7 @@ function decode_aarch32_instrs_VSHL_i_A1enc_A_txt (D, imm6, Vd, L, Q, M, Vm) = {
               elements = 1;
               shift_amount = UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSHL_i_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36032,7 +36032,7 @@ function decode_aarch32_instrs_VSHL_i_T1enc_A_txt (D, imm6, Vd, L, Q, M, Vm) = {
               elements = 1;
               shift_amount = UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSHL_i_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36119,7 +36119,7 @@ function decode_aarch32_instrs_VSHLL_A1enc_A_txt (U, D, imm6, Vd, M, Vm) = {
               elements = 2;
               shift_amount = UInt(imm6) - 32
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSHLL_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36207,7 +36207,7 @@ function decode_aarch32_instrs_VSHLL_T1enc_A_txt (U, D, imm6, Vd, M, Vm) = {
               elements = 2;
               shift_amount = UInt(imm6) - 32
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSHLL_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36405,7 +36405,7 @@ function decode_aarch32_instrs_VSHR_A1enc_A_txt (U, D, imm6, Vd, L, Q, M, Vm) = 
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSHR_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36485,7 +36485,7 @@ function decode_aarch32_instrs_VSHR_T1enc_A_txt (U, D, imm6, Vd, L, Q, M, Vm) = 
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSHR_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36574,7 +36574,7 @@ function decode_aarch32_instrs_VSHRN_A1enc_A_txt (D, imm6, Vd, M, Vm) = {
               elements = 2;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSHRN_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36628,7 +36628,7 @@ function decode_aarch32_instrs_VSHRN_T1enc_A_txt (D, imm6, Vd, M, Vm) = {
               elements = 2;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSHRN_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36704,7 +36704,7 @@ function decode_aarch32_instrs_VSLI_A1enc_A_txt (D, imm6, Vd, L, Q, M, Vm) = {
               elements = 1;
               shift_amount = UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSLI_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36782,7 +36782,7 @@ function decode_aarch32_instrs_VSLI_T1enc_A_txt (D, imm6, Vd, L, Q, M, Vm) = {
               elements = 1;
               shift_amount = UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSLI_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -36839,7 +36839,7 @@ function execute_aarch32_instrs_VSQRT_Op_A_txt (d, esize, m) = {
       64 => {
           D_set(d) = FPSqrt(D_read(m), FPSCR_read())
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VSQRT_Op_A_txt")
     }
 }
 
@@ -36876,7 +36876,7 @@ function decode_aarch32_instrs_VSQRT_A1enc_A_txt (cond, D, Vd, size, M, Vm) = {
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSQRT_A1enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -36929,7 +36929,7 @@ function decode_aarch32_instrs_VSQRT_T1enc_A_txt (D, Vd, size, M, Vm) = {
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSQRT_T1enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -37002,7 +37002,7 @@ function decode_aarch32_instrs_VSRA_A1enc_A_txt (U, D, imm6, Vd, L, Q, M, Vm) = 
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSRA_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -37082,7 +37082,7 @@ function decode_aarch32_instrs_VSRA_T1enc_A_txt (U, D, imm6, Vd, L, Q, M, Vm) = 
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSRA_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -37179,7 +37179,7 @@ function decode_aarch32_instrs_VSRI_A1enc_A_txt (D, imm6, Vd, L, Q, M, Vm) = {
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSRI_A1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -37257,7 +37257,7 @@ function decode_aarch32_instrs_VSRI_T1enc_A_txt (D, imm6, Vd, L, Q, M, Vm) = {
               elements = 1;
               shift_amount = 64 - UInt(imm6)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSRI_T1enc_A_txt")
         };
         let 'shift_amount = shift_amount;
         let 'esize = esize;
@@ -39356,7 +39356,7 @@ function execute_aarch32_instrs_VSTR_Op_A_txt (add, d, esize, imm32, n) = {
               MemA_set(address + 4, 4) = D_read(d)[63 .. 32]
           }
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VSTR_Op_A_txt")
     }
 }
 
@@ -39387,7 +39387,7 @@ function decode_aarch32_instrs_VSTR_A1enc_A_txt (cond, U, D, Rn, Vd, size, imm8)
           0b11 => {
               d = UInt(D @ Vd)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSTR_A1enc_A_txt")
         };
         let 'd = d;
         let 'n = UInt(Rn);
@@ -39438,7 +39438,7 @@ function decode_aarch32_instrs_VSTR_T1enc_A_txt (U, D, Rn, Vd, size, imm8) = {
           0b11 => {
               d = UInt(D @ Vd)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSTR_T1enc_A_txt")
         };
         let 'd = d;
         let 'n = UInt(Rn);
@@ -39486,7 +39486,7 @@ function execute_aarch32_instrs_VSUB_f_Op_A_txt (advsimd, d__arg, elements, esiz
           64 => {
               D_set(d) = FPSub(D_read(n), D_read(m), FPSCR_read())
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VSUB_f_Op_A_txt")
         }
     }
 }
@@ -39580,7 +39580,7 @@ function decode_aarch32_instrs_VSUB_f_A2enc_A_txt (cond, D, Vn, Vd, size, N, M, 
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSUB_f_A2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -39695,7 +39695,7 @@ function decode_aarch32_instrs_VSUB_f_T2enc_A_txt (D, Vn, Vd, size, N, M, Vm) = 
               n = UInt(N @ Vn);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VSUB_f_T2enc_A_txt")
         };
         let 'n = n;
         let 'm = m;
@@ -41190,7 +41190,7 @@ function execute_aarch32_instrs_MRS_br_Op_AS_txt (SYSm, d, read_spsr) = {
               0b11110 => {
                   R_set(d) = SPSR_hyp_read().bits[31 .. 0]
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_aarch32_instrs_MRS_br_Op_AS_txt")
             }
         } else {
             m : int = undefined;
@@ -41233,7 +41233,7 @@ function execute_aarch32_instrs_MRS_br_Op_AS_txt (SYSm, d, read_spsr) = {
               0b11111 => {
                   R_set(d) = Rmode_read(13, M32_Hyp)
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_aarch32_instrs_MRS_br_Op_AS_txt")
             }
         }
     }
@@ -41334,7 +41334,7 @@ function execute_aarch32_instrs_MSR_br_Op_AS_txt (SYSm, n, write_spsr) = {
               0b11110 => {
                   SPSR_hyp_write() = Mk_SPSR_hyp_Type([SPSR_hyp_read().bits with 31 .. 0 = R_read(n)])
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_aarch32_instrs_MSR_br_Op_AS_txt")
             }
         } else {
             m : int = undefined;
@@ -41377,7 +41377,7 @@ function execute_aarch32_instrs_MSR_br_Op_AS_txt (SYSm, n, write_spsr) = {
               0b11111 => {
                   Rmode_set(13, M32_Hyp) = R_read(n)
               },
-              _ => ()
+              _ => PatternMatchFailure("execute_aarch32_instrs_MSR_br_Op_AS_txt")
             }
         }
     }
@@ -42101,7 +42101,7 @@ function decode_aarch32_instrs_VMSR_A1enc_AS_txt (cond, reg, Rt) = {
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_aarch32_instrs_VMSR_A1enc_AS_txt")
             }
         };
         if t == 15 then {
@@ -42142,7 +42142,7 @@ function decode_aarch32_instrs_VMSR_T1enc_AS_txt (reg, Rt) = {
               Constraint_NOP => {
                   EndOfInstruction()
               },
-              _ => ()
+              _ => PatternMatchFailure("decode_aarch32_instrs_VMSR_T1enc_AS_txt")
             }
         };
         if t == 15 then {
@@ -44663,7 +44663,7 @@ function decode_aarch32_instrs_VCVTA_asimd_A1enc_A_txt (D, size, Vd, RM, op, Q, 
           esize = 32;
           elements = 2
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VCVTA_asimd_A1enc_A_txt")
     };
     let 'esize = esize;
     let 'elements = elements;
@@ -44711,7 +44711,7 @@ function decode_aarch32_instrs_VCVTA_asimd_T1enc_A_txt (D, size, Vd, RM, op, Q, 
           esize = 32;
           elements = 2
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VCVTA_asimd_T1enc_A_txt")
     };
     let 'esize = esize;
     let 'elements = elements;
@@ -44750,7 +44750,7 @@ function execute_aarch32_instrs_VCVTA_vfp_Op_A_txt (d, esize, m, rounding, is_un
       64 => {
           S_set(d) = FPToFixed(D_read(m), 0, is_unsigned, FPSCR_read(), rounding, 32)
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VCVTA_vfp_Op_A_txt")
     }
 }
 
@@ -44778,7 +44778,7 @@ function decode_aarch32_instrs_VCVTA_vfp_A1enc_A_txt (D, RM, Vd, size, op, M, Vm
           esize = 64;
           m = UInt(M @ Vm)
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VCVTA_vfp_A1enc_A_txt")
     };
     let 'm = m;
     let 'esize = esize;
@@ -44824,7 +44824,7 @@ function decode_aarch32_instrs_VCVTA_vfp_T1enc_A_txt (D, RM, Vd, size, op, M, Vm
           esize = 64;
           m = UInt(M @ Vm)
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VCVTA_vfp_T1enc_A_txt")
     };
     let 'm = m;
     let 'esize = esize;
@@ -44887,7 +44887,7 @@ function execute_aarch32_instrs_VMAXNM_Op_A_txt (advsimd, d__arg, elements, esiz
                   D_set(d) = FPMinNum(D_read(n), D_read(m), FPSCR_read())
               }
           },
-          _ => ()
+          _ => PatternMatchFailure("execute_aarch32_instrs_VMAXNM_Op_A_txt")
         }
     }
 }
@@ -44973,7 +44973,7 @@ function decode_aarch32_instrs_VMAXNM_A2enc_A_txt (D, Vn, Vd, size, N, op, M, Vm
           n = UInt(N @ Vn);
           m = UInt(M @ Vm)
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VMAXNM_A2enc_A_txt")
     };
     let 'n = n;
     let 'm = m;
@@ -45082,7 +45082,7 @@ function decode_aarch32_instrs_VMAXNM_T2enc_A_txt (D, Vn, Vd, size, N, op, M, Vm
           n = UInt(N @ Vn);
           m = UInt(M @ Vm)
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VMAXNM_T2enc_A_txt")
     };
     let 'n = n;
     let 'm = m;
@@ -45147,7 +45147,7 @@ function decode_aarch32_instrs_VRINTA_asimd_A1enc_A_txt (D, size, Vd, op, Q, M, 
           esize = 32;
           elements = 2
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VRINTA_asimd_A1enc_A_txt")
     };
     let 'esize = esize;
     let 'elements = elements;
@@ -45197,7 +45197,7 @@ function decode_aarch32_instrs_VRINTA_asimd_T1enc_A_txt (D, size, Vd, op, Q, M, 
           esize = 32;
           elements = 2
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VRINTA_asimd_T1enc_A_txt")
     };
     let 'esize = esize;
     let 'elements = elements;
@@ -45235,7 +45235,7 @@ function execute_aarch32_instrs_VRINTA_vfp_Op_A_txt (d, esize, exact, m, roundin
       64 => {
           D_set(d) = FPRoundInt(D_read(m), FPSCR_read(), rounding, exact)
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VRINTA_vfp_Op_A_txt")
     }
 }
 
@@ -45266,7 +45266,7 @@ function decode_aarch32_instrs_VRINTA_vfp_A1enc_A_txt (D, RM, Vd, size, M, Vm) =
           d = UInt(D @ Vd);
           m = UInt(M @ Vm)
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VRINTA_vfp_A1enc_A_txt")
     };
     let 'm = m;
     let 'esize = esize;
@@ -45315,7 +45315,7 @@ function decode_aarch32_instrs_VRINTA_vfp_T1enc_A_txt (D, RM, Vd, size, M, Vm) =
           d = UInt(D @ Vd);
           m = UInt(M @ Vm)
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VRINTA_vfp_T1enc_A_txt")
     };
     let 'm = m;
     let 'esize = esize;
@@ -45374,7 +45374,7 @@ function decode_aarch32_instrs_VRINTX_asimd_A1enc_A_txt (D, size, Vd, Q, M, Vm) 
           esize = 32;
           elements = 2
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VRINTX_asimd_A1enc_A_txt")
     };
     let 'esize = esize;
     let 'elements = elements;
@@ -45417,7 +45417,7 @@ function decode_aarch32_instrs_VRINTX_asimd_T1enc_A_txt (D, size, Vd, Q, M, Vm) 
           esize = 32;
           elements = 2
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VRINTX_asimd_T1enc_A_txt")
     };
     let 'esize = esize;
     let 'elements = elements;
@@ -45458,7 +45458,7 @@ function execute_aarch32_instrs_VRINTX_vfp_Op_A_txt (d, esize, exact, m) = {
       64 => {
           D_set(d) = FPRoundInt(D_read(m), FPSCR_read(), rounding, exact)
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VRINTX_vfp_Op_A_txt")
     }
 }
 
@@ -45493,7 +45493,7 @@ function decode_aarch32_instrs_VRINTX_vfp_A1enc_A_txt (cond, D, Vd, size, M, Vm)
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRINTX_vfp_A1enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -45544,7 +45544,7 @@ function decode_aarch32_instrs_VRINTX_vfp_T1enc_A_txt (D, Vd, size, M, Vm) = {
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRINTX_vfp_T1enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -45604,7 +45604,7 @@ function decode_aarch32_instrs_VRINTZ_asimd_A1enc_A_txt (D, size, Vd, Q, M, Vm) 
           esize = 32;
           elements = 2
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VRINTZ_asimd_A1enc_A_txt")
     };
     let 'esize = esize;
     let 'elements = elements;
@@ -45647,7 +45647,7 @@ function decode_aarch32_instrs_VRINTZ_asimd_T1enc_A_txt (D, size, Vd, Q, M, Vm) 
           esize = 32;
           elements = 2
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VRINTZ_asimd_T1enc_A_txt")
     };
     let 'esize = esize;
     let 'elements = elements;
@@ -45687,7 +45687,7 @@ function execute_aarch32_instrs_VRINTZ_vfp_Op_A_txt (d, esize, exact, m, roundin
       64 => {
           D_set(d) = FPRoundInt(D_read(m), FPSCR_read(), rounding, exact)
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VRINTZ_vfp_Op_A_txt")
     }
 }
 
@@ -45724,7 +45724,7 @@ function decode_aarch32_instrs_VRINTZ_vfp_A1enc_A_txt (cond, D, Vd, size, op, M,
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRINTZ_vfp_A1enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -45778,7 +45778,7 @@ function decode_aarch32_instrs_VRINTZ_vfp_T1enc_A_txt (D, Vd, size, op, M, Vm) =
               d = UInt(D @ Vd);
               m = UInt(M @ Vm)
           },
-          _ => ()
+          _ => PatternMatchFailure("decode_aarch32_instrs_VRINTZ_vfp_T1enc_A_txt")
         };
         let 'm = m;
         let 'esize = esize;
@@ -45816,7 +45816,7 @@ function execute_aarch32_instrs_VSEL_Op_A_txt (cond, d, esize, m, n) = {
       64 => {
           D_set(d) = if ConditionHolds(cond) then D_read(n) else D_read(m)
       },
-      _ => ()
+      _ => PatternMatchFailure("execute_aarch32_instrs_VSEL_Op_A_txt")
     }
 }
 
@@ -45849,7 +45849,7 @@ function decode_aarch32_instrs_VSEL_A1enc_A_txt (D, cc, Vn, Vd, size, N, M, Vm) 
           n = UInt(N @ Vn);
           m = UInt(M @ Vm)
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VSEL_A1enc_A_txt")
     };
     let 'n = n;
     let 'm = m;
@@ -45904,7 +45904,7 @@ function decode_aarch32_instrs_VSEL_T1enc_A_txt (D, cc, Vn, Vd, size, N, M, Vm) 
           n = UInt(N @ Vn);
           m = UInt(M @ Vm)
       },
-      _ => ()
+      _ => PatternMatchFailure("decode_aarch32_instrs_VSEL_T1enc_A_txt")
     };
     let 'n = n;
     let 'm = m;

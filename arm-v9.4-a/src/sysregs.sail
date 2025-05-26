@@ -242,7 +242,7 @@ function getCacheID (level, data_cache) = {
           assert(constraint((0 <= 'level & 'level < 7)));
           ccsidr_val = __DCACHE_CCSIDR_RESET[level]
       },
-      _ => ()
+      _ => PatternMatchFailure("getCacheID")
     };
     return(ccsidr_val)
 }

@@ -1,6 +1,8 @@
 LEM=lem
 CC=gcc
 
+VERBOSE_FLAG = -verbose 1
+
 # Attempt to work with either sail from opam or built from repo in SAIL_DIR
 ifneq ($(SAIL_DIR),)
 # Use sail repo in SAIL_DIR
@@ -36,13 +38,13 @@ LEM_INSTRS_FILES=instrs32.lem instrs64.lem
 LEM_VECTOR_INSTRS_FILES=instrs64_sme.lem instrs64_sve.lem
 LEM_LIBS=-lib Sail=$(SAIL_DIR)/src/gen_lib -lib Sail-Armv9-Base=lem/base -lib Sail-Armv9-System=lem/system -lib Sail-Armv9-Instrs=lem/instrs -lib Sail-Armv9-Vector-Instrs=lem/vector_instrs
 
-all: lem.stamp isabelle.stamp coq.stamp
+all: lem.stamp isabelle.stamp coq.stamp lean.stamp
 
 .PHONY: all clean interactive gen_c gen_isabelle
 
 lem lem.stamp: $(SAIL_SRCS) $(LEM_SPLICES) lem/base/extra_defs.lem src/termination_measures.sail src/lem-patches/Feature.patch
 	mkdir -p isabelle
-	$(SAIL) -dprofile -verbose 1 -memo_z3 -grouped_regstate -lem_split_files \
+	$(SAIL) -dprofile $(VERBOSE_FLAG) -memo_z3 -grouped_regstate -lem_split_files \
 	        -lem -lem_output_dir lem -isa_output_dir isabelle -o armv9 -lem_lib Extra_defs \
 	        -lem_mwords -mono_rewrites -auto_mono -undefined_gen \
 	        $(foreach splice,$(LEM_SPLICES),-splice $(splice)) \
@@ -71,7 +73,7 @@ gen_isabelle isabelle isabelle.stamp: lem.stamp
 	touch isabelle.stamp
 
 gen_coq coq coq.stamp: $(SAIL_SRCS) src/termination_measures.sail
-	$(SAIL) -dprofile -verbose 1 -memo_z3 \
+	$(SAIL) -dprofile $(VERBOSE_FLAG) -memo_z3 \
 	        -coq -dcoq_undef_axioms \
 	        -coq_output_dir coq -o armv9 -coq_lib arm_extras \
 	        -undefined_gen \
@@ -79,18 +81,23 @@ gen_coq coq coq.stamp: $(SAIL_SRCS) src/termination_measures.sail
 	        src/termination_measures.sail
 	touch coq.stamp
 
-gen_lean lean lean.stamp: $(SAIL_SRCS) src/termination_measures.sail
-	$(SAIL) -dprofile -verbose 1 -memo_z3 \
+gen_lean lean lean.stamp: $(SAIL_SRCS) src/termination_measures.sail lean/ArmExtras.lean
+	$(SAIL) -dprofile $(VERBOSE_FLAG) -memo_z3 \
 	        -lean --lean-force-output \
 	        -lean_output_dir lean -o armv9 \
 	        -undefined_gen \
+	        -memo-z3 \
 	        -lean-noncomputable \
+	        -lean-line-width 100000 \
+	        -lean-force-output \
+	        -lean-import-file lean/ArmExtras.lean \
 	        $(SAIL_SRCS) $(SAIL_FLAGS) \
 	        src/termination_measures.sail
+	touch lean.stamp
 
 c/armv9.c: $(SAIL_SRCS) $(SAIL_MAIN)
 	mkdir -p c
-	$(SAIL) -dprofile -verbose 1 -memo_z3 \
+	$(SAIL) -dprofile $(VERBOSE_FLAG) -memo_z3 \
 		-c $(SAIL_C_FLAGS) $(SAIL_FLAGS) $(SAIL_SRCS) $(SAIL_MAIN) > c/armv9.c.temp
 	mv c/armv9.c.temp c/armv9.c
 
@@ -111,7 +118,7 @@ interface_types.sail: $(SAIL_SRCS)
 	rm interface_types.sail.in
 
 interactive:
-	$(SAIL) -i -memo_z3 -verbose 1 \
+	$(SAIL) -i -memo_z3 $(VERBOSE_FLAG) \
 	        $(SAIL_SRCS) $(SAIL_FLAGS) \
 	        src/termination_measures.sail
 
@@ -120,5 +127,6 @@ clean:
 	rm -f isabelle.stamp isabelle/Arm_lemmas.thy isabelle/Arm.thy isabelle/Arm_types.thy \
 	  isabelle/Prelude.thy isabelle/ArmAuxiliary.thy
 	rm -f coq.stamp coq/{arm_extras,armv9,armv9_types}.{v,vo,vok,vos,glob}
+	rm -rf lean.stamp lean/armv9
 	rm -f ir/armv9.ir
 	rm -f interface_types.sail

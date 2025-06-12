@@ -30813,11 +30813,11 @@ function DecodePredCount (pattern, esize) = {
 }
 
 val Reduce : forall 'N 'esize,
-  ('N in {16, 32, 64, 128, 256, 512, 1024, 2048} & 'esize in {8, 16, 32, 64} & 'N >= 'esize).
+  ('N in {8, 16, 32, 64, 128, 256, 512, 1024, 2048} & 'esize in {8, 16, 32, 64} & 'N >= 'esize).
   (ReduceOp, bits('N), int('esize)) -> bits('esize)
 
 val Reduce__1 : forall 'N 'esize,
-  ('N in {16, 32, 64, 128, 256, 512, 1024, 2048} & 'esize in {8, 16, 32, 64} & 'N >= 'esize).
+  ('N in {8, 16, 32, 64, 128, 256, 512, 1024, 2048} & 'esize in {8, 16, 32, 64} & 'N >= 'esize).
   (ReduceOp, bits('N), int('esize), bool) -> bits('esize)
 
 function Reduce (op, input, esize) = {
@@ -30832,7 +30832,6 @@ function Reduce__1 (op, input, esize, altfp) = {
         return(input[esize - 1 .. 0])
     };
     let 'half = DIV('N, 2);
-    assert(constraint((('N - 1 - 'half + 1 == 16 | 'N - 1 - 'half + 1 == 32 | 'N - 1 - 'half + 1 == 64 | 'N - 1 - 'half + 1 == 128 | 'N - 1 - 'half + 1 == 256 | 'N - 1 - 'half + 1 == 512 | 'N - 1 - 'half + 1 == 1024 | 'N - 1 - 'half + 1 == 2048) & 'esize in {8, 16, 32, 64} & 'N - 1 - 'half + 1 >= 'esize)));
     let hi : bits('esize) = Reduce__1(op, input['N - 1 .. half], esize, altfp);
     let lo : bits('esize) = Reduce__1(op, input[half - 1 .. 0], esize, altfp);
     match op {

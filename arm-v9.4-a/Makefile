@@ -22,7 +22,8 @@ DEVICES=devices.sail
 DEVICES_LEM=$(addsuffix .lem,$(basename $(DEVICES)))
 DEVICES_PATH=src/$(DEVICES)
 
-SAIL_SRCS=src/prelude.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/stubs.sail src/interrupts.sail src/interface.sail $(DEVICES_PATH) src/impdefs.sail src/mem.sail src/sysregs_autogen.sail src/sysregs.sail src/reset.sail src/instrs32.sail src/instrs64.sail src/instrs64_sve.sail src/instrs64_sme.sail src/decode_end.sail src/fetch.sail src/map_clauses.sail src/event_clauses.sail
+SAIL_SRCS=src/prelude.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/stubs.sail src/interrupts.sail src/interface.sail $(DEVICES_PATH) src/impdefs.sail src/mem.sail src/sysregs_autogen.sail src/sysregs.sail src/reset.sail src/instrs32.sail src/instrs64.sail src/decode_end.sail src/fetch.sail src/map_clauses.sail src/event_clauses.sail
+'SAIL_SRCS=src/prelude.sail src/decode_start.sail src/builtins.sail src/v8_base.sail src/stubs.sail src/interrupts.sail src/interface.sail $(DEVICES_PATH) src/impdefs.sail src/mem.sail src/sysregs_autogen.sail src/sysregs.sail src/reset.sail src/instrs32.sail src/instrs64.sail src/instrs64_sve.sail src/instrs64_sme.sail src/decode_end.sail src/fetch.sail src/map_clauses.sail src/event_clauses.sail
 SAIL_MAIN=src/elfmain.sail
 ISLA_MAIN=src/isla_main.sail
 ISLA_SPLICE=src/isla_splice.sail

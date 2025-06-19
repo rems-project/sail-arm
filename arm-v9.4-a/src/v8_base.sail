@@ -38,6 +38,17 @@
 /*  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.         */
 /******************************************************************************/
 
+// ArchSem addition
+
+// The next PC to use, and whether the current instruction has updated it yet.
+// This allows the PC write to happen even if all of the PC reads haven't
+// happened yet, because reads use the original _PC, which now acts as an
+// intra-instruction global variable.
+
+register PC : bits(64)
+register PCUpdated : bool
+val PCNormalStep : unit -> unit
+
 bitfield Configuration_Type : bits(32) =
   {
     Cp15SDisable2 : 25,
@@ -6802,7 +6813,9 @@ function BranchTo (target, branch_type, branch_conditional) = {
     Hint_Branch(branch_type);
     if 'N == 32 then {
         assert(UsingAArch32());
-        _PC = ZeroExtend(target, 64)
+        PC = ZeroExtend(target, 64);
+        PCUpdated = true;
+        _PC = PC
     } else {
         assert('N == 64 & not_bool(UsingAArch32()));
         let target_vaddress : bits(64) = AArch64_BranchAddr(target[63 .. 0], PSTATE.EL);
@@ -6814,7 +6827,9 @@ function BranchTo (target, branch_type, branch_conditional) = {
             SPEBranch(target, branch_type, branch_conditional, branch_taken)
         };
         sail_branch_announce(64, target_vaddress);
-        _PC = target_vaddress
+        PC = target_vaddress;
+        PCUpdated = true;
+        _PC = PC
     };
     __BranchTaken = true;
     return()
@@ -18005,11 +18020,15 @@ function BranchToAddr (target, branch_type) = {
     if 'N == 32 then {
         assert(UsingAArch32());
         sail_branch_announce(64, ZeroExtend(64, target));
-        _PC = ZeroExtend(target, 64)
+        PC = ZeroExtend(target, 64);
+        PCUpdated = true;
+        _PC = PC
     } else {
         assert('N == 64 & not_bool(UsingAArch32()));
         sail_branch_announce(64, target[63 .. 0]);
-        _PC = target[63 .. 0]
+        PC = target[63 .. 0];
+        PCUpdated = true;
+        _PC = PC
     };
     __BranchTaken = true;
     return()
@@ -28006,6 +28025,9 @@ function AArch64_MemSingle_read__1 (address, size, accdesc_in, aligned, ispair) 
         let is_load : bool = true;
         SPESampleLoadStore(is_load, accdesc, memaddrdesc)
     };
+    if IsDataAccess(accdesc.acctype) then {
+        PCNormalStep()
+    };
     atomic : bool = undefined;
     if (memaddrdesc.memattrs.memtype == MemType_Normal & memaddrdesc.memattrs.inner.attrs == MemAttr_WB) & memaddrdesc.memattrs.outer.attrs == MemAttr_WB then {
         atomic = true
@@ -28103,6 +28125,7 @@ function AArch64_MemSingle_set__1 (address, size, accdesc_in, aligned, ispair, v
         let is_load : bool = false;
         SPESampleLoadStore(is_load, accdesc, memaddrdesc)
     };
+    PCNormalStep();
     memstatus : PhysMemRetStatus = undefined;
     atomic : bool = undefined;
     if (memaddrdesc.memattrs.memtype == MemType_Normal & memaddrdesc.memattrs.inner.attrs == MemAttr_WB) & memaddrdesc.memattrs.outer.attrs == MemAttr_WB then {
@@ -35676,6 +35699,7 @@ val BranchNotTaken : forall ('branch_conditional : Bool).
   (BranchType, bool('branch_conditional)) -> unit
 
 function BranchNotTaken (branchtype, branch_conditional) = {
+    PCNormalStep();
     let branchtaken : bool = false;
     if HaveStatisticalProfiling() then {
         SPEBranch(__UNKNOWN_bits(64), branchtype, branch_conditional, branchtaken)

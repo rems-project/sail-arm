@@ -279,6 +279,8 @@ function __CheckForEmulatorTermination(enc, instr) = {
 }
 
 function __InstructionExecute () = {
+    _PC = PC;
+    PCUpdated = false;
     enc : __InstrEnc = undefined;
     instr : bits(32) = undefined;
     EDSCR_write() = [EDSCR_read() with PipeAdv = 0b1];
@@ -328,9 +330,12 @@ function __InstructionExecute () = {
     if not_bool(AArch64_ExecutingERETInstr()) then {
         PSTATE.BTYPE = BTypeNext
     };
+    /*
     if not_bool(__BranchTaken) then {
         _PC = (_PC + DIV(ThisInstrLength(), 8))[63 .. 0]
     };
+    */
+    assert(PCUpdated, "Instruction not updated to new ArchSem PC write mechanism");
     if ShouldAdvanceIT then {
         AArch32_ITAdvance()
     };
@@ -338,6 +343,17 @@ function __InstructionExecute () = {
         SSAdvance()
     };
     return()
+}
+
+// ArchSem addition
+
+// Set the next PC to be the next instruction in memory
+
+function PCNormalStep() = {
+    assert(not_bool(__BranchTaken));
+    assert(not_bool(PCUpdated));
+    PC = (_PC + DIV(ThisInstrLength(), 8))[63 .. 0];
+    PCUpdated = true
 }
 
 function __TopLevel () = {

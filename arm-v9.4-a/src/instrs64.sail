@@ -43,6 +43,7 @@ val execute_aarch64_instrs_integer_arithmetic_unary_abs : forall 'd 'datasize 'n
   (int('d), int('datasize), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_unary_abs (d, datasize, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let 'result = Abs(SInt(operand1));
     X_set(d, datasize) = result[datasize - 1 .. 0]
@@ -192,6 +193,7 @@ val execute_aarch64_instrs_integer_arithmetic_add_sub_carry : forall 'd 'datasiz
   (int('d), int('datasize), int('m), int('n), bool('setflags), bool('sub_op)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_add_sub_carry (d, datasize, m, n, setflags, sub_op) = {
+    PCNormalStep();
     result : bits('datasize) = undefined;
     let operand1 : bits('datasize) = X_read(n, datasize);
     operand2 : bits('datasize) = X_read(m, datasize);
@@ -432,6 +434,7 @@ val execute_aarch64_instrs_integer_arithmetic_add_sub_shiftedreg : forall 'd 'da
   (int('d), int('datasize), int('m), int('n), bool('setflags), int('shift_amount), ShiftType, bool('sub_op)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_add_sub_shiftedreg (d, datasize, m, n, setflags, shift_amount, shift_type, sub_op) = {
+    PCNormalStep();
     result : bits('datasize) = undefined;
     let operand1 : bits('datasize) = X_read(n, datasize);
     operand2 : bits('datasize) = ShiftReg(m, shift_type, shift_amount, datasize);
@@ -587,6 +590,7 @@ val execute_aarch64_instrs_integer_arithmetic_add_sub_immediate : forall 'd 'dat
   (int('d), int('datasize), bits('datasize), int('n), bool('setflags), bool('sub_op)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_add_sub_immediate (d, datasize, imm, n, setflags, sub_op) = {
+    PCNormalStep();
     result : bits('datasize) = undefined;
     let operand1 : bits('datasize) = if n == 31 then
       SP_read()[datasize - 1 .. 0]
@@ -749,6 +753,7 @@ val execute_aarch64_instrs_integer_arithmetic_add_sub_extendedreg : forall 'd 'd
   (int('d), int('datasize), ExtendType, int('m), int('n), bool('setflags), int('shift), bool('sub_op)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_add_sub_extendedreg (d, datasize, extend_type, m, n, setflags, shift, sub_op) = {
+    PCNormalStep();
     result : bits('datasize) = undefined;
     let operand1 : bits('datasize) = if n == 31 then
       SP_read()[datasize - 1 .. 0]
@@ -1218,6 +1223,7 @@ val execute_aarch64_instrs_integer_arithmetic_address_pc_rel : forall 'd ('page 
   (int('d), bits(64), bool('page)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_address_pc_rel (d, imm, page) = {
+    PCNormalStep();
     base : bits(64) = PC_read();
     if page then {
         base[11 .. 0] = Zeros(12)
@@ -1389,6 +1395,7 @@ val execute_aarch64_instrs_integer_logical_immediate : forall 'd 'datasize 'n ('
   (int('d), int('datasize), bits('datasize), int('n), LogicalOp, bool('setflags)) -> unit
 
 function execute_aarch64_instrs_integer_logical_immediate (d, datasize, imm, n, op, setflags) = {
+    PCNormalStep();
     result : bits('datasize) = undefined;
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = imm;
@@ -1755,6 +1762,7 @@ val execute_aarch64_instrs_integer_logical_shiftedreg : forall 'd 'datasize ('in
   (int('d), int('datasize), bool('invert), int('m), int('n), LogicalOp, bool('setflags), int('shift_amount), ShiftType) -> unit
 
 function execute_aarch64_instrs_integer_logical_shiftedreg (d, datasize, invert, m, n, op, setflags, shift_amount, shift_type) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     operand2 : bits('datasize) = ShiftReg(m, shift_type, shift_amount, datasize);
     result : bits('datasize) = undefined;
@@ -2192,6 +2200,7 @@ val execute_aarch64_instrs_integer_shift_variable : forall 'd 'datasize 'm 'n,
   (int('d), int('datasize), int('m), int('n), ShiftType) -> unit
 
 function execute_aarch64_instrs_integer_shift_variable (d, datasize, m, n, shift_type) = {
+    PCNormalStep();
     let operand2 : bits('datasize) = X_read(m, datasize);
     let result : bits('datasize) = ShiftReg(n, shift_type, MOD(UInt(operand2), datasize), datasize);
     X_set(d, datasize) = result
@@ -2586,6 +2595,7 @@ function clause __DecodeA64_BranchExcSys ((pc, ([bitone, bitone, bitzero, bitone
 val execute_aarch64_instrs_integer_flags_axflag : unit -> unit
 
 function execute_aarch64_instrs_integer_flags_axflag () = {
+    PCNormalStep();
     let n : bits(1) = 0b0;
     let z : bits(1) = PSTATE.Z | PSTATE.V;
     let c : bits(1) = PSTATE.C & not_vec(PSTATE.V);
@@ -2915,6 +2925,7 @@ val execute_aarch64_instrs_integer_bitfield : forall 'd 'datasize ('extend : Boo
   (int('d), int('datasize), bool('extend), bool('inzero), int('n), int('r), int('s), bits('datasize), bits('datasize)) -> unit
 
 function execute_aarch64_instrs_integer_bitfield (d, datasize, extend, inzero, n, r, s, tmask, wmask) = {
+    PCNormalStep();
     let dst : bits('datasize) = if inzero then Zeros(datasize) else
       X_read(d, datasize);
     let src : bits('datasize) = X_read(n, datasize);
@@ -4141,6 +4152,7 @@ function clause __DecodeA64_BranchExcSys ((pc, ([bitone, bitone, bitzero, bitone
 val execute_aarch64_instrs_system_hints : SystemHintOp -> unit
 
 function execute_aarch64_instrs_system_hints op = {
+    PCNormalStep();
     match op {
       SystemHintOp_YIELD => {
           Hint_Yield()
@@ -6626,6 +6638,7 @@ val execute_aarch64_instrs_integer_conditional_compare_register : forall 'datasi
   (bits(4), int('datasize), bits(4), int('m), int('n), bool('sub_op)) -> unit
 
 function execute_aarch64_instrs_integer_conditional_compare_register (condition, datasize, flags__arg, m, n, sub_op) = {
+    PCNormalStep();
     flags : bits(4) = flags__arg;
     taken : bool = false;
     if ConditionHolds(condition) then {
@@ -6702,6 +6715,7 @@ val execute_aarch64_instrs_integer_conditional_compare_immediate : forall 'datas
   (bits(4), int('datasize), bits(4), bits('datasize), int('n), bool('sub_op)) -> unit
 
 function execute_aarch64_instrs_integer_conditional_compare_immediate (condition, datasize, flags__arg, imm, n, sub_op) = {
+    PCNormalStep();
     flags : bits(4) = flags__arg;
     taken : bool = false;
     if ConditionHolds(condition) then {
@@ -6776,6 +6790,7 @@ function clause __DecodeA64_DataProcReg ((pc, ([_, bitone, bitone, bitone, biton
 val execute_aarch64_instrs_integer_flags_cfinv : unit -> unit
 
 function execute_aarch64_instrs_integer_flags_cfinv () = {
+    PCNormalStep();
     PSTATE.C = not_vec(PSTATE.C)
 }
 
@@ -6801,6 +6816,7 @@ function clause __DecodeA64_BranchExcSys ((pc, (0b110101010000000001000000000111
 val execute_aarch64_instrs_system_monitors : unit -> unit
 
 function execute_aarch64_instrs_system_monitors () = {
+    PCNormalStep();
     ClearExclusiveLocal(ProcessorID())
 }
 
@@ -6891,6 +6907,7 @@ val execute_aarch64_instrs_integer_arithmetic_cnt : forall 'd 'datasize 'n,
   (int('d), int('datasize), int('n), CountOp) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_cnt (d, datasize, n, opcode) = {
+    PCNormalStep();
     result : int = undefined;
     let operand1 : bits('datasize) = X_read(n, datasize);
     if opcode == CountOp_CLZ then {
@@ -7769,6 +7786,7 @@ val execute_aarch64_instrs_integer_arithmetic_unary_cnt : forall 'd 'datasize 'n
   (int('d), int('datasize), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_unary_cnt (d, datasize, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let 'result = BitCount(operand1);
     X_set(d, datasize) = result[datasize - 1 .. 0]
@@ -9974,6 +9992,7 @@ val execute_aarch64_instrs_integer_crc : forall ('crc32c : Bool) 'd 'm 'n 'size,
   (bool('crc32c), int('d), int('m), int('n), int('size)) -> unit
 
 function execute_aarch64_instrs_integer_crc (crc32c, d, m, n, size) = {
+    PCNormalStep();
     let acc : bits(32) = X_read(n, 32);
     let val_name : bits('size) = X_read(m, size);
     let poly : bits(32) = (if crc32c then UInt(0x1EDC6F41) else UInt(0x04C11DB7))[31 .. 0];
@@ -10049,6 +10068,7 @@ val execute_aarch64_instrs_integer_conditional_select : forall 'd 'datasize ('el
   (bits(4), int('d), int('datasize), bool('else_inc), bool('else_inv), int('m), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_conditional_select (condition, d, datasize, else_inc, else_inv, m, n) = {
+    PCNormalStep();
     taken : bool = false;
     result : bits('datasize) = undefined;
     if ConditionHolds(condition) then {
@@ -10177,6 +10197,7 @@ val execute_aarch64_instrs_integer_arithmetic_unary_ctz : forall 'd 'datasize 'n
   (int('d), int('datasize), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_unary_ctz (d, datasize, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let 'result = CountLeadingZeroBits(BitReverse(operand1));
     X_set(d, datasize) = result[datasize - 1 .. 0]
@@ -10271,6 +10292,7 @@ function clause __DecodeA64_BranchExcSys ((pc, ([bitone, bitone, bitzero, bitone
 val execute_aarch64_instrs_system_barriers_dmb : (MBReqDomain, MBReqTypes) -> unit
 
 function execute_aarch64_instrs_system_barriers_dmb (domain, types) = {
+    PCNormalStep();
     DataMemoryBarrier(domain, types)
 }
 
@@ -10343,6 +10365,7 @@ val execute_aarch64_instrs_system_barriers_dsb : forall ('nXS : Bool).
   (DSBAlias, MBReqDomain, bool('nXS), MBReqTypes) -> unit
 
 function execute_aarch64_instrs_system_barriers_dsb (alias, domain, nXS__arg, types) = {
+    PCNormalStep();
     nXS : bool = nXS__arg;
     match alias {
       DSBAlias_SSBB => {
@@ -10726,6 +10749,7 @@ val execute_aarch64_instrs_integer_ins_ext_extract_immediate : forall 'd 'datasi
   (int('d), int('datasize), int('lsb), int('m), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_ins_ext_extract_immediate (d, datasize, lsb, m, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = X_read(m, datasize);
     let concat : bits(2 * 'datasize) = operand1 @ operand2;
@@ -22746,6 +22770,7 @@ function clause __DecodeA64_DataProcReg ((pc, ([bitone, bitzero, bitzero, bitone
 val execute_aarch64_instrs_system_barriers_isb : unit -> unit
 
 function execute_aarch64_instrs_system_barriers_isb () = {
+    PCNormalStep();
     InstructionSynchronizationBarrier();
     if HaveBRBExt() & BRBEBranchOnISB() then {
         BRBEISB()
@@ -38460,6 +38485,7 @@ val execute_aarch64_instrs_integer_arithmetic_mul_uniform_add_sub : forall 'a 'd
   (int('a), int('d), int('datasize), int('destsize), int('m), int('n), bool('sub_op)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_mul_uniform_add_sub (a, d, datasize, destsize, m, n, sub_op) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = X_read(m, datasize);
     let operand3 : bits('destsize) = X_read(a, destsize);
@@ -38721,6 +38747,7 @@ val execute_aarch64_instrs_integer_ins_ext_insert_movewide : forall 'd 'datasize
   (int('d), int('datasize), bits(16), MoveWideOp, int('pos)) -> unit
 
 function execute_aarch64_instrs_integer_ins_ext_insert_movewide (d, datasize, imm, opcode, pos) = {
+    PCNormalStep();
     result : bits('datasize) = undefined;
     if opcode == MoveWideOp_K then {
         result = X_read(d, datasize)
@@ -40010,6 +40037,7 @@ val execute_aarch64_instrs_integer_arithmetic_rbit : forall 'd 'datasize 'n,
   (int('d), int('datasize), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_rbit (d, datasize, n) = {
+    PCNormalStep();
     let operand : bits('datasize) = X_read(n, datasize);
     result : bits('datasize) = undefined;
     foreach (i from 0 to (datasize - 1) by 1 in inc) {
@@ -41050,6 +41078,7 @@ val execute_aarch64_instrs_integer_arithmetic_rev : forall 'container_size 'd 'd
   (int('container_size), int('d), int('datasize), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_rev (container_size, d, datasize, n) = {
+    PCNormalStep();
     let operand : bits('datasize) = X_read(n, datasize);
     result : bits('datasize) = undefined;
     let 'containers = DIV(datasize, container_size);
@@ -41337,6 +41366,7 @@ val execute_aarch64_instrs_integer_flags_rmif : forall 'lsb 'n,
   (int('lsb), bits(4), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_flags_rmif (lsb, mask, n) = {
+    PCNormalStep();
     let tmpreg : bits(64) = X_read(n, 64);
     let tmp : bits(4) = (tmpreg @ tmpreg)[lsb + 3 .. lsb];
     if [mask[3]] == 0b1 then {
@@ -42275,6 +42305,7 @@ function clause __DecodeA64_DataProcFPSIMD ((pc, ([bitzero, _, bitone, bitzero, 
 val execute_aarch64_instrs_system_barriers_sb : unit -> unit
 
 function execute_aarch64_instrs_system_barriers_sb () = {
+    PCNormalStep();
     SpeculationBarrier()
 }
 
@@ -42720,6 +42751,7 @@ val execute_aarch64_instrs_integer_arithmetic_div : forall 'd 'datasize ('is_uns
   (int('d), int('datasize), int('m), int('n), bool('is_unsigned)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_div (d, datasize, m, n, is_unsigned) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = X_read(m, datasize);
     result : int = undefined;
@@ -43311,6 +43343,7 @@ val execute_aarch64_instrs_integer_flags_setf : forall 'msb 'n,
   (int('msb), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_flags_setf (msb, n) = {
+    PCNormalStep();
     let tmpreg : bits(32) = X_read(n, 32);
     PSTATE.N = [tmpreg[msb]];
     PSTATE.Z = if tmpreg[msb .. 0] == Zeros(msb + 1) then 0b1 else 0b0;
@@ -44952,6 +44985,7 @@ val execute_aarch64_instrs_integer_arithmetic_mul_widening_32_64 : forall 'a 'd 
   (int('a), int('d), int('datasize), int('destsize), int('m), int('n), bool('sub_op), bool('is_unsigned)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_mul_widening_32_64 (a, d, datasize, destsize, m, n, sub_op, is_unsigned) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = X_read(m, datasize);
     let operand3 : bits('destsize) = X_read(a, destsize);
@@ -45070,6 +45104,7 @@ val execute_aarch64_instrs_integer_arithmetic_max_min_smax_imm : forall 'd 'data
   (int('d), int('datasize), int('imm), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_max_min_smax_imm (d, datasize, imm, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let 'result = Max(SInt(operand1), imm);
     X_set(d, datasize) = result[datasize - 1 .. 0]
@@ -45102,6 +45137,7 @@ val execute_aarch64_instrs_integer_arithmetic_max_min_smax_reg : forall 'd 'data
   (int('d), int('datasize), int('m), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_max_min_smax_reg (d, datasize, m, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = X_read(m, datasize);
     let 'result = Max(SInt(operand1), SInt(operand2));
@@ -45569,6 +45605,7 @@ val execute_aarch64_instrs_integer_arithmetic_max_min_smin_imm : forall 'd 'data
   (int('d), int('datasize), int('imm), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_max_min_smin_imm (d, datasize, imm, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let 'result = Min(SInt(operand1), imm);
     X_set(d, datasize) = result[datasize - 1 .. 0]
@@ -45601,6 +45638,7 @@ val execute_aarch64_instrs_integer_arithmetic_max_min_smin_reg : forall 'd 'data
   (int('d), int('datasize), int('m), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_max_min_smin_reg (d, datasize, m, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = X_read(m, datasize);
     let 'result = Min(SInt(operand1), SInt(operand2));
@@ -46192,6 +46230,7 @@ val execute_aarch64_instrs_integer_arithmetic_mul_widening_64_128hi : forall 'd 
   (int('d), int('datasize), int('m), int('n), bool('is_unsigned)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_mul_widening_64_128hi (d, datasize, m, n, is_unsigned) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = X_read(m, datasize);
     let 'result = asl_Int(operand1, is_unsigned) * asl_Int(operand2, is_unsigned);
@@ -52454,6 +52493,7 @@ val execute_aarch64_instrs_integer_arithmetic_max_min_umax_imm : forall 'd 'data
   (int('d), int('datasize), int('imm), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_max_min_umax_imm (d, datasize, imm, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let 'result = Max(UInt(operand1), imm);
     X_set(d, datasize) = result[datasize - 1 .. 0]
@@ -52486,6 +52526,7 @@ val execute_aarch64_instrs_integer_arithmetic_max_min_umax_reg : forall 'd 'data
   (int('d), int('datasize), int('m), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_max_min_umax_reg (d, datasize, m, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = X_read(m, datasize);
     let 'result = Max(UInt(operand1), UInt(operand2));
@@ -52519,6 +52560,7 @@ val execute_aarch64_instrs_integer_arithmetic_max_min_umin_reg : forall 'd 'data
   (int('d), int('datasize), int('m), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_max_min_umin_reg (d, datasize, m, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let operand2 : bits('datasize) = X_read(m, datasize);
     let 'result = Min(UInt(operand1), UInt(operand2));
@@ -52552,6 +52594,7 @@ val execute_aarch64_instrs_integer_arithmetic_max_min_umin_imm : forall 'd 'data
   (int('d), int('datasize), int('imm), int('n)) -> unit
 
 function execute_aarch64_instrs_integer_arithmetic_max_min_umin_imm (d, datasize, imm, n) = {
+    PCNormalStep();
     let operand1 : bits('datasize) = X_read(n, datasize);
     let 'result = Min(UInt(operand1), imm);
     X_set(d, datasize) = result[datasize - 1 .. 0]
@@ -52884,6 +52927,7 @@ function clause __DecodeA64_BranchExcSys ((pc, ([bitone, bitone, bitzero, bitone
 val execute_aarch64_instrs_integer_flags_xaflag : unit -> unit
 
 function execute_aarch64_instrs_integer_flags_xaflag () = {
+    PCNormalStep();
     let n : bits(1) = not_vec(PSTATE.C) & not_vec(PSTATE.Z);
     let z : bits(1) = PSTATE.Z & PSTATE.C;
     let c : bits(1) = PSTATE.C | PSTATE.Z;

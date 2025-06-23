@@ -44,103 +44,70 @@ $include <concurrency_interface/exception.sail>
 $include <concurrency_interface/cache_op.sail>
 $include <concurrency_interface/translation.sail>
 
-// This the set of all Arm access types that are not covered by the generic
-// interface access type.
-union arm_acc_type = {
-  // Software ASIMD extension load/store instructions
-  SAcc_ASIMD : /* streaming access :*/ bool,
-  // Software SVE load/store instructions
-  SAcc_SVE : /* streaming access :*/ bool,
-  // Software SME load/store instructions
-  SAcc_SME : /* streaming access :*/ bool,
-  // Sysop IC
-  SAcc_IC : unit,
-  // Sysop DC (not DC {Z,G,GZ}VA)
-  SAcc_DC : unit,
-  // Sysop DC {Z,G,GZ}VA
-  SAcc_DCZero : unit,
-  // Sysop AT
-  SAcc_AT : unit,
-  // NV2 memory redirected access
-  SAcc_NV2 : unit,
-  // Statistical Profiling buffer access
-  SAcc_SPE : unit,
-  // Guarded Control Stack access
-  SAcc_GCS : unit,
-  // Granule Protection Table Walk
-  SAcc_GPTW : unit
-}
-
-function AccessDescriptor_to_Access_kind(accdesc : AccessDescriptor) -> Access_kind(arm_acc_type) = {
-  // TODO
-  match accdesc.acctype {
-    AccessType_IFETCH => AK_ifetch(),
-    AccessType_GPR =>
-      let variety =
-        if accdesc.exclusive then AV_exclusive
-        else if accdesc.atomicop then AV_atomic_rmw
-        else AV_plain
-      in
-      let strength =
-        if accdesc.acqpc then AS_acq_rcpc
-        else if accdesc.acqsc | accdesc.relsc then AS_rel_or_acq
-        else AS_normal
-      in
-      AK_explicit(struct { variety, strength }),
-    AccessType_TTW => AK_ttw(),
-    AccessType_ASIMD => AK_arch(SAcc_ASIMD(accdesc.streamingsve)),
-    AccessType_SVE => AK_arch(SAcc_SVE(accdesc.streamingsve)),
-    AccessType_SME => AK_arch(SAcc_SME(accdesc.streamingsve)),
-    AccessType_IC => AK_arch(SAcc_IC()),
-    AccessType_DC => AK_arch(SAcc_DC()),
-    AccessType_DCZero => AK_arch(SAcc_DCZero()),
-    AccessType_AT => AK_arch(SAcc_AT()),
-    AccessType_NV2 => AK_arch(SAcc_NV2()),
-    AccessType_SPE => AK_arch(SAcc_SPE()),
-    AccessType_GCS => AK_arch(SAcc_GCS()),
-    AccessType_GPTW => AK_arch(SAcc_GPTW())
-  }
-}
-
-val pa_bits : bits(56) -> bits(64)
-
-function pa_bits(bv) = sail_zero_extend(bv, 64)
+function mem_acc_is_explicit     (acc : AccessDescriptor) -> bool = acc.acctype == AccessType_GPR
+function mem_acc_is_ifetch       (acc : AccessDescriptor) -> bool = acc.acctype == AccessType_IFETCH
+function mem_acc_is_ttw          (acc : AccessDescriptor) -> bool = acc.acctype == AccessType_TTW
+function mem_acc_is_relaxed      (acc : AccessDescriptor) -> bool = acc.acctype == AccessType_GPR & not_bool(acc.acqpc) & not_bool(acc.acqsc) & not_bool(acc.relsc)
+function mem_acc_is_rel_acq_rcpc (acc : AccessDescriptor) -> bool = acc.acctype == AccessType_GPR & acc.acqpc
+function mem_acc_is_rel_acq_rcsc (acc : AccessDescriptor) -> bool = acc.acctype == AccessType_GPR & (acc.acqsc | acc.relsc)
+function mem_acc_is_standalone   (acc : AccessDescriptor) -> bool = acc.acctype == AccessType_GPR & not_bool(acc.exclusive) & not_bool(acc.atomicop)
+function mem_acc_is_exclusive    (acc : AccessDescriptor) -> bool = acc.acctype == AccessType_GPR & acc.exclusive
+function mem_acc_is_atomic_rmw   (acc : AccessDescriptor) -> bool = acc.acctype == AccessType_GPR & acc.atomicop
 
 instantiation sail_mem_read with
-  'pa = bits(56),
-  'translation_summary = option(TranslationInfo),
-  'arch_ak = arm_acc_type,
+  'addr_size = 56,
+  'addr_space = PASpace,
+  'mem_acc = AccessDescriptor,
   'abort = Fault,
-  pa_bits = pa_bits
+  'CHERI = false,
+  'cap_size_log = 0,
+  mem_acc_is_explicit = mem_acc_is_explicit,
+  mem_acc_is_ifetch = mem_acc_is_ifetch,
+  mem_acc_is_ttw = mem_acc_is_ttw,
+  mem_acc_is_relaxed = mem_acc_is_relaxed,
+  mem_acc_is_rel_acq_rcpc = mem_acc_is_rel_acq_rcpc,
+  mem_acc_is_rel_acq_rcsc = mem_acc_is_rel_acq_rcsc,
+  mem_acc_is_standalone = mem_acc_is_standalone,
+  mem_acc_is_exclusive = mem_acc_is_exclusive,
+  mem_acc_is_atomic_rmw = mem_acc_is_atomic_rmw
 
-val read_request : forall 'n, 'n > 0. (AccessDescriptor, option(TranslationInfo), int('n), bits(64), bits(56)) -> Mem_read_request('n, 64, bits(56), option(TranslationInfo), arm_acc_type)
+val read_request : forall 'n, 'n > 0. (AccessDescriptor, int('n), FullAddress) -> Mem_read_request('n, 0, 56, PASpace, AccessDescriptor)
 
-function read_request(accdesc, ti, size, va, pa) = struct {
-  access_kind = AccessDescriptor_to_Access_kind(accdesc),
-  va = Some(va),
-  pa = pa,
-  translation = ti,
+function read_request(accdesc, size, pa) = struct {
+  access_kind = accdesc,
+  address = pa.address,
+  address_space = pa.paspace,
   size = size,
-  tag = false
+  num_tag = 0
 }
 
 instantiation sail_mem_write with
-  'pa = bits(56),
-  'translation_summary = option(TranslationInfo),
-  'arch_ak = arm_acc_type,
+  'addr_size = 56,
+  'addr_space = PASpace,
+  'mem_acc = AccessDescriptor,
   'abort = Fault,
-  pa_bits = pa_bits
+  'CHERI = false,
+  'cap_size_log = 0,
+  mem_acc_is_explicit = mem_acc_is_explicit,
+  mem_acc_is_ifetch = mem_acc_is_ifetch,
+  mem_acc_is_ttw = mem_acc_is_ttw,
+  mem_acc_is_relaxed = mem_acc_is_relaxed,
+  mem_acc_is_rel_acq_rcpc = mem_acc_is_rel_acq_rcpc,
+  mem_acc_is_rel_acq_rcsc = mem_acc_is_rel_acq_rcsc,
+  mem_acc_is_standalone = mem_acc_is_standalone,
+  mem_acc_is_exclusive = mem_acc_is_exclusive,
+  mem_acc_is_atomic_rmw = mem_acc_is_atomic_rmw
 
-val write_request : forall 'n, 'n > 0. (AccessDescriptor, option(TranslationInfo), int('n), bits(64), bits(56), bits(8 * 'n)) -> Mem_write_request('n, 64, bits(56), option(TranslationInfo), arm_acc_type)
+val write_request : forall 'n, 'n > 0. (AccessDescriptor, int('n), FullAddress, bits(8 * 'n)) -> Mem_write_request('n, 0, 56, PASpace, AccessDescriptor)
 
-function write_request(accdesc, ti, size, va, pa, value) = struct {
-  access_kind = AccessDescriptor_to_Access_kind(accdesc),
-  va = Some(va),
-  pa = pa,
-  translation = ti,
+function write_request(accdesc, size, pa, value) = struct {
+  access_kind = accdesc,
+  address = pa.address,
+  address_space = pa.paspace,
   size = size,
-  value = Some(value),
-  tag = None(),
+  value = to_bytes_le(value),
+  num_tag = 0,
+  tags = [],
 }
 
 instantiation sail_translation_start with
@@ -191,9 +158,9 @@ instantiation sail_barrier with
 instantiation sail_return_exception
 
 instantiation sail_take_exception with
-  'fault = option(FaultRecord)
+  'exn = option(FaultRecord)
 
 val return_exception : bits(56) -> unit
 
-function return_exception(x) = sail_return_exception(x)
+function return_exception(x) = sail_return_exception(())
 function take_exception(fault) = sail_take_exception(fault)

@@ -182,16 +182,16 @@ function PhysMemRead (desc, size, accdesc, translation_info) = {
   } else if (paddress[(length(paddress) - 1) .. 16] == ZeroExtend(UART_BASE)) then {
     (CreatePhysMemRetStatus(Fault_None), __ReadUART(paddress[15 .. 0], size))
   } else {
-     match sail_mem_read(read_request(accdesc, translation_info, size, desc.vaddress, desc.paddress.address)) {
-      Ok((value, _)) => (CreatePhysMemRetStatus(Fault_None), value),
+     match sail_mem_read(read_request(accdesc, size, desc.paddress)) {
+      Ok((value, _)) => (CreatePhysMemRetStatus(Fault_None), from_bytes_le(value)),
       Err(statuscode) => (CreatePhysMemRetStatus(statuscode), sail_zeros(8 * size))
     }
   }
 }
 $else
 function PhysMemRead (desc, size, accdesc, translation_info) = {
-  match sail_mem_read(read_request(accdesc, translation_info, size, desc.vaddress, desc.paddress.address)) {
-    Ok((value, _)) => (CreatePhysMemRetStatus(Fault_None), value),
+  match sail_mem_read(read_request(accdesc, size, desc.paddress)) {
+    Ok((value, _)) => (CreatePhysMemRetStatus(Fault_None), from_bytes_le(value)),
     Err(statuscode) => (CreatePhysMemRetStatus(statuscode), sail_zeros(8 * size))
   }
 }
@@ -208,7 +208,7 @@ function PhysMemWrite (desc, size, accdesc, translation_info, data) = {
     CreatePhysMemRetStatus(Fault_None)
   } else {
     if size > 0 then {
-      match sail_mem_write(write_request(accdesc, translation_info, size, desc.vaddress, desc.paddress.address, data)) {
+      match sail_mem_write(write_request(accdesc, size, desc.paddress, data)) {
         Ok(_) => CreatePhysMemRetStatus(Fault_None),
         Err(statuscode) => CreatePhysMemRetStatus(statuscode)
       }
@@ -220,7 +220,7 @@ function PhysMemWrite (desc, size, accdesc, translation_info, data) = {
 $else
 function PhysMemWrite (desc, size, accdesc, translation_info, data) = {
   if size > 0 then {
-    match sail_mem_write(write_request(accdesc, translation_info, size, desc.vaddress, desc.paddress.address, data)) {
+    match sail_mem_write(write_request(accdesc, size, desc.paddress, data)) {
       Ok(_) => CreatePhysMemRetStatus(Fault_None),
       Err(statuscode) => CreatePhysMemRetStatus(statuscode)
     }

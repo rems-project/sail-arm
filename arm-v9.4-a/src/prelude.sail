@@ -40,6 +40,8 @@
 
 default Order dec
 
+$define CONCURRENCY_INTERFACE_V2
+
 $include <smt.sail>
 $include <flow.sail>
 $include <arith.sail>

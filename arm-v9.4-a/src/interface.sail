@@ -110,6 +110,27 @@ function write_request(accdesc, size, pa, value) = struct {
   tags = [],
 }
 
+instantiation sail_mem_address_announce with
+  'addr_size = 56,
+  'addr_space = PASpace,
+  'mem_acc = AccessDescriptor,
+  'abort = Fault,
+  'CHERI = false,
+  'cap_size_log = 0
+
+val address_announce : forall 'n, 'n > 0. (AccessDescriptor, int('n), FullAddress) -> unit
+
+function address_announce(accdesc, size, pa) = {
+  let announcement : Mem_address_announce('n, 0, 56, PASpace, AccessDescriptor) = struct {
+    access_kind = accdesc,
+    address = pa.address,
+    address_space = pa.paspace,
+    size = size,
+    num_tag = 0
+  };
+  sail_mem_address_announce(announcement)
+}
+
 instantiation sail_translation_start with
   'trans_start = TranslationStartInfo
 

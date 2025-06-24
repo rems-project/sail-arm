@@ -2696,6 +2696,8 @@ val start_translation : TranslationStartInfo -> unit
 
 val end_translation : AddressDescriptor -> unit
 
+val address_announce : forall 'n, 'n > 0. (AccessDescriptor, int('n), FullAddress) -> unit
+
 let FINAL_LEVEL : int(3) = 3
 
 register RC : vector(5, bits(64))
@@ -28090,7 +28092,24 @@ function AArch64_MemSingle_set (address, size, accdesc, aligned, value_name) = {
     return()
 }
 
-function AArch64_MemSingle_set__1 (address, size, accdesc_in, aligned, ispair, value_name) = {
+function AArch64_MemSingle_set__1 (address, size, accdesc_in, aligned, ispair, value_name) =
+  assert(false, "Unsupported non-register AArch64_MemSingle_set")
+
+val AArch64_MemSingle_set_reg : forall ('aligned : Bool) 'size,
+  'size in {1, 2, 4, 8, 16}.
+  (bits(64), int('size), AccessDescriptor, bool('aligned), range(0,31)) -> unit
+
+val AArch64_MemSingle_set_reg__1 : forall ('aligned : Bool) ('ispair : Bool) 'size,
+  'size in {1, 2, 4, 8, 16}.
+  (bits(64), int('size), AccessDescriptor, bool('aligned), bool('ispair), range(0,31)) -> unit
+
+function AArch64_MemSingle_set_reg (address, size, accdesc, aligned, value_name) = {
+    let ispair : bool = false;
+    AArch64_MemSingle_set_reg__1(address, size, accdesc, aligned, ispair) = value_name;
+    return()
+}
+
+function AArch64_MemSingle_set_reg__1 (address, size, accdesc_in, aligned, ispair, value_name_reg) = {
     assert(size == 1 | size == 2 | size == 4 | size == 8 | size == 16);
     accdesc : AccessDescriptor = accdesc_in;
     if HaveLSE2Ext() then {
@@ -28105,6 +28124,9 @@ function AArch64_MemSingle_set__1 (address, size, accdesc_in, aligned, ispair, v
     if IsFault(memaddrdesc) then {
         AArch64_Abort(address, memaddrdesc.fault)
     };
+    address_announce(accdesc, size, memaddrdesc.paddress);
+    assert(size <= 8); // Can't do more than a register here
+    let value_name = X_read(value_name_reg, size * 8);
     if memaddrdesc.memattrs.shareability != Shareability_NSH then {
         ClearExclusiveByAddress(memaddrdesc.paddress, ProcessorID(), size)
     };
@@ -28280,73 +28302,54 @@ function Mem_set__1 (address, size, accdesc, ispair, value_in_name) = {
     Mem_set__2(address, size, accdesc, ispair, highestAddressfirst) = value_in_name
 }
 
-function Mem_set__2 (address, size, accdesc, ispair, highestAddressfirst, value_in_name) = {
+function Mem_set__2 (address, size, accdesc, ispair, highestAddressfirst, value_in_name) =
+  assert(false, "Unsupported general memory write")
+
+val Mem_set_reg : forall 'size, 'size * 8 >= 0.
+  (bits(64), int('size), AccessDescriptor, range(0,31)) -> unit
+
+val Mem_set_reg__1 : forall ('ispair : Bool) 'size, 'size * 8 >= 0.
+  (bits(64), int('size), AccessDescriptor, bool('ispair), range(0,31)) -> unit
+
+val Mem_set_reg__2 : forall ('highestAddressfirst : Bool) ('ispair : Bool) 'size,
+  'size * 8 >= 0.
+  (bits(64), int('size), AccessDescriptor, bool('ispair), bool('highestAddressfirst), range(0,31)) -> unit
+
+function Mem_set_reg (address, size, accdesc, value_in_name) = {
+    let ispair : bool = false;
+    let highestAddressfirst : bool = false;
+    Mem_set_reg__2(address, size, accdesc, ispair, highestAddressfirst) = value_in_name
+}
+
+function Mem_set_reg__1 (address, size, accdesc, ispair, value_in_name) = {
+    let highestAddressfirst : bool = false;
+    Mem_set_reg__2(address, size, accdesc, ispair, highestAddressfirst) = value_in_name
+}
+
+function Mem_set_reg__2 (address, size, accdesc, ispair, highestAddressfirst, value_in_name) = {
     c : Constraint = undefined;
     joinedpair : bool = undefined;
     let 'halfsize = DIV(size, 2);
-    value_name : bits('size * 8) = value_in_name;
     let 'alignment = if ispair then halfsize else size;
     aligned : bool = IsAligned__1(address, alignment);
     if not_bool(aligned) & AArch64_UnalignedAccessFaults(accdesc, address, size) then {
         AArch64_Abort(address, AlignmentFault(accdesc))
     };
     if BigEndian(accdesc.acctype) then {
-        assert(constraint(('size * 8 == 8 | 'size * 8 == 16 | 'size * 8 == 32 | 'size * 8 == 64 | 'size * 8 == 128)));
-        value_name = BigEndianReverse(value_name)
+        assert(false, "Big endian Mem_set_reg not supported")
     };
     if (accdesc.acctype == AccessType_ASIMD & size == 16) & IsAligned__1(address, 8) then {
-        assert(halfsize > 0);
-        highhalf : bits('halfsize * 8) = undefined;
-        lowhalf : bits('halfsize * 8) = undefined;
-        (highhalf @ lowhalf) = value_name;
-        AArch64_MemSingle_set__1(address, halfsize, accdesc, aligned, ispair) = lowhalf;
-        AArch64_MemSingle_set__1(address + halfsize, halfsize, accdesc, aligned, ispair) = highhalf
+        assert(false, "ASIMD Mem_set_reg not supported")
     } else if HaveLSE2Ext() & AllInAlignedQuantity(address, size, 16) then {
         assert(constraint('size in {1, 2, 4, 8, 16}));
-        AArch64_MemSingle_set__1(address, size, accdesc, aligned, ispair) = value_name
+        AArch64_MemSingle_set_reg__1(address, size, accdesc, aligned, ispair) = value_in_name
     } else if ispair & aligned then {
-        let joinedpair : bool = false;
-        assert(halfsize > 0);
-        highhalf : bits('halfsize * 8) = undefined;
-        lowhalf : bits('halfsize * 8) = undefined;
-        assert(constraint('size * 8 == 'halfsize * 8 + 'halfsize * 8));
-        (highhalf @ lowhalf) = value_name;
-        if HaveLRCPC3Ext() & highestAddressfirst then {
-            assert(constraint('halfsize in {1, 2, 4, 8, 16}));
-            AArch64_MemSingle_set__1(address + halfsize, halfsize, accdesc, aligned, joinedpair) = highhalf;
-            AArch64_MemSingle_set__1(address, halfsize, accdesc, aligned, joinedpair) = lowhalf
-        } else {
-            assert(constraint('halfsize in {1, 2, 4, 8, 16}));
-            AArch64_MemSingle_set__1(address, halfsize, accdesc, aligned, joinedpair) = lowhalf;
-            AArch64_MemSingle_set__1(address + halfsize, halfsize, accdesc, aligned, joinedpair) = highhalf
-        }
+        assert(false, "Pair Mem_set_reg not supported")
     } else if aligned then {
         assert(constraint('size in {1, 2, 4, 8, 16}));
-        AArch64_MemSingle_set__1(address, size, accdesc, aligned, ispair) = value_name
+        AArch64_MemSingle_set_reg__1(address, size, accdesc, aligned, ispair) = value_in_name
     } else {
-        assert(size > 1);
-        highhalf : bits('halfsize * 8) = undefined;
-        lowhalf : bits('halfsize * 8) = undefined;
-        if (HaveLRCPC3Ext() & ispair) & highestAddressfirst then {
-            assert(constraint('size * 8 == 'halfsize * 8 + 'halfsize * 8));
-            (highhalf @ lowhalf) = value_name;
-            foreach (i from 0 to (halfsize - 1) by 1 in inc) {
-                AArch64_MemSingle_set(address + halfsize + i, 1, accdesc, aligned) = highhalf[8 * i + 7 .. 8 * i]
-            };
-            foreach (i from 0 to (halfsize - 1) by 1 in inc) {
-                AArch64_MemSingle_set(address + i, 1, accdesc, aligned) = lowhalf[8 * i + 7 .. 8 * i]
-            }
-        } else {
-            AArch64_MemSingle_set(address, 1, accdesc, aligned) = value_name[7 .. 0];
-            let c : Constraint = ConstrainUnpredictable(Unpredictable_DEVPAGE2);
-            assert(c == Constraint_FAULT | c == Constraint_NONE);
-            if c == Constraint_NONE then {
-                aligned = true
-            };
-            foreach (i from 1 to (size - 1) by 1 in inc) {
-                AArch64_MemSingle_set(address + i, 1, accdesc, aligned) = value_name[8 * i + 7 .. 8 * i]
-            }
-        }
+        assert(false, "Split Mem_set_reg not supported")
     };
     return()
 }

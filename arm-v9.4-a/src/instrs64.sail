@@ -27527,15 +27527,15 @@ function execute_aarch64_instrs_memory_single_general_immediate_signed_offset_ld
     };
     match memop {
       MemOp_STORE => {
-          if rt_unknown then {
-              data = __UNKNOWN_bits(datasize)
-          } else {
-              data = X_read(t, datasize)
-          };
           if not_bool(wback) then {
               AArch64_SetLSInstructionSyndrome(DIV(datasize, 8), false, t, regsize == 64, false)
           };
-          Mem_set(address, DIV(datasize, 8), accdesc) = data
+          if rt_unknown then {
+              data = __UNKNOWN_bits(datasize);
+              Mem_set(address, DIV(datasize, 8), accdesc) = data
+          } else {
+              Mem_set_reg(address, DIV(datasize, 8), accdesc) = t
+          };
       },
       MemOp_LOAD => {
           if not_bool(wback) then {
@@ -28467,13 +28467,13 @@ function execute_aarch64_instrs_memory_ordered (datasize, limitedordered, memop,
     match memop {
       MemOp_STORE => {
           let address : bits(64) = address + offset;
-          if rt_unknown then {
-              data = __UNKNOWN_bits(datasize)
-          } else {
-              data = X_read(t, datasize)
-          };
           AArch64_SetLSInstructionSyndrome(dbytes, false, t, regsize == 64, true);
-          Mem_set(address, dbytes, accdesc) = data;
+          if rt_unknown then {
+              data = __UNKNOWN_bits(datasize);
+              Mem_set(address, dbytes, accdesc) = data;
+          } else {
+              Mem_set_reg(address, dbytes, accdesc) = t;
+          };
           if wback then {
               if n == 31 then {
                   SP_set() = address
@@ -32869,7 +32869,12 @@ function execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx 
           if not_bool(wback) then {
               AArch64_SetLSInstructionSyndrome(DIV(datasize, 8), false, t, regsize == 64, false)
           };
-          Mem_set(address, DIV(datasize, 8), accdesc) = data
+          if rt_unknown then {
+              data = __UNKNOWN_bits(datasize);
+              Mem_set(address, DIV(datasize, 8), accdesc) = data
+          } else {
+              Mem_set_reg(address, DIV(datasize, 8), accdesc) = t
+          };
       },
       MemOp_LOAD => {
           if not_bool(wback) then {
@@ -35251,15 +35256,15 @@ function execute_aarch64_instrs_memory_single_general_register (datasize, extend
     };
     match memop {
       MemOp_STORE => {
-          if rt_unknown then {
-              data = __UNKNOWN_bits(datasize)
-          } else {
-              data = X_read(t, datasize)
-          };
           if not_bool(wback) then {
               AArch64_SetLSInstructionSyndrome(DIV(datasize, 8), false, t, regsize == 64, false)
           };
-          Mem_set(address, DIV(datasize, 8), accdesc) = data
+          if rt_unknown then {
+              data = __UNKNOWN_bits(datasize);
+              Mem_set(address, DIV(datasize, 8), accdesc) = data
+          } else {
+              Mem_set_reg(address, DIV(datasize, 8), accdesc) = t
+          };
       },
       MemOp_LOAD => {
           if not_bool(wback) then {
@@ -36587,15 +36592,15 @@ function execute_aarch64_instrs_memory_single_general_immediate_signed_offset_un
     };
     match memop {
       MemOp_STORE => {
-          if rt_unknown then {
-              data = __UNKNOWN_bits(datasize)
-          } else {
-              data = X_read(t, datasize)
-          };
           if not_bool(wback) then {
               AArch64_SetLSInstructionSyndrome(DIV(datasize, 8), false, t, regsize == 64, false)
           };
-          Mem_set(address, DIV(datasize, 8), accdesc) = data
+          if rt_unknown then {
+              data = __UNKNOWN_bits(datasize);
+              Mem_set(address, DIV(datasize, 8), accdesc) = data
+          } else {
+              Mem_set_reg(address, DIV(datasize, 8), accdesc) = t
+          };
       },
       MemOp_LOAD => {
           if not_bool(wback) then {
@@ -37535,15 +37540,15 @@ function execute_aarch64_instrs_memory_single_general_immediate_signed_offset_no
     };
     match memop {
       MemOp_STORE => {
-          if rt_unknown then {
-              data = __UNKNOWN_bits(datasize)
-          } else {
-              data = X_read(t, datasize)
-          };
           if not_bool(wback) then {
               AArch64_SetLSInstructionSyndrome(DIV(datasize, 8), false, t, regsize == 64, false)
           };
-          Mem_set(address, DIV(datasize, 8), accdesc) = data
+          if rt_unknown then {
+              data = __UNKNOWN_bits(datasize);
+              Mem_set(address, DIV(datasize, 8), accdesc) = data
+          } else {
+              Mem_set_reg(address, DIV(datasize, 8), accdesc) = t
+          };
       },
       MemOp_LOAD => {
           if not_bool(wback) then {
@@ -39827,15 +39832,15 @@ function execute_aarch64_instrs_memory_single_general_immediate_unsigned (datasi
     };
     match memop {
       MemOp_STORE => {
-          if rt_unknown then {
-              data = __UNKNOWN_bits(datasize)
-          } else {
-              data = X_read(t, datasize)
-          };
           if not_bool(wback) then {
               AArch64_SetLSInstructionSyndrome(DIV(datasize, 8), false, t, regsize == 64, false)
           };
-          Mem_set(address, DIV(datasize, 8), accdesc) = data
+          if rt_unknown then {
+              data = __UNKNOWN_bits(datasize);
+              Mem_set(address, DIV(datasize, 8), accdesc) = data
+          } else {
+              Mem_set_reg(address, DIV(datasize, 8), accdesc) = t
+          };
       },
       MemOp_LOAD => {
           if not_bool(wback) then {

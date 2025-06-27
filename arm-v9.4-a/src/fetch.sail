@@ -341,7 +341,6 @@ function __InstructionExecute () = {
 }
 
 function __TopLevel () = {
-    BranchTaken : BranchType = undefined;
     interrupt_taken : bool = undefined;
     if Halted() then {
         return()
@@ -358,7 +357,7 @@ function __TopLevel () = {
         if not_bool(interrupt_taken) then {
             if Branchtypetaken == BranchType_RESET then {
                 CheckResetCatch();
-                BranchTaken = BranchType_UNKNOWN
+                Branchtypetaken = BranchType_UNKNOWN
             };
             __InstructionExecute()
         };

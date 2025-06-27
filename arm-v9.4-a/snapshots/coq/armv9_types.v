@@ -5,9 +5,9 @@ From stdpp Require Import base countable.
 Require Eqdep.
 Require Import SailStdpp.Base.
 Require Import SailStdpp.Real.
-Require Import SailStdpp.ConcurrencyInterfaceTypes.
-Require Import SailStdpp.ConcurrencyInterface.
-Require Import SailStdpp.ConcurrencyInterfaceBuiltins.
+Require Import SailStdpp.ConcurrencyInterfaceTypesV2.
+Require Import SailStdpp.ConcurrencyInterfaceV2.
+Require Import SailStdpp.ConcurrencyInterfaceBuiltinsV2.
 
 Import ListNotations.
 Open Scope string.
@@ -20,8 +20,8 @@ Inductive signal := LOW | HIGH.
 Definition num_of_signal (arg_ : signal) : Z := match arg_ with | LOW => 0 | HIGH => 1 end.
 
 Definition signal_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 1)*) : signal :=
-   let l__10537 := arg_ in
-   if Z.eqb (l__10537) (0) then LOW
+   let l__1511 := arg_ in
+   if Z.eqb (l__1511) (0) then LOW
    else HIGH.
 
 Lemma signal_num_of_roundtrip (x : signal) : signal_of_num (num_of_signal x) = x.
@@ -654,264 +654,264 @@ Definition num_of_Feature (arg_ : Feature) : Z :=
    end.
 
 Definition Feature_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 257)*) : Feature :=
-   let l__10280 := arg_ in
-   if Z.eqb (l__10280) (0) then FEAT_AA32EL0
-   else if Z.eqb (l__10280) (1) then FEAT_AA32EL1
-   else if Z.eqb (l__10280) (2) then FEAT_AA32EL2
-   else if Z.eqb (l__10280) (3) then FEAT_AA32EL3
-   else if Z.eqb (l__10280) (4) then FEAT_AA64EL0
-   else if Z.eqb (l__10280) (5) then FEAT_AA64EL1
-   else if Z.eqb (l__10280) (6) then FEAT_AA64EL2
-   else if Z.eqb (l__10280) (7) then FEAT_AA64EL3
-   else if Z.eqb (l__10280) (8) then FEAT_EL0
-   else if Z.eqb (l__10280) (9) then FEAT_EL1
-   else if Z.eqb (l__10280) (10) then FEAT_EL2
-   else if Z.eqb (l__10280) (11) then FEAT_EL3
-   else if Z.eqb (l__10280) (12) then FEAT_AES
-   else if Z.eqb (l__10280) (13) then FEAT_AdvSIMD
-   else if Z.eqb (l__10280) (14) then FEAT_CSV2_1p1
-   else if Z.eqb (l__10280) (15) then FEAT_CSV2_1p2
-   else if Z.eqb (l__10280) (16) then FEAT_CSV2_2
-   else if Z.eqb (l__10280) (17) then FEAT_CSV2_3
-   else if Z.eqb (l__10280) (18) then FEAT_DoubleLock
-   else if Z.eqb (l__10280) (19) then FEAT_ETMv4
-   else if Z.eqb (l__10280) (20) then FEAT_ETMv4p1
-   else if Z.eqb (l__10280) (21) then FEAT_ETMv4p2
-   else if Z.eqb (l__10280) (22) then FEAT_ETMv4p3
-   else if Z.eqb (l__10280) (23) then FEAT_ETMv4p4
-   else if Z.eqb (l__10280) (24) then FEAT_ETMv4p5
-   else if Z.eqb (l__10280) (25) then FEAT_ETMv4p6
-   else if Z.eqb (l__10280) (26) then FEAT_ETS2
-   else if Z.eqb (l__10280) (27) then FEAT_FP
-   else if Z.eqb (l__10280) (28) then FEAT_GICv3
-   else if Z.eqb (l__10280) (29) then FEAT_GICv3_LEGACY
-   else if Z.eqb (l__10280) (30) then FEAT_GICv3_TDIR
-   else if Z.eqb (l__10280) (31) then FEAT_GICv3p1
-   else if Z.eqb (l__10280) (32) then FEAT_GICv4
-   else if Z.eqb (l__10280) (33) then FEAT_GICv4p1
-   else if Z.eqb (l__10280) (34) then FEAT_IVIPT
-   else if Z.eqb (l__10280) (35) then FEAT_PCSRv8
-   else if Z.eqb (l__10280) (36) then FEAT_PMULL
-   else if Z.eqb (l__10280) (37) then FEAT_PMUv3
-   else if Z.eqb (l__10280) (38) then FEAT_PMUv3_EXT
-   else if Z.eqb (l__10280) (39) then FEAT_PMUv3_EXT32
-   else if Z.eqb (l__10280) (40) then FEAT_SHA1
-   else if Z.eqb (l__10280) (41) then FEAT_SHA256
-   else if Z.eqb (l__10280) (42) then FEAT_TRC_EXT
-   else if Z.eqb (l__10280) (43) then FEAT_TRC_SR
-   else if Z.eqb (l__10280) (44) then FEAT_nTLBPA
-   else if Z.eqb (l__10280) (45) then FEAT_CRC32
-   else if Z.eqb (l__10280) (46) then FEAT_Debugv8p1
-   else if Z.eqb (l__10280) (47) then FEAT_HAFDBS
-   else if Z.eqb (l__10280) (48) then FEAT_HPDS
-   else if Z.eqb (l__10280) (49) then FEAT_LOR
-   else if Z.eqb (l__10280) (50) then FEAT_LSE
-   else if Z.eqb (l__10280) (51) then FEAT_PAN
-   else if Z.eqb (l__10280) (52) then FEAT_PMUv3p1
-   else if Z.eqb (l__10280) (53) then FEAT_RDM
-   else if Z.eqb (l__10280) (54) then FEAT_VHE
-   else if Z.eqb (l__10280) (55) then FEAT_VMID16
-   else if Z.eqb (l__10280) (56) then FEAT_AA32BF16
-   else if Z.eqb (l__10280) (57) then FEAT_AA32HPD
-   else if Z.eqb (l__10280) (58) then FEAT_AA32I8MM
-   else if Z.eqb (l__10280) (59) then FEAT_ASMv8p2
-   else if Z.eqb (l__10280) (60) then FEAT_DPB
-   else if Z.eqb (l__10280) (61) then FEAT_Debugv8p2
-   else if Z.eqb (l__10280) (62) then FEAT_EDHSR
-   else if Z.eqb (l__10280) (63) then FEAT_F32MM
-   else if Z.eqb (l__10280) (64) then FEAT_F64MM
-   else if Z.eqb (l__10280) (65) then FEAT_FP16
-   else if Z.eqb (l__10280) (66) then FEAT_HPDS2
-   else if Z.eqb (l__10280) (67) then FEAT_I8MM
-   else if Z.eqb (l__10280) (68) then FEAT_IESB
-   else if Z.eqb (l__10280) (69) then FEAT_LPA
-   else if Z.eqb (l__10280) (70) then FEAT_LSMAOC
-   else if Z.eqb (l__10280) (71) then FEAT_LVA
-   else if Z.eqb (l__10280) (72) then FEAT_MPAM
-   else if Z.eqb (l__10280) (73) then FEAT_PAN2
-   else if Z.eqb (l__10280) (74) then FEAT_PCSRv8p2
-   else if Z.eqb (l__10280) (75) then FEAT_RAS
-   else if Z.eqb (l__10280) (76) then FEAT_SHA3
-   else if Z.eqb (l__10280) (77) then FEAT_SHA512
-   else if Z.eqb (l__10280) (78) then FEAT_SM3
-   else if Z.eqb (l__10280) (79) then FEAT_SM4
-   else if Z.eqb (l__10280) (80) then FEAT_SPE
-   else if Z.eqb (l__10280) (81) then FEAT_SVE
-   else if Z.eqb (l__10280) (82) then FEAT_TTCNP
-   else if Z.eqb (l__10280) (83) then FEAT_UAO
-   else if Z.eqb (l__10280) (84) then FEAT_VPIPT
-   else if Z.eqb (l__10280) (85) then FEAT_XNX
-   else if Z.eqb (l__10280) (86) then FEAT_CCIDX
-   else if Z.eqb (l__10280) (87) then FEAT_CONSTPACFIELD
-   else if Z.eqb (l__10280) (88) then FEAT_EPAC
-   else if Z.eqb (l__10280) (89) then FEAT_FCMA
-   else if Z.eqb (l__10280) (90) then FEAT_FPAC
-   else if Z.eqb (l__10280) (91) then FEAT_FPACCOMBINE
-   else if Z.eqb (l__10280) (92) then FEAT_JSCVT
-   else if Z.eqb (l__10280) (93) then FEAT_LRCPC
-   else if Z.eqb (l__10280) (94) then FEAT_NV
-   else if Z.eqb (l__10280) (95) then FEAT_PACIMP
-   else if Z.eqb (l__10280) (96) then FEAT_PACQARMA3
-   else if Z.eqb (l__10280) (97) then FEAT_PACQARMA5
-   else if Z.eqb (l__10280) (98) then FEAT_PAuth
-   else if Z.eqb (l__10280) (99) then FEAT_SPEv1p1
-   else if Z.eqb (l__10280) (100) then FEAT_AMUv1
-   else if Z.eqb (l__10280) (101) then FEAT_BBM
-   else if Z.eqb (l__10280) (102) then FEAT_CNTSC
-   else if Z.eqb (l__10280) (103) then FEAT_DIT
-   else if Z.eqb (l__10280) (104) then FEAT_Debugv8p4
-   else if Z.eqb (l__10280) (105) then FEAT_DotProd
-   else if Z.eqb (l__10280) (106) then FEAT_DoubleFault
-   else if Z.eqb (l__10280) (107) then FEAT_FHM
-   else if Z.eqb (l__10280) (108) then FEAT_FlagM
-   else if Z.eqb (l__10280) (109) then FEAT_IDST
-   else if Z.eqb (l__10280) (110) then FEAT_LRCPC2
-   else if Z.eqb (l__10280) (111) then FEAT_LSE2
-   else if Z.eqb (l__10280) (112) then FEAT_NV2
-   else if Z.eqb (l__10280) (113) then FEAT_PMUv3p4
-   else if Z.eqb (l__10280) (114) then FEAT_RASSAv1p1
-   else if Z.eqb (l__10280) (115) then FEAT_RASv1p1
-   else if Z.eqb (l__10280) (116) then FEAT_S2FWB
-   else if Z.eqb (l__10280) (117) then FEAT_SEL2
-   else if Z.eqb (l__10280) (118) then FEAT_TLBIOS
-   else if Z.eqb (l__10280) (119) then FEAT_TLBIRANGE
-   else if Z.eqb (l__10280) (120) then FEAT_TRF
-   else if Z.eqb (l__10280) (121) then FEAT_TTL
-   else if Z.eqb (l__10280) (122) then FEAT_TTST
-   else if Z.eqb (l__10280) (123) then FEAT_BTI
-   else if Z.eqb (l__10280) (124) then FEAT_CSV2
-   else if Z.eqb (l__10280) (125) then FEAT_CSV3
-   else if Z.eqb (l__10280) (126) then FEAT_DPB2
-   else if Z.eqb (l__10280) (127) then FEAT_E0PD
-   else if Z.eqb (l__10280) (128) then FEAT_EVT
-   else if Z.eqb (l__10280) (129) then FEAT_ExS
-   else if Z.eqb (l__10280) (130) then FEAT_FRINTTS
-   else if Z.eqb (l__10280) (131) then FEAT_FlagM2
-   else if Z.eqb (l__10280) (132) then FEAT_GTG
-   else if Z.eqb (l__10280) (133) then FEAT_MTE
-   else if Z.eqb (l__10280) (134) then FEAT_MTE2
-   else if Z.eqb (l__10280) (135) then FEAT_PMUv3p5
-   else if Z.eqb (l__10280) (136) then FEAT_RNG
-   else if Z.eqb (l__10280) (137) then FEAT_RNG_TRAP
-   else if Z.eqb (l__10280) (138) then FEAT_SB
-   else if Z.eqb (l__10280) (139) then FEAT_SPECRES
-   else if Z.eqb (l__10280) (140) then FEAT_SSBS
-   else if Z.eqb (l__10280) (141) then FEAT_SSBS2
-   else if Z.eqb (l__10280) (142) then FEAT_AMUv1p1
-   else if Z.eqb (l__10280) (143) then FEAT_BF16
-   else if Z.eqb (l__10280) (144) then FEAT_DGH
-   else if Z.eqb (l__10280) (145) then FEAT_ECV
-   else if Z.eqb (l__10280) (146) then FEAT_FGT
-   else if Z.eqb (l__10280) (147) then FEAT_HPMN0
-   else if Z.eqb (l__10280) (148) then FEAT_MPAMv0p1
-   else if Z.eqb (l__10280) (149) then FEAT_MPAMv1p1
-   else if Z.eqb (l__10280) (150) then FEAT_MTPMU
-   else if Z.eqb (l__10280) (151) then FEAT_PAuth2
-   else if Z.eqb (l__10280) (152) then FEAT_TWED
-   else if Z.eqb (l__10280) (153) then FEAT_AFP
-   else if Z.eqb (l__10280) (154) then FEAT_EBF16
-   else if Z.eqb (l__10280) (155) then FEAT_HCX
-   else if Z.eqb (l__10280) (156) then FEAT_LPA2
-   else if Z.eqb (l__10280) (157) then FEAT_LS64
-   else if Z.eqb (l__10280) (158) then FEAT_LS64_ACCDATA
-   else if Z.eqb (l__10280) (159) then FEAT_LS64_V
-   else if Z.eqb (l__10280) (160) then FEAT_MTE3
-   else if Z.eqb (l__10280) (161) then FEAT_PAN3
-   else if Z.eqb (l__10280) (162) then FEAT_PMUv3p7
-   else if Z.eqb (l__10280) (163) then FEAT_RPRES
-   else if Z.eqb (l__10280) (164) then FEAT_SPEv1p2
-   else if Z.eqb (l__10280) (165) then FEAT_WFxT
-   else if Z.eqb (l__10280) (166) then FEAT_XS
-   else if Z.eqb (l__10280) (167) then FEAT_CMOW
-   else if Z.eqb (l__10280) (168) then FEAT_Debugv8p8
-   else if Z.eqb (l__10280) (169) then FEAT_GICv3_NMI
-   else if Z.eqb (l__10280) (170) then FEAT_HBC
-   else if Z.eqb (l__10280) (171) then FEAT_MOPS
-   else if Z.eqb (l__10280) (172) then FEAT_NMI
-   else if Z.eqb (l__10280) (173) then FEAT_PMUv3_EXT64
-   else if Z.eqb (l__10280) (174) then FEAT_PMUv3_TH
-   else if Z.eqb (l__10280) (175) then FEAT_PMUv3p8
-   else if Z.eqb (l__10280) (176) then FEAT_SCTLR2
-   else if Z.eqb (l__10280) (177) then FEAT_SPEv1p3
-   else if Z.eqb (l__10280) (178) then FEAT_TCR2
-   else if Z.eqb (l__10280) (179) then FEAT_TIDCP1
-   else if Z.eqb (l__10280) (180) then FEAT_ADERR
-   else if Z.eqb (l__10280) (181) then FEAT_AIE
-   else if Z.eqb (l__10280) (182) then FEAT_ANERR
-   else if Z.eqb (l__10280) (183) then FEAT_CLRBHB
-   else if Z.eqb (l__10280) (184) then FEAT_CSSC
-   else if Z.eqb (l__10280) (185) then FEAT_Debugv8p9
-   else if Z.eqb (l__10280) (186) then FEAT_DoubleFault2
-   else if Z.eqb (l__10280) (187) then FEAT_ECBHB
-   else if Z.eqb (l__10280) (188) then FEAT_FGT2
-   else if Z.eqb (l__10280) (189) then FEAT_HAFT
-   else if Z.eqb (l__10280) (190) then FEAT_LRCPC3
-   else if Z.eqb (l__10280) (191) then FEAT_MTE4
-   else if Z.eqb (l__10280) (192) then FEAT_MTE_ASYM_FAULT
-   else if Z.eqb (l__10280) (193) then FEAT_MTE_ASYNC
-   else if Z.eqb (l__10280) (194) then FEAT_MTE_CANONICAL_TAGS
-   else if Z.eqb (l__10280) (195) then FEAT_MTE_NO_ADDRESS_TAGS
-   else if Z.eqb (l__10280) (196) then FEAT_MTE_PERM
-   else if Z.eqb (l__10280) (197) then FEAT_MTE_STORE_ONLY
-   else if Z.eqb (l__10280) (198) then FEAT_MTE_TAGGED_FAR
-   else if Z.eqb (l__10280) (199) then FEAT_PCSRv8p9
-   else if Z.eqb (l__10280) (200) then FEAT_PFAR
-   else if Z.eqb (l__10280) (201) then FEAT_PMUv3_EDGE
-   else if Z.eqb (l__10280) (202) then FEAT_PMUv3_ICNTR
-   else if Z.eqb (l__10280) (203) then FEAT_PMUv3_SS
-   else if Z.eqb (l__10280) (204) then FEAT_PMUv3p9
-   else if Z.eqb (l__10280) (205) then FEAT_PRFMSLC
-   else if Z.eqb (l__10280) (206) then FEAT_RASSAv2
-   else if Z.eqb (l__10280) (207) then FEAT_RASv2
-   else if Z.eqb (l__10280) (208) then FEAT_RPRFM
-   else if Z.eqb (l__10280) (209) then FEAT_S1PIE
-   else if Z.eqb (l__10280) (210) then FEAT_S1POE
-   else if Z.eqb (l__10280) (211) then FEAT_S2PIE
-   else if Z.eqb (l__10280) (212) then FEAT_S2POE
-   else if Z.eqb (l__10280) (213) then FEAT_SPECRES2
-   else if Z.eqb (l__10280) (214) then FEAT_SPE_CRR
-   else if Z.eqb (l__10280) (215) then FEAT_SPE_FDS
-   else if Z.eqb (l__10280) (216) then FEAT_SPEv1p4
-   else if Z.eqb (l__10280) (217) then FEAT_SPMU
-   else if Z.eqb (l__10280) (218) then FEAT_THE
-   else if Z.eqb (l__10280) (219) then FEAT_DoPD
-   else if Z.eqb (l__10280) (220) then FEAT_ETE
-   else if Z.eqb (l__10280) (221) then FEAT_SVE2
-   else if Z.eqb (l__10280) (222) then FEAT_SVE_AES
-   else if Z.eqb (l__10280) (223) then FEAT_SVE_BitPerm
-   else if Z.eqb (l__10280) (224) then FEAT_SVE_PMULL128
-   else if Z.eqb (l__10280) (225) then FEAT_SVE_SHA3
-   else if Z.eqb (l__10280) (226) then FEAT_SVE_SM4
-   else if Z.eqb (l__10280) (227) then FEAT_TME
-   else if Z.eqb (l__10280) (228) then FEAT_TRBE
-   else if Z.eqb (l__10280) (229) then FEAT_ETEv1p1
-   else if Z.eqb (l__10280) (230) then FEAT_BRBE
-   else if Z.eqb (l__10280) (231) then FEAT_ETEv1p2
-   else if Z.eqb (l__10280) (232) then FEAT_RME
-   else if Z.eqb (l__10280) (233) then FEAT_SME
-   else if Z.eqb (l__10280) (234) then FEAT_SME_F64F64
-   else if Z.eqb (l__10280) (235) then FEAT_SME_FA64
-   else if Z.eqb (l__10280) (236) then FEAT_SME_I16I64
-   else if Z.eqb (l__10280) (237) then FEAT_BRBEv1p1
-   else if Z.eqb (l__10280) (238) then FEAT_MEC
-   else if Z.eqb (l__10280) (239) then FEAT_SME2
-   else if Z.eqb (l__10280) (240) then FEAT_ABLE
-   else if Z.eqb (l__10280) (241) then FEAT_CHK
-   else if Z.eqb (l__10280) (242) then FEAT_D128
-   else if Z.eqb (l__10280) (243) then FEAT_EBEP
-   else if Z.eqb (l__10280) (244) then FEAT_ETEv1p3
-   else if Z.eqb (l__10280) (245) then FEAT_GCS
-   else if Z.eqb (l__10280) (246) then FEAT_ITE
-   else if Z.eqb (l__10280) (247) then FEAT_LSE128
-   else if Z.eqb (l__10280) (248) then FEAT_LVA3
-   else if Z.eqb (l__10280) (249) then FEAT_SEBEP
-   else if Z.eqb (l__10280) (250) then FEAT_SME2p1
-   else if Z.eqb (l__10280) (251) then FEAT_SME_F16F16
-   else if Z.eqb (l__10280) (252) then FEAT_SVE2p1
-   else if Z.eqb (l__10280) (253) then FEAT_SVE_B16B16
-   else if Z.eqb (l__10280) (254) then FEAT_SYSINSTR128
-   else if Z.eqb (l__10280) (255) then FEAT_SYSREG128
-   else if Z.eqb (l__10280) (256) then FEAT_TRBE_EXT
+   let l__1254 := arg_ in
+   if Z.eqb (l__1254) (0) then FEAT_AA32EL0
+   else if Z.eqb (l__1254) (1) then FEAT_AA32EL1
+   else if Z.eqb (l__1254) (2) then FEAT_AA32EL2
+   else if Z.eqb (l__1254) (3) then FEAT_AA32EL3
+   else if Z.eqb (l__1254) (4) then FEAT_AA64EL0
+   else if Z.eqb (l__1254) (5) then FEAT_AA64EL1
+   else if Z.eqb (l__1254) (6) then FEAT_AA64EL2
+   else if Z.eqb (l__1254) (7) then FEAT_AA64EL3
+   else if Z.eqb (l__1254) (8) then FEAT_EL0
+   else if Z.eqb (l__1254) (9) then FEAT_EL1
+   else if Z.eqb (l__1254) (10) then FEAT_EL2
+   else if Z.eqb (l__1254) (11) then FEAT_EL3
+   else if Z.eqb (l__1254) (12) then FEAT_AES
+   else if Z.eqb (l__1254) (13) then FEAT_AdvSIMD
+   else if Z.eqb (l__1254) (14) then FEAT_CSV2_1p1
+   else if Z.eqb (l__1254) (15) then FEAT_CSV2_1p2
+   else if Z.eqb (l__1254) (16) then FEAT_CSV2_2
+   else if Z.eqb (l__1254) (17) then FEAT_CSV2_3
+   else if Z.eqb (l__1254) (18) then FEAT_DoubleLock
+   else if Z.eqb (l__1254) (19) then FEAT_ETMv4
+   else if Z.eqb (l__1254) (20) then FEAT_ETMv4p1
+   else if Z.eqb (l__1254) (21) then FEAT_ETMv4p2
+   else if Z.eqb (l__1254) (22) then FEAT_ETMv4p3
+   else if Z.eqb (l__1254) (23) then FEAT_ETMv4p4
+   else if Z.eqb (l__1254) (24) then FEAT_ETMv4p5
+   else if Z.eqb (l__1254) (25) then FEAT_ETMv4p6
+   else if Z.eqb (l__1254) (26) then FEAT_ETS2
+   else if Z.eqb (l__1254) (27) then FEAT_FP
+   else if Z.eqb (l__1254) (28) then FEAT_GICv3
+   else if Z.eqb (l__1254) (29) then FEAT_GICv3_LEGACY
+   else if Z.eqb (l__1254) (30) then FEAT_GICv3_TDIR
+   else if Z.eqb (l__1254) (31) then FEAT_GICv3p1
+   else if Z.eqb (l__1254) (32) then FEAT_GICv4
+   else if Z.eqb (l__1254) (33) then FEAT_GICv4p1
+   else if Z.eqb (l__1254) (34) then FEAT_IVIPT
+   else if Z.eqb (l__1254) (35) then FEAT_PCSRv8
+   else if Z.eqb (l__1254) (36) then FEAT_PMULL
+   else if Z.eqb (l__1254) (37) then FEAT_PMUv3
+   else if Z.eqb (l__1254) (38) then FEAT_PMUv3_EXT
+   else if Z.eqb (l__1254) (39) then FEAT_PMUv3_EXT32
+   else if Z.eqb (l__1254) (40) then FEAT_SHA1
+   else if Z.eqb (l__1254) (41) then FEAT_SHA256
+   else if Z.eqb (l__1254) (42) then FEAT_TRC_EXT
+   else if Z.eqb (l__1254) (43) then FEAT_TRC_SR
+   else if Z.eqb (l__1254) (44) then FEAT_nTLBPA
+   else if Z.eqb (l__1254) (45) then FEAT_CRC32
+   else if Z.eqb (l__1254) (46) then FEAT_Debugv8p1
+   else if Z.eqb (l__1254) (47) then FEAT_HAFDBS
+   else if Z.eqb (l__1254) (48) then FEAT_HPDS
+   else if Z.eqb (l__1254) (49) then FEAT_LOR
+   else if Z.eqb (l__1254) (50) then FEAT_LSE
+   else if Z.eqb (l__1254) (51) then FEAT_PAN
+   else if Z.eqb (l__1254) (52) then FEAT_PMUv3p1
+   else if Z.eqb (l__1254) (53) then FEAT_RDM
+   else if Z.eqb (l__1254) (54) then FEAT_VHE
+   else if Z.eqb (l__1254) (55) then FEAT_VMID16
+   else if Z.eqb (l__1254) (56) then FEAT_AA32BF16
+   else if Z.eqb (l__1254) (57) then FEAT_AA32HPD
+   else if Z.eqb (l__1254) (58) then FEAT_AA32I8MM
+   else if Z.eqb (l__1254) (59) then FEAT_ASMv8p2
+   else if Z.eqb (l__1254) (60) then FEAT_DPB
+   else if Z.eqb (l__1254) (61) then FEAT_Debugv8p2
+   else if Z.eqb (l__1254) (62) then FEAT_EDHSR
+   else if Z.eqb (l__1254) (63) then FEAT_F32MM
+   else if Z.eqb (l__1254) (64) then FEAT_F64MM
+   else if Z.eqb (l__1254) (65) then FEAT_FP16
+   else if Z.eqb (l__1254) (66) then FEAT_HPDS2
+   else if Z.eqb (l__1254) (67) then FEAT_I8MM
+   else if Z.eqb (l__1254) (68) then FEAT_IESB
+   else if Z.eqb (l__1254) (69) then FEAT_LPA
+   else if Z.eqb (l__1254) (70) then FEAT_LSMAOC
+   else if Z.eqb (l__1254) (71) then FEAT_LVA
+   else if Z.eqb (l__1254) (72) then FEAT_MPAM
+   else if Z.eqb (l__1254) (73) then FEAT_PAN2
+   else if Z.eqb (l__1254) (74) then FEAT_PCSRv8p2
+   else if Z.eqb (l__1254) (75) then FEAT_RAS
+   else if Z.eqb (l__1254) (76) then FEAT_SHA3
+   else if Z.eqb (l__1254) (77) then FEAT_SHA512
+   else if Z.eqb (l__1254) (78) then FEAT_SM3
+   else if Z.eqb (l__1254) (79) then FEAT_SM4
+   else if Z.eqb (l__1254) (80) then FEAT_SPE
+   else if Z.eqb (l__1254) (81) then FEAT_SVE
+   else if Z.eqb (l__1254) (82) then FEAT_TTCNP
+   else if Z.eqb (l__1254) (83) then FEAT_UAO
+   else if Z.eqb (l__1254) (84) then FEAT_VPIPT
+   else if Z.eqb (l__1254) (85) then FEAT_XNX
+   else if Z.eqb (l__1254) (86) then FEAT_CCIDX
+   else if Z.eqb (l__1254) (87) then FEAT_CONSTPACFIELD
+   else if Z.eqb (l__1254) (88) then FEAT_EPAC
+   else if Z.eqb (l__1254) (89) then FEAT_FCMA
+   else if Z.eqb (l__1254) (90) then FEAT_FPAC
+   else if Z.eqb (l__1254) (91) then FEAT_FPACCOMBINE
+   else if Z.eqb (l__1254) (92) then FEAT_JSCVT
+   else if Z.eqb (l__1254) (93) then FEAT_LRCPC
+   else if Z.eqb (l__1254) (94) then FEAT_NV
+   else if Z.eqb (l__1254) (95) then FEAT_PACIMP
+   else if Z.eqb (l__1254) (96) then FEAT_PACQARMA3
+   else if Z.eqb (l__1254) (97) then FEAT_PACQARMA5
+   else if Z.eqb (l__1254) (98) then FEAT_PAuth
+   else if Z.eqb (l__1254) (99) then FEAT_SPEv1p1
+   else if Z.eqb (l__1254) (100) then FEAT_AMUv1
+   else if Z.eqb (l__1254) (101) then FEAT_BBM
+   else if Z.eqb (l__1254) (102) then FEAT_CNTSC
+   else if Z.eqb (l__1254) (103) then FEAT_DIT
+   else if Z.eqb (l__1254) (104) then FEAT_Debugv8p4
+   else if Z.eqb (l__1254) (105) then FEAT_DotProd
+   else if Z.eqb (l__1254) (106) then FEAT_DoubleFault
+   else if Z.eqb (l__1254) (107) then FEAT_FHM
+   else if Z.eqb (l__1254) (108) then FEAT_FlagM
+   else if Z.eqb (l__1254) (109) then FEAT_IDST
+   else if Z.eqb (l__1254) (110) then FEAT_LRCPC2
+   else if Z.eqb (l__1254) (111) then FEAT_LSE2
+   else if Z.eqb (l__1254) (112) then FEAT_NV2
+   else if Z.eqb (l__1254) (113) then FEAT_PMUv3p4
+   else if Z.eqb (l__1254) (114) then FEAT_RASSAv1p1
+   else if Z.eqb (l__1254) (115) then FEAT_RASv1p1
+   else if Z.eqb (l__1254) (116) then FEAT_S2FWB
+   else if Z.eqb (l__1254) (117) then FEAT_SEL2
+   else if Z.eqb (l__1254) (118) then FEAT_TLBIOS
+   else if Z.eqb (l__1254) (119) then FEAT_TLBIRANGE
+   else if Z.eqb (l__1254) (120) then FEAT_TRF
+   else if Z.eqb (l__1254) (121) then FEAT_TTL
+   else if Z.eqb (l__1254) (122) then FEAT_TTST
+   else if Z.eqb (l__1254) (123) then FEAT_BTI
+   else if Z.eqb (l__1254) (124) then FEAT_CSV2
+   else if Z.eqb (l__1254) (125) then FEAT_CSV3
+   else if Z.eqb (l__1254) (126) then FEAT_DPB2
+   else if Z.eqb (l__1254) (127) then FEAT_E0PD
+   else if Z.eqb (l__1254) (128) then FEAT_EVT
+   else if Z.eqb (l__1254) (129) then FEAT_ExS
+   else if Z.eqb (l__1254) (130) then FEAT_FRINTTS
+   else if Z.eqb (l__1254) (131) then FEAT_FlagM2
+   else if Z.eqb (l__1254) (132) then FEAT_GTG
+   else if Z.eqb (l__1254) (133) then FEAT_MTE
+   else if Z.eqb (l__1254) (134) then FEAT_MTE2
+   else if Z.eqb (l__1254) (135) then FEAT_PMUv3p5
+   else if Z.eqb (l__1254) (136) then FEAT_RNG
+   else if Z.eqb (l__1254) (137) then FEAT_RNG_TRAP
+   else if Z.eqb (l__1254) (138) then FEAT_SB
+   else if Z.eqb (l__1254) (139) then FEAT_SPECRES
+   else if Z.eqb (l__1254) (140) then FEAT_SSBS
+   else if Z.eqb (l__1254) (141) then FEAT_SSBS2
+   else if Z.eqb (l__1254) (142) then FEAT_AMUv1p1
+   else if Z.eqb (l__1254) (143) then FEAT_BF16
+   else if Z.eqb (l__1254) (144) then FEAT_DGH
+   else if Z.eqb (l__1254) (145) then FEAT_ECV
+   else if Z.eqb (l__1254) (146) then FEAT_FGT
+   else if Z.eqb (l__1254) (147) then FEAT_HPMN0
+   else if Z.eqb (l__1254) (148) then FEAT_MPAMv0p1
+   else if Z.eqb (l__1254) (149) then FEAT_MPAMv1p1
+   else if Z.eqb (l__1254) (150) then FEAT_MTPMU
+   else if Z.eqb (l__1254) (151) then FEAT_PAuth2
+   else if Z.eqb (l__1254) (152) then FEAT_TWED
+   else if Z.eqb (l__1254) (153) then FEAT_AFP
+   else if Z.eqb (l__1254) (154) then FEAT_EBF16
+   else if Z.eqb (l__1254) (155) then FEAT_HCX
+   else if Z.eqb (l__1254) (156) then FEAT_LPA2
+   else if Z.eqb (l__1254) (157) then FEAT_LS64
+   else if Z.eqb (l__1254) (158) then FEAT_LS64_ACCDATA
+   else if Z.eqb (l__1254) (159) then FEAT_LS64_V
+   else if Z.eqb (l__1254) (160) then FEAT_MTE3
+   else if Z.eqb (l__1254) (161) then FEAT_PAN3
+   else if Z.eqb (l__1254) (162) then FEAT_PMUv3p7
+   else if Z.eqb (l__1254) (163) then FEAT_RPRES
+   else if Z.eqb (l__1254) (164) then FEAT_SPEv1p2
+   else if Z.eqb (l__1254) (165) then FEAT_WFxT
+   else if Z.eqb (l__1254) (166) then FEAT_XS
+   else if Z.eqb (l__1254) (167) then FEAT_CMOW
+   else if Z.eqb (l__1254) (168) then FEAT_Debugv8p8
+   else if Z.eqb (l__1254) (169) then FEAT_GICv3_NMI
+   else if Z.eqb (l__1254) (170) then FEAT_HBC
+   else if Z.eqb (l__1254) (171) then FEAT_MOPS
+   else if Z.eqb (l__1254) (172) then FEAT_NMI
+   else if Z.eqb (l__1254) (173) then FEAT_PMUv3_EXT64
+   else if Z.eqb (l__1254) (174) then FEAT_PMUv3_TH
+   else if Z.eqb (l__1254) (175) then FEAT_PMUv3p8
+   else if Z.eqb (l__1254) (176) then FEAT_SCTLR2
+   else if Z.eqb (l__1254) (177) then FEAT_SPEv1p3
+   else if Z.eqb (l__1254) (178) then FEAT_TCR2
+   else if Z.eqb (l__1254) (179) then FEAT_TIDCP1
+   else if Z.eqb (l__1254) (180) then FEAT_ADERR
+   else if Z.eqb (l__1254) (181) then FEAT_AIE
+   else if Z.eqb (l__1254) (182) then FEAT_ANERR
+   else if Z.eqb (l__1254) (183) then FEAT_CLRBHB
+   else if Z.eqb (l__1254) (184) then FEAT_CSSC
+   else if Z.eqb (l__1254) (185) then FEAT_Debugv8p9
+   else if Z.eqb (l__1254) (186) then FEAT_DoubleFault2
+   else if Z.eqb (l__1254) (187) then FEAT_ECBHB
+   else if Z.eqb (l__1254) (188) then FEAT_FGT2
+   else if Z.eqb (l__1254) (189) then FEAT_HAFT
+   else if Z.eqb (l__1254) (190) then FEAT_LRCPC3
+   else if Z.eqb (l__1254) (191) then FEAT_MTE4
+   else if Z.eqb (l__1254) (192) then FEAT_MTE_ASYM_FAULT
+   else if Z.eqb (l__1254) (193) then FEAT_MTE_ASYNC
+   else if Z.eqb (l__1254) (194) then FEAT_MTE_CANONICAL_TAGS
+   else if Z.eqb (l__1254) (195) then FEAT_MTE_NO_ADDRESS_TAGS
+   else if Z.eqb (l__1254) (196) then FEAT_MTE_PERM
+   else if Z.eqb (l__1254) (197) then FEAT_MTE_STORE_ONLY
+   else if Z.eqb (l__1254) (198) then FEAT_MTE_TAGGED_FAR
+   else if Z.eqb (l__1254) (199) then FEAT_PCSRv8p9
+   else if Z.eqb (l__1254) (200) then FEAT_PFAR
+   else if Z.eqb (l__1254) (201) then FEAT_PMUv3_EDGE
+   else if Z.eqb (l__1254) (202) then FEAT_PMUv3_ICNTR
+   else if Z.eqb (l__1254) (203) then FEAT_PMUv3_SS
+   else if Z.eqb (l__1254) (204) then FEAT_PMUv3p9
+   else if Z.eqb (l__1254) (205) then FEAT_PRFMSLC
+   else if Z.eqb (l__1254) (206) then FEAT_RASSAv2
+   else if Z.eqb (l__1254) (207) then FEAT_RASv2
+   else if Z.eqb (l__1254) (208) then FEAT_RPRFM
+   else if Z.eqb (l__1254) (209) then FEAT_S1PIE
+   else if Z.eqb (l__1254) (210) then FEAT_S1POE
+   else if Z.eqb (l__1254) (211) then FEAT_S2PIE
+   else if Z.eqb (l__1254) (212) then FEAT_S2POE
+   else if Z.eqb (l__1254) (213) then FEAT_SPECRES2
+   else if Z.eqb (l__1254) (214) then FEAT_SPE_CRR
+   else if Z.eqb (l__1254) (215) then FEAT_SPE_FDS
+   else if Z.eqb (l__1254) (216) then FEAT_SPEv1p4
+   else if Z.eqb (l__1254) (217) then FEAT_SPMU
+   else if Z.eqb (l__1254) (218) then FEAT_THE
+   else if Z.eqb (l__1254) (219) then FEAT_DoPD
+   else if Z.eqb (l__1254) (220) then FEAT_ETE
+   else if Z.eqb (l__1254) (221) then FEAT_SVE2
+   else if Z.eqb (l__1254) (222) then FEAT_SVE_AES
+   else if Z.eqb (l__1254) (223) then FEAT_SVE_BitPerm
+   else if Z.eqb (l__1254) (224) then FEAT_SVE_PMULL128
+   else if Z.eqb (l__1254) (225) then FEAT_SVE_SHA3
+   else if Z.eqb (l__1254) (226) then FEAT_SVE_SM4
+   else if Z.eqb (l__1254) (227) then FEAT_TME
+   else if Z.eqb (l__1254) (228) then FEAT_TRBE
+   else if Z.eqb (l__1254) (229) then FEAT_ETEv1p1
+   else if Z.eqb (l__1254) (230) then FEAT_BRBE
+   else if Z.eqb (l__1254) (231) then FEAT_ETEv1p2
+   else if Z.eqb (l__1254) (232) then FEAT_RME
+   else if Z.eqb (l__1254) (233) then FEAT_SME
+   else if Z.eqb (l__1254) (234) then FEAT_SME_F64F64
+   else if Z.eqb (l__1254) (235) then FEAT_SME_FA64
+   else if Z.eqb (l__1254) (236) then FEAT_SME_I16I64
+   else if Z.eqb (l__1254) (237) then FEAT_BRBEv1p1
+   else if Z.eqb (l__1254) (238) then FEAT_MEC
+   else if Z.eqb (l__1254) (239) then FEAT_SME2
+   else if Z.eqb (l__1254) (240) then FEAT_ABLE
+   else if Z.eqb (l__1254) (241) then FEAT_CHK
+   else if Z.eqb (l__1254) (242) then FEAT_D128
+   else if Z.eqb (l__1254) (243) then FEAT_EBEP
+   else if Z.eqb (l__1254) (244) then FEAT_ETEv1p3
+   else if Z.eqb (l__1254) (245) then FEAT_GCS
+   else if Z.eqb (l__1254) (246) then FEAT_ITE
+   else if Z.eqb (l__1254) (247) then FEAT_LSE128
+   else if Z.eqb (l__1254) (248) then FEAT_LVA3
+   else if Z.eqb (l__1254) (249) then FEAT_SEBEP
+   else if Z.eqb (l__1254) (250) then FEAT_SME2p1
+   else if Z.eqb (l__1254) (251) then FEAT_SME_F16F16
+   else if Z.eqb (l__1254) (252) then FEAT_SVE2p1
+   else if Z.eqb (l__1254) (253) then FEAT_SVE_B16B16
+   else if Z.eqb (l__1254) (254) then FEAT_SYSINSTR128
+   else if Z.eqb (l__1254) (255) then FEAT_SYSREG128
+   else if Z.eqb (l__1254) (256) then FEAT_TRBE_EXT
    else FEAT_TRBE_MPAM.
 
 Lemma Feature_num_of_roundtrip (x : Feature) : Feature_of_num (num_of_Feature x) = x.
@@ -994,21 +994,21 @@ Definition num_of_ArchVersion (arg_ : ArchVersion) : Z :=
    end.
 
 Definition ArchVersion_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 14)*) : ArchVersion :=
-   let l__10266 := arg_ in
-   if Z.eqb (l__10266) (0) then v8Ap0
-   else if Z.eqb (l__10266) (1) then v8Ap1
-   else if Z.eqb (l__10266) (2) then v8Ap2
-   else if Z.eqb (l__10266) (3) then v8Ap3
-   else if Z.eqb (l__10266) (4) then v8Ap4
-   else if Z.eqb (l__10266) (5) then v8Ap5
-   else if Z.eqb (l__10266) (6) then v8Ap6
-   else if Z.eqb (l__10266) (7) then v8Ap7
-   else if Z.eqb (l__10266) (8) then v8Ap8
-   else if Z.eqb (l__10266) (9) then v8Ap9
-   else if Z.eqb (l__10266) (10) then v9Ap0
-   else if Z.eqb (l__10266) (11) then v9Ap1
-   else if Z.eqb (l__10266) (12) then v9Ap2
-   else if Z.eqb (l__10266) (13) then v9Ap3
+   let l__1240 := arg_ in
+   if Z.eqb (l__1240) (0) then v8Ap0
+   else if Z.eqb (l__1240) (1) then v8Ap1
+   else if Z.eqb (l__1240) (2) then v8Ap2
+   else if Z.eqb (l__1240) (3) then v8Ap3
+   else if Z.eqb (l__1240) (4) then v8Ap4
+   else if Z.eqb (l__1240) (5) then v8Ap5
+   else if Z.eqb (l__1240) (6) then v8Ap6
+   else if Z.eqb (l__1240) (7) then v8Ap7
+   else if Z.eqb (l__1240) (8) then v8Ap8
+   else if Z.eqb (l__1240) (9) then v8Ap9
+   else if Z.eqb (l__1240) (10) then v9Ap0
+   else if Z.eqb (l__1240) (11) then v9Ap1
+   else if Z.eqb (l__1240) (12) then v9Ap2
+   else if Z.eqb (l__1240) (13) then v9Ap3
    else v9Ap4.
 
 Lemma ArchVersion_num_of_roundtrip (x : ArchVersion) : ArchVersion_of_num (num_of_ArchVersion x) = x.
@@ -1082,8 +1082,8 @@ Definition num_of_Signal (arg_ : Signal) : Z :=
    match arg_ with | Signal_Low => 0 | Signal_High => 1 end.
 
 Definition Signal_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 1)*) : Signal :=
-   let l__10265 := arg_ in
-   if Z.eqb (l__10265) (0) then Signal_Low
+   let l__1239 := arg_ in
+   if Z.eqb (l__1239) (0) then Signal_Low
    else Signal_High.
 
 Lemma Signal_num_of_roundtrip (x : Signal) : Signal_of_num (num_of_Signal x) = x.
@@ -1135,10 +1135,10 @@ Definition num_of_SecurityState (arg_ : SecurityState) : Z :=
    match arg_ with | SS_NonSecure => 0 | SS_Root => 1 | SS_Realm => 2 | SS_Secure => 3 end.
 
 Definition SecurityState_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : SecurityState :=
-   let l__10262 := arg_ in
-   if Z.eqb (l__10262) (0) then SS_NonSecure
-   else if Z.eqb (l__10262) (1) then SS_Root
-   else if Z.eqb (l__10262) (2) then SS_Realm
+   let l__1236 := arg_ in
+   if Z.eqb (l__1236) (0) then SS_NonSecure
+   else if Z.eqb (l__1236) (1) then SS_Root
+   else if Z.eqb (l__1236) (2) then SS_Realm
    else SS_Secure.
 
 Lemma SecurityState_num_of_roundtrip (x : SecurityState) : SecurityState_of_num (num_of_SecurityState x) = x.
@@ -1442,10 +1442,10 @@ Definition num_of_PrivilegeLevel (arg_ : PrivilegeLevel) : Z :=
    match arg_ with | PL3 => 0 | PL2 => 1 | PL1 => 2 | PL0 => 3 end.
 
 Definition PrivilegeLevel_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : PrivilegeLevel :=
-   let l__10259 := arg_ in
-   if Z.eqb (l__10259) (0) then PL3
-   else if Z.eqb (l__10259) (1) then PL2
-   else if Z.eqb (l__10259) (2) then PL1
+   let l__1233 := arg_ in
+   if Z.eqb (l__1233) (0) then PL3
+   else if Z.eqb (l__1233) (1) then PL2
+   else if Z.eqb (l__1233) (2) then PL1
    else PL0.
 
 Lemma PrivilegeLevel_num_of_roundtrip (x : PrivilegeLevel) : PrivilegeLevel_of_num (num_of_PrivilegeLevel x) = x.
@@ -1497,9 +1497,9 @@ Definition num_of_InstrSet (arg_ : InstrSet) : Z :=
    match arg_ with | InstrSet_A64 => 0 | InstrSet_A32 => 1 | InstrSet_T32 => 2 end.
 
 Definition InstrSet_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : InstrSet :=
-   let l__10257 := arg_ in
-   if Z.eqb (l__10257) (0) then InstrSet_A64
-   else if Z.eqb (l__10257) (1) then InstrSet_A32
+   let l__1231 := arg_ in
+   if Z.eqb (l__1231) (0) then InstrSet_A64
+   else if Z.eqb (l__1231) (1) then InstrSet_A32
    else InstrSet_T32.
 
 Lemma InstrSet_num_of_roundtrip (x : InstrSet) : InstrSet_of_num (num_of_InstrSet x) = x.
@@ -1551,9 +1551,9 @@ Definition num_of_DSBAlias (arg_ : DSBAlias) : Z :=
    match arg_ with | DSBAlias_SSBB => 0 | DSBAlias_PSSBB => 1 | DSBAlias_DSB => 2 end.
 
 Definition DSBAlias_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : DSBAlias :=
-   let l__10255 := arg_ in
-   if Z.eqb (l__10255) (0) then DSBAlias_SSBB
-   else if Z.eqb (l__10255) (1) then DSBAlias_PSSBB
+   let l__1229 := arg_ in
+   if Z.eqb (l__1229) (0) then DSBAlias_SSBB
+   else if Z.eqb (l__1229) (1) then DSBAlias_PSSBB
    else DSBAlias_DSB.
 
 Lemma DSBAlias_num_of_roundtrip (x : DSBAlias) : DSBAlias_of_num (num_of_DSBAlias x) = x.
@@ -1605,10 +1605,10 @@ Definition num_of_WFxType (arg_ : WFxType) : Z :=
    match arg_ with | WFxType_WFE => 0 | WFxType_WFI => 1 | WFxType_WFET => 2 | WFxType_WFIT => 3 end.
 
 Definition WFxType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : WFxType :=
-   let l__10252 := arg_ in
-   if Z.eqb (l__10252) (0) then WFxType_WFE
-   else if Z.eqb (l__10252) (1) then WFxType_WFI
-   else if Z.eqb (l__10252) (2) then WFxType_WFET
+   let l__1226 := arg_ in
+   if Z.eqb (l__1226) (0) then WFxType_WFE
+   else if Z.eqb (l__1226) (1) then WFxType_WFI
+   else if Z.eqb (l__1226) (2) then WFxType_WFET
    else WFxType_WFIT.
 
 Lemma WFxType_num_of_roundtrip (x : WFxType) : WFxType_of_num (num_of_WFxType x) = x.
@@ -1662,9 +1662,9 @@ Definition num_of_ExceptionalOccurrenceTargetState (arg_ : ExceptionalOccurrence
 
 Definition ExceptionalOccurrenceTargetState_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*)
 : ExceptionalOccurrenceTargetState :=
-   let l__10250 := arg_ in
-   if Z.eqb (l__10250) (0) then AArch32_NonDebugState
-   else if Z.eqb (l__10250) (1) then AArch64_NonDebugState
+   let l__1224 := arg_ in
+   if Z.eqb (l__1224) (0) then AArch32_NonDebugState
+   else if Z.eqb (l__1224) (1) then AArch64_NonDebugState
    else DebugState.
 
 Lemma ExceptionalOccurrenceTargetState_num_of_roundtrip (x : ExceptionalOccurrenceTargetState) : ExceptionalOccurrenceTargetState_of_num (num_of_ExceptionalOccurrenceTargetState x) = x.
@@ -1729,10 +1729,10 @@ Definition num_of_PARTIDspaceType (arg_ : PARTIDspaceType) : Z :=
    end.
 
 Definition PARTIDspaceType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : PARTIDspaceType :=
-   let l__10247 := arg_ in
-   if Z.eqb (l__10247) (0) then PIdSpace_Secure
-   else if Z.eqb (l__10247) (1) then PIdSpace_Root
-   else if Z.eqb (l__10247) (2) then PIdSpace_Realm
+   let l__1221 := arg_ in
+   if Z.eqb (l__1221) (0) then PIdSpace_Secure
+   else if Z.eqb (l__1221) (1) then PIdSpace_Root
+   else if Z.eqb (l__1221) (2) then PIdSpace_Realm
    else PIdSpace_NonSecure.
 
 Lemma PARTIDspaceType_num_of_roundtrip (x : PARTIDspaceType) : PARTIDspaceType_of_num (num_of_PARTIDspaceType x) = x.
@@ -1856,20 +1856,20 @@ Definition num_of_AccessType (arg_ : AccessType) : Z :=
    end.
 
 Definition AccessType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 13)*) : AccessType :=
-   let l__10234 := arg_ in
-   if Z.eqb (l__10234) (0) then AccessType_IFETCH
-   else if Z.eqb (l__10234) (1) then AccessType_GPR
-   else if Z.eqb (l__10234) (2) then AccessType_ASIMD
-   else if Z.eqb (l__10234) (3) then AccessType_SVE
-   else if Z.eqb (l__10234) (4) then AccessType_SME
-   else if Z.eqb (l__10234) (5) then AccessType_IC
-   else if Z.eqb (l__10234) (6) then AccessType_DC
-   else if Z.eqb (l__10234) (7) then AccessType_DCZero
-   else if Z.eqb (l__10234) (8) then AccessType_AT
-   else if Z.eqb (l__10234) (9) then AccessType_NV2
-   else if Z.eqb (l__10234) (10) then AccessType_SPE
-   else if Z.eqb (l__10234) (11) then AccessType_GCS
-   else if Z.eqb (l__10234) (12) then AccessType_GPTW
+   let l__1208 := arg_ in
+   if Z.eqb (l__1208) (0) then AccessType_IFETCH
+   else if Z.eqb (l__1208) (1) then AccessType_GPR
+   else if Z.eqb (l__1208) (2) then AccessType_ASIMD
+   else if Z.eqb (l__1208) (3) then AccessType_SVE
+   else if Z.eqb (l__1208) (4) then AccessType_SME
+   else if Z.eqb (l__1208) (5) then AccessType_IC
+   else if Z.eqb (l__1208) (6) then AccessType_DC
+   else if Z.eqb (l__1208) (7) then AccessType_DCZero
+   else if Z.eqb (l__1208) (8) then AccessType_AT
+   else if Z.eqb (l__1208) (9) then AccessType_NV2
+   else if Z.eqb (l__1208) (10) then AccessType_SPE
+   else if Z.eqb (l__1208) (11) then AccessType_GCS
+   else if Z.eqb (l__1208) (12) then AccessType_GPTW
    else AccessType_TTW.
 
 Lemma AccessType_num_of_roundtrip (x : AccessType) : AccessType_of_num (num_of_AccessType x) = x.
@@ -1921,9 +1921,9 @@ Definition num_of_MemOp (arg_ : MemOp) : Z :=
    match arg_ with | MemOp_LOAD => 0 | MemOp_STORE => 1 | MemOp_PREFETCH => 2 end.
 
 Definition MemOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : MemOp :=
-   let l__10232 := arg_ in
-   if Z.eqb (l__10232) (0) then MemOp_LOAD
-   else if Z.eqb (l__10232) (1) then MemOp_STORE
+   let l__1206 := arg_ in
+   if Z.eqb (l__1206) (0) then MemOp_LOAD
+   else if Z.eqb (l__1206) (1) then MemOp_STORE
    else MemOp_PREFETCH.
 
 Lemma MemOp_num_of_roundtrip (x : MemOp) : MemOp_of_num (num_of_MemOp x) = x.
@@ -1975,8 +1975,8 @@ Definition num_of_VARange (arg_ : VARange) : Z :=
    match arg_ with | VARange_LOWER => 0 | VARange_UPPER => 1 end.
 
 Definition VARange_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 1)*) : VARange :=
-   let l__10231 := arg_ in
-   if Z.eqb (l__10231) (0) then VARange_LOWER
+   let l__1205 := arg_ in
+   if Z.eqb (l__1205) (0) then VARange_LOWER
    else VARange_UPPER.
 
 Lemma VARange_num_of_roundtrip (x : VARange) : VARange_of_num (num_of_VARange x) = x.
@@ -2051,17 +2051,17 @@ Definition num_of_MemAtomicOp (arg_ : MemAtomicOp) : Z :=
    end.
 
 Definition MemAtomicOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 10)*) : MemAtomicOp :=
-   let l__10221 := arg_ in
-   if Z.eqb (l__10221) (0) then MemAtomicOp_GCSSS1
-   else if Z.eqb (l__10221) (1) then MemAtomicOp_ADD
-   else if Z.eqb (l__10221) (2) then MemAtomicOp_BIC
-   else if Z.eqb (l__10221) (3) then MemAtomicOp_EOR
-   else if Z.eqb (l__10221) (4) then MemAtomicOp_ORR
-   else if Z.eqb (l__10221) (5) then MemAtomicOp_SMAX
-   else if Z.eqb (l__10221) (6) then MemAtomicOp_SMIN
-   else if Z.eqb (l__10221) (7) then MemAtomicOp_UMAX
-   else if Z.eqb (l__10221) (8) then MemAtomicOp_UMIN
-   else if Z.eqb (l__10221) (9) then MemAtomicOp_SWP
+   let l__1195 := arg_ in
+   if Z.eqb (l__1195) (0) then MemAtomicOp_GCSSS1
+   else if Z.eqb (l__1195) (1) then MemAtomicOp_ADD
+   else if Z.eqb (l__1195) (2) then MemAtomicOp_BIC
+   else if Z.eqb (l__1195) (3) then MemAtomicOp_EOR
+   else if Z.eqb (l__1195) (4) then MemAtomicOp_ORR
+   else if Z.eqb (l__1195) (5) then MemAtomicOp_SMAX
+   else if Z.eqb (l__1195) (6) then MemAtomicOp_SMIN
+   else if Z.eqb (l__1195) (7) then MemAtomicOp_UMAX
+   else if Z.eqb (l__1195) (8) then MemAtomicOp_UMIN
+   else if Z.eqb (l__1195) (9) then MemAtomicOp_SWP
    else MemAtomicOp_CAS.
 
 Lemma MemAtomicOp_num_of_roundtrip (x : MemAtomicOp) : MemAtomicOp_of_num (num_of_MemAtomicOp x) = x.
@@ -2113,9 +2113,9 @@ Definition num_of_CacheOp (arg_ : CacheOp) : Z :=
    match arg_ with | CacheOp_Clean => 0 | CacheOp_Invalidate => 1 | CacheOp_CleanInvalidate => 2 end.
 
 Definition CacheOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : CacheOp :=
-   let l__10219 := arg_ in
-   if Z.eqb (l__10219) (0) then CacheOp_Clean
-   else if Z.eqb (l__10219) (1) then CacheOp_Invalidate
+   let l__1193 := arg_ in
+   if Z.eqb (l__1193) (0) then CacheOp_Clean
+   else if Z.eqb (l__1193) (1) then CacheOp_Invalidate
    else CacheOp_CleanInvalidate.
 
 Lemma CacheOp_num_of_roundtrip (x : CacheOp) : CacheOp_of_num (num_of_CacheOp x) = x.
@@ -2186,15 +2186,15 @@ Definition num_of_CacheOpScope (arg_ : CacheOpScope) : Z :=
    end.
 
 Definition CacheOpScope_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 8)*) : CacheOpScope :=
-   let l__10211 := arg_ in
-   if Z.eqb (l__10211) (0) then CacheOpScope_SetWay
-   else if Z.eqb (l__10211) (1) then CacheOpScope_PoU
-   else if Z.eqb (l__10211) (2) then CacheOpScope_PoC
-   else if Z.eqb (l__10211) (3) then CacheOpScope_PoE
-   else if Z.eqb (l__10211) (4) then CacheOpScope_PoP
-   else if Z.eqb (l__10211) (5) then CacheOpScope_PoDP
-   else if Z.eqb (l__10211) (6) then CacheOpScope_PoPA
-   else if Z.eqb (l__10211) (7) then CacheOpScope_ALLU
+   let l__1185 := arg_ in
+   if Z.eqb (l__1185) (0) then CacheOpScope_SetWay
+   else if Z.eqb (l__1185) (1) then CacheOpScope_PoU
+   else if Z.eqb (l__1185) (2) then CacheOpScope_PoC
+   else if Z.eqb (l__1185) (3) then CacheOpScope_PoE
+   else if Z.eqb (l__1185) (4) then CacheOpScope_PoP
+   else if Z.eqb (l__1185) (5) then CacheOpScope_PoDP
+   else if Z.eqb (l__1185) (6) then CacheOpScope_PoPA
+   else if Z.eqb (l__1185) (7) then CacheOpScope_ALLU
    else CacheOpScope_ALLUIS.
 
 Lemma CacheOpScope_num_of_roundtrip (x : CacheOpScope) : CacheOpScope_of_num (num_of_CacheOpScope x) = x.
@@ -2251,10 +2251,10 @@ Definition num_of_CacheType (arg_ : CacheType) : Z :=
    end.
 
 Definition CacheType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : CacheType :=
-   let l__10208 := arg_ in
-   if Z.eqb (l__10208) (0) then CacheType_Data
-   else if Z.eqb (l__10208) (1) then CacheType_Tag
-   else if Z.eqb (l__10208) (2) then CacheType_Data_Tag
+   let l__1182 := arg_ in
+   if Z.eqb (l__1182) (0) then CacheType_Data
+   else if Z.eqb (l__1182) (1) then CacheType_Tag
+   else if Z.eqb (l__1182) (2) then CacheType_Data_Tag
    else CacheType_Instruction.
 
 Lemma CacheType_num_of_roundtrip (x : CacheType) : CacheType_of_num (num_of_CacheType x) = x.
@@ -2321,13 +2321,13 @@ Definition num_of_CachePASpace (arg_ : CachePASpace) : Z :=
    end.
 
 Definition CachePASpace_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 6)*) : CachePASpace :=
-   let l__10202 := arg_ in
-   if Z.eqb (l__10202) (0) then CPAS_NonSecure
-   else if Z.eqb (l__10202) (1) then CPAS_Any
-   else if Z.eqb (l__10202) (2) then CPAS_RealmNonSecure
-   else if Z.eqb (l__10202) (3) then CPAS_Realm
-   else if Z.eqb (l__10202) (4) then CPAS_Root
-   else if Z.eqb (l__10202) (5) then CPAS_SecureNonSecure
+   let l__1176 := arg_ in
+   if Z.eqb (l__1176) (0) then CPAS_NonSecure
+   else if Z.eqb (l__1176) (1) then CPAS_Any
+   else if Z.eqb (l__1176) (2) then CPAS_RealmNonSecure
+   else if Z.eqb (l__1176) (3) then CPAS_Realm
+   else if Z.eqb (l__1176) (4) then CPAS_Root
+   else if Z.eqb (l__1176) (5) then CPAS_SecureNonSecure
    else CPAS_Secure.
 
 Lemma CachePASpace_num_of_roundtrip (x : CachePASpace) : CachePASpace_of_num (num_of_CachePASpace x) = x.
@@ -2638,8 +2638,8 @@ Definition num_of_MemType (arg_ : MemType) : Z :=
    match arg_ with | MemType_Normal => 0 | MemType_Device => 1 end.
 
 Definition MemType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 1)*) : MemType :=
-   let l__10201 := arg_ in
-   if Z.eqb (l__10201) (0) then MemType_Normal
+   let l__1175 := arg_ in
+   if Z.eqb (l__1175) (0) then MemType_Normal
    else MemType_Device.
 
 Lemma MemType_num_of_roundtrip (x : MemType) : MemType_of_num (num_of_MemType x) = x.
@@ -2696,10 +2696,10 @@ Definition num_of_DeviceType (arg_ : DeviceType) : Z :=
    end.
 
 Definition DeviceType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : DeviceType :=
-   let l__10198 := arg_ in
-   if Z.eqb (l__10198) (0) then DeviceType_GRE
-   else if Z.eqb (l__10198) (1) then DeviceType_nGRE
-   else if Z.eqb (l__10198) (2) then DeviceType_nGnRE
+   let l__1172 := arg_ in
+   if Z.eqb (l__1172) (0) then DeviceType_GRE
+   else if Z.eqb (l__1172) (1) then DeviceType_nGRE
+   else if Z.eqb (l__1172) (2) then DeviceType_nGnRE
    else DeviceType_nGnRnE.
 
 Lemma DeviceType_num_of_roundtrip (x : DeviceType) : DeviceType_of_num (num_of_DeviceType x) = x.
@@ -2797,9 +2797,9 @@ Definition num_of_Shareability (arg_ : Shareability) : Z :=
    match arg_ with | Shareability_NSH => 0 | Shareability_ISH => 1 | Shareability_OSH => 2 end.
 
 Definition Shareability_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : Shareability :=
-   let l__10196 := arg_ in
-   if Z.eqb (l__10196) (0) then Shareability_NSH
-   else if Z.eqb (l__10196) (1) then Shareability_ISH
+   let l__1170 := arg_ in
+   if Z.eqb (l__1170) (0) then Shareability_NSH
+   else if Z.eqb (l__1170) (1) then Shareability_ISH
    else Shareability_OSH.
 
 Lemma Shareability_num_of_roundtrip (x : Shareability) : Shareability_of_num (num_of_Shareability x) = x.
@@ -2855,9 +2855,9 @@ Definition num_of_MemTagType (arg_ : MemTagType) : Z :=
    end.
 
 Definition MemTagType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : MemTagType :=
-   let l__10194 := arg_ in
-   if Z.eqb (l__10194) (0) then MemTag_Untagged
-   else if Z.eqb (l__10194) (1) then MemTag_AllocationTagged
+   let l__1168 := arg_ in
+   if Z.eqb (l__1168) (0) then MemTag_Untagged
+   else if Z.eqb (l__1168) (1) then MemTag_AllocationTagged
    else MemTag_CanonicallyTagged.
 
 Lemma MemTagType_num_of_roundtrip (x : MemTagType) : MemTagType_of_num (num_of_MemTagType x) = x.
@@ -2985,10 +2985,10 @@ Definition num_of_PASpace (arg_ : PASpace) : Z :=
    match arg_ with | PAS_NonSecure => 0 | PAS_Secure => 1 | PAS_Root => 2 | PAS_Realm => 3 end.
 
 Definition PASpace_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : PASpace :=
-   let l__10191 := arg_ in
-   if Z.eqb (l__10191) (0) then PAS_NonSecure
-   else if Z.eqb (l__10191) (1) then PAS_Secure
-   else if Z.eqb (l__10191) (2) then PAS_Root
+   let l__1165 := arg_ in
+   if Z.eqb (l__1165) (0) then PAS_NonSecure
+   else if Z.eqb (l__1165) (1) then PAS_Secure
+   else if Z.eqb (l__1165) (2) then PAS_Root
    else PAS_Realm.
 
 Lemma PASpace_num_of_roundtrip (x : PASpace) : PASpace_of_num (num_of_PASpace x) = x.
@@ -3082,11 +3082,11 @@ Definition num_of_GPCF (arg_ : GPCF) : Z :=
    end.
 
 Definition GPCF_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 4)*) : GPCF :=
-   let l__10187 := arg_ in
-   if Z.eqb (l__10187) (0) then GPCF_None
-   else if Z.eqb (l__10187) (1) then GPCF_AddressSize
-   else if Z.eqb (l__10187) (2) then GPCF_Walk
-   else if Z.eqb (l__10187) (3) then GPCF_EABT
+   let l__1161 := arg_ in
+   if Z.eqb (l__1161) (0) then GPCF_None
+   else if Z.eqb (l__1161) (1) then GPCF_AddressSize
+   else if Z.eqb (l__1161) (2) then GPCF_Walk
+   else if Z.eqb (l__1161) (3) then GPCF_EABT
    else GPCF_Fail.
 
 Lemma GPCF_num_of_roundtrip (x : GPCF) : GPCF_of_num (num_of_GPCF x) = x.
@@ -3223,30 +3223,30 @@ Definition num_of_Fault (arg_ : Fault) : Z :=
    end.
 
 Definition Fault_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 23)*) : Fault :=
-   let l__10164 := arg_ in
-   if Z.eqb (l__10164) (0) then Fault_None
-   else if Z.eqb (l__10164) (1) then Fault_AccessFlag
-   else if Z.eqb (l__10164) (2) then Fault_Alignment
-   else if Z.eqb (l__10164) (3) then Fault_Background
-   else if Z.eqb (l__10164) (4) then Fault_Domain
-   else if Z.eqb (l__10164) (5) then Fault_Permission
-   else if Z.eqb (l__10164) (6) then Fault_Translation
-   else if Z.eqb (l__10164) (7) then Fault_AddressSize
-   else if Z.eqb (l__10164) (8) then Fault_SyncExternal
-   else if Z.eqb (l__10164) (9) then Fault_SyncExternalOnWalk
-   else if Z.eqb (l__10164) (10) then Fault_SyncParity
-   else if Z.eqb (l__10164) (11) then Fault_SyncParityOnWalk
-   else if Z.eqb (l__10164) (12) then Fault_GPCFOnWalk
-   else if Z.eqb (l__10164) (13) then Fault_GPCFOnOutput
-   else if Z.eqb (l__10164) (14) then Fault_AsyncParity
-   else if Z.eqb (l__10164) (15) then Fault_AsyncExternal
-   else if Z.eqb (l__10164) (16) then Fault_TagCheck
-   else if Z.eqb (l__10164) (17) then Fault_Debug
-   else if Z.eqb (l__10164) (18) then Fault_TLBConflict
-   else if Z.eqb (l__10164) (19) then Fault_BranchTarget
-   else if Z.eqb (l__10164) (20) then Fault_HWUpdateAccessFlag
-   else if Z.eqb (l__10164) (21) then Fault_Lockdown
-   else if Z.eqb (l__10164) (22) then Fault_Exclusive
+   let l__1138 := arg_ in
+   if Z.eqb (l__1138) (0) then Fault_None
+   else if Z.eqb (l__1138) (1) then Fault_AccessFlag
+   else if Z.eqb (l__1138) (2) then Fault_Alignment
+   else if Z.eqb (l__1138) (3) then Fault_Background
+   else if Z.eqb (l__1138) (4) then Fault_Domain
+   else if Z.eqb (l__1138) (5) then Fault_Permission
+   else if Z.eqb (l__1138) (6) then Fault_Translation
+   else if Z.eqb (l__1138) (7) then Fault_AddressSize
+   else if Z.eqb (l__1138) (8) then Fault_SyncExternal
+   else if Z.eqb (l__1138) (9) then Fault_SyncExternalOnWalk
+   else if Z.eqb (l__1138) (10) then Fault_SyncParity
+   else if Z.eqb (l__1138) (11) then Fault_SyncParityOnWalk
+   else if Z.eqb (l__1138) (12) then Fault_GPCFOnWalk
+   else if Z.eqb (l__1138) (13) then Fault_GPCFOnOutput
+   else if Z.eqb (l__1138) (14) then Fault_AsyncParity
+   else if Z.eqb (l__1138) (15) then Fault_AsyncExternal
+   else if Z.eqb (l__1138) (16) then Fault_TagCheck
+   else if Z.eqb (l__1138) (17) then Fault_Debug
+   else if Z.eqb (l__1138) (18) then Fault_TLBConflict
+   else if Z.eqb (l__1138) (19) then Fault_BranchTarget
+   else if Z.eqb (l__1138) (20) then Fault_HWUpdateAccessFlag
+   else if Z.eqb (l__1138) (21) then Fault_Lockdown
+   else if Z.eqb (l__1138) (22) then Fault_Exclusive
    else Fault_ICacheMaint.
 
 Lemma Fault_num_of_roundtrip (x : Fault) : Fault_of_num (num_of_Fault x) = x.
@@ -3313,13 +3313,13 @@ Definition num_of_ErrorState (arg_ : ErrorState) : Z :=
    end.
 
 Definition ErrorState_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 6)*) : ErrorState :=
-   let l__10158 := arg_ in
-   if Z.eqb (l__10158) (0) then ErrorState_UC
-   else if Z.eqb (l__10158) (1) then ErrorState_UEU
-   else if Z.eqb (l__10158) (2) then ErrorState_UEO
-   else if Z.eqb (l__10158) (3) then ErrorState_UER
-   else if Z.eqb (l__10158) (4) then ErrorState_CE
-   else if Z.eqb (l__10158) (5) then ErrorState_Uncategorized
+   let l__1132 := arg_ in
+   if Z.eqb (l__1132) (0) then ErrorState_UC
+   else if Z.eqb (l__1132) (1) then ErrorState_UEU
+   else if Z.eqb (l__1132) (2) then ErrorState_UEO
+   else if Z.eqb (l__1132) (3) then ErrorState_UER
+   else if Z.eqb (l__1132) (4) then ErrorState_CE
+   else if Z.eqb (l__1132) (5) then ErrorState_Uncategorized
    else ErrorState_IMPDEF.
 
 Lemma ErrorState_num_of_roundtrip (x : ErrorState) : ErrorState_of_num (num_of_ErrorState x) = x.
@@ -3983,10 +3983,10 @@ Definition num_of_MBReqDomain (arg_ : MBReqDomain) : Z :=
    end.
 
 Definition MBReqDomain_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : MBReqDomain :=
-   let l__10155 := arg_ in
-   if Z.eqb (l__10155) (0) then MBReqDomain_Nonshareable
-   else if Z.eqb (l__10155) (1) then MBReqDomain_InnerShareable
-   else if Z.eqb (l__10155) (2) then MBReqDomain_OuterShareable
+   let l__1129 := arg_ in
+   if Z.eqb (l__1129) (0) then MBReqDomain_Nonshareable
+   else if Z.eqb (l__1129) (1) then MBReqDomain_InnerShareable
+   else if Z.eqb (l__1129) (2) then MBReqDomain_OuterShareable
    else MBReqDomain_FullSystem.
 
 Lemma MBReqDomain_num_of_roundtrip (x : MBReqDomain) : MBReqDomain_of_num (num_of_MBReqDomain x) = x.
@@ -4038,9 +4038,9 @@ Definition num_of_MBReqTypes (arg_ : MBReqTypes) : Z :=
    match arg_ with | MBReqTypes_Reads => 0 | MBReqTypes_Writes => 1 | MBReqTypes_All => 2 end.
 
 Definition MBReqTypes_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : MBReqTypes :=
-   let l__10153 := arg_ in
-   if Z.eqb (l__10153) (0) then MBReqTypes_Reads
-   else if Z.eqb (l__10153) (1) then MBReqTypes_Writes
+   let l__1127 := arg_ in
+   if Z.eqb (l__1127) (0) then MBReqTypes_Reads
+   else if Z.eqb (l__1127) (1) then MBReqTypes_Writes
    else MBReqTypes_All.
 
 Lemma MBReqTypes_num_of_roundtrip (x : MBReqTypes) : MBReqTypes_of_num (num_of_MBReqTypes x) = x.
@@ -4092,9 +4092,9 @@ Definition num_of_PrefetchHint (arg_ : PrefetchHint) : Z :=
    match arg_ with | Prefetch_READ => 0 | Prefetch_WRITE => 1 | Prefetch_EXEC => 2 end.
 
 Definition PrefetchHint_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : PrefetchHint :=
-   let l__10151 := arg_ in
-   if Z.eqb (l__10151) (0) then Prefetch_READ
-   else if Z.eqb (l__10151) (1) then Prefetch_WRITE
+   let l__1125 := arg_ in
+   if Z.eqb (l__1125) (0) then Prefetch_READ
+   else if Z.eqb (l__1125) (1) then Prefetch_WRITE
    else Prefetch_EXEC.
 
 Lemma PrefetchHint_num_of_roundtrip (x : PrefetchHint) : PrefetchHint_of_num (num_of_PrefetchHint x) = x.
@@ -4305,85 +4305,85 @@ Definition num_of_Unpredictable (arg_ : Unpredictable) : Z :=
    end.
 
 Definition Unpredictable_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 78)*) : Unpredictable :=
-   let l__10073 := arg_ in
-   if Z.eqb (l__10073) (0) then Unpredictable_VMSR
-   else if Z.eqb (l__10073) (1) then Unpredictable_WBOVERLAPLD
-   else if Z.eqb (l__10073) (2) then Unpredictable_WBOVERLAPST
-   else if Z.eqb (l__10073) (3) then Unpredictable_LDPOVERLAP
-   else if Z.eqb (l__10073) (4) then Unpredictable_BASEOVERLAP
-   else if Z.eqb (l__10073) (5) then Unpredictable_DATAOVERLAP
-   else if Z.eqb (l__10073) (6) then Unpredictable_DEVPAGE2
-   else if Z.eqb (l__10073) (7) then Unpredictable_INSTRDEVICE
-   else if Z.eqb (l__10073) (8) then Unpredictable_RESCPACR
-   else if Z.eqb (l__10073) (9) then Unpredictable_RESMAIR
-   else if Z.eqb (l__10073) (10) then Unpredictable_S1CTAGGED
-   else if Z.eqb (l__10073) (11) then Unpredictable_S2RESMEMATTR
-   else if Z.eqb (l__10073) (12) then Unpredictable_RESTEXCB
-   else if Z.eqb (l__10073) (13) then Unpredictable_RESPRRR
-   else if Z.eqb (l__10073) (14) then Unpredictable_RESDACR
-   else if Z.eqb (l__10073) (15) then Unpredictable_RESVTCRS
-   else if Z.eqb (l__10073) (16) then Unpredictable_RESTnSZ
-   else if Z.eqb (l__10073) (17) then Unpredictable_RESTCF
-   else if Z.eqb (l__10073) (18) then Unpredictable_DEVICETAGSTORE
-   else if Z.eqb (l__10073) (19) then Unpredictable_OORTnSZ
-   else if Z.eqb (l__10073) (20) then Unpredictable_LARGEIPA
-   else if Z.eqb (l__10073) (21) then Unpredictable_ESRCONDPASS
-   else if Z.eqb (l__10073) (22) then Unpredictable_ILZEROIT
-   else if Z.eqb (l__10073) (23) then Unpredictable_ILZEROT
-   else if Z.eqb (l__10073) (24) then Unpredictable_BPVECTORCATCHPRI
-   else if Z.eqb (l__10073) (25) then Unpredictable_VCMATCHHALF
-   else if Z.eqb (l__10073) (26) then Unpredictable_VCMATCHDAPA
-   else if Z.eqb (l__10073) (27) then Unpredictable_WPMASKANDBAS
-   else if Z.eqb (l__10073) (28) then Unpredictable_WPBASCONTIGUOUS
-   else if Z.eqb (l__10073) (29) then Unpredictable_RESWPMASK
-   else if Z.eqb (l__10073) (30) then Unpredictable_WPMASKEDBITS
-   else if Z.eqb (l__10073) (31) then Unpredictable_RESBPWPCTRL
-   else if Z.eqb (l__10073) (32) then Unpredictable_BPNOTIMPL
-   else if Z.eqb (l__10073) (33) then Unpredictable_RESBPTYPE
-   else if Z.eqb (l__10073) (34) then Unpredictable_RESMDSELR
-   else if Z.eqb (l__10073) (35) then Unpredictable_BPNOTCTXCMP
-   else if Z.eqb (l__10073) (36) then Unpredictable_BPMATCHHALF
-   else if Z.eqb (l__10073) (37) then Unpredictable_BPMISMATCHHALF
-   else if Z.eqb (l__10073) (38) then Unpredictable_BPLINKINGDISABLED
-   else if Z.eqb (l__10073) (39) then Unpredictable_RESBPMASK
-   else if Z.eqb (l__10073) (40) then Unpredictable_BPMASK
-   else if Z.eqb (l__10073) (41) then Unpredictable_BPMASKEDBITS
-   else if Z.eqb (l__10073) (42) then Unpredictable_BPLINKEDADDRMATCH
-   else if Z.eqb (l__10073) (43) then Unpredictable_RESTARTALIGNPC
-   else if Z.eqb (l__10073) (44) then Unpredictable_RESTARTZEROUPPERPC
-   else if Z.eqb (l__10073) (45) then Unpredictable_ZEROUPPER
-   else if Z.eqb (l__10073) (46) then Unpredictable_ERETZEROUPPERPC
-   else if Z.eqb (l__10073) (47) then Unpredictable_A32FORCEALIGNPC
-   else if Z.eqb (l__10073) (48) then Unpredictable_SMD
-   else if Z.eqb (l__10073) (49) then Unpredictable_NONFAULT
-   else if Z.eqb (l__10073) (50) then Unpredictable_SVEZEROUPPER
-   else if Z.eqb (l__10073) (51) then Unpredictable_SVELDNFDATA
-   else if Z.eqb (l__10073) (52) then Unpredictable_SVELDNFZERO
-   else if Z.eqb (l__10073) (53) then Unpredictable_CHECKSPNONEACTIVE
-   else if Z.eqb (l__10073) (54) then Unpredictable_SMEZEROUPPER
-   else if Z.eqb (l__10073) (55) then Unpredictable_NVNV1
-   else if Z.eqb (l__10073) (56) then Unpredictable_Shareability
-   else if Z.eqb (l__10073) (57) then Unpredictable_AFUPDATE
-   else if Z.eqb (l__10073) (58) then Unpredictable_DBUPDATE
-   else if Z.eqb (l__10073) (59) then Unpredictable_IESBinDebug
-   else if Z.eqb (l__10073) (60) then Unpredictable_BADPMSFCR
-   else if Z.eqb (l__10073) (61) then Unpredictable_ZEROBTYPE
-   else if Z.eqb (l__10073) (62) then Unpredictable_EL2TIMESTAMP
-   else if Z.eqb (l__10073) (63) then Unpredictable_EL1TIMESTAMP
-   else if Z.eqb (l__10073) (64) then Unpredictable_RESERVEDNSxB
-   else if Z.eqb (l__10073) (65) then Unpredictable_WFxTDEBUG
-   else if Z.eqb (l__10073) (66) then Unpredictable_LS64UNSUPPORTED
-   else if Z.eqb (l__10073) (67) then Unpredictable_MISALIGNEDATOMIC
-   else if Z.eqb (l__10073) (68) then Unpredictable_CLEARERRITEZERO
-   else if Z.eqb (l__10073) (69) then Unpredictable_ALUEXCEPTIONRETURN
-   else if Z.eqb (l__10073) (70) then Unpredictable_IGNORETRAPINDEBUG
-   else if Z.eqb (l__10073) (71) then Unpredictable_DBGxVR_RESS
-   else if Z.eqb (l__10073) (72) then Unpredictable_PMUEVENTCOUNTER
-   else if Z.eqb (l__10073) (73) then Unpredictable_PMSCR_PCT
-   else if Z.eqb (l__10073) (74) then Unpredictable_CounterReservedForEL2
-   else if Z.eqb (l__10073) (75) then Unpredictable_BRBFILTRATE
-   else if Z.eqb (l__10073) (76) then Unpredictable_MOPSOVERLAP31
-   else if Z.eqb (l__10073) (77) then Unpredictable_STOREONLYTAGCHECKEDCAS
+   let l__1047 := arg_ in
+   if Z.eqb (l__1047) (0) then Unpredictable_VMSR
+   else if Z.eqb (l__1047) (1) then Unpredictable_WBOVERLAPLD
+   else if Z.eqb (l__1047) (2) then Unpredictable_WBOVERLAPST
+   else if Z.eqb (l__1047) (3) then Unpredictable_LDPOVERLAP
+   else if Z.eqb (l__1047) (4) then Unpredictable_BASEOVERLAP
+   else if Z.eqb (l__1047) (5) then Unpredictable_DATAOVERLAP
+   else if Z.eqb (l__1047) (6) then Unpredictable_DEVPAGE2
+   else if Z.eqb (l__1047) (7) then Unpredictable_INSTRDEVICE
+   else if Z.eqb (l__1047) (8) then Unpredictable_RESCPACR
+   else if Z.eqb (l__1047) (9) then Unpredictable_RESMAIR
+   else if Z.eqb (l__1047) (10) then Unpredictable_S1CTAGGED
+   else if Z.eqb (l__1047) (11) then Unpredictable_S2RESMEMATTR
+   else if Z.eqb (l__1047) (12) then Unpredictable_RESTEXCB
+   else if Z.eqb (l__1047) (13) then Unpredictable_RESPRRR
+   else if Z.eqb (l__1047) (14) then Unpredictable_RESDACR
+   else if Z.eqb (l__1047) (15) then Unpredictable_RESVTCRS
+   else if Z.eqb (l__1047) (16) then Unpredictable_RESTnSZ
+   else if Z.eqb (l__1047) (17) then Unpredictable_RESTCF
+   else if Z.eqb (l__1047) (18) then Unpredictable_DEVICETAGSTORE
+   else if Z.eqb (l__1047) (19) then Unpredictable_OORTnSZ
+   else if Z.eqb (l__1047) (20) then Unpredictable_LARGEIPA
+   else if Z.eqb (l__1047) (21) then Unpredictable_ESRCONDPASS
+   else if Z.eqb (l__1047) (22) then Unpredictable_ILZEROIT
+   else if Z.eqb (l__1047) (23) then Unpredictable_ILZEROT
+   else if Z.eqb (l__1047) (24) then Unpredictable_BPVECTORCATCHPRI
+   else if Z.eqb (l__1047) (25) then Unpredictable_VCMATCHHALF
+   else if Z.eqb (l__1047) (26) then Unpredictable_VCMATCHDAPA
+   else if Z.eqb (l__1047) (27) then Unpredictable_WPMASKANDBAS
+   else if Z.eqb (l__1047) (28) then Unpredictable_WPBASCONTIGUOUS
+   else if Z.eqb (l__1047) (29) then Unpredictable_RESWPMASK
+   else if Z.eqb (l__1047) (30) then Unpredictable_WPMASKEDBITS
+   else if Z.eqb (l__1047) (31) then Unpredictable_RESBPWPCTRL
+   else if Z.eqb (l__1047) (32) then Unpredictable_BPNOTIMPL
+   else if Z.eqb (l__1047) (33) then Unpredictable_RESBPTYPE
+   else if Z.eqb (l__1047) (34) then Unpredictable_RESMDSELR
+   else if Z.eqb (l__1047) (35) then Unpredictable_BPNOTCTXCMP
+   else if Z.eqb (l__1047) (36) then Unpredictable_BPMATCHHALF
+   else if Z.eqb (l__1047) (37) then Unpredictable_BPMISMATCHHALF
+   else if Z.eqb (l__1047) (38) then Unpredictable_BPLINKINGDISABLED
+   else if Z.eqb (l__1047) (39) then Unpredictable_RESBPMASK
+   else if Z.eqb (l__1047) (40) then Unpredictable_BPMASK
+   else if Z.eqb (l__1047) (41) then Unpredictable_BPMASKEDBITS
+   else if Z.eqb (l__1047) (42) then Unpredictable_BPLINKEDADDRMATCH
+   else if Z.eqb (l__1047) (43) then Unpredictable_RESTARTALIGNPC
+   else if Z.eqb (l__1047) (44) then Unpredictable_RESTARTZEROUPPERPC
+   else if Z.eqb (l__1047) (45) then Unpredictable_ZEROUPPER
+   else if Z.eqb (l__1047) (46) then Unpredictable_ERETZEROUPPERPC
+   else if Z.eqb (l__1047) (47) then Unpredictable_A32FORCEALIGNPC
+   else if Z.eqb (l__1047) (48) then Unpredictable_SMD
+   else if Z.eqb (l__1047) (49) then Unpredictable_NONFAULT
+   else if Z.eqb (l__1047) (50) then Unpredictable_SVEZEROUPPER
+   else if Z.eqb (l__1047) (51) then Unpredictable_SVELDNFDATA
+   else if Z.eqb (l__1047) (52) then Unpredictable_SVELDNFZERO
+   else if Z.eqb (l__1047) (53) then Unpredictable_CHECKSPNONEACTIVE
+   else if Z.eqb (l__1047) (54) then Unpredictable_SMEZEROUPPER
+   else if Z.eqb (l__1047) (55) then Unpredictable_NVNV1
+   else if Z.eqb (l__1047) (56) then Unpredictable_Shareability
+   else if Z.eqb (l__1047) (57) then Unpredictable_AFUPDATE
+   else if Z.eqb (l__1047) (58) then Unpredictable_DBUPDATE
+   else if Z.eqb (l__1047) (59) then Unpredictable_IESBinDebug
+   else if Z.eqb (l__1047) (60) then Unpredictable_BADPMSFCR
+   else if Z.eqb (l__1047) (61) then Unpredictable_ZEROBTYPE
+   else if Z.eqb (l__1047) (62) then Unpredictable_EL2TIMESTAMP
+   else if Z.eqb (l__1047) (63) then Unpredictable_EL1TIMESTAMP
+   else if Z.eqb (l__1047) (64) then Unpredictable_RESERVEDNSxB
+   else if Z.eqb (l__1047) (65) then Unpredictable_WFxTDEBUG
+   else if Z.eqb (l__1047) (66) then Unpredictable_LS64UNSUPPORTED
+   else if Z.eqb (l__1047) (67) then Unpredictable_MISALIGNEDATOMIC
+   else if Z.eqb (l__1047) (68) then Unpredictable_CLEARERRITEZERO
+   else if Z.eqb (l__1047) (69) then Unpredictable_ALUEXCEPTIONRETURN
+   else if Z.eqb (l__1047) (70) then Unpredictable_IGNORETRAPINDEBUG
+   else if Z.eqb (l__1047) (71) then Unpredictable_DBGxVR_RESS
+   else if Z.eqb (l__1047) (72) then Unpredictable_PMUEVENTCOUNTER
+   else if Z.eqb (l__1047) (73) then Unpredictable_PMSCR_PCT
+   else if Z.eqb (l__1047) (74) then Unpredictable_CounterReservedForEL2
+   else if Z.eqb (l__1047) (75) then Unpredictable_BRBFILTRATE
+   else if Z.eqb (l__1047) (76) then Unpredictable_MOPSOVERLAP31
+   else if Z.eqb (l__1047) (77) then Unpredictable_STOREONLYTAGCHECKEDCAS
    else Unpredictable_RESTC.
 
 Lemma Unpredictable_num_of_roundtrip (x : Unpredictable) : Unpredictable_of_num (num_of_Unpredictable x) = x.
@@ -4494,35 +4494,35 @@ Definition num_of_Constraint (arg_ : Constraint) : Z :=
    end.
 
 Definition Constraint_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 28)*) : Constraint :=
-   let l__10045 := arg_ in
-   if Z.eqb (l__10045) (0) then Constraint_NONE
-   else if Z.eqb (l__10045) (1) then Constraint_UNKNOWN
-   else if Z.eqb (l__10045) (2) then Constraint_UNDEF
-   else if Z.eqb (l__10045) (3) then Constraint_UNDEFEL0
-   else if Z.eqb (l__10045) (4) then Constraint_NOP
-   else if Z.eqb (l__10045) (5) then Constraint_TRUE
-   else if Z.eqb (l__10045) (6) then Constraint_FALSE
-   else if Z.eqb (l__10045) (7) then Constraint_DISABLED
-   else if Z.eqb (l__10045) (8) then Constraint_UNCOND
-   else if Z.eqb (l__10045) (9) then Constraint_COND
-   else if Z.eqb (l__10045) (10) then Constraint_ADDITIONAL_DECODE
-   else if Z.eqb (l__10045) (11) then Constraint_WBSUPPRESS
-   else if Z.eqb (l__10045) (12) then Constraint_FAULT
-   else if Z.eqb (l__10045) (13) then Constraint_LIMITED_ATOMICITY
-   else if Z.eqb (l__10045) (14) then Constraint_NVNV1_00
-   else if Z.eqb (l__10045) (15) then Constraint_NVNV1_01
-   else if Z.eqb (l__10045) (16) then Constraint_NVNV1_11
-   else if Z.eqb (l__10045) (17) then Constraint_EL1TIMESTAMP
-   else if Z.eqb (l__10045) (18) then Constraint_EL2TIMESTAMP
-   else if Z.eqb (l__10045) (19) then Constraint_OSH
-   else if Z.eqb (l__10045) (20) then Constraint_ISH
-   else if Z.eqb (l__10045) (21) then Constraint_NSH
-   else if Z.eqb (l__10045) (22) then Constraint_NC
-   else if Z.eqb (l__10045) (23) then Constraint_WT
-   else if Z.eqb (l__10045) (24) then Constraint_WB
-   else if Z.eqb (l__10045) (25) then Constraint_FORCE
-   else if Z.eqb (l__10045) (26) then Constraint_FORCENOSLCHECK
-   else if Z.eqb (l__10045) (27) then Constraint_MAPTOALLOCATED
+   let l__1019 := arg_ in
+   if Z.eqb (l__1019) (0) then Constraint_NONE
+   else if Z.eqb (l__1019) (1) then Constraint_UNKNOWN
+   else if Z.eqb (l__1019) (2) then Constraint_UNDEF
+   else if Z.eqb (l__1019) (3) then Constraint_UNDEFEL0
+   else if Z.eqb (l__1019) (4) then Constraint_NOP
+   else if Z.eqb (l__1019) (5) then Constraint_TRUE
+   else if Z.eqb (l__1019) (6) then Constraint_FALSE
+   else if Z.eqb (l__1019) (7) then Constraint_DISABLED
+   else if Z.eqb (l__1019) (8) then Constraint_UNCOND
+   else if Z.eqb (l__1019) (9) then Constraint_COND
+   else if Z.eqb (l__1019) (10) then Constraint_ADDITIONAL_DECODE
+   else if Z.eqb (l__1019) (11) then Constraint_WBSUPPRESS
+   else if Z.eqb (l__1019) (12) then Constraint_FAULT
+   else if Z.eqb (l__1019) (13) then Constraint_LIMITED_ATOMICITY
+   else if Z.eqb (l__1019) (14) then Constraint_NVNV1_00
+   else if Z.eqb (l__1019) (15) then Constraint_NVNV1_01
+   else if Z.eqb (l__1019) (16) then Constraint_NVNV1_11
+   else if Z.eqb (l__1019) (17) then Constraint_EL1TIMESTAMP
+   else if Z.eqb (l__1019) (18) then Constraint_EL2TIMESTAMP
+   else if Z.eqb (l__1019) (19) then Constraint_OSH
+   else if Z.eqb (l__1019) (20) then Constraint_ISH
+   else if Z.eqb (l__1019) (21) then Constraint_NSH
+   else if Z.eqb (l__1019) (22) then Constraint_NC
+   else if Z.eqb (l__1019) (23) then Constraint_WT
+   else if Z.eqb (l__1019) (24) then Constraint_WB
+   else if Z.eqb (l__1019) (25) then Constraint_FORCE
+   else if Z.eqb (l__1019) (26) then Constraint_FORCENOSLCHECK
+   else if Z.eqb (l__1019) (27) then Constraint_MAPTOALLOCATED
    else Constraint_PMSCR_PCT_VIRT.
 
 Lemma Constraint_num_of_roundtrip (x : Constraint) : Constraint_of_num (num_of_Constraint x) = x.
@@ -4719,10 +4719,10 @@ Definition num_of_RestrictType (arg_ : RestrictType) : Z :=
    end.
 
 Definition RestrictType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : RestrictType :=
-   let l__10042 := arg_ in
-   if Z.eqb (l__10042) (0) then RestrictType_DataValue
-   else if Z.eqb (l__10042) (1) then RestrictType_ControlFlow
-   else if Z.eqb (l__10042) (2) then RestrictType_CachePrefetch
+   let l__1016 := arg_ in
+   if Z.eqb (l__1016) (0) then RestrictType_DataValue
+   else if Z.eqb (l__1016) (1) then RestrictType_ControlFlow
+   else if Z.eqb (l__1016) (2) then RestrictType_CachePrefetch
    else RestrictType_Other.
 
 Lemma RestrictType_num_of_roundtrip (x : RestrictType) : RestrictType_of_num (num_of_RestrictType x) = x.
@@ -4869,12 +4869,12 @@ Definition num_of_FPExc (arg_ : FPExc) : Z :=
    end.
 
 Definition FPExc_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 5)*) : FPExc :=
-   let l__10037 := arg_ in
-   if Z.eqb (l__10037) (0) then FPExc_InvalidOp
-   else if Z.eqb (l__10037) (1) then FPExc_DivideByZero
-   else if Z.eqb (l__10037) (2) then FPExc_Overflow
-   else if Z.eqb (l__10037) (3) then FPExc_Underflow
-   else if Z.eqb (l__10037) (4) then FPExc_Inexact
+   let l__1011 := arg_ in
+   if Z.eqb (l__1011) (0) then FPExc_InvalidOp
+   else if Z.eqb (l__1011) (1) then FPExc_DivideByZero
+   else if Z.eqb (l__1011) (2) then FPExc_Overflow
+   else if Z.eqb (l__1011) (3) then FPExc_Underflow
+   else if Z.eqb (l__1011) (4) then FPExc_Inexact
    else FPExc_InputDenorm.
 
 Lemma FPExc_num_of_roundtrip (x : FPExc) : FPExc_of_num (num_of_FPExc x) = x.
@@ -4939,12 +4939,12 @@ Definition num_of_FPRounding (arg_ : FPRounding) : Z :=
    end.
 
 Definition FPRounding_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 5)*) : FPRounding :=
-   let l__10032 := arg_ in
-   if Z.eqb (l__10032) (0) then FPRounding_TIEEVEN
-   else if Z.eqb (l__10032) (1) then FPRounding_POSINF
-   else if Z.eqb (l__10032) (2) then FPRounding_NEGINF
-   else if Z.eqb (l__10032) (3) then FPRounding_ZERO
-   else if Z.eqb (l__10032) (4) then FPRounding_TIEAWAY
+   let l__1006 := arg_ in
+   if Z.eqb (l__1006) (0) then FPRounding_TIEEVEN
+   else if Z.eqb (l__1006) (1) then FPRounding_POSINF
+   else if Z.eqb (l__1006) (2) then FPRounding_NEGINF
+   else if Z.eqb (l__1006) (3) then FPRounding_ZERO
+   else if Z.eqb (l__1006) (4) then FPRounding_TIEAWAY
    else FPRounding_ODD.
 
 Lemma FPRounding_num_of_roundtrip (x : FPRounding) : FPRounding_of_num (num_of_FPRounding x) = x.
@@ -5004,12 +5004,12 @@ Definition num_of_FPType (arg_ : FPType) : Z :=
    end.
 
 Definition FPType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 5)*) : FPType :=
-   let l__10027 := arg_ in
-   if Z.eqb (l__10027) (0) then FPType_Zero
-   else if Z.eqb (l__10027) (1) then FPType_Denormal
-   else if Z.eqb (l__10027) (2) then FPType_Nonzero
-   else if Z.eqb (l__10027) (3) then FPType_Infinity
-   else if Z.eqb (l__10027) (4) then FPType_QNaN
+   let l__1001 := arg_ in
+   if Z.eqb (l__1001) (0) then FPType_Zero
+   else if Z.eqb (l__1001) (1) then FPType_Denormal
+   else if Z.eqb (l__1001) (2) then FPType_Nonzero
+   else if Z.eqb (l__1001) (3) then FPType_Infinity
+   else if Z.eqb (l__1001) (4) then FPType_QNaN
    else FPType_SNaN.
 
 Lemma FPType_num_of_roundtrip (x : FPType) : FPType_of_num (num_of_FPType x) = x.
@@ -5084,17 +5084,17 @@ Definition num_of_BranchType (arg_ : BranchType) : Z :=
    end.
 
 Definition BranchType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 10)*) : BranchType :=
-   let l__9897 := arg_ in
-   if Z.eqb (l__9897) (0) then BranchType_DIRCALL
-   else if Z.eqb (l__9897) (1) then BranchType_INDCALL
-   else if Z.eqb (l__9897) (2) then BranchType_ERET
-   else if Z.eqb (l__9897) (3) then BranchType_DBGEXIT
-   else if Z.eqb (l__9897) (4) then BranchType_RET
-   else if Z.eqb (l__9897) (5) then BranchType_DIR
-   else if Z.eqb (l__9897) (6) then BranchType_INDIR
-   else if Z.eqb (l__9897) (7) then BranchType_EXCEPTION
-   else if Z.eqb (l__9897) (8) then BranchType_TMFAIL
-   else if Z.eqb (l__9897) (9) then BranchType_RESET
+   let l__871 := arg_ in
+   if Z.eqb (l__871) (0) then BranchType_DIRCALL
+   else if Z.eqb (l__871) (1) then BranchType_INDCALL
+   else if Z.eqb (l__871) (2) then BranchType_ERET
+   else if Z.eqb (l__871) (3) then BranchType_DBGEXIT
+   else if Z.eqb (l__871) (4) then BranchType_RET
+   else if Z.eqb (l__871) (5) then BranchType_DIR
+   else if Z.eqb (l__871) (6) then BranchType_INDIR
+   else if Z.eqb (l__871) (7) then BranchType_EXCEPTION
+   else if Z.eqb (l__871) (8) then BranchType_TMFAIL
+   else if Z.eqb (l__871) (9) then BranchType_RESET
    else BranchType_UNKNOWN.
 
 Lemma BranchType_num_of_roundtrip (x : BranchType) : BranchType_of_num (num_of_BranchType x) = x.
@@ -5173,19 +5173,19 @@ Definition num_of_InterruptID (arg_ : InterruptID) : Z :=
    end.
 
 Definition InterruptID_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 12)*) : InterruptID :=
-   let l__9885 := arg_ in
-   if Z.eqb (l__9885) (0) then InterruptID_PMUIRQ
-   else if Z.eqb (l__9885) (1) then InterruptID_COMMIRQ
-   else if Z.eqb (l__9885) (2) then InterruptID_CTIIRQ
-   else if Z.eqb (l__9885) (3) then InterruptID_COMMRX
-   else if Z.eqb (l__9885) (4) then InterruptID_COMMTX
-   else if Z.eqb (l__9885) (5) then InterruptID_CNTP
-   else if Z.eqb (l__9885) (6) then InterruptID_CNTHP
-   else if Z.eqb (l__9885) (7) then InterruptID_CNTHPS
-   else if Z.eqb (l__9885) (8) then InterruptID_CNTPS
-   else if Z.eqb (l__9885) (9) then InterruptID_CNTV
-   else if Z.eqb (l__9885) (10) then InterruptID_CNTHV
-   else if Z.eqb (l__9885) (11) then InterruptID_CNTHVS
+   let l__859 := arg_ in
+   if Z.eqb (l__859) (0) then InterruptID_PMUIRQ
+   else if Z.eqb (l__859) (1) then InterruptID_COMMIRQ
+   else if Z.eqb (l__859) (2) then InterruptID_CTIIRQ
+   else if Z.eqb (l__859) (3) then InterruptID_COMMRX
+   else if Z.eqb (l__859) (4) then InterruptID_COMMTX
+   else if Z.eqb (l__859) (5) then InterruptID_CNTP
+   else if Z.eqb (l__859) (6) then InterruptID_CNTHP
+   else if Z.eqb (l__859) (7) then InterruptID_CNTHPS
+   else if Z.eqb (l__859) (8) then InterruptID_CNTPS
+   else if Z.eqb (l__859) (9) then InterruptID_CNTV
+   else if Z.eqb (l__859) (10) then InterruptID_CNTHV
+   else if Z.eqb (l__859) (11) then InterruptID_CNTHVS
    else InterruptID_PMBIRQ.
 
 Lemma InterruptID_num_of_roundtrip (x : InterruptID) : InterruptID_of_num (num_of_InterruptID x) = x.
@@ -5320,47 +5320,47 @@ Definition num_of_Exception (arg_ : Exception) : Z :=
    end.
 
 Definition Exception_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 40)*) : Exception :=
-   let l__9845 := arg_ in
-   if Z.eqb (l__9845) (0) then Exception_Uncategorized
-   else if Z.eqb (l__9845) (1) then Exception_WFxTrap
-   else if Z.eqb (l__9845) (2) then Exception_CP15RTTrap
-   else if Z.eqb (l__9845) (3) then Exception_CP15RRTTrap
-   else if Z.eqb (l__9845) (4) then Exception_CP14RTTrap
-   else if Z.eqb (l__9845) (5) then Exception_CP14DTTrap
-   else if Z.eqb (l__9845) (6) then Exception_CP14RRTTrap
-   else if Z.eqb (l__9845) (7) then Exception_AdvSIMDFPAccessTrap
-   else if Z.eqb (l__9845) (8) then Exception_FPIDTrap
-   else if Z.eqb (l__9845) (9) then Exception_LDST64BTrap
-   else if Z.eqb (l__9845) (10) then Exception_PACTrap
-   else if Z.eqb (l__9845) (11) then Exception_IllegalState
-   else if Z.eqb (l__9845) (12) then Exception_SupervisorCall
-   else if Z.eqb (l__9845) (13) then Exception_HypervisorCall
-   else if Z.eqb (l__9845) (14) then Exception_MonitorCall
-   else if Z.eqb (l__9845) (15) then Exception_SystemRegisterTrap
-   else if Z.eqb (l__9845) (16) then Exception_ERetTrap
-   else if Z.eqb (l__9845) (17) then Exception_InstructionAbort
-   else if Z.eqb (l__9845) (18) then Exception_PCAlignment
-   else if Z.eqb (l__9845) (19) then Exception_DataAbort
-   else if Z.eqb (l__9845) (20) then Exception_NV2DataAbort
-   else if Z.eqb (l__9845) (21) then Exception_PACFail
-   else if Z.eqb (l__9845) (22) then Exception_SPAlignment
-   else if Z.eqb (l__9845) (23) then Exception_FPTrappedException
-   else if Z.eqb (l__9845) (24) then Exception_SError
-   else if Z.eqb (l__9845) (25) then Exception_Breakpoint
-   else if Z.eqb (l__9845) (26) then Exception_SoftwareStep
-   else if Z.eqb (l__9845) (27) then Exception_Watchpoint
-   else if Z.eqb (l__9845) (28) then Exception_NV2Watchpoint
-   else if Z.eqb (l__9845) (29) then Exception_SoftwareBreakpoint
-   else if Z.eqb (l__9845) (30) then Exception_VectorCatch
-   else if Z.eqb (l__9845) (31) then Exception_IRQ
-   else if Z.eqb (l__9845) (32) then Exception_SVEAccessTrap
-   else if Z.eqb (l__9845) (33) then Exception_SMEAccessTrap
-   else if Z.eqb (l__9845) (34) then Exception_TSTARTAccessTrap
-   else if Z.eqb (l__9845) (35) then Exception_GPC
-   else if Z.eqb (l__9845) (36) then Exception_BranchTarget
-   else if Z.eqb (l__9845) (37) then Exception_MemCpyMemSet
-   else if Z.eqb (l__9845) (38) then Exception_GCSFail
-   else if Z.eqb (l__9845) (39) then Exception_SystemRegister128Trap
+   let l__819 := arg_ in
+   if Z.eqb (l__819) (0) then Exception_Uncategorized
+   else if Z.eqb (l__819) (1) then Exception_WFxTrap
+   else if Z.eqb (l__819) (2) then Exception_CP15RTTrap
+   else if Z.eqb (l__819) (3) then Exception_CP15RRTTrap
+   else if Z.eqb (l__819) (4) then Exception_CP14RTTrap
+   else if Z.eqb (l__819) (5) then Exception_CP14DTTrap
+   else if Z.eqb (l__819) (6) then Exception_CP14RRTTrap
+   else if Z.eqb (l__819) (7) then Exception_AdvSIMDFPAccessTrap
+   else if Z.eqb (l__819) (8) then Exception_FPIDTrap
+   else if Z.eqb (l__819) (9) then Exception_LDST64BTrap
+   else if Z.eqb (l__819) (10) then Exception_PACTrap
+   else if Z.eqb (l__819) (11) then Exception_IllegalState
+   else if Z.eqb (l__819) (12) then Exception_SupervisorCall
+   else if Z.eqb (l__819) (13) then Exception_HypervisorCall
+   else if Z.eqb (l__819) (14) then Exception_MonitorCall
+   else if Z.eqb (l__819) (15) then Exception_SystemRegisterTrap
+   else if Z.eqb (l__819) (16) then Exception_ERetTrap
+   else if Z.eqb (l__819) (17) then Exception_InstructionAbort
+   else if Z.eqb (l__819) (18) then Exception_PCAlignment
+   else if Z.eqb (l__819) (19) then Exception_DataAbort
+   else if Z.eqb (l__819) (20) then Exception_NV2DataAbort
+   else if Z.eqb (l__819) (21) then Exception_PACFail
+   else if Z.eqb (l__819) (22) then Exception_SPAlignment
+   else if Z.eqb (l__819) (23) then Exception_FPTrappedException
+   else if Z.eqb (l__819) (24) then Exception_SError
+   else if Z.eqb (l__819) (25) then Exception_Breakpoint
+   else if Z.eqb (l__819) (26) then Exception_SoftwareStep
+   else if Z.eqb (l__819) (27) then Exception_Watchpoint
+   else if Z.eqb (l__819) (28) then Exception_NV2Watchpoint
+   else if Z.eqb (l__819) (29) then Exception_SoftwareBreakpoint
+   else if Z.eqb (l__819) (30) then Exception_VectorCatch
+   else if Z.eqb (l__819) (31) then Exception_IRQ
+   else if Z.eqb (l__819) (32) then Exception_SVEAccessTrap
+   else if Z.eqb (l__819) (33) then Exception_SMEAccessTrap
+   else if Z.eqb (l__819) (34) then Exception_TSTARTAccessTrap
+   else if Z.eqb (l__819) (35) then Exception_GPC
+   else if Z.eqb (l__819) (36) then Exception_BranchTarget
+   else if Z.eqb (l__819) (37) then Exception_MemCpyMemSet
+   else if Z.eqb (l__819) (38) then Exception_GCSFail
+   else if Z.eqb (l__819) (39) then Exception_SystemRegister128Trap
    else Exception_FIQ.
 
 Lemma Exception_num_of_roundtrip (x : Exception) : Exception_of_num (num_of_Exception x) = x.
@@ -5500,8 +5500,8 @@ Definition num_of_TranslationStage (arg_ : TranslationStage) : Z :=
    match arg_ with | TranslationStage_1 => 0 | TranslationStage_12 => 1 end.
 
 Definition TranslationStage_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 1)*) : TranslationStage :=
-   let l__9844 := arg_ in
-   if Z.eqb (l__9844) (0) then TranslationStage_1
+   let l__818 := arg_ in
+   if Z.eqb (l__818) (0) then TranslationStage_1
    else TranslationStage_12.
 
 Lemma TranslationStage_num_of_roundtrip (x : TranslationStage) : TranslationStage_of_num (num_of_TranslationStage x) = x.
@@ -5561,10 +5561,10 @@ Definition num_of_ATAccess (arg_ : ATAccess) : Z :=
    end.
 
 Definition ATAccess_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : ATAccess :=
-   let l__9841 := arg_ in
-   if Z.eqb (l__9841) (0) then ATAccess_Read
-   else if Z.eqb (l__9841) (1) then ATAccess_Write
-   else if Z.eqb (l__9841) (2) then ATAccess_ReadPAN
+   let l__815 := arg_ in
+   if Z.eqb (l__815) (0) then ATAccess_Read
+   else if Z.eqb (l__815) (1) then ATAccess_Write
+   else if Z.eqb (l__815) (2) then ATAccess_ReadPAN
    else ATAccess_WritePAN.
 
 Lemma ATAccess_num_of_roundtrip (x : ATAccess) : ATAccess_of_num (num_of_ATAccess x) = x.
@@ -5622,11 +5622,11 @@ Definition num_of_Regime (arg_ : Regime) : Z :=
    end.
 
 Definition Regime_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 4)*) : Regime :=
-   let l__9837 := arg_ in
-   if Z.eqb (l__9837) (0) then Regime_EL3
-   else if Z.eqb (l__9837) (1) then Regime_EL30
-   else if Z.eqb (l__9837) (2) then Regime_EL2
-   else if Z.eqb (l__9837) (3) then Regime_EL20
+   let l__811 := arg_ in
+   if Z.eqb (l__811) (0) then Regime_EL3
+   else if Z.eqb (l__811) (1) then Regime_EL30
+   else if Z.eqb (l__811) (2) then Regime_EL2
+   else if Z.eqb (l__811) (3) then Regime_EL20
    else Regime_EL10.
 
 Lemma Regime_num_of_roundtrip (x : Regime) : Regime_of_num (num_of_Regime x) = x.
@@ -5678,9 +5678,9 @@ Definition num_of_TGx (arg_ : TGx) : Z :=
    match arg_ with | TGx_4KB => 0 | TGx_16KB => 1 | TGx_64KB => 2 end.
 
 Definition TGx_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : TGx :=
-   let l__9835 := arg_ in
-   if Z.eqb (l__9835) (0) then TGx_4KB
-   else if Z.eqb (l__9835) (1) then TGx_16KB
+   let l__809 := arg_ in
+   if Z.eqb (l__809) (0) then TGx_4KB
+   else if Z.eqb (l__809) (1) then TGx_16KB
    else TGx_64KB.
 
 Lemma TGx_num_of_roundtrip (x : TGx) : TGx_of_num (num_of_TGx x) = x.
@@ -5736,9 +5736,9 @@ Definition num_of_DescriptorType (arg_ : DescriptorType) : Z :=
    end.
 
 Definition DescriptorType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : DescriptorType :=
-   let l__9833 := arg_ in
-   if Z.eqb (l__9833) (0) then DescriptorType_Table
-   else if Z.eqb (l__9833) (1) then DescriptorType_Leaf
+   let l__807 := arg_ in
+   if Z.eqb (l__807) (0) then DescriptorType_Table
+   else if Z.eqb (l__807) (1) then DescriptorType_Leaf
    else DescriptorType_Invalid.
 
 Lemma DescriptorType_num_of_roundtrip (x : DescriptorType) : DescriptorType_of_num (num_of_DescriptorType x) = x.
@@ -5803,12 +5803,12 @@ Definition num_of_SDFType (arg_ : SDFType) : Z :=
    end.
 
 Definition SDFType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 5)*) : SDFType :=
-   let l__9828 := arg_ in
-   if Z.eqb (l__9828) (0) then SDFType_Table
-   else if Z.eqb (l__9828) (1) then SDFType_Invalid
-   else if Z.eqb (l__9828) (2) then SDFType_Supersection
-   else if Z.eqb (l__9828) (3) then SDFType_Section
-   else if Z.eqb (l__9828) (4) then SDFType_LargePage
+   let l__802 := arg_ in
+   if Z.eqb (l__802) (0) then SDFType_Table
+   else if Z.eqb (l__802) (1) then SDFType_Invalid
+   else if Z.eqb (l__802) (2) then SDFType_Supersection
+   else if Z.eqb (l__802) (3) then SDFType_Section
+   else if Z.eqb (l__802) (4) then SDFType_LargePage
    else SDFType_SmallPage.
 
 Lemma SDFType_num_of_roundtrip (x : SDFType) : SDFType_of_num (num_of_SDFType x) = x.
@@ -6943,13 +6943,13 @@ Definition num_of_SVECmp (arg_ : SVECmp) : Z :=
    end.
 
 Definition SVECmp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 6)*) : SVECmp :=
-   let l__9822 := arg_ in
-   if Z.eqb (l__9822) (0) then Cmp_EQ
-   else if Z.eqb (l__9822) (1) then Cmp_NE
-   else if Z.eqb (l__9822) (2) then Cmp_GE
-   else if Z.eqb (l__9822) (3) then Cmp_GT
-   else if Z.eqb (l__9822) (4) then Cmp_LT
-   else if Z.eqb (l__9822) (5) then Cmp_LE
+   let l__796 := arg_ in
+   if Z.eqb (l__796) (0) then Cmp_EQ
+   else if Z.eqb (l__796) (1) then Cmp_NE
+   else if Z.eqb (l__796) (2) then Cmp_GE
+   else if Z.eqb (l__796) (3) then Cmp_GT
+   else if Z.eqb (l__796) (4) then Cmp_LT
+   else if Z.eqb (l__796) (5) then Cmp_LE
    else Cmp_UN.
 
 Lemma SVECmp_num_of_roundtrip (x : SVECmp) : SVECmp_of_num (num_of_SVECmp x) = x.
@@ -7018,11 +7018,11 @@ Definition num_of_SMEExceptionType (arg_ : SMEExceptionType) : Z :=
    end.
 
 Definition SMEExceptionType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 4)*) : SMEExceptionType :=
-   let l__9818 := arg_ in
-   if Z.eqb (l__9818) (0) then SMEExceptionType_AccessTrap
-   else if Z.eqb (l__9818) (1) then SMEExceptionType_Streaming
-   else if Z.eqb (l__9818) (2) then SMEExceptionType_NotStreaming
-   else if Z.eqb (l__9818) (3) then SMEExceptionType_InactiveZA
+   let l__792 := arg_ in
+   if Z.eqb (l__792) (0) then SMEExceptionType_AccessTrap
+   else if Z.eqb (l__792) (1) then SMEExceptionType_Streaming
+   else if Z.eqb (l__792) (2) then SMEExceptionType_NotStreaming
+   else if Z.eqb (l__792) (3) then SMEExceptionType_InactiveZA
    else SMEExceptionType_InaccessibleZT0.
 
 Lemma SMEExceptionType_num_of_roundtrip (x : SMEExceptionType) : SMEExceptionType_of_num (num_of_SMEExceptionType x) = x.
@@ -7094,14 +7094,14 @@ Definition num_of_GCSInstruction (arg_ : GCSInstruction) : Z :=
    end.
 
 Definition GCSInstruction_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 7)*) : GCSInstruction :=
-   let l__9811 := arg_ in
-   if Z.eqb (l__9811) (0) then GCSInstType_PRET
-   else if Z.eqb (l__9811) (1) then GCSInstType_POPM
-   else if Z.eqb (l__9811) (2) then GCSInstType_PRETAA
-   else if Z.eqb (l__9811) (3) then GCSInstType_PRETAB
-   else if Z.eqb (l__9811) (4) then GCSInstType_SS1
-   else if Z.eqb (l__9811) (5) then GCSInstType_SS2
-   else if Z.eqb (l__9811) (6) then GCSInstType_POPCX
+   let l__785 := arg_ in
+   if Z.eqb (l__785) (0) then GCSInstType_PRET
+   else if Z.eqb (l__785) (1) then GCSInstType_POPM
+   else if Z.eqb (l__785) (2) then GCSInstType_PRETAA
+   else if Z.eqb (l__785) (3) then GCSInstType_PRETAB
+   else if Z.eqb (l__785) (4) then GCSInstType_SS1
+   else if Z.eqb (l__785) (5) then GCSInstType_SS2
+   else if Z.eqb (l__785) (6) then GCSInstType_POPCX
    else GCSInstType_POPX.
 
 Lemma GCSInstruction_num_of_roundtrip (x : GCSInstruction) : GCSInstruction_of_num (num_of_GCSInstruction x) = x.
@@ -7153,9 +7153,9 @@ Definition num_of_MOPSStage (arg_ : MOPSStage) : Z :=
    match arg_ with | MOPSStage_Prologue => 0 | MOPSStage_Main => 1 | MOPSStage_Epilogue => 2 end.
 
 Definition MOPSStage_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : MOPSStage :=
-   let l__9809 := arg_ in
-   if Z.eqb (l__9809) (0) then MOPSStage_Prologue
-   else if Z.eqb (l__9809) (1) then MOPSStage_Main
+   let l__783 := arg_ in
+   if Z.eqb (l__783) (0) then MOPSStage_Prologue
+   else if Z.eqb (l__783) (1) then MOPSStage_Main
    else MOPSStage_Epilogue.
 
 Lemma MOPSStage_num_of_roundtrip (x : MOPSStage) : MOPSStage_of_num (num_of_MOPSStage x) = x.
@@ -7360,14 +7360,14 @@ Definition num_of_TMFailure (arg_ : TMFailure) : Z :=
    end.
 
 Definition TMFailure_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 7)*) : TMFailure :=
-   let l__9802 := arg_ in
-   if Z.eqb (l__9802) (0) then TMFailure_CNCL
-   else if Z.eqb (l__9802) (1) then TMFailure_DBG
-   else if Z.eqb (l__9802) (2) then TMFailure_ERR
-   else if Z.eqb (l__9802) (3) then TMFailure_NEST
-   else if Z.eqb (l__9802) (4) then TMFailure_SIZE
-   else if Z.eqb (l__9802) (5) then TMFailure_MEM
-   else if Z.eqb (l__9802) (6) then TMFailure_TRIVIAL
+   let l__776 := arg_ in
+   if Z.eqb (l__776) (0) then TMFailure_CNCL
+   else if Z.eqb (l__776) (1) then TMFailure_DBG
+   else if Z.eqb (l__776) (2) then TMFailure_ERR
+   else if Z.eqb (l__776) (3) then TMFailure_NEST
+   else if Z.eqb (l__776) (4) then TMFailure_SIZE
+   else if Z.eqb (l__776) (5) then TMFailure_MEM
+   else if Z.eqb (l__776) (6) then TMFailure_TRIVIAL
    else TMFailure_IMP.
 
 Lemma TMFailure_num_of_roundtrip (x : TMFailure) : TMFailure_of_num (num_of_TMFailure x) = x.
@@ -7419,9 +7419,9 @@ Definition num_of_PGSe (arg_ : PGSe) : Z :=
    match arg_ with | PGS_4KB => 0 | PGS_16KB => 1 | PGS_64KB => 2 end.
 
 Definition PGSe_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : PGSe :=
-   let l__9800 := arg_ in
-   if Z.eqb (l__9800) (0) then PGS_4KB
-   else if Z.eqb (l__9800) (1) then PGS_16KB
+   let l__774 := arg_ in
+   if Z.eqb (l__774) (0) then PGS_4KB
+   else if Z.eqb (l__774) (1) then PGS_16KB
    else PGS_64KB.
 
 Lemma PGSe_num_of_roundtrip (x : PGSe) : PGSe_of_num (num_of_PGSe x) = x.
@@ -7571,11 +7571,11 @@ Definition num_of_TimeStamp (arg_ : TimeStamp) : Z :=
    end.
 
 Definition TimeStamp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 4)*) : TimeStamp :=
-   let l__9796 := arg_ in
-   if Z.eqb (l__9796) (0) then TimeStamp_None
-   else if Z.eqb (l__9796) (1) then TimeStamp_CoreSight
-   else if Z.eqb (l__9796) (2) then TimeStamp_Physical
-   else if Z.eqb (l__9796) (3) then TimeStamp_OffsetPhysical
+   let l__770 := arg_ in
+   if Z.eqb (l__770) (0) then TimeStamp_None
+   else if Z.eqb (l__770) (1) then TimeStamp_CoreSight
+   else if Z.eqb (l__770) (2) then TimeStamp_Physical
+   else if Z.eqb (l__770) (3) then TimeStamp_OffsetPhysical
    else TimeStamp_Virtual.
 
 Lemma TimeStamp_num_of_roundtrip (x : TimeStamp) : TimeStamp_of_num (num_of_TimeStamp x) = x.
@@ -7633,11 +7633,11 @@ Definition num_of_OpType (arg_ : OpType) : Z :=
    end.
 
 Definition OpType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 4)*) : OpType :=
-   let l__9792 := arg_ in
-   if Z.eqb (l__9792) (0) then OpType_Load
-   else if Z.eqb (l__9792) (1) then OpType_Store
-   else if Z.eqb (l__9792) (2) then OpType_LoadAtomic
-   else if Z.eqb (l__9792) (3) then OpType_Branch
+   let l__766 := arg_ in
+   if Z.eqb (l__766) (0) then OpType_Load
+   else if Z.eqb (l__766) (1) then OpType_Store
+   else if Z.eqb (l__766) (2) then OpType_LoadAtomic
+   else if Z.eqb (l__766) (3) then OpType_Branch
    else OpType_Other.
 
 Lemma OpType_num_of_roundtrip (x : OpType) : OpType_of_num (num_of_OpType x) = x.
@@ -7689,9 +7689,9 @@ Definition num_of_CountOp (arg_ : CountOp) : Z :=
    match arg_ with | CountOp_CLZ => 0 | CountOp_CLS => 1 | CountOp_CNT => 2 end.
 
 Definition CountOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : CountOp :=
-   let l__9790 := arg_ in
-   if Z.eqb (l__9790) (0) then CountOp_CLZ
-   else if Z.eqb (l__9790) (1) then CountOp_CLS
+   let l__764 := arg_ in
+   if Z.eqb (l__764) (0) then CountOp_CLZ
+   else if Z.eqb (l__764) (1) then CountOp_CLS
    else CountOp_CNT.
 
 Lemma CountOp_num_of_roundtrip (x : CountOp) : CountOp_of_num (num_of_CountOp x) = x.
@@ -7760,14 +7760,14 @@ Definition num_of_ExtendType (arg_ : ExtendType) : Z :=
    end.
 
 Definition ExtendType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 7)*) : ExtendType :=
-   let l__9783 := arg_ in
-   if Z.eqb (l__9783) (0) then ExtendType_SXTB
-   else if Z.eqb (l__9783) (1) then ExtendType_SXTH
-   else if Z.eqb (l__9783) (2) then ExtendType_SXTW
-   else if Z.eqb (l__9783) (3) then ExtendType_SXTX
-   else if Z.eqb (l__9783) (4) then ExtendType_UXTB
-   else if Z.eqb (l__9783) (5) then ExtendType_UXTH
-   else if Z.eqb (l__9783) (6) then ExtendType_UXTW
+   let l__757 := arg_ in
+   if Z.eqb (l__757) (0) then ExtendType_SXTB
+   else if Z.eqb (l__757) (1) then ExtendType_SXTH
+   else if Z.eqb (l__757) (2) then ExtendType_SXTW
+   else if Z.eqb (l__757) (3) then ExtendType_SXTX
+   else if Z.eqb (l__757) (4) then ExtendType_UXTB
+   else if Z.eqb (l__757) (5) then ExtendType_UXTH
+   else if Z.eqb (l__757) (6) then ExtendType_UXTW
    else ExtendType_UXTX.
 
 Lemma ExtendType_num_of_roundtrip (x : ExtendType) : ExtendType_of_num (num_of_ExtendType x) = x.
@@ -7824,10 +7824,10 @@ Definition num_of_FPMaxMinOp (arg_ : FPMaxMinOp) : Z :=
    end.
 
 Definition FPMaxMinOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : FPMaxMinOp :=
-   let l__9780 := arg_ in
-   if Z.eqb (l__9780) (0) then FPMaxMinOp_MAX
-   else if Z.eqb (l__9780) (1) then FPMaxMinOp_MIN
-   else if Z.eqb (l__9780) (2) then FPMaxMinOp_MAXNUM
+   let l__754 := arg_ in
+   if Z.eqb (l__754) (0) then FPMaxMinOp_MAX
+   else if Z.eqb (l__754) (1) then FPMaxMinOp_MIN
+   else if Z.eqb (l__754) (2) then FPMaxMinOp_MAXNUM
    else FPMaxMinOp_MINNUM.
 
 Lemma FPMaxMinOp_num_of_roundtrip (x : FPMaxMinOp) : FPMaxMinOp_of_num (num_of_FPMaxMinOp x) = x.
@@ -7884,10 +7884,10 @@ Definition num_of_FPUnaryOp (arg_ : FPUnaryOp) : Z :=
    end.
 
 Definition FPUnaryOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : FPUnaryOp :=
-   let l__9777 := arg_ in
-   if Z.eqb (l__9777) (0) then FPUnaryOp_ABS
-   else if Z.eqb (l__9777) (1) then FPUnaryOp_MOV
-   else if Z.eqb (l__9777) (2) then FPUnaryOp_NEG
+   let l__751 := arg_ in
+   if Z.eqb (l__751) (0) then FPUnaryOp_ABS
+   else if Z.eqb (l__751) (1) then FPUnaryOp_MOV
+   else if Z.eqb (l__751) (2) then FPUnaryOp_NEG
    else FPUnaryOp_SQRT.
 
 Lemma FPUnaryOp_num_of_roundtrip (x : FPUnaryOp) : FPUnaryOp_of_num (num_of_FPUnaryOp x) = x.
@@ -7950,11 +7950,11 @@ Definition num_of_FPConvOp (arg_ : FPConvOp) : Z :=
    end.
 
 Definition FPConvOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 4)*) : FPConvOp :=
-   let l__9773 := arg_ in
-   if Z.eqb (l__9773) (0) then FPConvOp_CVT_FtoI
-   else if Z.eqb (l__9773) (1) then FPConvOp_CVT_ItoF
-   else if Z.eqb (l__9773) (2) then FPConvOp_MOV_FtoI
-   else if Z.eqb (l__9773) (3) then FPConvOp_MOV_ItoF
+   let l__747 := arg_ in
+   if Z.eqb (l__747) (0) then FPConvOp_CVT_FtoI
+   else if Z.eqb (l__747) (1) then FPConvOp_CVT_ItoF
+   else if Z.eqb (l__747) (2) then FPConvOp_MOV_FtoI
+   else if Z.eqb (l__747) (3) then FPConvOp_MOV_ItoF
    else FPConvOp_CVT_FtoI_JS.
 
 Lemma FPConvOp_num_of_roundtrip (x : FPConvOp) : FPConvOp_of_num (num_of_FPConvOp x) = x.
@@ -8006,9 +8006,9 @@ Definition num_of_MoveWideOp (arg_ : MoveWideOp) : Z :=
    match arg_ with | MoveWideOp_N => 0 | MoveWideOp_Z => 1 | MoveWideOp_K => 2 end.
 
 Definition MoveWideOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : MoveWideOp :=
-   let l__9771 := arg_ in
-   if Z.eqb (l__9771) (0) then MoveWideOp_N
-   else if Z.eqb (l__9771) (1) then MoveWideOp_Z
+   let l__745 := arg_ in
+   if Z.eqb (l__745) (0) then MoveWideOp_N
+   else if Z.eqb (l__745) (1) then MoveWideOp_Z
    else MoveWideOp_K.
 
 Lemma MoveWideOp_num_of_roundtrip (x : MoveWideOp) : MoveWideOp_of_num (num_of_MoveWideOp x) = x.
@@ -8065,10 +8065,10 @@ Definition num_of_ShiftType (arg_ : ShiftType) : Z :=
    end.
 
 Definition ShiftType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : ShiftType :=
-   let l__9768 := arg_ in
-   if Z.eqb (l__9768) (0) then ShiftType_LSL
-   else if Z.eqb (l__9768) (1) then ShiftType_LSR
-   else if Z.eqb (l__9768) (2) then ShiftType_ASR
+   let l__742 := arg_ in
+   if Z.eqb (l__742) (0) then ShiftType_LSL
+   else if Z.eqb (l__742) (1) then ShiftType_LSR
+   else if Z.eqb (l__742) (2) then ShiftType_ASR
    else ShiftType_ROR.
 
 Lemma ShiftType_num_of_roundtrip (x : ShiftType) : ShiftType_of_num (num_of_ShiftType x) = x.
@@ -8120,9 +8120,9 @@ Definition num_of_LogicalOp (arg_ : LogicalOp) : Z :=
    match arg_ with | LogicalOp_AND => 0 | LogicalOp_EOR => 1 | LogicalOp_ORR => 2 end.
 
 Definition LogicalOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : LogicalOp :=
-   let l__9766 := arg_ in
-   if Z.eqb (l__9766) (0) then LogicalOp_AND
-   else if Z.eqb (l__9766) (1) then LogicalOp_EOR
+   let l__740 := arg_ in
+   if Z.eqb (l__740) (0) then LogicalOp_AND
+   else if Z.eqb (l__740) (1) then LogicalOp_EOR
    else LogicalOp_ORR.
 
 Lemma LogicalOp_num_of_roundtrip (x : LogicalOp) : LogicalOp_of_num (num_of_LogicalOp x) = x.
@@ -8209,23 +8209,23 @@ Definition num_of_SystemHintOp (arg_ : SystemHintOp) : Z :=
    end.
 
 Definition SystemHintOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 16)*) : SystemHintOp :=
-   let l__9750 := arg_ in
-   if Z.eqb (l__9750) (0) then SystemHintOp_NOP
-   else if Z.eqb (l__9750) (1) then SystemHintOp_YIELD
-   else if Z.eqb (l__9750) (2) then SystemHintOp_WFE
-   else if Z.eqb (l__9750) (3) then SystemHintOp_WFI
-   else if Z.eqb (l__9750) (4) then SystemHintOp_SEV
-   else if Z.eqb (l__9750) (5) then SystemHintOp_SEVL
-   else if Z.eqb (l__9750) (6) then SystemHintOp_DGH
-   else if Z.eqb (l__9750) (7) then SystemHintOp_ESB
-   else if Z.eqb (l__9750) (8) then SystemHintOp_PSB
-   else if Z.eqb (l__9750) (9) then SystemHintOp_TSB
-   else if Z.eqb (l__9750) (10) then SystemHintOp_BTI
-   else if Z.eqb (l__9750) (11) then SystemHintOp_WFET
-   else if Z.eqb (l__9750) (12) then SystemHintOp_WFIT
-   else if Z.eqb (l__9750) (13) then SystemHintOp_CLRBHB
-   else if Z.eqb (l__9750) (14) then SystemHintOp_GCSB
-   else if Z.eqb (l__9750) (15) then SystemHintOp_CHKFEAT
+   let l__724 := arg_ in
+   if Z.eqb (l__724) (0) then SystemHintOp_NOP
+   else if Z.eqb (l__724) (1) then SystemHintOp_YIELD
+   else if Z.eqb (l__724) (2) then SystemHintOp_WFE
+   else if Z.eqb (l__724) (3) then SystemHintOp_WFI
+   else if Z.eqb (l__724) (4) then SystemHintOp_SEV
+   else if Z.eqb (l__724) (5) then SystemHintOp_SEVL
+   else if Z.eqb (l__724) (6) then SystemHintOp_DGH
+   else if Z.eqb (l__724) (7) then SystemHintOp_ESB
+   else if Z.eqb (l__724) (8) then SystemHintOp_PSB
+   else if Z.eqb (l__724) (9) then SystemHintOp_TSB
+   else if Z.eqb (l__724) (10) then SystemHintOp_BTI
+   else if Z.eqb (l__724) (11) then SystemHintOp_WFET
+   else if Z.eqb (l__724) (12) then SystemHintOp_WFIT
+   else if Z.eqb (l__724) (13) then SystemHintOp_CLRBHB
+   else if Z.eqb (l__724) (14) then SystemHintOp_GCSB
+   else if Z.eqb (l__724) (15) then SystemHintOp_CHKFEAT
    else SystemHintOp_CSDB.
 
 Lemma SystemHintOp_num_of_roundtrip (x : SystemHintOp) : SystemHintOp_of_num (num_of_SystemHintOp x) = x.
@@ -8304,19 +8304,19 @@ Definition num_of_PSTATEField (arg_ : PSTATEField) : Z :=
    end.
 
 Definition PSTATEField_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 12)*) : PSTATEField :=
-   let l__9738 := arg_ in
-   if Z.eqb (l__9738) (0) then PSTATEField_DAIFSet
-   else if Z.eqb (l__9738) (1) then PSTATEField_DAIFClr
-   else if Z.eqb (l__9738) (2) then PSTATEField_PAN
-   else if Z.eqb (l__9738) (3) then PSTATEField_UAO
-   else if Z.eqb (l__9738) (4) then PSTATEField_DIT
-   else if Z.eqb (l__9738) (5) then PSTATEField_SSBS
-   else if Z.eqb (l__9738) (6) then PSTATEField_TCO
-   else if Z.eqb (l__9738) (7) then PSTATEField_SVCRSM
-   else if Z.eqb (l__9738) (8) then PSTATEField_SVCRZA
-   else if Z.eqb (l__9738) (9) then PSTATEField_SVCRSMZA
-   else if Z.eqb (l__9738) (10) then PSTATEField_ALLINT
-   else if Z.eqb (l__9738) (11) then PSTATEField_PM
+   let l__712 := arg_ in
+   if Z.eqb (l__712) (0) then PSTATEField_DAIFSet
+   else if Z.eqb (l__712) (1) then PSTATEField_DAIFClr
+   else if Z.eqb (l__712) (2) then PSTATEField_PAN
+   else if Z.eqb (l__712) (3) then PSTATEField_UAO
+   else if Z.eqb (l__712) (4) then PSTATEField_DIT
+   else if Z.eqb (l__712) (5) then PSTATEField_SSBS
+   else if Z.eqb (l__712) (6) then PSTATEField_TCO
+   else if Z.eqb (l__712) (7) then PSTATEField_SVCRSM
+   else if Z.eqb (l__712) (8) then PSTATEField_SVCRZA
+   else if Z.eqb (l__712) (9) then PSTATEField_SVCRSMZA
+   else if Z.eqb (l__712) (10) then PSTATEField_ALLINT
+   else if Z.eqb (l__712) (11) then PSTATEField_PM
    else PSTATEField_SP.
 
 Lemma PSTATEField_num_of_roundtrip (x : PSTATEField) : PSTATEField_of_num (num_of_PSTATEField x) = x.
@@ -8368,8 +8368,8 @@ Definition num_of_TLBILevel (arg_ : TLBILevel) : Z :=
    match arg_ with | TLBILevel_Any => 0 | TLBILevel_Last => 1 end.
 
 Definition TLBILevel_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 1)*) : TLBILevel :=
-   let l__9737 := arg_ in
-   if Z.eqb (l__9737) (0) then TLBILevel_Any
+   let l__711 := arg_ in
+   if Z.eqb (l__711) (0) then TLBILevel_Any
    else TLBILevel_Last.
 
 Lemma TLBILevel_num_of_roundtrip (x : TLBILevel) : TLBILevel_of_num (num_of_TLBILevel x) = x.
@@ -8470,30 +8470,30 @@ Definition num_of_TLBIOp (arg_ : TLBIOp) : Z :=
    end.
 
 Definition TLBIOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 23)*) : TLBIOp :=
-   let l__9714 := arg_ in
-   if Z.eqb (l__9714) (0) then TLBIOp_DALL
-   else if Z.eqb (l__9714) (1) then TLBIOp_DASID
-   else if Z.eqb (l__9714) (2) then TLBIOp_DVA
-   else if Z.eqb (l__9714) (3) then TLBIOp_IALL
-   else if Z.eqb (l__9714) (4) then TLBIOp_IASID
-   else if Z.eqb (l__9714) (5) then TLBIOp_IVA
-   else if Z.eqb (l__9714) (6) then TLBIOp_ALL
-   else if Z.eqb (l__9714) (7) then TLBIOp_ASID
-   else if Z.eqb (l__9714) (8) then TLBIOp_IPAS2
-   else if Z.eqb (l__9714) (9) then TLBIPOp_IPAS2
-   else if Z.eqb (l__9714) (10) then TLBIOp_VAA
-   else if Z.eqb (l__9714) (11) then TLBIOp_VA
-   else if Z.eqb (l__9714) (12) then TLBIPOp_VAA
-   else if Z.eqb (l__9714) (13) then TLBIPOp_VA
-   else if Z.eqb (l__9714) (14) then TLBIOp_VMALL
-   else if Z.eqb (l__9714) (15) then TLBIOp_VMALLS12
-   else if Z.eqb (l__9714) (16) then TLBIOp_RIPAS2
-   else if Z.eqb (l__9714) (17) then TLBIPOp_RIPAS2
-   else if Z.eqb (l__9714) (18) then TLBIOp_RVAA
-   else if Z.eqb (l__9714) (19) then TLBIOp_RVA
-   else if Z.eqb (l__9714) (20) then TLBIPOp_RVAA
-   else if Z.eqb (l__9714) (21) then TLBIPOp_RVA
-   else if Z.eqb (l__9714) (22) then TLBIOp_RPA
+   let l__688 := arg_ in
+   if Z.eqb (l__688) (0) then TLBIOp_DALL
+   else if Z.eqb (l__688) (1) then TLBIOp_DASID
+   else if Z.eqb (l__688) (2) then TLBIOp_DVA
+   else if Z.eqb (l__688) (3) then TLBIOp_IALL
+   else if Z.eqb (l__688) (4) then TLBIOp_IASID
+   else if Z.eqb (l__688) (5) then TLBIOp_IVA
+   else if Z.eqb (l__688) (6) then TLBIOp_ALL
+   else if Z.eqb (l__688) (7) then TLBIOp_ASID
+   else if Z.eqb (l__688) (8) then TLBIOp_IPAS2
+   else if Z.eqb (l__688) (9) then TLBIPOp_IPAS2
+   else if Z.eqb (l__688) (10) then TLBIOp_VAA
+   else if Z.eqb (l__688) (11) then TLBIOp_VA
+   else if Z.eqb (l__688) (12) then TLBIPOp_VAA
+   else if Z.eqb (l__688) (13) then TLBIPOp_VA
+   else if Z.eqb (l__688) (14) then TLBIOp_VMALL
+   else if Z.eqb (l__688) (15) then TLBIOp_VMALLS12
+   else if Z.eqb (l__688) (16) then TLBIOp_RIPAS2
+   else if Z.eqb (l__688) (17) then TLBIPOp_RIPAS2
+   else if Z.eqb (l__688) (18) then TLBIOp_RVAA
+   else if Z.eqb (l__688) (19) then TLBIOp_RVA
+   else if Z.eqb (l__688) (20) then TLBIPOp_RVAA
+   else if Z.eqb (l__688) (21) then TLBIPOp_RVA
+   else if Z.eqb (l__688) (22) then TLBIOp_RPA
    else TLBIOp_PAALL.
 
 Lemma TLBIOp_num_of_roundtrip (x : TLBIOp) : TLBIOp_of_num (num_of_TLBIOp x) = x.
@@ -8545,8 +8545,8 @@ Definition num_of_TLBIMemAttr (arg_ : TLBIMemAttr) : Z :=
    match arg_ with | TLBI_AllAttr => 0 | TLBI_ExcludeXS => 1 end.
 
 Definition TLBIMemAttr_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 1)*) : TLBIMemAttr :=
-   let l__9713 := arg_ in
-   if Z.eqb (l__9713) (0) then TLBI_AllAttr
+   let l__687 := arg_ in
+   if Z.eqb (l__687) (0) then TLBI_AllAttr
    else TLBI_ExcludeXS.
 
 Lemma TLBIMemAttr_num_of_roundtrip (x : TLBIMemAttr) : TLBIMemAttr_of_num (num_of_TLBIMemAttr x) = x.
@@ -8716,10 +8716,10 @@ Definition num_of_VBitOp (arg_ : VBitOp) : Z :=
    match arg_ with | VBitOp_VBIF => 0 | VBitOp_VBIT => 1 | VBitOp_VBSL => 2 | VBitOp_VEOR => 3 end.
 
 Definition VBitOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : VBitOp :=
-   let l__9710 := arg_ in
-   if Z.eqb (l__9710) (0) then VBitOp_VBIF
-   else if Z.eqb (l__9710) (1) then VBitOp_VBIT
-   else if Z.eqb (l__9710) (2) then VBitOp_VBSL
+   let l__684 := arg_ in
+   if Z.eqb (l__684) (0) then VBitOp_VBIF
+   else if Z.eqb (l__684) (1) then VBitOp_VBIT
+   else if Z.eqb (l__684) (2) then VBitOp_VBSL
    else VBitOp_VEOR.
 
 Lemma VBitOp_num_of_roundtrip (x : VBitOp) : VBitOp_of_num (num_of_VBitOp x) = x.
@@ -8777,11 +8777,11 @@ Definition num_of_CompareOp (arg_ : CompareOp) : Z :=
    end.
 
 Definition CompareOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 4)*) : CompareOp :=
-   let l__9706 := arg_ in
-   if Z.eqb (l__9706) (0) then CompareOp_GT
-   else if Z.eqb (l__9706) (1) then CompareOp_GE
-   else if Z.eqb (l__9706) (2) then CompareOp_EQ
-   else if Z.eqb (l__9706) (3) then CompareOp_LE
+   let l__680 := arg_ in
+   if Z.eqb (l__680) (0) then CompareOp_GT
+   else if Z.eqb (l__680) (1) then CompareOp_GE
+   else if Z.eqb (l__680) (2) then CompareOp_EQ
+   else if Z.eqb (l__680) (3) then CompareOp_LE
    else CompareOp_LT.
 
 Lemma CompareOp_num_of_roundtrip (x : CompareOp) : CompareOp_of_num (num_of_CompareOp x) = x.
@@ -8838,10 +8838,10 @@ Definition num_of_ImmediateOp (arg_ : ImmediateOp) : Z :=
    end.
 
 Definition ImmediateOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : ImmediateOp :=
-   let l__9703 := arg_ in
-   if Z.eqb (l__9703) (0) then ImmediateOp_MOVI
-   else if Z.eqb (l__9703) (1) then ImmediateOp_MVNI
-   else if Z.eqb (l__9703) (2) then ImmediateOp_ORR
+   let l__677 := arg_ in
+   if Z.eqb (l__677) (0) then ImmediateOp_MOVI
+   else if Z.eqb (l__677) (1) then ImmediateOp_MVNI
+   else if Z.eqb (l__677) (2) then ImmediateOp_ORR
    else ImmediateOp_BIC.
 
 Lemma ImmediateOp_num_of_roundtrip (x : ImmediateOp) : ImmediateOp_of_num (num_of_ImmediateOp x) = x.
@@ -8906,12 +8906,12 @@ Definition num_of_ReduceOp (arg_ : ReduceOp) : Z :=
    end.
 
 Definition ReduceOp_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 5)*) : ReduceOp :=
-   let l__9698 := arg_ in
-   if Z.eqb (l__9698) (0) then ReduceOp_FMINNUM
-   else if Z.eqb (l__9698) (1) then ReduceOp_FMAXNUM
-   else if Z.eqb (l__9698) (2) then ReduceOp_FMIN
-   else if Z.eqb (l__9698) (3) then ReduceOp_FMAX
-   else if Z.eqb (l__9698) (4) then ReduceOp_FADD
+   let l__672 := arg_ in
+   if Z.eqb (l__672) (0) then ReduceOp_FMINNUM
+   else if Z.eqb (l__672) (1) then ReduceOp_FMAXNUM
+   else if Z.eqb (l__672) (2) then ReduceOp_FMIN
+   else if Z.eqb (l__672) (3) then ReduceOp_FMAX
+   else if Z.eqb (l__672) (4) then ReduceOp_FADD
    else ReduceOp_ADD.
 
 Lemma ReduceOp_num_of_roundtrip (x : ReduceOp) : ReduceOp_of_num (num_of_ReduceOp x) = x.
@@ -8980,14 +8980,14 @@ Definition num_of_CrossTriggerIn (arg_ : CrossTriggerIn) : Z :=
    end.
 
 Definition CrossTriggerIn_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 7)*) : CrossTriggerIn :=
-   let l__9691 := arg_ in
-   if Z.eqb (l__9691) (0) then CrossTriggerIn_CrossHalt
-   else if Z.eqb (l__9691) (1) then CrossTriggerIn_PMUOverflow
-   else if Z.eqb (l__9691) (2) then CrossTriggerIn_RSVD2
-   else if Z.eqb (l__9691) (3) then CrossTriggerIn_RSVD3
-   else if Z.eqb (l__9691) (4) then CrossTriggerIn_TraceExtOut0
-   else if Z.eqb (l__9691) (5) then CrossTriggerIn_TraceExtOut1
-   else if Z.eqb (l__9691) (6) then CrossTriggerIn_TraceExtOut2
+   let l__665 := arg_ in
+   if Z.eqb (l__665) (0) then CrossTriggerIn_CrossHalt
+   else if Z.eqb (l__665) (1) then CrossTriggerIn_PMUOverflow
+   else if Z.eqb (l__665) (2) then CrossTriggerIn_RSVD2
+   else if Z.eqb (l__665) (3) then CrossTriggerIn_RSVD3
+   else if Z.eqb (l__665) (4) then CrossTriggerIn_TraceExtOut0
+   else if Z.eqb (l__665) (5) then CrossTriggerIn_TraceExtOut1
+   else if Z.eqb (l__665) (6) then CrossTriggerIn_TraceExtOut2
    else CrossTriggerIn_TraceExtOut3.
 
 Lemma CrossTriggerIn_num_of_roundtrip (x : CrossTriggerIn) : CrossTriggerIn_of_num (num_of_CrossTriggerIn x) = x.
@@ -9184,10 +9184,10 @@ Definition num_of___InstrEnc (arg_ : __InstrEnc) : Z :=
    match arg_ with | __A64 => 0 | __A32 => 1 | __T16 => 2 | __T32 => 3 end.
 
 Definition __InstrEnc_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 3)*) : __InstrEnc :=
-   let l__9688 := arg_ in
-   if Z.eqb (l__9688) (0) then __A64
-   else if Z.eqb (l__9688) (1) then __A32
-   else if Z.eqb (l__9688) (2) then __T16
+   let l__662 := arg_ in
+   if Z.eqb (l__662) (0) then __A64
+   else if Z.eqb (l__662) (1) then __A32
+   else if Z.eqb (l__662) (2) then __T16
    else __T32.
 
 Lemma __InstrEnc_num_of_roundtrip (x : __InstrEnc) : __InstrEnc_of_num (num_of___InstrEnc x) = x.
@@ -9245,11 +9245,11 @@ Definition num_of_SRType (arg_ : SRType) : Z :=
    end.
 
 Definition SRType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 4)*) : SRType :=
-   let l__9684 := arg_ in
-   if Z.eqb (l__9684) (0) then SRType_LSL
-   else if Z.eqb (l__9684) (1) then SRType_LSR
-   else if Z.eqb (l__9684) (2) then SRType_ASR
-   else if Z.eqb (l__9684) (3) then SRType_ROR
+   let l__658 := arg_ in
+   if Z.eqb (l__658) (0) then SRType_LSL
+   else if Z.eqb (l__658) (1) then SRType_LSR
+   else if Z.eqb (l__658) (2) then SRType_ASR
+   else if Z.eqb (l__658) (3) then SRType_ROR
    else SRType_RRX.
 
 Lemma SRType_num_of_roundtrip (x : SRType) : SRType_of_num (num_of_SRType x) = x.
@@ -9301,9 +9301,9 @@ Definition num_of_VCGEType (arg_ : VCGEType) : Z :=
    match arg_ with | VCGEType_signed => 0 | VCGEType_unsigned => 1 | VCGEType_fp => 2 end.
 
 Definition VCGEType_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : VCGEType :=
-   let l__9682 := arg_ in
-   if Z.eqb (l__9682) (0) then VCGEType_signed
-   else if Z.eqb (l__9682) (1) then VCGEType_unsigned
+   let l__656 := arg_ in
+   if Z.eqb (l__656) (0) then VCGEType_signed
+   else if Z.eqb (l__656) (1) then VCGEType_unsigned
    else VCGEType_fp.
 
 Lemma VCGEType_num_of_roundtrip (x : VCGEType) : VCGEType_of_num (num_of_VCGEType x) = x.
@@ -9355,9 +9355,9 @@ Definition num_of_VFPNegMul (arg_ : VFPNegMul) : Z :=
    match arg_ with | VFPNegMul_VNMLA => 0 | VFPNegMul_VNMLS => 1 | VFPNegMul_VNMUL => 2 end.
 
 Definition VFPNegMul_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : VFPNegMul :=
-   let l__9680 := arg_ in
-   if Z.eqb (l__9680) (0) then VFPNegMul_VNMLA
-   else if Z.eqb (l__9680) (1) then VFPNegMul_VNMLS
+   let l__654 := arg_ in
+   if Z.eqb (l__654) (0) then VFPNegMul_VNMLA
+   else if Z.eqb (l__654) (1) then VFPNegMul_VNMLS
    else VFPNegMul_VNMUL.
 
 Lemma VFPNegMul_num_of_roundtrip (x : VFPNegMul) : VFPNegMul_of_num (num_of_VFPNegMul x) = x.
@@ -9409,9 +9409,9 @@ Definition num_of_VCGTtype (arg_ : VCGTtype) : Z :=
    match arg_ with | VCGTtype_signed => 0 | VCGTtype_unsigned => 1 | VCGTtype_fp => 2 end.
 
 Definition VCGTtype_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : VCGTtype :=
-   let l__9678 := arg_ in
-   if Z.eqb (l__9678) (0) then VCGTtype_signed
-   else if Z.eqb (l__9678) (1) then VCGTtype_unsigned
+   let l__652 := arg_ in
+   if Z.eqb (l__652) (0) then VCGTtype_signed
+   else if Z.eqb (l__652) (1) then VCGTtype_unsigned
    else VCGTtype_fp.
 
 Lemma VCGTtype_num_of_roundtrip (x : VCGTtype) : VCGTtype_of_num (num_of_VCGTtype x) = x.
@@ -9463,9 +9463,9 @@ Definition num_of_VBitOps (arg_ : VBitOps) : Z :=
    match arg_ with | VBitOps_VBIF => 0 | VBitOps_VBIT => 1 | VBitOps_VBSL => 2 end.
 
 Definition VBitOps_of_num (arg_ : Z) (*(0 <=? arg_) && (arg_ <=? 2)*) : VBitOps :=
-   let l__9676 := arg_ in
-   if Z.eqb (l__9676) (0) then VBitOps_VBIF
-   else if Z.eqb (l__9676) (1) then VBitOps_VBIT
+   let l__650 := arg_ in
+   if Z.eqb (l__650) (0) then VBitOps_VBIF
+   else if Z.eqb (l__650) (1) then VBitOps_VBIT
    else VBitOps_VBSL.
 
 Lemma VBitOps_num_of_roundtrip (x : VBitOps) : VBitOps_of_num (num_of_VBitOps x) = x.
@@ -9895,65 +9895,6 @@ Definition GPCCR_EL3_Type : Type := mword 64.
 Definition GPTBR_EL3_Type : Type := mword 64.
 
 Definition GICC_CTLR_Type : Type := mword 32.
-
-Inductive arm_acc_type :=
-| SAcc_ASIMD : bool -> arm_acc_type
-| SAcc_SVE : bool -> arm_acc_type
-| SAcc_SME : bool -> arm_acc_type
-| SAcc_IC : unit -> arm_acc_type
-| SAcc_DC : unit -> arm_acc_type
-| SAcc_DCZero : unit -> arm_acc_type
-| SAcc_AT : unit -> arm_acc_type
-| SAcc_NV2 : unit -> arm_acc_type
-| SAcc_SPE : unit -> arm_acc_type
-| SAcc_GCS : unit -> arm_acc_type
-| SAcc_GPTW : unit -> arm_acc_type.
-Arguments arm_acc_type : clear implicits.
-
-Definition sail_arm_acc_type_encode (x : arm_acc_type) := match x with
-  | SAcc_ASIMD x' => encode (0, encode x')
-  | SAcc_SVE x' => encode (1, encode x')
-  | SAcc_SME x' => encode (2, encode x')
-  | SAcc_IC x' => encode (3, encode x')
-  | SAcc_DC x' => encode (4, encode x')
-  | SAcc_DCZero x' => encode (5, encode x')
-  | SAcc_AT x' => encode (6, encode x')
-  | SAcc_NV2 x' => encode (7, encode x')
-  | SAcc_SPE x' => encode (8, encode x')
-  | SAcc_GCS x' => encode (9, encode x')
-  | SAcc_GPTW x' => encode (10, encode x') end.
-Definition sail_arm_acc_type_decode x : option arm_acc_type := match decode x with
-  | Some (0, x') => SAcc_ASIMD <$> decode x'
-  | Some (1, x') => SAcc_SVE <$> decode x'
-  | Some (2, x') => SAcc_SME <$> decode x'
-  | Some (3, x') => SAcc_IC <$> decode x'
-  | Some (4, x') => SAcc_DC <$> decode x'
-  | Some (5, x') => SAcc_DCZero <$> decode x'
-  | Some (6, x') => SAcc_AT <$> decode x'
-  | Some (7, x') => SAcc_NV2 <$> decode x'
-  | Some (8, x') => SAcc_SPE <$> decode x'
-  | Some (9, x') => SAcc_GCS <$> decode x'
-  | Some (10, x') => SAcc_GPTW <$> decode x'
-  | _ => None end.
-Lemma sail_arm_acc_type_decode_encode : forall (x : arm_acc_type), sail_arm_acc_type_decode
-  (sail_arm_acc_type_encode x)  = Some x.
-Proof.
-  unfold sail_arm_acc_type_decode, sail_arm_acc_type_encode;
-  intros [x|x|x|x|x|x|x|x|x|x|x]; rewrite !decode_encode; reflexivity.
-Qed.
-
-#[export]
-Instance Decidable_eq_arm_acc_type : EqDecision arm_acc_type := decode_encode_eq_dec
-  sail_arm_acc_type_encode sail_arm_acc_type_decode sail_arm_acc_type_decode_encode .
-
-#[export]
-Instance Countable_arm_acc_type : Countable arm_acc_type := {|
-  encode := sail_arm_acc_type_encode;
-  decode := sail_arm_acc_type_decode;
-  decode_encode := sail_arm_acc_type_decode_encode
-|}.
-#[export]
-Instance dummy_arm_acc_type : Inhabited (arm_acc_type) := { inhabitant := SAcc_ASIMD inhabitant }.
 
 Definition MAIR2_EL1_Type : Type := mword 64.
 
@@ -11426,6 +11367,40 @@ Instance Countable_Barrier : Countable Barrier := {|
 |}.
 #[export]
 Instance dummy_Barrier : Inhabited (Barrier) := { inhabitant := Barrier_DSB inhabitant }.
+
+Definition mem_acc_is_atomic_rmw (acc : AccessDescriptor) : bool :=
+   andb ((generic_eq (acc.(AccessDescriptor_acctype)) (AccessType_GPR)))
+     (acc.(AccessDescriptor_atomicop)).
+
+Definition mem_acc_is_exclusive (acc : AccessDescriptor) : bool :=
+   andb ((generic_eq (acc.(AccessDescriptor_acctype)) (AccessType_GPR)))
+     (acc.(AccessDescriptor_exclusive)).
+
+Definition mem_acc_is_explicit (acc : AccessDescriptor) : bool :=
+   generic_eq (acc.(AccessDescriptor_acctype)) (AccessType_GPR).
+
+Definition mem_acc_is_ifetch (acc : AccessDescriptor) : bool :=
+   generic_eq (acc.(AccessDescriptor_acctype)) (AccessType_IFETCH).
+
+Definition mem_acc_is_rel_acq_rcpc (acc : AccessDescriptor) : bool :=
+   andb ((generic_eq (acc.(AccessDescriptor_acctype)) (AccessType_GPR)))
+     (acc.(AccessDescriptor_acqpc)).
+
+Definition mem_acc_is_rel_acq_rcsc (acc : AccessDescriptor) : bool :=
+   andb ((generic_eq (acc.(AccessDescriptor_acctype)) (AccessType_GPR)))
+     ((orb (acc.(AccessDescriptor_acqsc)) (acc.(AccessDescriptor_relsc)))).
+
+Definition mem_acc_is_relaxed (acc : AccessDescriptor) : bool :=
+   andb ((generic_eq (acc.(AccessDescriptor_acctype)) (AccessType_GPR)))
+     ((andb ((negb (acc.(AccessDescriptor_acqpc))))
+         ((andb ((negb (acc.(AccessDescriptor_acqsc)))) ((negb (acc.(AccessDescriptor_relsc)))))))).
+
+Definition mem_acc_is_standalone (acc : AccessDescriptor) : bool :=
+   andb ((generic_eq (acc.(AccessDescriptor_acctype)) (AccessType_GPR)))
+     ((andb ((negb (acc.(AccessDescriptor_exclusive)))) ((negb (acc.(AccessDescriptor_atomicop)))))).
+
+Definition mem_acc_is_ttw (acc : AccessDescriptor) : bool :=
+   generic_eq (acc.(AccessDescriptor_acctype)) (AccessType_TTW).
 
 
 
@@ -14153,6 +14128,7 @@ Instance Countable_register_bitvector_56 : Countable register_bitvector_56. refi
 Defined.
 
 Variant register_bitvector_64 :=
+  | PC
   | R0
   | R1
   | R2
@@ -14660,1016 +14636,1018 @@ Variant register_bitvector_64 :=
 
 Definition num_of_register_bitvector_64 (r : register_bitvector_64) : Z :=
   match r with
-  | R0 => 0
-  | R1 => 1
-  | R2 => 2
-  | R3 => 3
-  | R4 => 4
-  | R5 => 5
-  | R6 => 6
-  | R7 => 7
-  | R8 => 8
-  | R9 => 9
-  | R10 => 10
-  | R11 => 11
-  | R12 => 12
-  | R13 => 13
-  | R14 => 14
-  | R15 => 15
-  | R16 => 16
-  | R17 => 17
-  | R18 => 18
-  | R19 => 19
-  | R20 => 20
-  | R21 => 21
-  | R22 => 22
-  | R23 => 23
-  | R24 => 24
-  | R25 => 25
-  | R26 => 26
-  | R27 => 27
-  | R28 => 28
-  | R29 => 29
-  | R30 => 30
-  | _PC => 31
-  | FPCR => 32
-  | FPSR => 33
-  | ICC_PMR_EL1 => 34
-  | SPESamplePreviousBranchAddress => 35
-  | SPESampleTimestamp => 36
-  | SPESampleEvents => 37
-  | sp_rel_access_pc => 38
-  | HCR_EL2 => 39
-  | SCR_EL3 => 40
-  | CTR_EL0 => 41
-  | MDCR_EL2 => 42
-  | MDCCSR_EL0 => 43
-  | PMCNTENCLR_EL0 => 44
-  | PMCR_EL0 => 45
-  | PMINTENCLR_EL1 => 46
-  | PMOVSCLR_EL0 => 47
-  | MDCR_EL3 => 48
-  | PMCCFILTR_EL0 => 49
-  | PMCNTENSET_EL0 => 50
-  | PMICFILTR_EL0 => 51
-  | SDER32_EL2 => 52
-  | _SDER32_EL3 => 53
-  | PMICNTR_EL0 => 54
-  | PMOVSSET_EL0 => 55
-  | BRBCR_EL1 => 56
-  | BRBCR_EL2 => 57
-  | BRBFCR_EL1 => 58
-  | BRBTS_EL1 => 59
-  | CNTPOFF_EL2 => 60
-  | CNTVOFF_EL2 => 61
-  | CNTHCTL_EL2 => 62
-  | CFG_RVBAR => 63
-  | DLR_EL0 => 64
-  | DSPSR_EL0 => 65
-  | TCR_EL1 => 66
-  | TCR_EL2 => 67
-  | TCR_EL3 => 68
-  | BRBIDR0_EL1 => 69
-  | PMSIDR_EL1 => 70
-  | PMSCR_EL1 => 71
-  | PMSCR_EL2 => 72
-  | PMBLIMITR_EL1 => 73
-  | PMBSR_EL1 => 74
-  | ZCR_EL1 => 75
-  | ZCR_EL2 => 76
-  | ZCR_EL3 => 77
-  | SMCR_EL1 => 78
-  | SMCR_EL2 => 79
-  | SMCR_EL3 => 80
-  | GCSPR_EL0 => 81
-  | GCSPR_EL1 => 82
-  | GCSPR_EL2 => 83
-  | GCSPR_EL3 => 84
-  | CPACR_EL1 => 85
-  | CPTR_EL2 => 86
-  | CPTR_EL3 => 87
-  | SP_EL0 => 88
-  | SP_EL1 => 89
-  | SP_EL2 => 90
-  | SP_EL3 => 91
-  | OSDLR_EL1 => 92
-  | DBGPRCR_EL1 => 93
-  | GCSCR_EL1 => 94
-  | GCSCR_EL2 => 95
-  | GCSCR_EL3 => 96
-  | MDSCR_EL1 => 97
-  | OSLSR_EL1 => 98
-  | SCTLR_EL2 => 99
-  | SCTLR_EL1 => 100
-  | SCTLR_EL3 => 101
-  | ESR_EL1 => 102
-  | ESR_EL2 => 103
-  | ESR_EL3 => 104
-  | FAR_EL1 => 105
-  | FAR_EL2 => 106
-  | FAR_EL3 => 107
-  | HPFAR_EL2 => 108
-  | MFAR_EL3 => 109
-  | PFAR_EL1 => 110
-  | PFAR_EL2 => 111
-  | ELR_EL1 => 112
-  | ELR_EL2 => 113
-  | ELR_EL3 => 114
-  | SPSR_EL1 => 115
-  | SPSR_EL2 => 116
-  | SPSR_EL3 => 117
-  | SPSR_abt => 118
-  | SPSR_fiq => 119
-  | SPSR_irq => 120
-  | SPSR_und => 121
-  | OSECCR_EL1 => 122
-  | VBAR_EL1 => 123
-  | VBAR_EL2 => 124
-  | VBAR_EL3 => 125
-  | GCSCRE0_EL1 => 126
-  | HCRX_EL2 => 127
-  | MPAM2_EL2 => 128
-  | _MPAM3_EL3 => 129
-  | _MPAM1_EL1 => 130
-  | MPAMIDR_EL1 => 131
-  | MPAMHCR_EL2 => 132
-  | MPAMVPM0_EL2 => 133
-  | MPAMVPMV_EL2 => 134
-  | MPAMVPM1_EL2 => 135
-  | MPAMVPM2_EL2 => 136
-  | MPAMVPM3_EL2 => 137
-  | MPAMVPM4_EL2 => 138
-  | MPAMVPM5_EL2 => 139
-  | MPAMVPM6_EL2 => 140
-  | MPAMVPM7_EL2 => 141
-  | MPAM0_EL1 => 142
-  | MPAMSM_EL1 => 143
-  | CLIDR_EL1 => 144
-  | CONTEXTIDR_EL1 => 145
-  | TTBR0_NS => 146
-  | TTBR0_S => 147
-  | HTTBR => 148
-  | TTBR1_NS => 149
-  | TTBR1_S => 150
-  | IFSR32_EL2 => 151
-  | SCTLR2_EL1 => 152
-  | SCTLR2_EL2 => 153
-  | FPEXC32_EL2 => 154
-  | CNTHP_CTL_EL2 => 155
-  | CNTHP_CVAL_EL2 => 156
-  | _CNTHP_CVAL => 157
-  | CNTP_CTL_EL0 => 158
-  | CNTP_CVAL_EL0 => 159
-  | _CNTP_CVAL_NS => 160
-  | CNTP_CVAL_S => 161
-  | CNTV_CTL_EL0 => 162
-  | CNTV_CVAL_EL0 => 163
-  | CNTHPS_CTL_EL2 => 164
-  | CNTHPS_CVAL_EL2 => 165
-  | CNTHVS_CTL_EL2 => 166
-  | CNTHVS_CVAL_EL2 => 167
-  | CNTHV_CTL_EL2 => 168
-  | CNTHV_CVAL_EL2 => 169
-  | CNTPS_CTL_EL1 => 170
-  | CNTPS_CVAL_EL1 => 171
-  | CNTKCTL_EL1 => 172
-  | GPCCR_EL3 => 173
-  | GPTBR_EL3 => 174
-  | MAIR2_EL1 => 175
-  | MAIR_EL1 => 176
-  | PIRE0_EL1 => 177
-  | PIR_EL1 => 178
-  | TCR2_EL1 => 179
-  | MAIR2_EL2 => 180
-  | MAIR_EL2 => 181
-  | PIR_EL2 => 182
-  | TCR2_EL2 => 183
-  | PIRE0_EL2 => 184
-  | MAIR2_EL3 => 185
-  | MAIR_EL3 => 186
-  | PIR_EL3 => 187
-  | SCTLR2_EL3 => 188
-  | TTBR0_EL3 => 189
-  | APIAKeyHi_EL1 => 190
-  | APIAKeyLo_EL1 => 191
-  | APIBKeyHi_EL1 => 192
-  | APIBKeyLo_EL1 => 193
-  | APDAKeyHi_EL1 => 194
-  | APDAKeyLo_EL1 => 195
-  | APDBKeyHi_EL1 => 196
-  | APDBKeyLo_EL1 => 197
-  | APGAKeyHi_EL1 => 198
-  | APGAKeyLo_EL1 => 199
-  | GCR_EL1 => 200
-  | RGSR_EL1 => 201
-  | TFSRE0_EL1 => 202
-  | TFSR_EL1 => 203
-  | TFSR_EL2 => 204
-  | TFSR_EL3 => 205
-  | CONTEXTIDR_EL2 => 206
-  | VTCR_EL2 => 207
-  | VTTBR => 208
-  | EDWAR => 209
-  | POR_EL1 => 210
-  | POR_EL2 => 211
-  | POR_EL3 => 212
-  | POR_EL0 => 213
-  | MECID_P0_EL2 => 214
-  | VMECID_P_EL2 => 215
-  | MECID_A0_EL2 => 216
-  | MECID_A1_EL2 => 217
-  | MECID_P1_EL2 => 218
-  | MECID_RL_A_EL3 => 219
-  | S2PIR_EL2 => 220
-  | VSTCR_EL2 => 221
-  | VSTTBR_EL2 => 222
-  | S2POR_EL1 => 223
-  | VMECID_A_EL2 => 224
-  | VNCR_EL2 => 225
-  | HFGITR_EL2 => 226
-  | DISR_EL1 => 227
-  | VSESR_EL2 => 228
-  | VDISR_EL2 => 229
-  | RVBAR_EL1 => 230
-  | RVBAR_EL2 => 231
-  | RVBAR_EL3 => 232
-  | DBGDSAR => 233
-  | EDAA32PFR => 234
-  | EDDFR => 235
-  | EDDFR1 => 236
-  | EDHSR => 237
-  | EDPCSR => 238
-  | EDPFR => 239
-  | GICR_CLRLPIR => 240
-  | GICR_INVALLR => 241
-  | GICR_INVLPIR => 242
-  | GICR_PENDBASER => 243
-  | GICR_PROPBASER => 244
-  | GICR_SETLPIR => 245
-  | GICR_VPENDBASER => 246
-  | GICR_VPROPBASER => 247
-  | GITS_CBASER => 248
-  | GITS_CREADR => 249
-  | GITS_CWRITER => 250
-  | GITS_SGIR => 251
-  | GITS_TYPER => 252
-  | PMCFGR => 253
-  | PMIIDR => 254
-  | PMPCSCTL => 255
-  | PMPCSR => 256
-  | PMVCIDSR => 257
-  | AMCFGR_EL0 => 258
-  | AMCGCR_EL0 => 259
-  | AMCNTENCLR0_EL0 => 260
-  | AMCNTENCLR1_EL0 => 261
-  | AMCNTENSET0_EL0 => 262
-  | AMCNTENSET1_EL0 => 263
-  | AMCR_EL0 => 264
-  | AMUSERENR_EL0 => 265
-  | CCSIDR2_EL1 => 266
-  | CCSIDR_EL1 => 267
-  | CSSELR_EL1 => 268
-  | DBGAUTHSTATUS_EL1 => 269
-  | DBGCLAIMCLR_EL1 => 270
-  | DBGCLAIMSET_EL1 => 271
-  | MDCCINT_EL1 => 272
-  | MDRAR_EL1 => 273
-  | _DBGDRAR => 274
-  | DBGVCR32_EL2 => 275
-  | ERRIDR_EL1 => 276
-  | ERRSELR_EL1 => 277
-  | RMR_EL2 => 278
-  | HSTR_EL2 => 279
-  | TRFCR_EL2 => 280
-  | ICC_ASGI1R_EL1 => 281
-  | _ICC_ASGI1R => 282
-  | ICC_BPR0_EL1 => 283
-  | ICC_BPR1_EL1_NS => 284
-  | ICC_BPR1_EL1_S => 285
-  | ICC_CTLR_EL1_NS => 286
-  | ICC_CTLR_EL1_S => 287
-  | ICC_DIR_EL1 => 288
-  | ICC_EOIR0_EL1 => 289
-  | ICC_EOIR1_EL1 => 290
-  | ICC_HPPIR0_EL1 => 291
-  | ICC_HPPIR1_EL1 => 292
-  | ICC_SRE_EL2 => 293
-  | ICC_IAR0_EL1 => 294
-  | ICC_IAR1_EL1 => 295
-  | ICC_IGRPEN0_EL1 => 296
-  | ICC_IGRPEN1_EL1_NS => 297
-  | ICC_IGRPEN1_EL1_S => 298
-  | ICC_RPR_EL1 => 299
-  | ICC_SGI0R_EL1 => 300
-  | _ICC_SGI0R => 301
-  | ICC_SGI1R_EL1 => 302
-  | _ICC_SGI1R => 303
-  | ICC_SRE_EL1_NS => 304
-  | ICC_SRE_EL1_S => 305
-  | ICH_EISR_EL2 => 306
-  | ICH_ELRSR_EL2 => 307
-  | ICH_HCR_EL2 => 308
-  | ICH_MISR_EL2 => 309
-  | ICH_VMCR_EL2 => 310
-  | ICH_VTR_EL2 => 311
-  | ICV_BPR0_EL1 => 312
-  | ICV_BPR1_EL1 => 313
-  | ICV_CTLR_EL1 => 314
-  | ICV_DIR_EL1 => 315
-  | ICV_EOIR0_EL1 => 316
-  | ICV_EOIR1_EL1 => 317
-  | ICV_HPPIR0_EL1 => 318
-  | ICV_HPPIR1_EL1 => 319
-  | ICV_IAR0_EL1 => 320
-  | ICV_IAR1_EL1 => 321
-  | ICV_IGRPEN0_EL1 => 322
-  | ICV_IGRPEN1_EL1 => 323
-  | ICV_PMR_EL1 => 324
-  | ICV_RPR_EL1 => 325
-  | ID_AFR0_EL1 => 326
-  | ID_DFR1_EL1 => 327
-  | ID_ISAR0_EL1 => 328
-  | ID_ISAR5_EL1 => 329
-  | ID_MMFR5_EL1 => 330
-  | ID_PFR2_EL1 => 331
-  | ISR_EL1 => 332
-  | MPIDR_EL1 => 333
-  | MVFR2_EL1 => 334
-  | PAR_NS => 335
-  | PAR_S => 336
-  | _PMCNTEN => 337
-  | PMINTENSET_EL1 => 338
-  | _PMINTEN => 339
-  | _PMOVS => 340
-  | PMSELR_EL0 => 341
-  | PMSWINC_EL0 => 342
-  | PMUSERENR_EL0 => 343
-  | RMR_EL1 => 344
-  | RMR_EL3 => 345
-  | TRFCR_EL1 => 346
-  | VMPIDR_EL2 => 347
-  | VPIDR_EL2 => 348
-  | ID_DFR0_EL1 => 349
-  | ID_ISAR1_EL1 => 350
-  | ID_ISAR2_EL1 => 351
-  | ID_ISAR3_EL1 => 352
-  | ID_ISAR4_EL1 => 353
-  | ID_ISAR6_EL1 => 354
-  | ID_MMFR0_EL1 => 355
-  | ID_MMFR1_EL1 => 356
-  | ID_MMFR2_EL1 => 357
-  | ID_MMFR3_EL1 => 358
-  | ID_MMFR4_EL1 => 359
-  | ID_PFR0_EL1 => 360
-  | ID_PFR1_EL1 => 361
-  | MIDR_EL1 => 362
-  | MVFR0_EL1 => 363
-  | MVFR1_EL1 => 364
-  | PMCEID0_EL0 => 365
-  | PMCEID1_EL0 => 366
-  | ACCDATA_EL1 => 367
-  | AMCG1IDR_EL0 => 368
-  | BRBINFINJ_EL1 => 369
-  | CNTFRQ_EL0 => 370
-  | CNTHPS_TVAL_EL2 => 371
-  | CNTHP_TVAL_EL2 => 372
-  | CNTHVS_TVAL_EL2 => 373
-  | CNTHV_TVAL_EL2 => 374
-  | CNTPS_TVAL_EL1 => 375
-  | CNTP_TVAL_EL0 => 376
-  | CNTV_TVAL_EL0 => 377
-  | DACR32_EL2 => 378
-  | DBGDTRRX_EL0 => 379
-  | DBGDTRTX_EL0 => 380
-  | DCZID_EL0 => 381
-  | GMID_EL1 => 382
-  | HAFGRTR_EL2 => 383
-  | HDFGRTR2_EL2 => 384
-  | HDFGRTR_EL2 => 385
-  | HDFGWTR2_EL2 => 386
-  | HDFGWTR_EL2 => 387
-  | HFGITR2_EL2 => 388
-  | HFGRTR2_EL2 => 389
-  | HFGRTR_EL2 => 390
-  | HFGWTR2_EL2 => 391
-  | HFGWTR_EL2 => 392
-  | ICC_CTLR_EL3 => 393
-  | ICC_IGRPEN1_EL3 => 394
-  | ICC_NMIAR1_EL1 => 395
-  | ICC_SRE_EL3 => 396
-  | ICV_NMIAR1_EL1 => 397
-  | ID_AA64AFR0_EL1 => 398
-  | ID_AA64AFR1_EL1 => 399
-  | ID_AA64ISAR0_EL1 => 400
-  | ID_AA64ISAR2_EL1 => 401
-  | ID_AA64MMFR0_EL1 => 402
-  | ID_AA64MMFR2_EL1 => 403
-  | ID_AA64MMFR3_EL1 => 404
-  | ID_AA64MMFR4_EL1 => 405
-  | ID_AA64PFR1_EL1 => 406
-  | ID_AA64PFR2_EL1 => 407
-  | ID_AA64SMFR0_EL1 => 408
-  | ID_AA64ZFR0_EL1 => 409
-  | LORC_EL1 => 410
-  | LOREA_EL1 => 411
-  | LORID_EL1 => 412
-  | LORN_EL1 => 413
-  | LORSA_EL1 => 414
-  | MDSELR_EL1 => 415
-  | MECIDR_EL2 => 416
-  | OSDTRRX_EL1 => 417
-  | OSDTRTX_EL1 => 418
-  | OSLAR_EL1 => 419
-  | PMBIDR_EL1 => 420
-  | PMECR_EL1 => 421
-  | PMMIR_EL1 => 422
-  | PMSEVFR_EL1 => 423
-  | PMSFCR_EL1 => 424
-  | PMSICR_EL1 => 425
-  | PMSIRR_EL1 => 426
-  | PMSLATFR_EL1 => 427
-  | PMSNEVFR_EL1 => 428
-  | PMSSCR_EL1 => 429
-  | PMUACR_EL1 => 430
-  | PMXEVCNTR_EL0 => 431
-  | PMZR_EL0 => 432
-  | SMIDR_EL1 => 433
-  | SMPRI_EL1 => 434
-  | SPMSELR_EL0 => 435
-  | ID_AA64DFR0_EL1 => 436
-  | ID_AA64DFR1_EL1 => 437
-  | ID_AA64ISAR1_EL1 => 438
-  | ID_AA64MMFR1_EL1 => 439
-  | ID_AA64PFR0_EL1 => 440
-  | PMCCNTR_EL0 => 441
-  | PMBPTR_EL1 => 442
-  | PMSDSFR_EL1 => 443
-  | BRBSRCINJ_EL1 => 444
-  | BRBTGTINJ_EL1 => 445
-  | _DBGDTR_EL0 => 446
-  | HEAP_BASE => 447
-  | HEAP_LIMIT => 448
-  | STACK_BASE => 449
-  | STACK_LIMIT => 450
-  | _PMCCNTR => 451
-  | AIDR_EL1 => 452
-  | REVIDR_EL1 => 453
-  | TPIDR_EL2 => 454
-  | ACTLR_EL2 => 455
-  | SPMACCESSR_EL1 => 456
-  | TPIDR_EL1 => 457
-  | ACTLR_EL1 => 458
-  | AFSR1_EL1 => 459
-  | PMCCNTSVR_EL1 => 460
-  | AMAIR2_EL2 => 461
-  | AFSR0_EL3 => 462
-  | AFSR1_EL2 => 463
-  | AFSR0_EL1 => 464
-  | SPMACCESSR_EL2 => 465
-  | PMICNTSVR_EL1 => 466
-  | SCXTNUM_EL2 => 467
-  | PMIAR_EL1 => 468
-  | TPIDR_EL3 => 469
-  | ACTLR_EL3 => 470
-  | AMAIR_EL2 => 471
-  | AMAIR_EL3 => 472
-  | SCXTNUM_EL1 => 473
-  | TPIDRRO_EL0 => 474
-  | AMAIR_EL1 => 475
-  | SCXTNUM_EL0 => 476
-  | TPIDR2_EL0 => 477
-  | SCXTNUM_EL3 => 478
-  | TPIDR_EL0 => 479
-  | RNDRRS => 480
-  | SMPRIMAP_EL2 => 481
-  | RNDR => 482
-  | HACR_EL2 => 483
-  | AMAIR2_EL3 => 484
-  | AFSR1_EL3 => 485
-  | AFSR0_EL2 => 486
-  | AMAIR2_EL1 => 487
-  | SPMACCESSR_EL3 => 488
-  | _CNTVOFF => 489
-  | _CNTV_CVAL => 490
-  | ERXADDR_EL1 => 491
-  | ERXMISC0_EL1 => 492
-  | ERXPFGCDN_EL1 => 493
-  | ERXPFGF_EL1 => 494
-  | ERXMISC1_EL1 => 495
-  | ERXCTLR_EL1 => 496
-  | ERXSTATUS_EL1 => 497
-  | ERXFR_EL1 => 498
-  | ERXGSR_EL1 => 499
-  | ERXMISC3_EL1 => 500
-  | ERXMISC2_EL1 => 501
-  | ERXPFGCTL_EL1 => 502
+  | PC => 0
+  | R0 => 1
+  | R1 => 2
+  | R2 => 3
+  | R3 => 4
+  | R4 => 5
+  | R5 => 6
+  | R6 => 7
+  | R7 => 8
+  | R8 => 9
+  | R9 => 10
+  | R10 => 11
+  | R11 => 12
+  | R12 => 13
+  | R13 => 14
+  | R14 => 15
+  | R15 => 16
+  | R16 => 17
+  | R17 => 18
+  | R18 => 19
+  | R19 => 20
+  | R20 => 21
+  | R21 => 22
+  | R22 => 23
+  | R23 => 24
+  | R24 => 25
+  | R25 => 26
+  | R26 => 27
+  | R27 => 28
+  | R28 => 29
+  | R29 => 30
+  | R30 => 31
+  | _PC => 32
+  | FPCR => 33
+  | FPSR => 34
+  | ICC_PMR_EL1 => 35
+  | SPESamplePreviousBranchAddress => 36
+  | SPESampleTimestamp => 37
+  | SPESampleEvents => 38
+  | sp_rel_access_pc => 39
+  | HCR_EL2 => 40
+  | SCR_EL3 => 41
+  | CTR_EL0 => 42
+  | MDCR_EL2 => 43
+  | MDCCSR_EL0 => 44
+  | PMCNTENCLR_EL0 => 45
+  | PMCR_EL0 => 46
+  | PMINTENCLR_EL1 => 47
+  | PMOVSCLR_EL0 => 48
+  | MDCR_EL3 => 49
+  | PMCCFILTR_EL0 => 50
+  | PMCNTENSET_EL0 => 51
+  | PMICFILTR_EL0 => 52
+  | SDER32_EL2 => 53
+  | _SDER32_EL3 => 54
+  | PMICNTR_EL0 => 55
+  | PMOVSSET_EL0 => 56
+  | BRBCR_EL1 => 57
+  | BRBCR_EL2 => 58
+  | BRBFCR_EL1 => 59
+  | BRBTS_EL1 => 60
+  | CNTPOFF_EL2 => 61
+  | CNTVOFF_EL2 => 62
+  | CNTHCTL_EL2 => 63
+  | CFG_RVBAR => 64
+  | DLR_EL0 => 65
+  | DSPSR_EL0 => 66
+  | TCR_EL1 => 67
+  | TCR_EL2 => 68
+  | TCR_EL3 => 69
+  | BRBIDR0_EL1 => 70
+  | PMSIDR_EL1 => 71
+  | PMSCR_EL1 => 72
+  | PMSCR_EL2 => 73
+  | PMBLIMITR_EL1 => 74
+  | PMBSR_EL1 => 75
+  | ZCR_EL1 => 76
+  | ZCR_EL2 => 77
+  | ZCR_EL3 => 78
+  | SMCR_EL1 => 79
+  | SMCR_EL2 => 80
+  | SMCR_EL3 => 81
+  | GCSPR_EL0 => 82
+  | GCSPR_EL1 => 83
+  | GCSPR_EL2 => 84
+  | GCSPR_EL3 => 85
+  | CPACR_EL1 => 86
+  | CPTR_EL2 => 87
+  | CPTR_EL3 => 88
+  | SP_EL0 => 89
+  | SP_EL1 => 90
+  | SP_EL2 => 91
+  | SP_EL3 => 92
+  | OSDLR_EL1 => 93
+  | DBGPRCR_EL1 => 94
+  | GCSCR_EL1 => 95
+  | GCSCR_EL2 => 96
+  | GCSCR_EL3 => 97
+  | MDSCR_EL1 => 98
+  | OSLSR_EL1 => 99
+  | SCTLR_EL2 => 100
+  | SCTLR_EL1 => 101
+  | SCTLR_EL3 => 102
+  | ESR_EL1 => 103
+  | ESR_EL2 => 104
+  | ESR_EL3 => 105
+  | FAR_EL1 => 106
+  | FAR_EL2 => 107
+  | FAR_EL3 => 108
+  | HPFAR_EL2 => 109
+  | MFAR_EL3 => 110
+  | PFAR_EL1 => 111
+  | PFAR_EL2 => 112
+  | ELR_EL1 => 113
+  | ELR_EL2 => 114
+  | ELR_EL3 => 115
+  | SPSR_EL1 => 116
+  | SPSR_EL2 => 117
+  | SPSR_EL3 => 118
+  | SPSR_abt => 119
+  | SPSR_fiq => 120
+  | SPSR_irq => 121
+  | SPSR_und => 122
+  | OSECCR_EL1 => 123
+  | VBAR_EL1 => 124
+  | VBAR_EL2 => 125
+  | VBAR_EL3 => 126
+  | GCSCRE0_EL1 => 127
+  | HCRX_EL2 => 128
+  | MPAM2_EL2 => 129
+  | _MPAM3_EL3 => 130
+  | _MPAM1_EL1 => 131
+  | MPAMIDR_EL1 => 132
+  | MPAMHCR_EL2 => 133
+  | MPAMVPM0_EL2 => 134
+  | MPAMVPMV_EL2 => 135
+  | MPAMVPM1_EL2 => 136
+  | MPAMVPM2_EL2 => 137
+  | MPAMVPM3_EL2 => 138
+  | MPAMVPM4_EL2 => 139
+  | MPAMVPM5_EL2 => 140
+  | MPAMVPM6_EL2 => 141
+  | MPAMVPM7_EL2 => 142
+  | MPAM0_EL1 => 143
+  | MPAMSM_EL1 => 144
+  | CLIDR_EL1 => 145
+  | CONTEXTIDR_EL1 => 146
+  | TTBR0_NS => 147
+  | TTBR0_S => 148
+  | HTTBR => 149
+  | TTBR1_NS => 150
+  | TTBR1_S => 151
+  | IFSR32_EL2 => 152
+  | SCTLR2_EL1 => 153
+  | SCTLR2_EL2 => 154
+  | FPEXC32_EL2 => 155
+  | CNTHP_CTL_EL2 => 156
+  | CNTHP_CVAL_EL2 => 157
+  | _CNTHP_CVAL => 158
+  | CNTP_CTL_EL0 => 159
+  | CNTP_CVAL_EL0 => 160
+  | _CNTP_CVAL_NS => 161
+  | CNTP_CVAL_S => 162
+  | CNTV_CTL_EL0 => 163
+  | CNTV_CVAL_EL0 => 164
+  | CNTHPS_CTL_EL2 => 165
+  | CNTHPS_CVAL_EL2 => 166
+  | CNTHVS_CTL_EL2 => 167
+  | CNTHVS_CVAL_EL2 => 168
+  | CNTHV_CTL_EL2 => 169
+  | CNTHV_CVAL_EL2 => 170
+  | CNTPS_CTL_EL1 => 171
+  | CNTPS_CVAL_EL1 => 172
+  | CNTKCTL_EL1 => 173
+  | GPCCR_EL3 => 174
+  | GPTBR_EL3 => 175
+  | MAIR2_EL1 => 176
+  | MAIR_EL1 => 177
+  | PIRE0_EL1 => 178
+  | PIR_EL1 => 179
+  | TCR2_EL1 => 180
+  | MAIR2_EL2 => 181
+  | MAIR_EL2 => 182
+  | PIR_EL2 => 183
+  | TCR2_EL2 => 184
+  | PIRE0_EL2 => 185
+  | MAIR2_EL3 => 186
+  | MAIR_EL3 => 187
+  | PIR_EL3 => 188
+  | SCTLR2_EL3 => 189
+  | TTBR0_EL3 => 190
+  | APIAKeyHi_EL1 => 191
+  | APIAKeyLo_EL1 => 192
+  | APIBKeyHi_EL1 => 193
+  | APIBKeyLo_EL1 => 194
+  | APDAKeyHi_EL1 => 195
+  | APDAKeyLo_EL1 => 196
+  | APDBKeyHi_EL1 => 197
+  | APDBKeyLo_EL1 => 198
+  | APGAKeyHi_EL1 => 199
+  | APGAKeyLo_EL1 => 200
+  | GCR_EL1 => 201
+  | RGSR_EL1 => 202
+  | TFSRE0_EL1 => 203
+  | TFSR_EL1 => 204
+  | TFSR_EL2 => 205
+  | TFSR_EL3 => 206
+  | CONTEXTIDR_EL2 => 207
+  | VTCR_EL2 => 208
+  | VTTBR => 209
+  | EDWAR => 210
+  | POR_EL1 => 211
+  | POR_EL2 => 212
+  | POR_EL3 => 213
+  | POR_EL0 => 214
+  | MECID_P0_EL2 => 215
+  | VMECID_P_EL2 => 216
+  | MECID_A0_EL2 => 217
+  | MECID_A1_EL2 => 218
+  | MECID_P1_EL2 => 219
+  | MECID_RL_A_EL3 => 220
+  | S2PIR_EL2 => 221
+  | VSTCR_EL2 => 222
+  | VSTTBR_EL2 => 223
+  | S2POR_EL1 => 224
+  | VMECID_A_EL2 => 225
+  | VNCR_EL2 => 226
+  | HFGITR_EL2 => 227
+  | DISR_EL1 => 228
+  | VSESR_EL2 => 229
+  | VDISR_EL2 => 230
+  | RVBAR_EL1 => 231
+  | RVBAR_EL2 => 232
+  | RVBAR_EL3 => 233
+  | DBGDSAR => 234
+  | EDAA32PFR => 235
+  | EDDFR => 236
+  | EDDFR1 => 237
+  | EDHSR => 238
+  | EDPCSR => 239
+  | EDPFR => 240
+  | GICR_CLRLPIR => 241
+  | GICR_INVALLR => 242
+  | GICR_INVLPIR => 243
+  | GICR_PENDBASER => 244
+  | GICR_PROPBASER => 245
+  | GICR_SETLPIR => 246
+  | GICR_VPENDBASER => 247
+  | GICR_VPROPBASER => 248
+  | GITS_CBASER => 249
+  | GITS_CREADR => 250
+  | GITS_CWRITER => 251
+  | GITS_SGIR => 252
+  | GITS_TYPER => 253
+  | PMCFGR => 254
+  | PMIIDR => 255
+  | PMPCSCTL => 256
+  | PMPCSR => 257
+  | PMVCIDSR => 258
+  | AMCFGR_EL0 => 259
+  | AMCGCR_EL0 => 260
+  | AMCNTENCLR0_EL0 => 261
+  | AMCNTENCLR1_EL0 => 262
+  | AMCNTENSET0_EL0 => 263
+  | AMCNTENSET1_EL0 => 264
+  | AMCR_EL0 => 265
+  | AMUSERENR_EL0 => 266
+  | CCSIDR2_EL1 => 267
+  | CCSIDR_EL1 => 268
+  | CSSELR_EL1 => 269
+  | DBGAUTHSTATUS_EL1 => 270
+  | DBGCLAIMCLR_EL1 => 271
+  | DBGCLAIMSET_EL1 => 272
+  | MDCCINT_EL1 => 273
+  | MDRAR_EL1 => 274
+  | _DBGDRAR => 275
+  | DBGVCR32_EL2 => 276
+  | ERRIDR_EL1 => 277
+  | ERRSELR_EL1 => 278
+  | RMR_EL2 => 279
+  | HSTR_EL2 => 280
+  | TRFCR_EL2 => 281
+  | ICC_ASGI1R_EL1 => 282
+  | _ICC_ASGI1R => 283
+  | ICC_BPR0_EL1 => 284
+  | ICC_BPR1_EL1_NS => 285
+  | ICC_BPR1_EL1_S => 286
+  | ICC_CTLR_EL1_NS => 287
+  | ICC_CTLR_EL1_S => 288
+  | ICC_DIR_EL1 => 289
+  | ICC_EOIR0_EL1 => 290
+  | ICC_EOIR1_EL1 => 291
+  | ICC_HPPIR0_EL1 => 292
+  | ICC_HPPIR1_EL1 => 293
+  | ICC_SRE_EL2 => 294
+  | ICC_IAR0_EL1 => 295
+  | ICC_IAR1_EL1 => 296
+  | ICC_IGRPEN0_EL1 => 297
+  | ICC_IGRPEN1_EL1_NS => 298
+  | ICC_IGRPEN1_EL1_S => 299
+  | ICC_RPR_EL1 => 300
+  | ICC_SGI0R_EL1 => 301
+  | _ICC_SGI0R => 302
+  | ICC_SGI1R_EL1 => 303
+  | _ICC_SGI1R => 304
+  | ICC_SRE_EL1_NS => 305
+  | ICC_SRE_EL1_S => 306
+  | ICH_EISR_EL2 => 307
+  | ICH_ELRSR_EL2 => 308
+  | ICH_HCR_EL2 => 309
+  | ICH_MISR_EL2 => 310
+  | ICH_VMCR_EL2 => 311
+  | ICH_VTR_EL2 => 312
+  | ICV_BPR0_EL1 => 313
+  | ICV_BPR1_EL1 => 314
+  | ICV_CTLR_EL1 => 315
+  | ICV_DIR_EL1 => 316
+  | ICV_EOIR0_EL1 => 317
+  | ICV_EOIR1_EL1 => 318
+  | ICV_HPPIR0_EL1 => 319
+  | ICV_HPPIR1_EL1 => 320
+  | ICV_IAR0_EL1 => 321
+  | ICV_IAR1_EL1 => 322
+  | ICV_IGRPEN0_EL1 => 323
+  | ICV_IGRPEN1_EL1 => 324
+  | ICV_PMR_EL1 => 325
+  | ICV_RPR_EL1 => 326
+  | ID_AFR0_EL1 => 327
+  | ID_DFR1_EL1 => 328
+  | ID_ISAR0_EL1 => 329
+  | ID_ISAR5_EL1 => 330
+  | ID_MMFR5_EL1 => 331
+  | ID_PFR2_EL1 => 332
+  | ISR_EL1 => 333
+  | MPIDR_EL1 => 334
+  | MVFR2_EL1 => 335
+  | PAR_NS => 336
+  | PAR_S => 337
+  | _PMCNTEN => 338
+  | PMINTENSET_EL1 => 339
+  | _PMINTEN => 340
+  | _PMOVS => 341
+  | PMSELR_EL0 => 342
+  | PMSWINC_EL0 => 343
+  | PMUSERENR_EL0 => 344
+  | RMR_EL1 => 345
+  | RMR_EL3 => 346
+  | TRFCR_EL1 => 347
+  | VMPIDR_EL2 => 348
+  | VPIDR_EL2 => 349
+  | ID_DFR0_EL1 => 350
+  | ID_ISAR1_EL1 => 351
+  | ID_ISAR2_EL1 => 352
+  | ID_ISAR3_EL1 => 353
+  | ID_ISAR4_EL1 => 354
+  | ID_ISAR6_EL1 => 355
+  | ID_MMFR0_EL1 => 356
+  | ID_MMFR1_EL1 => 357
+  | ID_MMFR2_EL1 => 358
+  | ID_MMFR3_EL1 => 359
+  | ID_MMFR4_EL1 => 360
+  | ID_PFR0_EL1 => 361
+  | ID_PFR1_EL1 => 362
+  | MIDR_EL1 => 363
+  | MVFR0_EL1 => 364
+  | MVFR1_EL1 => 365
+  | PMCEID0_EL0 => 366
+  | PMCEID1_EL0 => 367
+  | ACCDATA_EL1 => 368
+  | AMCG1IDR_EL0 => 369
+  | BRBINFINJ_EL1 => 370
+  | CNTFRQ_EL0 => 371
+  | CNTHPS_TVAL_EL2 => 372
+  | CNTHP_TVAL_EL2 => 373
+  | CNTHVS_TVAL_EL2 => 374
+  | CNTHV_TVAL_EL2 => 375
+  | CNTPS_TVAL_EL1 => 376
+  | CNTP_TVAL_EL0 => 377
+  | CNTV_TVAL_EL0 => 378
+  | DACR32_EL2 => 379
+  | DBGDTRRX_EL0 => 380
+  | DBGDTRTX_EL0 => 381
+  | DCZID_EL0 => 382
+  | GMID_EL1 => 383
+  | HAFGRTR_EL2 => 384
+  | HDFGRTR2_EL2 => 385
+  | HDFGRTR_EL2 => 386
+  | HDFGWTR2_EL2 => 387
+  | HDFGWTR_EL2 => 388
+  | HFGITR2_EL2 => 389
+  | HFGRTR2_EL2 => 390
+  | HFGRTR_EL2 => 391
+  | HFGWTR2_EL2 => 392
+  | HFGWTR_EL2 => 393
+  | ICC_CTLR_EL3 => 394
+  | ICC_IGRPEN1_EL3 => 395
+  | ICC_NMIAR1_EL1 => 396
+  | ICC_SRE_EL3 => 397
+  | ICV_NMIAR1_EL1 => 398
+  | ID_AA64AFR0_EL1 => 399
+  | ID_AA64AFR1_EL1 => 400
+  | ID_AA64ISAR0_EL1 => 401
+  | ID_AA64ISAR2_EL1 => 402
+  | ID_AA64MMFR0_EL1 => 403
+  | ID_AA64MMFR2_EL1 => 404
+  | ID_AA64MMFR3_EL1 => 405
+  | ID_AA64MMFR4_EL1 => 406
+  | ID_AA64PFR1_EL1 => 407
+  | ID_AA64PFR2_EL1 => 408
+  | ID_AA64SMFR0_EL1 => 409
+  | ID_AA64ZFR0_EL1 => 410
+  | LORC_EL1 => 411
+  | LOREA_EL1 => 412
+  | LORID_EL1 => 413
+  | LORN_EL1 => 414
+  | LORSA_EL1 => 415
+  | MDSELR_EL1 => 416
+  | MECIDR_EL2 => 417
+  | OSDTRRX_EL1 => 418
+  | OSDTRTX_EL1 => 419
+  | OSLAR_EL1 => 420
+  | PMBIDR_EL1 => 421
+  | PMECR_EL1 => 422
+  | PMMIR_EL1 => 423
+  | PMSEVFR_EL1 => 424
+  | PMSFCR_EL1 => 425
+  | PMSICR_EL1 => 426
+  | PMSIRR_EL1 => 427
+  | PMSLATFR_EL1 => 428
+  | PMSNEVFR_EL1 => 429
+  | PMSSCR_EL1 => 430
+  | PMUACR_EL1 => 431
+  | PMXEVCNTR_EL0 => 432
+  | PMZR_EL0 => 433
+  | SMIDR_EL1 => 434
+  | SMPRI_EL1 => 435
+  | SPMSELR_EL0 => 436
+  | ID_AA64DFR0_EL1 => 437
+  | ID_AA64DFR1_EL1 => 438
+  | ID_AA64ISAR1_EL1 => 439
+  | ID_AA64MMFR1_EL1 => 440
+  | ID_AA64PFR0_EL1 => 441
+  | PMCCNTR_EL0 => 442
+  | PMBPTR_EL1 => 443
+  | PMSDSFR_EL1 => 444
+  | BRBSRCINJ_EL1 => 445
+  | BRBTGTINJ_EL1 => 446
+  | _DBGDTR_EL0 => 447
+  | HEAP_BASE => 448
+  | HEAP_LIMIT => 449
+  | STACK_BASE => 450
+  | STACK_LIMIT => 451
+  | _PMCCNTR => 452
+  | AIDR_EL1 => 453
+  | REVIDR_EL1 => 454
+  | TPIDR_EL2 => 455
+  | ACTLR_EL2 => 456
+  | SPMACCESSR_EL1 => 457
+  | TPIDR_EL1 => 458
+  | ACTLR_EL1 => 459
+  | AFSR1_EL1 => 460
+  | PMCCNTSVR_EL1 => 461
+  | AMAIR2_EL2 => 462
+  | AFSR0_EL3 => 463
+  | AFSR1_EL2 => 464
+  | AFSR0_EL1 => 465
+  | SPMACCESSR_EL2 => 466
+  | PMICNTSVR_EL1 => 467
+  | SCXTNUM_EL2 => 468
+  | PMIAR_EL1 => 469
+  | TPIDR_EL3 => 470
+  | ACTLR_EL3 => 471
+  | AMAIR_EL2 => 472
+  | AMAIR_EL3 => 473
+  | SCXTNUM_EL1 => 474
+  | TPIDRRO_EL0 => 475
+  | AMAIR_EL1 => 476
+  | SCXTNUM_EL0 => 477
+  | TPIDR2_EL0 => 478
+  | SCXTNUM_EL3 => 479
+  | TPIDR_EL0 => 480
+  | RNDRRS => 481
+  | SMPRIMAP_EL2 => 482
+  | RNDR => 483
+  | HACR_EL2 => 484
+  | AMAIR2_EL3 => 485
+  | AFSR1_EL3 => 486
+  | AFSR0_EL2 => 487
+  | AMAIR2_EL1 => 488
+  | SPMACCESSR_EL3 => 489
+  | _CNTVOFF => 490
+  | _CNTV_CVAL => 491
+  | ERXADDR_EL1 => 492
+  | ERXMISC0_EL1 => 493
+  | ERXPFGCDN_EL1 => 494
+  | ERXPFGF_EL1 => 495
+  | ERXMISC1_EL1 => 496
+  | ERXCTLR_EL1 => 497
+  | ERXSTATUS_EL1 => 498
+  | ERXFR_EL1 => 499
+  | ERXGSR_EL1 => 500
+  | ERXMISC3_EL1 => 501
+  | ERXMISC2_EL1 => 502
+  | ERXPFGCTL_EL1 => 503
   end.
 Definition register_bitvector_64_of_num (i : Z) : register_bitvector_64 :=
   match i with
-  | 0 => R0
-  | 1 => R1
-  | 2 => R2
-  | 3 => R3
-  | 4 => R4
-  | 5 => R5
-  | 6 => R6
-  | 7 => R7
-  | 8 => R8
-  | 9 => R9
-  | 10 => R10
-  | 11 => R11
-  | 12 => R12
-  | 13 => R13
-  | 14 => R14
-  | 15 => R15
-  | 16 => R16
-  | 17 => R17
-  | 18 => R18
-  | 19 => R19
-  | 20 => R20
-  | 21 => R21
-  | 22 => R22
-  | 23 => R23
-  | 24 => R24
-  | 25 => R25
-  | 26 => R26
-  | 27 => R27
-  | 28 => R28
-  | 29 => R29
-  | 30 => R30
-  | 31 => _PC
-  | 32 => FPCR
-  | 33 => FPSR
-  | 34 => ICC_PMR_EL1
-  | 35 => SPESamplePreviousBranchAddress
-  | 36 => SPESampleTimestamp
-  | 37 => SPESampleEvents
-  | 38 => sp_rel_access_pc
-  | 39 => HCR_EL2
-  | 40 => SCR_EL3
-  | 41 => CTR_EL0
-  | 42 => MDCR_EL2
-  | 43 => MDCCSR_EL0
-  | 44 => PMCNTENCLR_EL0
-  | 45 => PMCR_EL0
-  | 46 => PMINTENCLR_EL1
-  | 47 => PMOVSCLR_EL0
-  | 48 => MDCR_EL3
-  | 49 => PMCCFILTR_EL0
-  | 50 => PMCNTENSET_EL0
-  | 51 => PMICFILTR_EL0
-  | 52 => SDER32_EL2
-  | 53 => _SDER32_EL3
-  | 54 => PMICNTR_EL0
-  | 55 => PMOVSSET_EL0
-  | 56 => BRBCR_EL1
-  | 57 => BRBCR_EL2
-  | 58 => BRBFCR_EL1
-  | 59 => BRBTS_EL1
-  | 60 => CNTPOFF_EL2
-  | 61 => CNTVOFF_EL2
-  | 62 => CNTHCTL_EL2
-  | 63 => CFG_RVBAR
-  | 64 => DLR_EL0
-  | 65 => DSPSR_EL0
-  | 66 => TCR_EL1
-  | 67 => TCR_EL2
-  | 68 => TCR_EL3
-  | 69 => BRBIDR0_EL1
-  | 70 => PMSIDR_EL1
-  | 71 => PMSCR_EL1
-  | 72 => PMSCR_EL2
-  | 73 => PMBLIMITR_EL1
-  | 74 => PMBSR_EL1
-  | 75 => ZCR_EL1
-  | 76 => ZCR_EL2
-  | 77 => ZCR_EL3
-  | 78 => SMCR_EL1
-  | 79 => SMCR_EL2
-  | 80 => SMCR_EL3
-  | 81 => GCSPR_EL0
-  | 82 => GCSPR_EL1
-  | 83 => GCSPR_EL2
-  | 84 => GCSPR_EL3
-  | 85 => CPACR_EL1
-  | 86 => CPTR_EL2
-  | 87 => CPTR_EL3
-  | 88 => SP_EL0
-  | 89 => SP_EL1
-  | 90 => SP_EL2
-  | 91 => SP_EL3
-  | 92 => OSDLR_EL1
-  | 93 => DBGPRCR_EL1
-  | 94 => GCSCR_EL1
-  | 95 => GCSCR_EL2
-  | 96 => GCSCR_EL3
-  | 97 => MDSCR_EL1
-  | 98 => OSLSR_EL1
-  | 99 => SCTLR_EL2
-  | 100 => SCTLR_EL1
-  | 101 => SCTLR_EL3
-  | 102 => ESR_EL1
-  | 103 => ESR_EL2
-  | 104 => ESR_EL3
-  | 105 => FAR_EL1
-  | 106 => FAR_EL2
-  | 107 => FAR_EL3
-  | 108 => HPFAR_EL2
-  | 109 => MFAR_EL3
-  | 110 => PFAR_EL1
-  | 111 => PFAR_EL2
-  | 112 => ELR_EL1
-  | 113 => ELR_EL2
-  | 114 => ELR_EL3
-  | 115 => SPSR_EL1
-  | 116 => SPSR_EL2
-  | 117 => SPSR_EL3
-  | 118 => SPSR_abt
-  | 119 => SPSR_fiq
-  | 120 => SPSR_irq
-  | 121 => SPSR_und
-  | 122 => OSECCR_EL1
-  | 123 => VBAR_EL1
-  | 124 => VBAR_EL2
-  | 125 => VBAR_EL3
-  | 126 => GCSCRE0_EL1
-  | 127 => HCRX_EL2
-  | 128 => MPAM2_EL2
-  | 129 => _MPAM3_EL3
-  | 130 => _MPAM1_EL1
-  | 131 => MPAMIDR_EL1
-  | 132 => MPAMHCR_EL2
-  | 133 => MPAMVPM0_EL2
-  | 134 => MPAMVPMV_EL2
-  | 135 => MPAMVPM1_EL2
-  | 136 => MPAMVPM2_EL2
-  | 137 => MPAMVPM3_EL2
-  | 138 => MPAMVPM4_EL2
-  | 139 => MPAMVPM5_EL2
-  | 140 => MPAMVPM6_EL2
-  | 141 => MPAMVPM7_EL2
-  | 142 => MPAM0_EL1
-  | 143 => MPAMSM_EL1
-  | 144 => CLIDR_EL1
-  | 145 => CONTEXTIDR_EL1
-  | 146 => TTBR0_NS
-  | 147 => TTBR0_S
-  | 148 => HTTBR
-  | 149 => TTBR1_NS
-  | 150 => TTBR1_S
-  | 151 => IFSR32_EL2
-  | 152 => SCTLR2_EL1
-  | 153 => SCTLR2_EL2
-  | 154 => FPEXC32_EL2
-  | 155 => CNTHP_CTL_EL2
-  | 156 => CNTHP_CVAL_EL2
-  | 157 => _CNTHP_CVAL
-  | 158 => CNTP_CTL_EL0
-  | 159 => CNTP_CVAL_EL0
-  | 160 => _CNTP_CVAL_NS
-  | 161 => CNTP_CVAL_S
-  | 162 => CNTV_CTL_EL0
-  | 163 => CNTV_CVAL_EL0
-  | 164 => CNTHPS_CTL_EL2
-  | 165 => CNTHPS_CVAL_EL2
-  | 166 => CNTHVS_CTL_EL2
-  | 167 => CNTHVS_CVAL_EL2
-  | 168 => CNTHV_CTL_EL2
-  | 169 => CNTHV_CVAL_EL2
-  | 170 => CNTPS_CTL_EL1
-  | 171 => CNTPS_CVAL_EL1
-  | 172 => CNTKCTL_EL1
-  | 173 => GPCCR_EL3
-  | 174 => GPTBR_EL3
-  | 175 => MAIR2_EL1
-  | 176 => MAIR_EL1
-  | 177 => PIRE0_EL1
-  | 178 => PIR_EL1
-  | 179 => TCR2_EL1
-  | 180 => MAIR2_EL2
-  | 181 => MAIR_EL2
-  | 182 => PIR_EL2
-  | 183 => TCR2_EL2
-  | 184 => PIRE0_EL2
-  | 185 => MAIR2_EL3
-  | 186 => MAIR_EL3
-  | 187 => PIR_EL3
-  | 188 => SCTLR2_EL3
-  | 189 => TTBR0_EL3
-  | 190 => APIAKeyHi_EL1
-  | 191 => APIAKeyLo_EL1
-  | 192 => APIBKeyHi_EL1
-  | 193 => APIBKeyLo_EL1
-  | 194 => APDAKeyHi_EL1
-  | 195 => APDAKeyLo_EL1
-  | 196 => APDBKeyHi_EL1
-  | 197 => APDBKeyLo_EL1
-  | 198 => APGAKeyHi_EL1
-  | 199 => APGAKeyLo_EL1
-  | 200 => GCR_EL1
-  | 201 => RGSR_EL1
-  | 202 => TFSRE0_EL1
-  | 203 => TFSR_EL1
-  | 204 => TFSR_EL2
-  | 205 => TFSR_EL3
-  | 206 => CONTEXTIDR_EL2
-  | 207 => VTCR_EL2
-  | 208 => VTTBR
-  | 209 => EDWAR
-  | 210 => POR_EL1
-  | 211 => POR_EL2
-  | 212 => POR_EL3
-  | 213 => POR_EL0
-  | 214 => MECID_P0_EL2
-  | 215 => VMECID_P_EL2
-  | 216 => MECID_A0_EL2
-  | 217 => MECID_A1_EL2
-  | 218 => MECID_P1_EL2
-  | 219 => MECID_RL_A_EL3
-  | 220 => S2PIR_EL2
-  | 221 => VSTCR_EL2
-  | 222 => VSTTBR_EL2
-  | 223 => S2POR_EL1
-  | 224 => VMECID_A_EL2
-  | 225 => VNCR_EL2
-  | 226 => HFGITR_EL2
-  | 227 => DISR_EL1
-  | 228 => VSESR_EL2
-  | 229 => VDISR_EL2
-  | 230 => RVBAR_EL1
-  | 231 => RVBAR_EL2
-  | 232 => RVBAR_EL3
-  | 233 => DBGDSAR
-  | 234 => EDAA32PFR
-  | 235 => EDDFR
-  | 236 => EDDFR1
-  | 237 => EDHSR
-  | 238 => EDPCSR
-  | 239 => EDPFR
-  | 240 => GICR_CLRLPIR
-  | 241 => GICR_INVALLR
-  | 242 => GICR_INVLPIR
-  | 243 => GICR_PENDBASER
-  | 244 => GICR_PROPBASER
-  | 245 => GICR_SETLPIR
-  | 246 => GICR_VPENDBASER
-  | 247 => GICR_VPROPBASER
-  | 248 => GITS_CBASER
-  | 249 => GITS_CREADR
-  | 250 => GITS_CWRITER
-  | 251 => GITS_SGIR
-  | 252 => GITS_TYPER
-  | 253 => PMCFGR
-  | 254 => PMIIDR
-  | 255 => PMPCSCTL
-  | 256 => PMPCSR
-  | 257 => PMVCIDSR
-  | 258 => AMCFGR_EL0
-  | 259 => AMCGCR_EL0
-  | 260 => AMCNTENCLR0_EL0
-  | 261 => AMCNTENCLR1_EL0
-  | 262 => AMCNTENSET0_EL0
-  | 263 => AMCNTENSET1_EL0
-  | 264 => AMCR_EL0
-  | 265 => AMUSERENR_EL0
-  | 266 => CCSIDR2_EL1
-  | 267 => CCSIDR_EL1
-  | 268 => CSSELR_EL1
-  | 269 => DBGAUTHSTATUS_EL1
-  | 270 => DBGCLAIMCLR_EL1
-  | 271 => DBGCLAIMSET_EL1
-  | 272 => MDCCINT_EL1
-  | 273 => MDRAR_EL1
-  | 274 => _DBGDRAR
-  | 275 => DBGVCR32_EL2
-  | 276 => ERRIDR_EL1
-  | 277 => ERRSELR_EL1
-  | 278 => RMR_EL2
-  | 279 => HSTR_EL2
-  | 280 => TRFCR_EL2
-  | 281 => ICC_ASGI1R_EL1
-  | 282 => _ICC_ASGI1R
-  | 283 => ICC_BPR0_EL1
-  | 284 => ICC_BPR1_EL1_NS
-  | 285 => ICC_BPR1_EL1_S
-  | 286 => ICC_CTLR_EL1_NS
-  | 287 => ICC_CTLR_EL1_S
-  | 288 => ICC_DIR_EL1
-  | 289 => ICC_EOIR0_EL1
-  | 290 => ICC_EOIR1_EL1
-  | 291 => ICC_HPPIR0_EL1
-  | 292 => ICC_HPPIR1_EL1
-  | 293 => ICC_SRE_EL2
-  | 294 => ICC_IAR0_EL1
-  | 295 => ICC_IAR1_EL1
-  | 296 => ICC_IGRPEN0_EL1
-  | 297 => ICC_IGRPEN1_EL1_NS
-  | 298 => ICC_IGRPEN1_EL1_S
-  | 299 => ICC_RPR_EL1
-  | 300 => ICC_SGI0R_EL1
-  | 301 => _ICC_SGI0R
-  | 302 => ICC_SGI1R_EL1
-  | 303 => _ICC_SGI1R
-  | 304 => ICC_SRE_EL1_NS
-  | 305 => ICC_SRE_EL1_S
-  | 306 => ICH_EISR_EL2
-  | 307 => ICH_ELRSR_EL2
-  | 308 => ICH_HCR_EL2
-  | 309 => ICH_MISR_EL2
-  | 310 => ICH_VMCR_EL2
-  | 311 => ICH_VTR_EL2
-  | 312 => ICV_BPR0_EL1
-  | 313 => ICV_BPR1_EL1
-  | 314 => ICV_CTLR_EL1
-  | 315 => ICV_DIR_EL1
-  | 316 => ICV_EOIR0_EL1
-  | 317 => ICV_EOIR1_EL1
-  | 318 => ICV_HPPIR0_EL1
-  | 319 => ICV_HPPIR1_EL1
-  | 320 => ICV_IAR0_EL1
-  | 321 => ICV_IAR1_EL1
-  | 322 => ICV_IGRPEN0_EL1
-  | 323 => ICV_IGRPEN1_EL1
-  | 324 => ICV_PMR_EL1
-  | 325 => ICV_RPR_EL1
-  | 326 => ID_AFR0_EL1
-  | 327 => ID_DFR1_EL1
-  | 328 => ID_ISAR0_EL1
-  | 329 => ID_ISAR5_EL1
-  | 330 => ID_MMFR5_EL1
-  | 331 => ID_PFR2_EL1
-  | 332 => ISR_EL1
-  | 333 => MPIDR_EL1
-  | 334 => MVFR2_EL1
-  | 335 => PAR_NS
-  | 336 => PAR_S
-  | 337 => _PMCNTEN
-  | 338 => PMINTENSET_EL1
-  | 339 => _PMINTEN
-  | 340 => _PMOVS
-  | 341 => PMSELR_EL0
-  | 342 => PMSWINC_EL0
-  | 343 => PMUSERENR_EL0
-  | 344 => RMR_EL1
-  | 345 => RMR_EL3
-  | 346 => TRFCR_EL1
-  | 347 => VMPIDR_EL2
-  | 348 => VPIDR_EL2
-  | 349 => ID_DFR0_EL1
-  | 350 => ID_ISAR1_EL1
-  | 351 => ID_ISAR2_EL1
-  | 352 => ID_ISAR3_EL1
-  | 353 => ID_ISAR4_EL1
-  | 354 => ID_ISAR6_EL1
-  | 355 => ID_MMFR0_EL1
-  | 356 => ID_MMFR1_EL1
-  | 357 => ID_MMFR2_EL1
-  | 358 => ID_MMFR3_EL1
-  | 359 => ID_MMFR4_EL1
-  | 360 => ID_PFR0_EL1
-  | 361 => ID_PFR1_EL1
-  | 362 => MIDR_EL1
-  | 363 => MVFR0_EL1
-  | 364 => MVFR1_EL1
-  | 365 => PMCEID0_EL0
-  | 366 => PMCEID1_EL0
-  | 367 => ACCDATA_EL1
-  | 368 => AMCG1IDR_EL0
-  | 369 => BRBINFINJ_EL1
-  | 370 => CNTFRQ_EL0
-  | 371 => CNTHPS_TVAL_EL2
-  | 372 => CNTHP_TVAL_EL2
-  | 373 => CNTHVS_TVAL_EL2
-  | 374 => CNTHV_TVAL_EL2
-  | 375 => CNTPS_TVAL_EL1
-  | 376 => CNTP_TVAL_EL0
-  | 377 => CNTV_TVAL_EL0
-  | 378 => DACR32_EL2
-  | 379 => DBGDTRRX_EL0
-  | 380 => DBGDTRTX_EL0
-  | 381 => DCZID_EL0
-  | 382 => GMID_EL1
-  | 383 => HAFGRTR_EL2
-  | 384 => HDFGRTR2_EL2
-  | 385 => HDFGRTR_EL2
-  | 386 => HDFGWTR2_EL2
-  | 387 => HDFGWTR_EL2
-  | 388 => HFGITR2_EL2
-  | 389 => HFGRTR2_EL2
-  | 390 => HFGRTR_EL2
-  | 391 => HFGWTR2_EL2
-  | 392 => HFGWTR_EL2
-  | 393 => ICC_CTLR_EL3
-  | 394 => ICC_IGRPEN1_EL3
-  | 395 => ICC_NMIAR1_EL1
-  | 396 => ICC_SRE_EL3
-  | 397 => ICV_NMIAR1_EL1
-  | 398 => ID_AA64AFR0_EL1
-  | 399 => ID_AA64AFR1_EL1
-  | 400 => ID_AA64ISAR0_EL1
-  | 401 => ID_AA64ISAR2_EL1
-  | 402 => ID_AA64MMFR0_EL1
-  | 403 => ID_AA64MMFR2_EL1
-  | 404 => ID_AA64MMFR3_EL1
-  | 405 => ID_AA64MMFR4_EL1
-  | 406 => ID_AA64PFR1_EL1
-  | 407 => ID_AA64PFR2_EL1
-  | 408 => ID_AA64SMFR0_EL1
-  | 409 => ID_AA64ZFR0_EL1
-  | 410 => LORC_EL1
-  | 411 => LOREA_EL1
-  | 412 => LORID_EL1
-  | 413 => LORN_EL1
-  | 414 => LORSA_EL1
-  | 415 => MDSELR_EL1
-  | 416 => MECIDR_EL2
-  | 417 => OSDTRRX_EL1
-  | 418 => OSDTRTX_EL1
-  | 419 => OSLAR_EL1
-  | 420 => PMBIDR_EL1
-  | 421 => PMECR_EL1
-  | 422 => PMMIR_EL1
-  | 423 => PMSEVFR_EL1
-  | 424 => PMSFCR_EL1
-  | 425 => PMSICR_EL1
-  | 426 => PMSIRR_EL1
-  | 427 => PMSLATFR_EL1
-  | 428 => PMSNEVFR_EL1
-  | 429 => PMSSCR_EL1
-  | 430 => PMUACR_EL1
-  | 431 => PMXEVCNTR_EL0
-  | 432 => PMZR_EL0
-  | 433 => SMIDR_EL1
-  | 434 => SMPRI_EL1
-  | 435 => SPMSELR_EL0
-  | 436 => ID_AA64DFR0_EL1
-  | 437 => ID_AA64DFR1_EL1
-  | 438 => ID_AA64ISAR1_EL1
-  | 439 => ID_AA64MMFR1_EL1
-  | 440 => ID_AA64PFR0_EL1
-  | 441 => PMCCNTR_EL0
-  | 442 => PMBPTR_EL1
-  | 443 => PMSDSFR_EL1
-  | 444 => BRBSRCINJ_EL1
-  | 445 => BRBTGTINJ_EL1
-  | 446 => _DBGDTR_EL0
-  | 447 => HEAP_BASE
-  | 448 => HEAP_LIMIT
-  | 449 => STACK_BASE
-  | 450 => STACK_LIMIT
-  | 451 => _PMCCNTR
-  | 452 => AIDR_EL1
-  | 453 => REVIDR_EL1
-  | 454 => TPIDR_EL2
-  | 455 => ACTLR_EL2
-  | 456 => SPMACCESSR_EL1
-  | 457 => TPIDR_EL1
-  | 458 => ACTLR_EL1
-  | 459 => AFSR1_EL1
-  | 460 => PMCCNTSVR_EL1
-  | 461 => AMAIR2_EL2
-  | 462 => AFSR0_EL3
-  | 463 => AFSR1_EL2
-  | 464 => AFSR0_EL1
-  | 465 => SPMACCESSR_EL2
-  | 466 => PMICNTSVR_EL1
-  | 467 => SCXTNUM_EL2
-  | 468 => PMIAR_EL1
-  | 469 => TPIDR_EL3
-  | 470 => ACTLR_EL3
-  | 471 => AMAIR_EL2
-  | 472 => AMAIR_EL3
-  | 473 => SCXTNUM_EL1
-  | 474 => TPIDRRO_EL0
-  | 475 => AMAIR_EL1
-  | 476 => SCXTNUM_EL0
-  | 477 => TPIDR2_EL0
-  | 478 => SCXTNUM_EL3
-  | 479 => TPIDR_EL0
-  | 480 => RNDRRS
-  | 481 => SMPRIMAP_EL2
-  | 482 => RNDR
-  | 483 => HACR_EL2
-  | 484 => AMAIR2_EL3
-  | 485 => AFSR1_EL3
-  | 486 => AFSR0_EL2
-  | 487 => AMAIR2_EL1
-  | 488 => SPMACCESSR_EL3
-  | 489 => _CNTVOFF
-  | 490 => _CNTV_CVAL
-  | 491 => ERXADDR_EL1
-  | 492 => ERXMISC0_EL1
-  | 493 => ERXPFGCDN_EL1
-  | 494 => ERXPFGF_EL1
-  | 495 => ERXMISC1_EL1
-  | 496 => ERXCTLR_EL1
-  | 497 => ERXSTATUS_EL1
-  | 498 => ERXFR_EL1
-  | 499 => ERXGSR_EL1
-  | 500 => ERXMISC3_EL1
-  | 501 => ERXMISC2_EL1
-  | 502 => ERXPFGCTL_EL1
-  | _ => R0
+  | 0 => PC
+  | 1 => R0
+  | 2 => R1
+  | 3 => R2
+  | 4 => R3
+  | 5 => R4
+  | 6 => R5
+  | 7 => R6
+  | 8 => R7
+  | 9 => R8
+  | 10 => R9
+  | 11 => R10
+  | 12 => R11
+  | 13 => R12
+  | 14 => R13
+  | 15 => R14
+  | 16 => R15
+  | 17 => R16
+  | 18 => R17
+  | 19 => R18
+  | 20 => R19
+  | 21 => R20
+  | 22 => R21
+  | 23 => R22
+  | 24 => R23
+  | 25 => R24
+  | 26 => R25
+  | 27 => R26
+  | 28 => R27
+  | 29 => R28
+  | 30 => R29
+  | 31 => R30
+  | 32 => _PC
+  | 33 => FPCR
+  | 34 => FPSR
+  | 35 => ICC_PMR_EL1
+  | 36 => SPESamplePreviousBranchAddress
+  | 37 => SPESampleTimestamp
+  | 38 => SPESampleEvents
+  | 39 => sp_rel_access_pc
+  | 40 => HCR_EL2
+  | 41 => SCR_EL3
+  | 42 => CTR_EL0
+  | 43 => MDCR_EL2
+  | 44 => MDCCSR_EL0
+  | 45 => PMCNTENCLR_EL0
+  | 46 => PMCR_EL0
+  | 47 => PMINTENCLR_EL1
+  | 48 => PMOVSCLR_EL0
+  | 49 => MDCR_EL3
+  | 50 => PMCCFILTR_EL0
+  | 51 => PMCNTENSET_EL0
+  | 52 => PMICFILTR_EL0
+  | 53 => SDER32_EL2
+  | 54 => _SDER32_EL3
+  | 55 => PMICNTR_EL0
+  | 56 => PMOVSSET_EL0
+  | 57 => BRBCR_EL1
+  | 58 => BRBCR_EL2
+  | 59 => BRBFCR_EL1
+  | 60 => BRBTS_EL1
+  | 61 => CNTPOFF_EL2
+  | 62 => CNTVOFF_EL2
+  | 63 => CNTHCTL_EL2
+  | 64 => CFG_RVBAR
+  | 65 => DLR_EL0
+  | 66 => DSPSR_EL0
+  | 67 => TCR_EL1
+  | 68 => TCR_EL2
+  | 69 => TCR_EL3
+  | 70 => BRBIDR0_EL1
+  | 71 => PMSIDR_EL1
+  | 72 => PMSCR_EL1
+  | 73 => PMSCR_EL2
+  | 74 => PMBLIMITR_EL1
+  | 75 => PMBSR_EL1
+  | 76 => ZCR_EL1
+  | 77 => ZCR_EL2
+  | 78 => ZCR_EL3
+  | 79 => SMCR_EL1
+  | 80 => SMCR_EL2
+  | 81 => SMCR_EL3
+  | 82 => GCSPR_EL0
+  | 83 => GCSPR_EL1
+  | 84 => GCSPR_EL2
+  | 85 => GCSPR_EL3
+  | 86 => CPACR_EL1
+  | 87 => CPTR_EL2
+  | 88 => CPTR_EL3
+  | 89 => SP_EL0
+  | 90 => SP_EL1
+  | 91 => SP_EL2
+  | 92 => SP_EL3
+  | 93 => OSDLR_EL1
+  | 94 => DBGPRCR_EL1
+  | 95 => GCSCR_EL1
+  | 96 => GCSCR_EL2
+  | 97 => GCSCR_EL3
+  | 98 => MDSCR_EL1
+  | 99 => OSLSR_EL1
+  | 100 => SCTLR_EL2
+  | 101 => SCTLR_EL1
+  | 102 => SCTLR_EL3
+  | 103 => ESR_EL1
+  | 104 => ESR_EL2
+  | 105 => ESR_EL3
+  | 106 => FAR_EL1
+  | 107 => FAR_EL2
+  | 108 => FAR_EL3
+  | 109 => HPFAR_EL2
+  | 110 => MFAR_EL3
+  | 111 => PFAR_EL1
+  | 112 => PFAR_EL2
+  | 113 => ELR_EL1
+  | 114 => ELR_EL2
+  | 115 => ELR_EL3
+  | 116 => SPSR_EL1
+  | 117 => SPSR_EL2
+  | 118 => SPSR_EL3
+  | 119 => SPSR_abt
+  | 120 => SPSR_fiq
+  | 121 => SPSR_irq
+  | 122 => SPSR_und
+  | 123 => OSECCR_EL1
+  | 124 => VBAR_EL1
+  | 125 => VBAR_EL2
+  | 126 => VBAR_EL3
+  | 127 => GCSCRE0_EL1
+  | 128 => HCRX_EL2
+  | 129 => MPAM2_EL2
+  | 130 => _MPAM3_EL3
+  | 131 => _MPAM1_EL1
+  | 132 => MPAMIDR_EL1
+  | 133 => MPAMHCR_EL2
+  | 134 => MPAMVPM0_EL2
+  | 135 => MPAMVPMV_EL2
+  | 136 => MPAMVPM1_EL2
+  | 137 => MPAMVPM2_EL2
+  | 138 => MPAMVPM3_EL2
+  | 139 => MPAMVPM4_EL2
+  | 140 => MPAMVPM5_EL2
+  | 141 => MPAMVPM6_EL2
+  | 142 => MPAMVPM7_EL2
+  | 143 => MPAM0_EL1
+  | 144 => MPAMSM_EL1
+  | 145 => CLIDR_EL1
+  | 146 => CONTEXTIDR_EL1
+  | 147 => TTBR0_NS
+  | 148 => TTBR0_S
+  | 149 => HTTBR
+  | 150 => TTBR1_NS
+  | 151 => TTBR1_S
+  | 152 => IFSR32_EL2
+  | 153 => SCTLR2_EL1
+  | 154 => SCTLR2_EL2
+  | 155 => FPEXC32_EL2
+  | 156 => CNTHP_CTL_EL2
+  | 157 => CNTHP_CVAL_EL2
+  | 158 => _CNTHP_CVAL
+  | 159 => CNTP_CTL_EL0
+  | 160 => CNTP_CVAL_EL0
+  | 161 => _CNTP_CVAL_NS
+  | 162 => CNTP_CVAL_S
+  | 163 => CNTV_CTL_EL0
+  | 164 => CNTV_CVAL_EL0
+  | 165 => CNTHPS_CTL_EL2
+  | 166 => CNTHPS_CVAL_EL2
+  | 167 => CNTHVS_CTL_EL2
+  | 168 => CNTHVS_CVAL_EL2
+  | 169 => CNTHV_CTL_EL2
+  | 170 => CNTHV_CVAL_EL2
+  | 171 => CNTPS_CTL_EL1
+  | 172 => CNTPS_CVAL_EL1
+  | 173 => CNTKCTL_EL1
+  | 174 => GPCCR_EL3
+  | 175 => GPTBR_EL3
+  | 176 => MAIR2_EL1
+  | 177 => MAIR_EL1
+  | 178 => PIRE0_EL1
+  | 179 => PIR_EL1
+  | 180 => TCR2_EL1
+  | 181 => MAIR2_EL2
+  | 182 => MAIR_EL2
+  | 183 => PIR_EL2
+  | 184 => TCR2_EL2
+  | 185 => PIRE0_EL2
+  | 186 => MAIR2_EL3
+  | 187 => MAIR_EL3
+  | 188 => PIR_EL3
+  | 189 => SCTLR2_EL3
+  | 190 => TTBR0_EL3
+  | 191 => APIAKeyHi_EL1
+  | 192 => APIAKeyLo_EL1
+  | 193 => APIBKeyHi_EL1
+  | 194 => APIBKeyLo_EL1
+  | 195 => APDAKeyHi_EL1
+  | 196 => APDAKeyLo_EL1
+  | 197 => APDBKeyHi_EL1
+  | 198 => APDBKeyLo_EL1
+  | 199 => APGAKeyHi_EL1
+  | 200 => APGAKeyLo_EL1
+  | 201 => GCR_EL1
+  | 202 => RGSR_EL1
+  | 203 => TFSRE0_EL1
+  | 204 => TFSR_EL1
+  | 205 => TFSR_EL2
+  | 206 => TFSR_EL3
+  | 207 => CONTEXTIDR_EL2
+  | 208 => VTCR_EL2
+  | 209 => VTTBR
+  | 210 => EDWAR
+  | 211 => POR_EL1
+  | 212 => POR_EL2
+  | 213 => POR_EL3
+  | 214 => POR_EL0
+  | 215 => MECID_P0_EL2
+  | 216 => VMECID_P_EL2
+  | 217 => MECID_A0_EL2
+  | 218 => MECID_A1_EL2
+  | 219 => MECID_P1_EL2
+  | 220 => MECID_RL_A_EL3
+  | 221 => S2PIR_EL2
+  | 222 => VSTCR_EL2
+  | 223 => VSTTBR_EL2
+  | 224 => S2POR_EL1
+  | 225 => VMECID_A_EL2
+  | 226 => VNCR_EL2
+  | 227 => HFGITR_EL2
+  | 228 => DISR_EL1
+  | 229 => VSESR_EL2
+  | 230 => VDISR_EL2
+  | 231 => RVBAR_EL1
+  | 232 => RVBAR_EL2
+  | 233 => RVBAR_EL3
+  | 234 => DBGDSAR
+  | 235 => EDAA32PFR
+  | 236 => EDDFR
+  | 237 => EDDFR1
+  | 238 => EDHSR
+  | 239 => EDPCSR
+  | 240 => EDPFR
+  | 241 => GICR_CLRLPIR
+  | 242 => GICR_INVALLR
+  | 243 => GICR_INVLPIR
+  | 244 => GICR_PENDBASER
+  | 245 => GICR_PROPBASER
+  | 246 => GICR_SETLPIR
+  | 247 => GICR_VPENDBASER
+  | 248 => GICR_VPROPBASER
+  | 249 => GITS_CBASER
+  | 250 => GITS_CREADR
+  | 251 => GITS_CWRITER
+  | 252 => GITS_SGIR
+  | 253 => GITS_TYPER
+  | 254 => PMCFGR
+  | 255 => PMIIDR
+  | 256 => PMPCSCTL
+  | 257 => PMPCSR
+  | 258 => PMVCIDSR
+  | 259 => AMCFGR_EL0
+  | 260 => AMCGCR_EL0
+  | 261 => AMCNTENCLR0_EL0
+  | 262 => AMCNTENCLR1_EL0
+  | 263 => AMCNTENSET0_EL0
+  | 264 => AMCNTENSET1_EL0
+  | 265 => AMCR_EL0
+  | 266 => AMUSERENR_EL0
+  | 267 => CCSIDR2_EL1
+  | 268 => CCSIDR_EL1
+  | 269 => CSSELR_EL1
+  | 270 => DBGAUTHSTATUS_EL1
+  | 271 => DBGCLAIMCLR_EL1
+  | 272 => DBGCLAIMSET_EL1
+  | 273 => MDCCINT_EL1
+  | 274 => MDRAR_EL1
+  | 275 => _DBGDRAR
+  | 276 => DBGVCR32_EL2
+  | 277 => ERRIDR_EL1
+  | 278 => ERRSELR_EL1
+  | 279 => RMR_EL2
+  | 280 => HSTR_EL2
+  | 281 => TRFCR_EL2
+  | 282 => ICC_ASGI1R_EL1
+  | 283 => _ICC_ASGI1R
+  | 284 => ICC_BPR0_EL1
+  | 285 => ICC_BPR1_EL1_NS
+  | 286 => ICC_BPR1_EL1_S
+  | 287 => ICC_CTLR_EL1_NS
+  | 288 => ICC_CTLR_EL1_S
+  | 289 => ICC_DIR_EL1
+  | 290 => ICC_EOIR0_EL1
+  | 291 => ICC_EOIR1_EL1
+  | 292 => ICC_HPPIR0_EL1
+  | 293 => ICC_HPPIR1_EL1
+  | 294 => ICC_SRE_EL2
+  | 295 => ICC_IAR0_EL1
+  | 296 => ICC_IAR1_EL1
+  | 297 => ICC_IGRPEN0_EL1
+  | 298 => ICC_IGRPEN1_EL1_NS
+  | 299 => ICC_IGRPEN1_EL1_S
+  | 300 => ICC_RPR_EL1
+  | 301 => ICC_SGI0R_EL1
+  | 302 => _ICC_SGI0R
+  | 303 => ICC_SGI1R_EL1
+  | 304 => _ICC_SGI1R
+  | 305 => ICC_SRE_EL1_NS
+  | 306 => ICC_SRE_EL1_S
+  | 307 => ICH_EISR_EL2
+  | 308 => ICH_ELRSR_EL2
+  | 309 => ICH_HCR_EL2
+  | 310 => ICH_MISR_EL2
+  | 311 => ICH_VMCR_EL2
+  | 312 => ICH_VTR_EL2
+  | 313 => ICV_BPR0_EL1
+  | 314 => ICV_BPR1_EL1
+  | 315 => ICV_CTLR_EL1
+  | 316 => ICV_DIR_EL1
+  | 317 => ICV_EOIR0_EL1
+  | 318 => ICV_EOIR1_EL1
+  | 319 => ICV_HPPIR0_EL1
+  | 320 => ICV_HPPIR1_EL1
+  | 321 => ICV_IAR0_EL1
+  | 322 => ICV_IAR1_EL1
+  | 323 => ICV_IGRPEN0_EL1
+  | 324 => ICV_IGRPEN1_EL1
+  | 325 => ICV_PMR_EL1
+  | 326 => ICV_RPR_EL1
+  | 327 => ID_AFR0_EL1
+  | 328 => ID_DFR1_EL1
+  | 329 => ID_ISAR0_EL1
+  | 330 => ID_ISAR5_EL1
+  | 331 => ID_MMFR5_EL1
+  | 332 => ID_PFR2_EL1
+  | 333 => ISR_EL1
+  | 334 => MPIDR_EL1
+  | 335 => MVFR2_EL1
+  | 336 => PAR_NS
+  | 337 => PAR_S
+  | 338 => _PMCNTEN
+  | 339 => PMINTENSET_EL1
+  | 340 => _PMINTEN
+  | 341 => _PMOVS
+  | 342 => PMSELR_EL0
+  | 343 => PMSWINC_EL0
+  | 344 => PMUSERENR_EL0
+  | 345 => RMR_EL1
+  | 346 => RMR_EL3
+  | 347 => TRFCR_EL1
+  | 348 => VMPIDR_EL2
+  | 349 => VPIDR_EL2
+  | 350 => ID_DFR0_EL1
+  | 351 => ID_ISAR1_EL1
+  | 352 => ID_ISAR2_EL1
+  | 353 => ID_ISAR3_EL1
+  | 354 => ID_ISAR4_EL1
+  | 355 => ID_ISAR6_EL1
+  | 356 => ID_MMFR0_EL1
+  | 357 => ID_MMFR1_EL1
+  | 358 => ID_MMFR2_EL1
+  | 359 => ID_MMFR3_EL1
+  | 360 => ID_MMFR4_EL1
+  | 361 => ID_PFR0_EL1
+  | 362 => ID_PFR1_EL1
+  | 363 => MIDR_EL1
+  | 364 => MVFR0_EL1
+  | 365 => MVFR1_EL1
+  | 366 => PMCEID0_EL0
+  | 367 => PMCEID1_EL0
+  | 368 => ACCDATA_EL1
+  | 369 => AMCG1IDR_EL0
+  | 370 => BRBINFINJ_EL1
+  | 371 => CNTFRQ_EL0
+  | 372 => CNTHPS_TVAL_EL2
+  | 373 => CNTHP_TVAL_EL2
+  | 374 => CNTHVS_TVAL_EL2
+  | 375 => CNTHV_TVAL_EL2
+  | 376 => CNTPS_TVAL_EL1
+  | 377 => CNTP_TVAL_EL0
+  | 378 => CNTV_TVAL_EL0
+  | 379 => DACR32_EL2
+  | 380 => DBGDTRRX_EL0
+  | 381 => DBGDTRTX_EL0
+  | 382 => DCZID_EL0
+  | 383 => GMID_EL1
+  | 384 => HAFGRTR_EL2
+  | 385 => HDFGRTR2_EL2
+  | 386 => HDFGRTR_EL2
+  | 387 => HDFGWTR2_EL2
+  | 388 => HDFGWTR_EL2
+  | 389 => HFGITR2_EL2
+  | 390 => HFGRTR2_EL2
+  | 391 => HFGRTR_EL2
+  | 392 => HFGWTR2_EL2
+  | 393 => HFGWTR_EL2
+  | 394 => ICC_CTLR_EL3
+  | 395 => ICC_IGRPEN1_EL3
+  | 396 => ICC_NMIAR1_EL1
+  | 397 => ICC_SRE_EL3
+  | 398 => ICV_NMIAR1_EL1
+  | 399 => ID_AA64AFR0_EL1
+  | 400 => ID_AA64AFR1_EL1
+  | 401 => ID_AA64ISAR0_EL1
+  | 402 => ID_AA64ISAR2_EL1
+  | 403 => ID_AA64MMFR0_EL1
+  | 404 => ID_AA64MMFR2_EL1
+  | 405 => ID_AA64MMFR3_EL1
+  | 406 => ID_AA64MMFR4_EL1
+  | 407 => ID_AA64PFR1_EL1
+  | 408 => ID_AA64PFR2_EL1
+  | 409 => ID_AA64SMFR0_EL1
+  | 410 => ID_AA64ZFR0_EL1
+  | 411 => LORC_EL1
+  | 412 => LOREA_EL1
+  | 413 => LORID_EL1
+  | 414 => LORN_EL1
+  | 415 => LORSA_EL1
+  | 416 => MDSELR_EL1
+  | 417 => MECIDR_EL2
+  | 418 => OSDTRRX_EL1
+  | 419 => OSDTRTX_EL1
+  | 420 => OSLAR_EL1
+  | 421 => PMBIDR_EL1
+  | 422 => PMECR_EL1
+  | 423 => PMMIR_EL1
+  | 424 => PMSEVFR_EL1
+  | 425 => PMSFCR_EL1
+  | 426 => PMSICR_EL1
+  | 427 => PMSIRR_EL1
+  | 428 => PMSLATFR_EL1
+  | 429 => PMSNEVFR_EL1
+  | 430 => PMSSCR_EL1
+  | 431 => PMUACR_EL1
+  | 432 => PMXEVCNTR_EL0
+  | 433 => PMZR_EL0
+  | 434 => SMIDR_EL1
+  | 435 => SMPRI_EL1
+  | 436 => SPMSELR_EL0
+  | 437 => ID_AA64DFR0_EL1
+  | 438 => ID_AA64DFR1_EL1
+  | 439 => ID_AA64ISAR1_EL1
+  | 440 => ID_AA64MMFR1_EL1
+  | 441 => ID_AA64PFR0_EL1
+  | 442 => PMCCNTR_EL0
+  | 443 => PMBPTR_EL1
+  | 444 => PMSDSFR_EL1
+  | 445 => BRBSRCINJ_EL1
+  | 446 => BRBTGTINJ_EL1
+  | 447 => _DBGDTR_EL0
+  | 448 => HEAP_BASE
+  | 449 => HEAP_LIMIT
+  | 450 => STACK_BASE
+  | 451 => STACK_LIMIT
+  | 452 => _PMCCNTR
+  | 453 => AIDR_EL1
+  | 454 => REVIDR_EL1
+  | 455 => TPIDR_EL2
+  | 456 => ACTLR_EL2
+  | 457 => SPMACCESSR_EL1
+  | 458 => TPIDR_EL1
+  | 459 => ACTLR_EL1
+  | 460 => AFSR1_EL1
+  | 461 => PMCCNTSVR_EL1
+  | 462 => AMAIR2_EL2
+  | 463 => AFSR0_EL3
+  | 464 => AFSR1_EL2
+  | 465 => AFSR0_EL1
+  | 466 => SPMACCESSR_EL2
+  | 467 => PMICNTSVR_EL1
+  | 468 => SCXTNUM_EL2
+  | 469 => PMIAR_EL1
+  | 470 => TPIDR_EL3
+  | 471 => ACTLR_EL3
+  | 472 => AMAIR_EL2
+  | 473 => AMAIR_EL3
+  | 474 => SCXTNUM_EL1
+  | 475 => TPIDRRO_EL0
+  | 476 => AMAIR_EL1
+  | 477 => SCXTNUM_EL0
+  | 478 => TPIDR2_EL0
+  | 479 => SCXTNUM_EL3
+  | 480 => TPIDR_EL0
+  | 481 => RNDRRS
+  | 482 => SMPRIMAP_EL2
+  | 483 => RNDR
+  | 484 => HACR_EL2
+  | 485 => AMAIR2_EL3
+  | 486 => AFSR1_EL3
+  | 487 => AFSR0_EL2
+  | 488 => AMAIR2_EL1
+  | 489 => SPMACCESSR_EL3
+  | 490 => _CNTVOFF
+  | 491 => _CNTV_CVAL
+  | 492 => ERXADDR_EL1
+  | 493 => ERXMISC0_EL1
+  | 494 => ERXPFGCDN_EL1
+  | 495 => ERXPFGF_EL1
+  | 496 => ERXMISC1_EL1
+  | 497 => ERXCTLR_EL1
+  | 498 => ERXSTATUS_EL1
+  | 499 => ERXFR_EL1
+  | 500 => ERXGSR_EL1
+  | 501 => ERXMISC3_EL1
+  | 502 => ERXMISC2_EL1
+  | 503 => ERXPFGCTL_EL1
+  | _ => PC
   end.
 Lemma register_bitvector_64_num_of_roundtrip (x : register_bitvector_64) : register_bitvector_64_of_num (num_of_register_bitvector_64 x) = x.
   destruct x; reflexivity.
@@ -15700,6 +15678,7 @@ Qed.
 Hint Rewrite register_bitvector_64_beq_iff : register_beq_iffs.
 Hint Rewrite register_bitvector_64_beq_refl : register_beq_refls.
 Definition register_bitvector_64_list : list (string * register_bitvector_64) := [
+  ("PC", PC);
   ("R0", R0);
   ("R1", R1);
   ("R2", R2);
@@ -16330,6 +16309,7 @@ Instance Countable_register_bitvector_88 : Countable register_bitvector_88. refi
 Defined.
 
 Variant register_bool :=
+  | PCUpdated
   | FEAT_AA32EL0_IMPLEMENTED
   | FEAT_AA32EL1_IMPLEMENTED
   | FEAT_AA32EL2_IMPLEMENTED
@@ -16659,660 +16639,662 @@ Variant register_bool :=
 
 Definition num_of_register_bool (r : register_bool) : Z :=
   match r with
-  | FEAT_AA32EL0_IMPLEMENTED => 0
-  | FEAT_AA32EL1_IMPLEMENTED => 1
-  | FEAT_AA32EL2_IMPLEMENTED => 2
-  | FEAT_AA32EL3_IMPLEMENTED => 3
-  | FEAT_AA64EL0_IMPLEMENTED => 4
-  | FEAT_AA64EL1_IMPLEMENTED => 5
-  | FEAT_AA64EL2_IMPLEMENTED => 6
-  | FEAT_AA64EL3_IMPLEMENTED => 7
-  | FEAT_EL0_IMPLEMENTED => 8
-  | FEAT_EL1_IMPLEMENTED => 9
-  | FEAT_EL2_IMPLEMENTED => 10
-  | FEAT_EL3_IMPLEMENTED => 11
-  | FEAT_AES_IMPLEMENTED => 12
-  | FEAT_AdvSIMD_IMPLEMENTED => 13
-  | FEAT_CSV2_1p1_IMPLEMENTED => 14
-  | FEAT_CSV2_1p2_IMPLEMENTED => 15
-  | FEAT_CSV2_2_IMPLEMENTED => 16
-  | FEAT_CSV2_3_IMPLEMENTED => 17
-  | FEAT_DoubleLock_IMPLEMENTED => 18
-  | FEAT_ETMv4_IMPLEMENTED => 19
-  | FEAT_ETMv4p1_IMPLEMENTED => 20
-  | FEAT_ETMv4p2_IMPLEMENTED => 21
-  | FEAT_ETMv4p3_IMPLEMENTED => 22
-  | FEAT_ETMv4p4_IMPLEMENTED => 23
-  | FEAT_ETMv4p5_IMPLEMENTED => 24
-  | FEAT_ETMv4p6_IMPLEMENTED => 25
-  | FEAT_ETS2_IMPLEMENTED => 26
-  | FEAT_FP_IMPLEMENTED => 27
-  | FEAT_GICv3_IMPLEMENTED => 28
-  | FEAT_GICv3_LEGACY_IMPLEMENTED => 29
-  | FEAT_GICv3_TDIR_IMPLEMENTED => 30
-  | FEAT_GICv3p1_IMPLEMENTED => 31
-  | FEAT_GICv4_IMPLEMENTED => 32
-  | FEAT_GICv4p1_IMPLEMENTED => 33
-  | FEAT_IVIPT_IMPLEMENTED => 34
-  | FEAT_PCSRv8_IMPLEMENTED => 35
-  | FEAT_PMULL_IMPLEMENTED => 36
-  | FEAT_PMUv3_IMPLEMENTED => 37
-  | FEAT_PMUv3_EXT_IMPLEMENTED => 38
-  | FEAT_PMUv3_EXT32_IMPLEMENTED => 39
-  | FEAT_SHA1_IMPLEMENTED => 40
-  | FEAT_SHA256_IMPLEMENTED => 41
-  | FEAT_TRC_EXT_IMPLEMENTED => 42
-  | FEAT_TRC_SR_IMPLEMENTED => 43
-  | FEAT_nTLBPA_IMPLEMENTED => 44
-  | FEAT_CRC32_IMPLEMENTED => 45
-  | FEAT_Debugv8p1_IMPLEMENTED => 46
-  | FEAT_HAFDBS_IMPLEMENTED => 47
-  | FEAT_HPDS_IMPLEMENTED => 48
-  | FEAT_LOR_IMPLEMENTED => 49
-  | FEAT_LSE_IMPLEMENTED => 50
-  | FEAT_PAN_IMPLEMENTED => 51
-  | FEAT_PMUv3p1_IMPLEMENTED => 52
-  | FEAT_RDM_IMPLEMENTED => 53
-  | FEAT_VHE_IMPLEMENTED => 54
-  | FEAT_VMID16_IMPLEMENTED => 55
-  | FEAT_AA32BF16_IMPLEMENTED => 56
-  | FEAT_AA32HPD_IMPLEMENTED => 57
-  | FEAT_AA32I8MM_IMPLEMENTED => 58
-  | FEAT_ASMv8p2_IMPLEMENTED => 59
-  | FEAT_DPB_IMPLEMENTED => 60
-  | FEAT_Debugv8p2_IMPLEMENTED => 61
-  | FEAT_EDHSR_IMPLEMENTED => 62
-  | FEAT_F32MM_IMPLEMENTED => 63
-  | FEAT_F64MM_IMPLEMENTED => 64
-  | FEAT_FP16_IMPLEMENTED => 65
-  | FEAT_HPDS2_IMPLEMENTED => 66
-  | FEAT_I8MM_IMPLEMENTED => 67
-  | FEAT_IESB_IMPLEMENTED => 68
-  | FEAT_LPA_IMPLEMENTED => 69
-  | FEAT_LSMAOC_IMPLEMENTED => 70
-  | FEAT_LVA_IMPLEMENTED => 71
-  | FEAT_MPAM_IMPLEMENTED => 72
-  | FEAT_PAN2_IMPLEMENTED => 73
-  | FEAT_PCSRv8p2_IMPLEMENTED => 74
-  | FEAT_RAS_IMPLEMENTED => 75
-  | FEAT_SHA3_IMPLEMENTED => 76
-  | FEAT_SHA512_IMPLEMENTED => 77
-  | FEAT_SM3_IMPLEMENTED => 78
-  | FEAT_SM4_IMPLEMENTED => 79
-  | FEAT_SPE_IMPLEMENTED => 80
-  | FEAT_SVE_IMPLEMENTED => 81
-  | FEAT_TTCNP_IMPLEMENTED => 82
-  | FEAT_UAO_IMPLEMENTED => 83
-  | FEAT_VPIPT_IMPLEMENTED => 84
-  | FEAT_XNX_IMPLEMENTED => 85
-  | FEAT_CCIDX_IMPLEMENTED => 86
-  | FEAT_CONSTPACFIELD_IMPLEMENTED => 87
-  | FEAT_EPAC_IMPLEMENTED => 88
-  | FEAT_FCMA_IMPLEMENTED => 89
-  | FEAT_FPAC_IMPLEMENTED => 90
-  | FEAT_FPACCOMBINE_IMPLEMENTED => 91
-  | FEAT_JSCVT_IMPLEMENTED => 92
-  | FEAT_LRCPC_IMPLEMENTED => 93
-  | FEAT_NV_IMPLEMENTED => 94
-  | FEAT_PACIMP_IMPLEMENTED => 95
-  | FEAT_PACQARMA3_IMPLEMENTED => 96
-  | FEAT_PACQARMA5_IMPLEMENTED => 97
-  | FEAT_PAuth_IMPLEMENTED => 98
-  | FEAT_SPEv1p1_IMPLEMENTED => 99
-  | FEAT_AMUv1_IMPLEMENTED => 100
-  | FEAT_BBM_IMPLEMENTED => 101
-  | FEAT_CNTSC_IMPLEMENTED => 102
-  | FEAT_DIT_IMPLEMENTED => 103
-  | FEAT_Debugv8p4_IMPLEMENTED => 104
-  | FEAT_DotProd_IMPLEMENTED => 105
-  | FEAT_DoubleFault_IMPLEMENTED => 106
-  | FEAT_FHM_IMPLEMENTED => 107
-  | FEAT_FlagM_IMPLEMENTED => 108
-  | FEAT_IDST_IMPLEMENTED => 109
-  | FEAT_LRCPC2_IMPLEMENTED => 110
-  | FEAT_LSE2_IMPLEMENTED => 111
-  | FEAT_NV2_IMPLEMENTED => 112
-  | FEAT_PMUv3p4_IMPLEMENTED => 113
-  | FEAT_RASSAv1p1_IMPLEMENTED => 114
-  | FEAT_RASv1p1_IMPLEMENTED => 115
-  | FEAT_S2FWB_IMPLEMENTED => 116
-  | FEAT_SEL2_IMPLEMENTED => 117
-  | FEAT_TLBIOS_IMPLEMENTED => 118
-  | FEAT_TLBIRANGE_IMPLEMENTED => 119
-  | FEAT_TRF_IMPLEMENTED => 120
-  | FEAT_TTL_IMPLEMENTED => 121
-  | FEAT_TTST_IMPLEMENTED => 122
-  | FEAT_BTI_IMPLEMENTED => 123
-  | FEAT_CSV2_IMPLEMENTED => 124
-  | FEAT_CSV3_IMPLEMENTED => 125
-  | FEAT_DPB2_IMPLEMENTED => 126
-  | FEAT_E0PD_IMPLEMENTED => 127
-  | FEAT_EVT_IMPLEMENTED => 128
-  | FEAT_ExS_IMPLEMENTED => 129
-  | FEAT_FRINTTS_IMPLEMENTED => 130
-  | FEAT_FlagM2_IMPLEMENTED => 131
-  | FEAT_GTG_IMPLEMENTED => 132
-  | FEAT_MTE_IMPLEMENTED => 133
-  | FEAT_MTE2_IMPLEMENTED => 134
-  | FEAT_PMUv3p5_IMPLEMENTED => 135
-  | FEAT_RNG_IMPLEMENTED => 136
-  | FEAT_RNG_TRAP_IMPLEMENTED => 137
-  | FEAT_SB_IMPLEMENTED => 138
-  | FEAT_SPECRES_IMPLEMENTED => 139
-  | FEAT_SSBS_IMPLEMENTED => 140
-  | FEAT_SSBS2_IMPLEMENTED => 141
-  | FEAT_AMUv1p1_IMPLEMENTED => 142
-  | FEAT_BF16_IMPLEMENTED => 143
-  | FEAT_DGH_IMPLEMENTED => 144
-  | FEAT_ECV_IMPLEMENTED => 145
-  | FEAT_FGT_IMPLEMENTED => 146
-  | FEAT_HPMN0_IMPLEMENTED => 147
-  | FEAT_MPAMv0p1_IMPLEMENTED => 148
-  | FEAT_MPAMv1p1_IMPLEMENTED => 149
-  | FEAT_MTPMU_IMPLEMENTED => 150
-  | FEAT_PAuth2_IMPLEMENTED => 151
-  | FEAT_TWED_IMPLEMENTED => 152
-  | FEAT_AFP_IMPLEMENTED => 153
-  | FEAT_EBF16_IMPLEMENTED => 154
-  | FEAT_HCX_IMPLEMENTED => 155
-  | FEAT_LPA2_IMPLEMENTED => 156
-  | FEAT_LS64_IMPLEMENTED => 157
-  | FEAT_LS64_ACCDATA_IMPLEMENTED => 158
-  | FEAT_LS64_V_IMPLEMENTED => 159
-  | FEAT_MTE3_IMPLEMENTED => 160
-  | FEAT_PAN3_IMPLEMENTED => 161
-  | FEAT_PMUv3p7_IMPLEMENTED => 162
-  | FEAT_RPRES_IMPLEMENTED => 163
-  | FEAT_SPEv1p2_IMPLEMENTED => 164
-  | FEAT_WFxT_IMPLEMENTED => 165
-  | FEAT_XS_IMPLEMENTED => 166
-  | FEAT_CMOW_IMPLEMENTED => 167
-  | FEAT_Debugv8p8_IMPLEMENTED => 168
-  | FEAT_GICv3_NMI_IMPLEMENTED => 169
-  | FEAT_HBC_IMPLEMENTED => 170
-  | FEAT_MOPS_IMPLEMENTED => 171
-  | FEAT_NMI_IMPLEMENTED => 172
-  | FEAT_PMUv3_EXT64_IMPLEMENTED => 173
-  | FEAT_PMUv3_TH_IMPLEMENTED => 174
-  | FEAT_PMUv3p8_IMPLEMENTED => 175
-  | FEAT_SCTLR2_IMPLEMENTED => 176
-  | FEAT_SPEv1p3_IMPLEMENTED => 177
-  | FEAT_TCR2_IMPLEMENTED => 178
-  | FEAT_TIDCP1_IMPLEMENTED => 179
-  | FEAT_ADERR_IMPLEMENTED => 180
-  | FEAT_AIE_IMPLEMENTED => 181
-  | FEAT_ANERR_IMPLEMENTED => 182
-  | FEAT_CLRBHB_IMPLEMENTED => 183
-  | FEAT_CSSC_IMPLEMENTED => 184
-  | FEAT_Debugv8p9_IMPLEMENTED => 185
-  | FEAT_DoubleFault2_IMPLEMENTED => 186
-  | FEAT_ECBHB_IMPLEMENTED => 187
-  | FEAT_FGT2_IMPLEMENTED => 188
-  | FEAT_HAFT_IMPLEMENTED => 189
-  | FEAT_LRCPC3_IMPLEMENTED => 190
-  | FEAT_MTE4_IMPLEMENTED => 191
-  | FEAT_MTE_ASYM_FAULT_IMPLEMENTED => 192
-  | FEAT_MTE_ASYNC_IMPLEMENTED => 193
-  | FEAT_MTE_CANONICAL_TAGS_IMPLEMENTED => 194
-  | FEAT_MTE_NO_ADDRESS_TAGS_IMPLEMENTED => 195
-  | FEAT_MTE_PERM_IMPLEMENTED => 196
-  | FEAT_MTE_STORE_ONLY_IMPLEMENTED => 197
-  | FEAT_MTE_TAGGED_FAR_IMPLEMENTED => 198
-  | FEAT_PCSRv8p9_IMPLEMENTED => 199
-  | FEAT_PFAR_IMPLEMENTED => 200
-  | FEAT_PMUv3_EDGE_IMPLEMENTED => 201
-  | FEAT_PMUv3_ICNTR_IMPLEMENTED => 202
-  | FEAT_PMUv3_SS_IMPLEMENTED => 203
-  | FEAT_PMUv3p9_IMPLEMENTED => 204
-  | FEAT_PRFMSLC_IMPLEMENTED => 205
-  | FEAT_RASSAv2_IMPLEMENTED => 206
-  | FEAT_RASv2_IMPLEMENTED => 207
-  | FEAT_RPRFM_IMPLEMENTED => 208
-  | FEAT_S1PIE_IMPLEMENTED => 209
-  | FEAT_S1POE_IMPLEMENTED => 210
-  | FEAT_S2PIE_IMPLEMENTED => 211
-  | FEAT_S2POE_IMPLEMENTED => 212
-  | FEAT_SPECRES2_IMPLEMENTED => 213
-  | FEAT_SPE_CRR_IMPLEMENTED => 214
-  | FEAT_SPE_FDS_IMPLEMENTED => 215
-  | FEAT_SPEv1p4_IMPLEMENTED => 216
-  | FEAT_SPMU_IMPLEMENTED => 217
-  | FEAT_THE_IMPLEMENTED => 218
-  | FEAT_DoPD_IMPLEMENTED => 219
-  | FEAT_ETE_IMPLEMENTED => 220
-  | FEAT_SVE2_IMPLEMENTED => 221
-  | FEAT_SVE_AES_IMPLEMENTED => 222
-  | FEAT_SVE_BitPerm_IMPLEMENTED => 223
-  | FEAT_SVE_PMULL128_IMPLEMENTED => 224
-  | FEAT_SVE_SHA3_IMPLEMENTED => 225
-  | FEAT_SVE_SM4_IMPLEMENTED => 226
-  | FEAT_TME_IMPLEMENTED => 227
-  | FEAT_TRBE_IMPLEMENTED => 228
-  | FEAT_ETEv1p1_IMPLEMENTED => 229
-  | FEAT_BRBE_IMPLEMENTED => 230
-  | FEAT_ETEv1p2_IMPLEMENTED => 231
-  | FEAT_RME_IMPLEMENTED => 232
-  | FEAT_SME_IMPLEMENTED => 233
-  | FEAT_SME_F64F64_IMPLEMENTED => 234
-  | FEAT_SME_FA64_IMPLEMENTED => 235
-  | FEAT_SME_I16I64_IMPLEMENTED => 236
-  | FEAT_BRBEv1p1_IMPLEMENTED => 237
-  | FEAT_MEC_IMPLEMENTED => 238
-  | FEAT_SME2_IMPLEMENTED => 239
-  | FEAT_ABLE_IMPLEMENTED => 240
-  | FEAT_CHK_IMPLEMENTED => 241
-  | FEAT_D128_IMPLEMENTED => 242
-  | FEAT_EBEP_IMPLEMENTED => 243
-  | FEAT_ETEv1p3_IMPLEMENTED => 244
-  | FEAT_GCS_IMPLEMENTED => 245
-  | FEAT_ITE_IMPLEMENTED => 246
-  | FEAT_LSE128_IMPLEMENTED => 247
-  | FEAT_LVA3_IMPLEMENTED => 248
-  | FEAT_SEBEP_IMPLEMENTED => 249
-  | FEAT_SME2p1_IMPLEMENTED => 250
-  | FEAT_SME_F16F16_IMPLEMENTED => 251
-  | FEAT_SVE2p1_IMPLEMENTED => 252
-  | FEAT_SVE_B16B16_IMPLEMENTED => 253
-  | FEAT_SYSINSTR128_IMPLEMENTED => 254
-  | FEAT_SYSREG128_IMPLEMENTED => 255
-  | FEAT_TRBE_EXT_IMPLEMENTED => 256
-  | FEAT_TRBE_MPAM_IMPLEMENTED => 257
-  | v8Ap0_IMPLEMENTED => 258
-  | v8Ap1_IMPLEMENTED => 259
-  | v8Ap2_IMPLEMENTED => 260
-  | v8Ap3_IMPLEMENTED => 261
-  | v8Ap4_IMPLEMENTED => 262
-  | v8Ap5_IMPLEMENTED => 263
-  | v8Ap6_IMPLEMENTED => 264
-  | v8Ap7_IMPLEMENTED => 265
-  | v8Ap8_IMPLEMENTED => 266
-  | v8Ap9_IMPLEMENTED => 267
-  | v9Ap0_IMPLEMENTED => 268
-  | v9Ap1_IMPLEMENTED => 269
-  | v9Ap2_IMPLEMENTED => 270
-  | v9Ap3_IMPLEMENTED => 271
-  | v9Ap4_IMPLEMENTED => 272
-  | IsWFIsleep => 273
-  | IsWFEsleep => 274
-  | ShouldAdvanceIT => 275
-  | ShouldAdvanceSS => 276
-  | InGuardedPage => 277
-  | BTypeCompatible => 278
-  | SPESampleInFlight => 279
-  | SPESampleContextEL1Valid => 280
-  | SPESampleContextEL2Valid => 281
-  | SPESampleInstIsNV2 => 282
-  | SPESamplePreviousBranchAddressValid => 283
-  | SPESampleDataSourceValid => 284
-  | SPESampleSubclassValid => 285
-  | SPESampleTimestampValid => 286
-  | __SPE_LFSR_initialized => 287
-  | __last_branch_valid => 288
-  | __InstructionStep => 289
-  | __BranchTaken => 290
-  | __ExclusiveMonitorSet => 291
-  | __highest_el_aarch32 => 292
-  | __apply_effective_shareability => 293
-  | __cpy_mops_option_a_supported => 294
-  | __cpyf_mops_option_a_supported => 295
-  | __empam_force_ns_RAO => 296
-  | __empam_force_ns_implemented => 297
-  | __empam_sdeflt_implemented => 298
-  | __empam_tidr_implemented => 299
-  | __feat_rpres => 300
-  | __has_sme_priority_control => 301
-  | __isb_is_branch => 302
-  | __set_mops_option_a_supported => 303
-  | __setg_mops_option_a_supported => 304
-  | __sme_only => 305
-  | __mpam_has_hcr => 306
-  | __tlb_enabled => 307
-  | __mpam_has_altsp => 308
-  | __syncAbortOnReadNormCache => 309
-  | __syncAbortOnReadNormNonCache => 310
-  | __syncAbortOnDeviceRead => 311
-  | __syncAbortOnSoRead => 312
-  | __syncAbortOnSoWrite => 313
-  | __syncAbortOnPrefetch => 314
-  | __syncAbortOnTTWCache => 315
-  | __syncAbortOnTTWNonCache => 316
-  | __syncAbortOnWriteNormCache => 317
-  | __syncAbortOnWriteNormNonCache => 318
-  | __syncAbortOnDeviceWrite => 319
-  | __unpred_tsize_aborts => 320
-  | __ignore_rvbar_in_aarch32 => 321
-  | __trickbox_enabled => 322
-  | __mops_forward_copy => 323
-  | __has_spe_pseudo_cycles => 324
+  | PCUpdated => 0
+  | FEAT_AA32EL0_IMPLEMENTED => 1
+  | FEAT_AA32EL1_IMPLEMENTED => 2
+  | FEAT_AA32EL2_IMPLEMENTED => 3
+  | FEAT_AA32EL3_IMPLEMENTED => 4
+  | FEAT_AA64EL0_IMPLEMENTED => 5
+  | FEAT_AA64EL1_IMPLEMENTED => 6
+  | FEAT_AA64EL2_IMPLEMENTED => 7
+  | FEAT_AA64EL3_IMPLEMENTED => 8
+  | FEAT_EL0_IMPLEMENTED => 9
+  | FEAT_EL1_IMPLEMENTED => 10
+  | FEAT_EL2_IMPLEMENTED => 11
+  | FEAT_EL3_IMPLEMENTED => 12
+  | FEAT_AES_IMPLEMENTED => 13
+  | FEAT_AdvSIMD_IMPLEMENTED => 14
+  | FEAT_CSV2_1p1_IMPLEMENTED => 15
+  | FEAT_CSV2_1p2_IMPLEMENTED => 16
+  | FEAT_CSV2_2_IMPLEMENTED => 17
+  | FEAT_CSV2_3_IMPLEMENTED => 18
+  | FEAT_DoubleLock_IMPLEMENTED => 19
+  | FEAT_ETMv4_IMPLEMENTED => 20
+  | FEAT_ETMv4p1_IMPLEMENTED => 21
+  | FEAT_ETMv4p2_IMPLEMENTED => 22
+  | FEAT_ETMv4p3_IMPLEMENTED => 23
+  | FEAT_ETMv4p4_IMPLEMENTED => 24
+  | FEAT_ETMv4p5_IMPLEMENTED => 25
+  | FEAT_ETMv4p6_IMPLEMENTED => 26
+  | FEAT_ETS2_IMPLEMENTED => 27
+  | FEAT_FP_IMPLEMENTED => 28
+  | FEAT_GICv3_IMPLEMENTED => 29
+  | FEAT_GICv3_LEGACY_IMPLEMENTED => 30
+  | FEAT_GICv3_TDIR_IMPLEMENTED => 31
+  | FEAT_GICv3p1_IMPLEMENTED => 32
+  | FEAT_GICv4_IMPLEMENTED => 33
+  | FEAT_GICv4p1_IMPLEMENTED => 34
+  | FEAT_IVIPT_IMPLEMENTED => 35
+  | FEAT_PCSRv8_IMPLEMENTED => 36
+  | FEAT_PMULL_IMPLEMENTED => 37
+  | FEAT_PMUv3_IMPLEMENTED => 38
+  | FEAT_PMUv3_EXT_IMPLEMENTED => 39
+  | FEAT_PMUv3_EXT32_IMPLEMENTED => 40
+  | FEAT_SHA1_IMPLEMENTED => 41
+  | FEAT_SHA256_IMPLEMENTED => 42
+  | FEAT_TRC_EXT_IMPLEMENTED => 43
+  | FEAT_TRC_SR_IMPLEMENTED => 44
+  | FEAT_nTLBPA_IMPLEMENTED => 45
+  | FEAT_CRC32_IMPLEMENTED => 46
+  | FEAT_Debugv8p1_IMPLEMENTED => 47
+  | FEAT_HAFDBS_IMPLEMENTED => 48
+  | FEAT_HPDS_IMPLEMENTED => 49
+  | FEAT_LOR_IMPLEMENTED => 50
+  | FEAT_LSE_IMPLEMENTED => 51
+  | FEAT_PAN_IMPLEMENTED => 52
+  | FEAT_PMUv3p1_IMPLEMENTED => 53
+  | FEAT_RDM_IMPLEMENTED => 54
+  | FEAT_VHE_IMPLEMENTED => 55
+  | FEAT_VMID16_IMPLEMENTED => 56
+  | FEAT_AA32BF16_IMPLEMENTED => 57
+  | FEAT_AA32HPD_IMPLEMENTED => 58
+  | FEAT_AA32I8MM_IMPLEMENTED => 59
+  | FEAT_ASMv8p2_IMPLEMENTED => 60
+  | FEAT_DPB_IMPLEMENTED => 61
+  | FEAT_Debugv8p2_IMPLEMENTED => 62
+  | FEAT_EDHSR_IMPLEMENTED => 63
+  | FEAT_F32MM_IMPLEMENTED => 64
+  | FEAT_F64MM_IMPLEMENTED => 65
+  | FEAT_FP16_IMPLEMENTED => 66
+  | FEAT_HPDS2_IMPLEMENTED => 67
+  | FEAT_I8MM_IMPLEMENTED => 68
+  | FEAT_IESB_IMPLEMENTED => 69
+  | FEAT_LPA_IMPLEMENTED => 70
+  | FEAT_LSMAOC_IMPLEMENTED => 71
+  | FEAT_LVA_IMPLEMENTED => 72
+  | FEAT_MPAM_IMPLEMENTED => 73
+  | FEAT_PAN2_IMPLEMENTED => 74
+  | FEAT_PCSRv8p2_IMPLEMENTED => 75
+  | FEAT_RAS_IMPLEMENTED => 76
+  | FEAT_SHA3_IMPLEMENTED => 77
+  | FEAT_SHA512_IMPLEMENTED => 78
+  | FEAT_SM3_IMPLEMENTED => 79
+  | FEAT_SM4_IMPLEMENTED => 80
+  | FEAT_SPE_IMPLEMENTED => 81
+  | FEAT_SVE_IMPLEMENTED => 82
+  | FEAT_TTCNP_IMPLEMENTED => 83
+  | FEAT_UAO_IMPLEMENTED => 84
+  | FEAT_VPIPT_IMPLEMENTED => 85
+  | FEAT_XNX_IMPLEMENTED => 86
+  | FEAT_CCIDX_IMPLEMENTED => 87
+  | FEAT_CONSTPACFIELD_IMPLEMENTED => 88
+  | FEAT_EPAC_IMPLEMENTED => 89
+  | FEAT_FCMA_IMPLEMENTED => 90
+  | FEAT_FPAC_IMPLEMENTED => 91
+  | FEAT_FPACCOMBINE_IMPLEMENTED => 92
+  | FEAT_JSCVT_IMPLEMENTED => 93
+  | FEAT_LRCPC_IMPLEMENTED => 94
+  | FEAT_NV_IMPLEMENTED => 95
+  | FEAT_PACIMP_IMPLEMENTED => 96
+  | FEAT_PACQARMA3_IMPLEMENTED => 97
+  | FEAT_PACQARMA5_IMPLEMENTED => 98
+  | FEAT_PAuth_IMPLEMENTED => 99
+  | FEAT_SPEv1p1_IMPLEMENTED => 100
+  | FEAT_AMUv1_IMPLEMENTED => 101
+  | FEAT_BBM_IMPLEMENTED => 102
+  | FEAT_CNTSC_IMPLEMENTED => 103
+  | FEAT_DIT_IMPLEMENTED => 104
+  | FEAT_Debugv8p4_IMPLEMENTED => 105
+  | FEAT_DotProd_IMPLEMENTED => 106
+  | FEAT_DoubleFault_IMPLEMENTED => 107
+  | FEAT_FHM_IMPLEMENTED => 108
+  | FEAT_FlagM_IMPLEMENTED => 109
+  | FEAT_IDST_IMPLEMENTED => 110
+  | FEAT_LRCPC2_IMPLEMENTED => 111
+  | FEAT_LSE2_IMPLEMENTED => 112
+  | FEAT_NV2_IMPLEMENTED => 113
+  | FEAT_PMUv3p4_IMPLEMENTED => 114
+  | FEAT_RASSAv1p1_IMPLEMENTED => 115
+  | FEAT_RASv1p1_IMPLEMENTED => 116
+  | FEAT_S2FWB_IMPLEMENTED => 117
+  | FEAT_SEL2_IMPLEMENTED => 118
+  | FEAT_TLBIOS_IMPLEMENTED => 119
+  | FEAT_TLBIRANGE_IMPLEMENTED => 120
+  | FEAT_TRF_IMPLEMENTED => 121
+  | FEAT_TTL_IMPLEMENTED => 122
+  | FEAT_TTST_IMPLEMENTED => 123
+  | FEAT_BTI_IMPLEMENTED => 124
+  | FEAT_CSV2_IMPLEMENTED => 125
+  | FEAT_CSV3_IMPLEMENTED => 126
+  | FEAT_DPB2_IMPLEMENTED => 127
+  | FEAT_E0PD_IMPLEMENTED => 128
+  | FEAT_EVT_IMPLEMENTED => 129
+  | FEAT_ExS_IMPLEMENTED => 130
+  | FEAT_FRINTTS_IMPLEMENTED => 131
+  | FEAT_FlagM2_IMPLEMENTED => 132
+  | FEAT_GTG_IMPLEMENTED => 133
+  | FEAT_MTE_IMPLEMENTED => 134
+  | FEAT_MTE2_IMPLEMENTED => 135
+  | FEAT_PMUv3p5_IMPLEMENTED => 136
+  | FEAT_RNG_IMPLEMENTED => 137
+  | FEAT_RNG_TRAP_IMPLEMENTED => 138
+  | FEAT_SB_IMPLEMENTED => 139
+  | FEAT_SPECRES_IMPLEMENTED => 140
+  | FEAT_SSBS_IMPLEMENTED => 141
+  | FEAT_SSBS2_IMPLEMENTED => 142
+  | FEAT_AMUv1p1_IMPLEMENTED => 143
+  | FEAT_BF16_IMPLEMENTED => 144
+  | FEAT_DGH_IMPLEMENTED => 145
+  | FEAT_ECV_IMPLEMENTED => 146
+  | FEAT_FGT_IMPLEMENTED => 147
+  | FEAT_HPMN0_IMPLEMENTED => 148
+  | FEAT_MPAMv0p1_IMPLEMENTED => 149
+  | FEAT_MPAMv1p1_IMPLEMENTED => 150
+  | FEAT_MTPMU_IMPLEMENTED => 151
+  | FEAT_PAuth2_IMPLEMENTED => 152
+  | FEAT_TWED_IMPLEMENTED => 153
+  | FEAT_AFP_IMPLEMENTED => 154
+  | FEAT_EBF16_IMPLEMENTED => 155
+  | FEAT_HCX_IMPLEMENTED => 156
+  | FEAT_LPA2_IMPLEMENTED => 157
+  | FEAT_LS64_IMPLEMENTED => 158
+  | FEAT_LS64_ACCDATA_IMPLEMENTED => 159
+  | FEAT_LS64_V_IMPLEMENTED => 160
+  | FEAT_MTE3_IMPLEMENTED => 161
+  | FEAT_PAN3_IMPLEMENTED => 162
+  | FEAT_PMUv3p7_IMPLEMENTED => 163
+  | FEAT_RPRES_IMPLEMENTED => 164
+  | FEAT_SPEv1p2_IMPLEMENTED => 165
+  | FEAT_WFxT_IMPLEMENTED => 166
+  | FEAT_XS_IMPLEMENTED => 167
+  | FEAT_CMOW_IMPLEMENTED => 168
+  | FEAT_Debugv8p8_IMPLEMENTED => 169
+  | FEAT_GICv3_NMI_IMPLEMENTED => 170
+  | FEAT_HBC_IMPLEMENTED => 171
+  | FEAT_MOPS_IMPLEMENTED => 172
+  | FEAT_NMI_IMPLEMENTED => 173
+  | FEAT_PMUv3_EXT64_IMPLEMENTED => 174
+  | FEAT_PMUv3_TH_IMPLEMENTED => 175
+  | FEAT_PMUv3p8_IMPLEMENTED => 176
+  | FEAT_SCTLR2_IMPLEMENTED => 177
+  | FEAT_SPEv1p3_IMPLEMENTED => 178
+  | FEAT_TCR2_IMPLEMENTED => 179
+  | FEAT_TIDCP1_IMPLEMENTED => 180
+  | FEAT_ADERR_IMPLEMENTED => 181
+  | FEAT_AIE_IMPLEMENTED => 182
+  | FEAT_ANERR_IMPLEMENTED => 183
+  | FEAT_CLRBHB_IMPLEMENTED => 184
+  | FEAT_CSSC_IMPLEMENTED => 185
+  | FEAT_Debugv8p9_IMPLEMENTED => 186
+  | FEAT_DoubleFault2_IMPLEMENTED => 187
+  | FEAT_ECBHB_IMPLEMENTED => 188
+  | FEAT_FGT2_IMPLEMENTED => 189
+  | FEAT_HAFT_IMPLEMENTED => 190
+  | FEAT_LRCPC3_IMPLEMENTED => 191
+  | FEAT_MTE4_IMPLEMENTED => 192
+  | FEAT_MTE_ASYM_FAULT_IMPLEMENTED => 193
+  | FEAT_MTE_ASYNC_IMPLEMENTED => 194
+  | FEAT_MTE_CANONICAL_TAGS_IMPLEMENTED => 195
+  | FEAT_MTE_NO_ADDRESS_TAGS_IMPLEMENTED => 196
+  | FEAT_MTE_PERM_IMPLEMENTED => 197
+  | FEAT_MTE_STORE_ONLY_IMPLEMENTED => 198
+  | FEAT_MTE_TAGGED_FAR_IMPLEMENTED => 199
+  | FEAT_PCSRv8p9_IMPLEMENTED => 200
+  | FEAT_PFAR_IMPLEMENTED => 201
+  | FEAT_PMUv3_EDGE_IMPLEMENTED => 202
+  | FEAT_PMUv3_ICNTR_IMPLEMENTED => 203
+  | FEAT_PMUv3_SS_IMPLEMENTED => 204
+  | FEAT_PMUv3p9_IMPLEMENTED => 205
+  | FEAT_PRFMSLC_IMPLEMENTED => 206
+  | FEAT_RASSAv2_IMPLEMENTED => 207
+  | FEAT_RASv2_IMPLEMENTED => 208
+  | FEAT_RPRFM_IMPLEMENTED => 209
+  | FEAT_S1PIE_IMPLEMENTED => 210
+  | FEAT_S1POE_IMPLEMENTED => 211
+  | FEAT_S2PIE_IMPLEMENTED => 212
+  | FEAT_S2POE_IMPLEMENTED => 213
+  | FEAT_SPECRES2_IMPLEMENTED => 214
+  | FEAT_SPE_CRR_IMPLEMENTED => 215
+  | FEAT_SPE_FDS_IMPLEMENTED => 216
+  | FEAT_SPEv1p4_IMPLEMENTED => 217
+  | FEAT_SPMU_IMPLEMENTED => 218
+  | FEAT_THE_IMPLEMENTED => 219
+  | FEAT_DoPD_IMPLEMENTED => 220
+  | FEAT_ETE_IMPLEMENTED => 221
+  | FEAT_SVE2_IMPLEMENTED => 222
+  | FEAT_SVE_AES_IMPLEMENTED => 223
+  | FEAT_SVE_BitPerm_IMPLEMENTED => 224
+  | FEAT_SVE_PMULL128_IMPLEMENTED => 225
+  | FEAT_SVE_SHA3_IMPLEMENTED => 226
+  | FEAT_SVE_SM4_IMPLEMENTED => 227
+  | FEAT_TME_IMPLEMENTED => 228
+  | FEAT_TRBE_IMPLEMENTED => 229
+  | FEAT_ETEv1p1_IMPLEMENTED => 230
+  | FEAT_BRBE_IMPLEMENTED => 231
+  | FEAT_ETEv1p2_IMPLEMENTED => 232
+  | FEAT_RME_IMPLEMENTED => 233
+  | FEAT_SME_IMPLEMENTED => 234
+  | FEAT_SME_F64F64_IMPLEMENTED => 235
+  | FEAT_SME_FA64_IMPLEMENTED => 236
+  | FEAT_SME_I16I64_IMPLEMENTED => 237
+  | FEAT_BRBEv1p1_IMPLEMENTED => 238
+  | FEAT_MEC_IMPLEMENTED => 239
+  | FEAT_SME2_IMPLEMENTED => 240
+  | FEAT_ABLE_IMPLEMENTED => 241
+  | FEAT_CHK_IMPLEMENTED => 242
+  | FEAT_D128_IMPLEMENTED => 243
+  | FEAT_EBEP_IMPLEMENTED => 244
+  | FEAT_ETEv1p3_IMPLEMENTED => 245
+  | FEAT_GCS_IMPLEMENTED => 246
+  | FEAT_ITE_IMPLEMENTED => 247
+  | FEAT_LSE128_IMPLEMENTED => 248
+  | FEAT_LVA3_IMPLEMENTED => 249
+  | FEAT_SEBEP_IMPLEMENTED => 250
+  | FEAT_SME2p1_IMPLEMENTED => 251
+  | FEAT_SME_F16F16_IMPLEMENTED => 252
+  | FEAT_SVE2p1_IMPLEMENTED => 253
+  | FEAT_SVE_B16B16_IMPLEMENTED => 254
+  | FEAT_SYSINSTR128_IMPLEMENTED => 255
+  | FEAT_SYSREG128_IMPLEMENTED => 256
+  | FEAT_TRBE_EXT_IMPLEMENTED => 257
+  | FEAT_TRBE_MPAM_IMPLEMENTED => 258
+  | v8Ap0_IMPLEMENTED => 259
+  | v8Ap1_IMPLEMENTED => 260
+  | v8Ap2_IMPLEMENTED => 261
+  | v8Ap3_IMPLEMENTED => 262
+  | v8Ap4_IMPLEMENTED => 263
+  | v8Ap5_IMPLEMENTED => 264
+  | v8Ap6_IMPLEMENTED => 265
+  | v8Ap7_IMPLEMENTED => 266
+  | v8Ap8_IMPLEMENTED => 267
+  | v8Ap9_IMPLEMENTED => 268
+  | v9Ap0_IMPLEMENTED => 269
+  | v9Ap1_IMPLEMENTED => 270
+  | v9Ap2_IMPLEMENTED => 271
+  | v9Ap3_IMPLEMENTED => 272
+  | v9Ap4_IMPLEMENTED => 273
+  | IsWFIsleep => 274
+  | IsWFEsleep => 275
+  | ShouldAdvanceIT => 276
+  | ShouldAdvanceSS => 277
+  | InGuardedPage => 278
+  | BTypeCompatible => 279
+  | SPESampleInFlight => 280
+  | SPESampleContextEL1Valid => 281
+  | SPESampleContextEL2Valid => 282
+  | SPESampleInstIsNV2 => 283
+  | SPESamplePreviousBranchAddressValid => 284
+  | SPESampleDataSourceValid => 285
+  | SPESampleSubclassValid => 286
+  | SPESampleTimestampValid => 287
+  | __SPE_LFSR_initialized => 288
+  | __last_branch_valid => 289
+  | __InstructionStep => 290
+  | __BranchTaken => 291
+  | __ExclusiveMonitorSet => 292
+  | __highest_el_aarch32 => 293
+  | __apply_effective_shareability => 294
+  | __cpy_mops_option_a_supported => 295
+  | __cpyf_mops_option_a_supported => 296
+  | __empam_force_ns_RAO => 297
+  | __empam_force_ns_implemented => 298
+  | __empam_sdeflt_implemented => 299
+  | __empam_tidr_implemented => 300
+  | __feat_rpres => 301
+  | __has_sme_priority_control => 302
+  | __isb_is_branch => 303
+  | __set_mops_option_a_supported => 304
+  | __setg_mops_option_a_supported => 305
+  | __sme_only => 306
+  | __mpam_has_hcr => 307
+  | __tlb_enabled => 308
+  | __mpam_has_altsp => 309
+  | __syncAbortOnReadNormCache => 310
+  | __syncAbortOnReadNormNonCache => 311
+  | __syncAbortOnDeviceRead => 312
+  | __syncAbortOnSoRead => 313
+  | __syncAbortOnSoWrite => 314
+  | __syncAbortOnPrefetch => 315
+  | __syncAbortOnTTWCache => 316
+  | __syncAbortOnTTWNonCache => 317
+  | __syncAbortOnWriteNormCache => 318
+  | __syncAbortOnWriteNormNonCache => 319
+  | __syncAbortOnDeviceWrite => 320
+  | __unpred_tsize_aborts => 321
+  | __ignore_rvbar_in_aarch32 => 322
+  | __trickbox_enabled => 323
+  | __mops_forward_copy => 324
+  | __has_spe_pseudo_cycles => 325
   end.
 Definition register_bool_of_num (i : Z) : register_bool :=
   match i with
-  | 0 => FEAT_AA32EL0_IMPLEMENTED
-  | 1 => FEAT_AA32EL1_IMPLEMENTED
-  | 2 => FEAT_AA32EL2_IMPLEMENTED
-  | 3 => FEAT_AA32EL3_IMPLEMENTED
-  | 4 => FEAT_AA64EL0_IMPLEMENTED
-  | 5 => FEAT_AA64EL1_IMPLEMENTED
-  | 6 => FEAT_AA64EL2_IMPLEMENTED
-  | 7 => FEAT_AA64EL3_IMPLEMENTED
-  | 8 => FEAT_EL0_IMPLEMENTED
-  | 9 => FEAT_EL1_IMPLEMENTED
-  | 10 => FEAT_EL2_IMPLEMENTED
-  | 11 => FEAT_EL3_IMPLEMENTED
-  | 12 => FEAT_AES_IMPLEMENTED
-  | 13 => FEAT_AdvSIMD_IMPLEMENTED
-  | 14 => FEAT_CSV2_1p1_IMPLEMENTED
-  | 15 => FEAT_CSV2_1p2_IMPLEMENTED
-  | 16 => FEAT_CSV2_2_IMPLEMENTED
-  | 17 => FEAT_CSV2_3_IMPLEMENTED
-  | 18 => FEAT_DoubleLock_IMPLEMENTED
-  | 19 => FEAT_ETMv4_IMPLEMENTED
-  | 20 => FEAT_ETMv4p1_IMPLEMENTED
-  | 21 => FEAT_ETMv4p2_IMPLEMENTED
-  | 22 => FEAT_ETMv4p3_IMPLEMENTED
-  | 23 => FEAT_ETMv4p4_IMPLEMENTED
-  | 24 => FEAT_ETMv4p5_IMPLEMENTED
-  | 25 => FEAT_ETMv4p6_IMPLEMENTED
-  | 26 => FEAT_ETS2_IMPLEMENTED
-  | 27 => FEAT_FP_IMPLEMENTED
-  | 28 => FEAT_GICv3_IMPLEMENTED
-  | 29 => FEAT_GICv3_LEGACY_IMPLEMENTED
-  | 30 => FEAT_GICv3_TDIR_IMPLEMENTED
-  | 31 => FEAT_GICv3p1_IMPLEMENTED
-  | 32 => FEAT_GICv4_IMPLEMENTED
-  | 33 => FEAT_GICv4p1_IMPLEMENTED
-  | 34 => FEAT_IVIPT_IMPLEMENTED
-  | 35 => FEAT_PCSRv8_IMPLEMENTED
-  | 36 => FEAT_PMULL_IMPLEMENTED
-  | 37 => FEAT_PMUv3_IMPLEMENTED
-  | 38 => FEAT_PMUv3_EXT_IMPLEMENTED
-  | 39 => FEAT_PMUv3_EXT32_IMPLEMENTED
-  | 40 => FEAT_SHA1_IMPLEMENTED
-  | 41 => FEAT_SHA256_IMPLEMENTED
-  | 42 => FEAT_TRC_EXT_IMPLEMENTED
-  | 43 => FEAT_TRC_SR_IMPLEMENTED
-  | 44 => FEAT_nTLBPA_IMPLEMENTED
-  | 45 => FEAT_CRC32_IMPLEMENTED
-  | 46 => FEAT_Debugv8p1_IMPLEMENTED
-  | 47 => FEAT_HAFDBS_IMPLEMENTED
-  | 48 => FEAT_HPDS_IMPLEMENTED
-  | 49 => FEAT_LOR_IMPLEMENTED
-  | 50 => FEAT_LSE_IMPLEMENTED
-  | 51 => FEAT_PAN_IMPLEMENTED
-  | 52 => FEAT_PMUv3p1_IMPLEMENTED
-  | 53 => FEAT_RDM_IMPLEMENTED
-  | 54 => FEAT_VHE_IMPLEMENTED
-  | 55 => FEAT_VMID16_IMPLEMENTED
-  | 56 => FEAT_AA32BF16_IMPLEMENTED
-  | 57 => FEAT_AA32HPD_IMPLEMENTED
-  | 58 => FEAT_AA32I8MM_IMPLEMENTED
-  | 59 => FEAT_ASMv8p2_IMPLEMENTED
-  | 60 => FEAT_DPB_IMPLEMENTED
-  | 61 => FEAT_Debugv8p2_IMPLEMENTED
-  | 62 => FEAT_EDHSR_IMPLEMENTED
-  | 63 => FEAT_F32MM_IMPLEMENTED
-  | 64 => FEAT_F64MM_IMPLEMENTED
-  | 65 => FEAT_FP16_IMPLEMENTED
-  | 66 => FEAT_HPDS2_IMPLEMENTED
-  | 67 => FEAT_I8MM_IMPLEMENTED
-  | 68 => FEAT_IESB_IMPLEMENTED
-  | 69 => FEAT_LPA_IMPLEMENTED
-  | 70 => FEAT_LSMAOC_IMPLEMENTED
-  | 71 => FEAT_LVA_IMPLEMENTED
-  | 72 => FEAT_MPAM_IMPLEMENTED
-  | 73 => FEAT_PAN2_IMPLEMENTED
-  | 74 => FEAT_PCSRv8p2_IMPLEMENTED
-  | 75 => FEAT_RAS_IMPLEMENTED
-  | 76 => FEAT_SHA3_IMPLEMENTED
-  | 77 => FEAT_SHA512_IMPLEMENTED
-  | 78 => FEAT_SM3_IMPLEMENTED
-  | 79 => FEAT_SM4_IMPLEMENTED
-  | 80 => FEAT_SPE_IMPLEMENTED
-  | 81 => FEAT_SVE_IMPLEMENTED
-  | 82 => FEAT_TTCNP_IMPLEMENTED
-  | 83 => FEAT_UAO_IMPLEMENTED
-  | 84 => FEAT_VPIPT_IMPLEMENTED
-  | 85 => FEAT_XNX_IMPLEMENTED
-  | 86 => FEAT_CCIDX_IMPLEMENTED
-  | 87 => FEAT_CONSTPACFIELD_IMPLEMENTED
-  | 88 => FEAT_EPAC_IMPLEMENTED
-  | 89 => FEAT_FCMA_IMPLEMENTED
-  | 90 => FEAT_FPAC_IMPLEMENTED
-  | 91 => FEAT_FPACCOMBINE_IMPLEMENTED
-  | 92 => FEAT_JSCVT_IMPLEMENTED
-  | 93 => FEAT_LRCPC_IMPLEMENTED
-  | 94 => FEAT_NV_IMPLEMENTED
-  | 95 => FEAT_PACIMP_IMPLEMENTED
-  | 96 => FEAT_PACQARMA3_IMPLEMENTED
-  | 97 => FEAT_PACQARMA5_IMPLEMENTED
-  | 98 => FEAT_PAuth_IMPLEMENTED
-  | 99 => FEAT_SPEv1p1_IMPLEMENTED
-  | 100 => FEAT_AMUv1_IMPLEMENTED
-  | 101 => FEAT_BBM_IMPLEMENTED
-  | 102 => FEAT_CNTSC_IMPLEMENTED
-  | 103 => FEAT_DIT_IMPLEMENTED
-  | 104 => FEAT_Debugv8p4_IMPLEMENTED
-  | 105 => FEAT_DotProd_IMPLEMENTED
-  | 106 => FEAT_DoubleFault_IMPLEMENTED
-  | 107 => FEAT_FHM_IMPLEMENTED
-  | 108 => FEAT_FlagM_IMPLEMENTED
-  | 109 => FEAT_IDST_IMPLEMENTED
-  | 110 => FEAT_LRCPC2_IMPLEMENTED
-  | 111 => FEAT_LSE2_IMPLEMENTED
-  | 112 => FEAT_NV2_IMPLEMENTED
-  | 113 => FEAT_PMUv3p4_IMPLEMENTED
-  | 114 => FEAT_RASSAv1p1_IMPLEMENTED
-  | 115 => FEAT_RASv1p1_IMPLEMENTED
-  | 116 => FEAT_S2FWB_IMPLEMENTED
-  | 117 => FEAT_SEL2_IMPLEMENTED
-  | 118 => FEAT_TLBIOS_IMPLEMENTED
-  | 119 => FEAT_TLBIRANGE_IMPLEMENTED
-  | 120 => FEAT_TRF_IMPLEMENTED
-  | 121 => FEAT_TTL_IMPLEMENTED
-  | 122 => FEAT_TTST_IMPLEMENTED
-  | 123 => FEAT_BTI_IMPLEMENTED
-  | 124 => FEAT_CSV2_IMPLEMENTED
-  | 125 => FEAT_CSV3_IMPLEMENTED
-  | 126 => FEAT_DPB2_IMPLEMENTED
-  | 127 => FEAT_E0PD_IMPLEMENTED
-  | 128 => FEAT_EVT_IMPLEMENTED
-  | 129 => FEAT_ExS_IMPLEMENTED
-  | 130 => FEAT_FRINTTS_IMPLEMENTED
-  | 131 => FEAT_FlagM2_IMPLEMENTED
-  | 132 => FEAT_GTG_IMPLEMENTED
-  | 133 => FEAT_MTE_IMPLEMENTED
-  | 134 => FEAT_MTE2_IMPLEMENTED
-  | 135 => FEAT_PMUv3p5_IMPLEMENTED
-  | 136 => FEAT_RNG_IMPLEMENTED
-  | 137 => FEAT_RNG_TRAP_IMPLEMENTED
-  | 138 => FEAT_SB_IMPLEMENTED
-  | 139 => FEAT_SPECRES_IMPLEMENTED
-  | 140 => FEAT_SSBS_IMPLEMENTED
-  | 141 => FEAT_SSBS2_IMPLEMENTED
-  | 142 => FEAT_AMUv1p1_IMPLEMENTED
-  | 143 => FEAT_BF16_IMPLEMENTED
-  | 144 => FEAT_DGH_IMPLEMENTED
-  | 145 => FEAT_ECV_IMPLEMENTED
-  | 146 => FEAT_FGT_IMPLEMENTED
-  | 147 => FEAT_HPMN0_IMPLEMENTED
-  | 148 => FEAT_MPAMv0p1_IMPLEMENTED
-  | 149 => FEAT_MPAMv1p1_IMPLEMENTED
-  | 150 => FEAT_MTPMU_IMPLEMENTED
-  | 151 => FEAT_PAuth2_IMPLEMENTED
-  | 152 => FEAT_TWED_IMPLEMENTED
-  | 153 => FEAT_AFP_IMPLEMENTED
-  | 154 => FEAT_EBF16_IMPLEMENTED
-  | 155 => FEAT_HCX_IMPLEMENTED
-  | 156 => FEAT_LPA2_IMPLEMENTED
-  | 157 => FEAT_LS64_IMPLEMENTED
-  | 158 => FEAT_LS64_ACCDATA_IMPLEMENTED
-  | 159 => FEAT_LS64_V_IMPLEMENTED
-  | 160 => FEAT_MTE3_IMPLEMENTED
-  | 161 => FEAT_PAN3_IMPLEMENTED
-  | 162 => FEAT_PMUv3p7_IMPLEMENTED
-  | 163 => FEAT_RPRES_IMPLEMENTED
-  | 164 => FEAT_SPEv1p2_IMPLEMENTED
-  | 165 => FEAT_WFxT_IMPLEMENTED
-  | 166 => FEAT_XS_IMPLEMENTED
-  | 167 => FEAT_CMOW_IMPLEMENTED
-  | 168 => FEAT_Debugv8p8_IMPLEMENTED
-  | 169 => FEAT_GICv3_NMI_IMPLEMENTED
-  | 170 => FEAT_HBC_IMPLEMENTED
-  | 171 => FEAT_MOPS_IMPLEMENTED
-  | 172 => FEAT_NMI_IMPLEMENTED
-  | 173 => FEAT_PMUv3_EXT64_IMPLEMENTED
-  | 174 => FEAT_PMUv3_TH_IMPLEMENTED
-  | 175 => FEAT_PMUv3p8_IMPLEMENTED
-  | 176 => FEAT_SCTLR2_IMPLEMENTED
-  | 177 => FEAT_SPEv1p3_IMPLEMENTED
-  | 178 => FEAT_TCR2_IMPLEMENTED
-  | 179 => FEAT_TIDCP1_IMPLEMENTED
-  | 180 => FEAT_ADERR_IMPLEMENTED
-  | 181 => FEAT_AIE_IMPLEMENTED
-  | 182 => FEAT_ANERR_IMPLEMENTED
-  | 183 => FEAT_CLRBHB_IMPLEMENTED
-  | 184 => FEAT_CSSC_IMPLEMENTED
-  | 185 => FEAT_Debugv8p9_IMPLEMENTED
-  | 186 => FEAT_DoubleFault2_IMPLEMENTED
-  | 187 => FEAT_ECBHB_IMPLEMENTED
-  | 188 => FEAT_FGT2_IMPLEMENTED
-  | 189 => FEAT_HAFT_IMPLEMENTED
-  | 190 => FEAT_LRCPC3_IMPLEMENTED
-  | 191 => FEAT_MTE4_IMPLEMENTED
-  | 192 => FEAT_MTE_ASYM_FAULT_IMPLEMENTED
-  | 193 => FEAT_MTE_ASYNC_IMPLEMENTED
-  | 194 => FEAT_MTE_CANONICAL_TAGS_IMPLEMENTED
-  | 195 => FEAT_MTE_NO_ADDRESS_TAGS_IMPLEMENTED
-  | 196 => FEAT_MTE_PERM_IMPLEMENTED
-  | 197 => FEAT_MTE_STORE_ONLY_IMPLEMENTED
-  | 198 => FEAT_MTE_TAGGED_FAR_IMPLEMENTED
-  | 199 => FEAT_PCSRv8p9_IMPLEMENTED
-  | 200 => FEAT_PFAR_IMPLEMENTED
-  | 201 => FEAT_PMUv3_EDGE_IMPLEMENTED
-  | 202 => FEAT_PMUv3_ICNTR_IMPLEMENTED
-  | 203 => FEAT_PMUv3_SS_IMPLEMENTED
-  | 204 => FEAT_PMUv3p9_IMPLEMENTED
-  | 205 => FEAT_PRFMSLC_IMPLEMENTED
-  | 206 => FEAT_RASSAv2_IMPLEMENTED
-  | 207 => FEAT_RASv2_IMPLEMENTED
-  | 208 => FEAT_RPRFM_IMPLEMENTED
-  | 209 => FEAT_S1PIE_IMPLEMENTED
-  | 210 => FEAT_S1POE_IMPLEMENTED
-  | 211 => FEAT_S2PIE_IMPLEMENTED
-  | 212 => FEAT_S2POE_IMPLEMENTED
-  | 213 => FEAT_SPECRES2_IMPLEMENTED
-  | 214 => FEAT_SPE_CRR_IMPLEMENTED
-  | 215 => FEAT_SPE_FDS_IMPLEMENTED
-  | 216 => FEAT_SPEv1p4_IMPLEMENTED
-  | 217 => FEAT_SPMU_IMPLEMENTED
-  | 218 => FEAT_THE_IMPLEMENTED
-  | 219 => FEAT_DoPD_IMPLEMENTED
-  | 220 => FEAT_ETE_IMPLEMENTED
-  | 221 => FEAT_SVE2_IMPLEMENTED
-  | 222 => FEAT_SVE_AES_IMPLEMENTED
-  | 223 => FEAT_SVE_BitPerm_IMPLEMENTED
-  | 224 => FEAT_SVE_PMULL128_IMPLEMENTED
-  | 225 => FEAT_SVE_SHA3_IMPLEMENTED
-  | 226 => FEAT_SVE_SM4_IMPLEMENTED
-  | 227 => FEAT_TME_IMPLEMENTED
-  | 228 => FEAT_TRBE_IMPLEMENTED
-  | 229 => FEAT_ETEv1p1_IMPLEMENTED
-  | 230 => FEAT_BRBE_IMPLEMENTED
-  | 231 => FEAT_ETEv1p2_IMPLEMENTED
-  | 232 => FEAT_RME_IMPLEMENTED
-  | 233 => FEAT_SME_IMPLEMENTED
-  | 234 => FEAT_SME_F64F64_IMPLEMENTED
-  | 235 => FEAT_SME_FA64_IMPLEMENTED
-  | 236 => FEAT_SME_I16I64_IMPLEMENTED
-  | 237 => FEAT_BRBEv1p1_IMPLEMENTED
-  | 238 => FEAT_MEC_IMPLEMENTED
-  | 239 => FEAT_SME2_IMPLEMENTED
-  | 240 => FEAT_ABLE_IMPLEMENTED
-  | 241 => FEAT_CHK_IMPLEMENTED
-  | 242 => FEAT_D128_IMPLEMENTED
-  | 243 => FEAT_EBEP_IMPLEMENTED
-  | 244 => FEAT_ETEv1p3_IMPLEMENTED
-  | 245 => FEAT_GCS_IMPLEMENTED
-  | 246 => FEAT_ITE_IMPLEMENTED
-  | 247 => FEAT_LSE128_IMPLEMENTED
-  | 248 => FEAT_LVA3_IMPLEMENTED
-  | 249 => FEAT_SEBEP_IMPLEMENTED
-  | 250 => FEAT_SME2p1_IMPLEMENTED
-  | 251 => FEAT_SME_F16F16_IMPLEMENTED
-  | 252 => FEAT_SVE2p1_IMPLEMENTED
-  | 253 => FEAT_SVE_B16B16_IMPLEMENTED
-  | 254 => FEAT_SYSINSTR128_IMPLEMENTED
-  | 255 => FEAT_SYSREG128_IMPLEMENTED
-  | 256 => FEAT_TRBE_EXT_IMPLEMENTED
-  | 257 => FEAT_TRBE_MPAM_IMPLEMENTED
-  | 258 => v8Ap0_IMPLEMENTED
-  | 259 => v8Ap1_IMPLEMENTED
-  | 260 => v8Ap2_IMPLEMENTED
-  | 261 => v8Ap3_IMPLEMENTED
-  | 262 => v8Ap4_IMPLEMENTED
-  | 263 => v8Ap5_IMPLEMENTED
-  | 264 => v8Ap6_IMPLEMENTED
-  | 265 => v8Ap7_IMPLEMENTED
-  | 266 => v8Ap8_IMPLEMENTED
-  | 267 => v8Ap9_IMPLEMENTED
-  | 268 => v9Ap0_IMPLEMENTED
-  | 269 => v9Ap1_IMPLEMENTED
-  | 270 => v9Ap2_IMPLEMENTED
-  | 271 => v9Ap3_IMPLEMENTED
-  | 272 => v9Ap4_IMPLEMENTED
-  | 273 => IsWFIsleep
-  | 274 => IsWFEsleep
-  | 275 => ShouldAdvanceIT
-  | 276 => ShouldAdvanceSS
-  | 277 => InGuardedPage
-  | 278 => BTypeCompatible
-  | 279 => SPESampleInFlight
-  | 280 => SPESampleContextEL1Valid
-  | 281 => SPESampleContextEL2Valid
-  | 282 => SPESampleInstIsNV2
-  | 283 => SPESamplePreviousBranchAddressValid
-  | 284 => SPESampleDataSourceValid
-  | 285 => SPESampleSubclassValid
-  | 286 => SPESampleTimestampValid
-  | 287 => __SPE_LFSR_initialized
-  | 288 => __last_branch_valid
-  | 289 => __InstructionStep
-  | 290 => __BranchTaken
-  | 291 => __ExclusiveMonitorSet
-  | 292 => __highest_el_aarch32
-  | 293 => __apply_effective_shareability
-  | 294 => __cpy_mops_option_a_supported
-  | 295 => __cpyf_mops_option_a_supported
-  | 296 => __empam_force_ns_RAO
-  | 297 => __empam_force_ns_implemented
-  | 298 => __empam_sdeflt_implemented
-  | 299 => __empam_tidr_implemented
-  | 300 => __feat_rpres
-  | 301 => __has_sme_priority_control
-  | 302 => __isb_is_branch
-  | 303 => __set_mops_option_a_supported
-  | 304 => __setg_mops_option_a_supported
-  | 305 => __sme_only
-  | 306 => __mpam_has_hcr
-  | 307 => __tlb_enabled
-  | 308 => __mpam_has_altsp
-  | 309 => __syncAbortOnReadNormCache
-  | 310 => __syncAbortOnReadNormNonCache
-  | 311 => __syncAbortOnDeviceRead
-  | 312 => __syncAbortOnSoRead
-  | 313 => __syncAbortOnSoWrite
-  | 314 => __syncAbortOnPrefetch
-  | 315 => __syncAbortOnTTWCache
-  | 316 => __syncAbortOnTTWNonCache
-  | 317 => __syncAbortOnWriteNormCache
-  | 318 => __syncAbortOnWriteNormNonCache
-  | 319 => __syncAbortOnDeviceWrite
-  | 320 => __unpred_tsize_aborts
-  | 321 => __ignore_rvbar_in_aarch32
-  | 322 => __trickbox_enabled
-  | 323 => __mops_forward_copy
-  | 324 => __has_spe_pseudo_cycles
-  | _ => FEAT_AA32EL0_IMPLEMENTED
+  | 0 => PCUpdated
+  | 1 => FEAT_AA32EL0_IMPLEMENTED
+  | 2 => FEAT_AA32EL1_IMPLEMENTED
+  | 3 => FEAT_AA32EL2_IMPLEMENTED
+  | 4 => FEAT_AA32EL3_IMPLEMENTED
+  | 5 => FEAT_AA64EL0_IMPLEMENTED
+  | 6 => FEAT_AA64EL1_IMPLEMENTED
+  | 7 => FEAT_AA64EL2_IMPLEMENTED
+  | 8 => FEAT_AA64EL3_IMPLEMENTED
+  | 9 => FEAT_EL0_IMPLEMENTED
+  | 10 => FEAT_EL1_IMPLEMENTED
+  | 11 => FEAT_EL2_IMPLEMENTED
+  | 12 => FEAT_EL3_IMPLEMENTED
+  | 13 => FEAT_AES_IMPLEMENTED
+  | 14 => FEAT_AdvSIMD_IMPLEMENTED
+  | 15 => FEAT_CSV2_1p1_IMPLEMENTED
+  | 16 => FEAT_CSV2_1p2_IMPLEMENTED
+  | 17 => FEAT_CSV2_2_IMPLEMENTED
+  | 18 => FEAT_CSV2_3_IMPLEMENTED
+  | 19 => FEAT_DoubleLock_IMPLEMENTED
+  | 20 => FEAT_ETMv4_IMPLEMENTED
+  | 21 => FEAT_ETMv4p1_IMPLEMENTED
+  | 22 => FEAT_ETMv4p2_IMPLEMENTED
+  | 23 => FEAT_ETMv4p3_IMPLEMENTED
+  | 24 => FEAT_ETMv4p4_IMPLEMENTED
+  | 25 => FEAT_ETMv4p5_IMPLEMENTED
+  | 26 => FEAT_ETMv4p6_IMPLEMENTED
+  | 27 => FEAT_ETS2_IMPLEMENTED
+  | 28 => FEAT_FP_IMPLEMENTED
+  | 29 => FEAT_GICv3_IMPLEMENTED
+  | 30 => FEAT_GICv3_LEGACY_IMPLEMENTED
+  | 31 => FEAT_GICv3_TDIR_IMPLEMENTED
+  | 32 => FEAT_GICv3p1_IMPLEMENTED
+  | 33 => FEAT_GICv4_IMPLEMENTED
+  | 34 => FEAT_GICv4p1_IMPLEMENTED
+  | 35 => FEAT_IVIPT_IMPLEMENTED
+  | 36 => FEAT_PCSRv8_IMPLEMENTED
+  | 37 => FEAT_PMULL_IMPLEMENTED
+  | 38 => FEAT_PMUv3_IMPLEMENTED
+  | 39 => FEAT_PMUv3_EXT_IMPLEMENTED
+  | 40 => FEAT_PMUv3_EXT32_IMPLEMENTED
+  | 41 => FEAT_SHA1_IMPLEMENTED
+  | 42 => FEAT_SHA256_IMPLEMENTED
+  | 43 => FEAT_TRC_EXT_IMPLEMENTED
+  | 44 => FEAT_TRC_SR_IMPLEMENTED
+  | 45 => FEAT_nTLBPA_IMPLEMENTED
+  | 46 => FEAT_CRC32_IMPLEMENTED
+  | 47 => FEAT_Debugv8p1_IMPLEMENTED
+  | 48 => FEAT_HAFDBS_IMPLEMENTED
+  | 49 => FEAT_HPDS_IMPLEMENTED
+  | 50 => FEAT_LOR_IMPLEMENTED
+  | 51 => FEAT_LSE_IMPLEMENTED
+  | 52 => FEAT_PAN_IMPLEMENTED
+  | 53 => FEAT_PMUv3p1_IMPLEMENTED
+  | 54 => FEAT_RDM_IMPLEMENTED
+  | 55 => FEAT_VHE_IMPLEMENTED
+  | 56 => FEAT_VMID16_IMPLEMENTED
+  | 57 => FEAT_AA32BF16_IMPLEMENTED
+  | 58 => FEAT_AA32HPD_IMPLEMENTED
+  | 59 => FEAT_AA32I8MM_IMPLEMENTED
+  | 60 => FEAT_ASMv8p2_IMPLEMENTED
+  | 61 => FEAT_DPB_IMPLEMENTED
+  | 62 => FEAT_Debugv8p2_IMPLEMENTED
+  | 63 => FEAT_EDHSR_IMPLEMENTED
+  | 64 => FEAT_F32MM_IMPLEMENTED
+  | 65 => FEAT_F64MM_IMPLEMENTED
+  | 66 => FEAT_FP16_IMPLEMENTED
+  | 67 => FEAT_HPDS2_IMPLEMENTED
+  | 68 => FEAT_I8MM_IMPLEMENTED
+  | 69 => FEAT_IESB_IMPLEMENTED
+  | 70 => FEAT_LPA_IMPLEMENTED
+  | 71 => FEAT_LSMAOC_IMPLEMENTED
+  | 72 => FEAT_LVA_IMPLEMENTED
+  | 73 => FEAT_MPAM_IMPLEMENTED
+  | 74 => FEAT_PAN2_IMPLEMENTED
+  | 75 => FEAT_PCSRv8p2_IMPLEMENTED
+  | 76 => FEAT_RAS_IMPLEMENTED
+  | 77 => FEAT_SHA3_IMPLEMENTED
+  | 78 => FEAT_SHA512_IMPLEMENTED
+  | 79 => FEAT_SM3_IMPLEMENTED
+  | 80 => FEAT_SM4_IMPLEMENTED
+  | 81 => FEAT_SPE_IMPLEMENTED
+  | 82 => FEAT_SVE_IMPLEMENTED
+  | 83 => FEAT_TTCNP_IMPLEMENTED
+  | 84 => FEAT_UAO_IMPLEMENTED
+  | 85 => FEAT_VPIPT_IMPLEMENTED
+  | 86 => FEAT_XNX_IMPLEMENTED
+  | 87 => FEAT_CCIDX_IMPLEMENTED
+  | 88 => FEAT_CONSTPACFIELD_IMPLEMENTED
+  | 89 => FEAT_EPAC_IMPLEMENTED
+  | 90 => FEAT_FCMA_IMPLEMENTED
+  | 91 => FEAT_FPAC_IMPLEMENTED
+  | 92 => FEAT_FPACCOMBINE_IMPLEMENTED
+  | 93 => FEAT_JSCVT_IMPLEMENTED
+  | 94 => FEAT_LRCPC_IMPLEMENTED
+  | 95 => FEAT_NV_IMPLEMENTED
+  | 96 => FEAT_PACIMP_IMPLEMENTED
+  | 97 => FEAT_PACQARMA3_IMPLEMENTED
+  | 98 => FEAT_PACQARMA5_IMPLEMENTED
+  | 99 => FEAT_PAuth_IMPLEMENTED
+  | 100 => FEAT_SPEv1p1_IMPLEMENTED
+  | 101 => FEAT_AMUv1_IMPLEMENTED
+  | 102 => FEAT_BBM_IMPLEMENTED
+  | 103 => FEAT_CNTSC_IMPLEMENTED
+  | 104 => FEAT_DIT_IMPLEMENTED
+  | 105 => FEAT_Debugv8p4_IMPLEMENTED
+  | 106 => FEAT_DotProd_IMPLEMENTED
+  | 107 => FEAT_DoubleFault_IMPLEMENTED
+  | 108 => FEAT_FHM_IMPLEMENTED
+  | 109 => FEAT_FlagM_IMPLEMENTED
+  | 110 => FEAT_IDST_IMPLEMENTED
+  | 111 => FEAT_LRCPC2_IMPLEMENTED
+  | 112 => FEAT_LSE2_IMPLEMENTED
+  | 113 => FEAT_NV2_IMPLEMENTED
+  | 114 => FEAT_PMUv3p4_IMPLEMENTED
+  | 115 => FEAT_RASSAv1p1_IMPLEMENTED
+  | 116 => FEAT_RASv1p1_IMPLEMENTED
+  | 117 => FEAT_S2FWB_IMPLEMENTED
+  | 118 => FEAT_SEL2_IMPLEMENTED
+  | 119 => FEAT_TLBIOS_IMPLEMENTED
+  | 120 => FEAT_TLBIRANGE_IMPLEMENTED
+  | 121 => FEAT_TRF_IMPLEMENTED
+  | 122 => FEAT_TTL_IMPLEMENTED
+  | 123 => FEAT_TTST_IMPLEMENTED
+  | 124 => FEAT_BTI_IMPLEMENTED
+  | 125 => FEAT_CSV2_IMPLEMENTED
+  | 126 => FEAT_CSV3_IMPLEMENTED
+  | 127 => FEAT_DPB2_IMPLEMENTED
+  | 128 => FEAT_E0PD_IMPLEMENTED
+  | 129 => FEAT_EVT_IMPLEMENTED
+  | 130 => FEAT_ExS_IMPLEMENTED
+  | 131 => FEAT_FRINTTS_IMPLEMENTED
+  | 132 => FEAT_FlagM2_IMPLEMENTED
+  | 133 => FEAT_GTG_IMPLEMENTED
+  | 134 => FEAT_MTE_IMPLEMENTED
+  | 135 => FEAT_MTE2_IMPLEMENTED
+  | 136 => FEAT_PMUv3p5_IMPLEMENTED
+  | 137 => FEAT_RNG_IMPLEMENTED
+  | 138 => FEAT_RNG_TRAP_IMPLEMENTED
+  | 139 => FEAT_SB_IMPLEMENTED
+  | 140 => FEAT_SPECRES_IMPLEMENTED
+  | 141 => FEAT_SSBS_IMPLEMENTED
+  | 142 => FEAT_SSBS2_IMPLEMENTED
+  | 143 => FEAT_AMUv1p1_IMPLEMENTED
+  | 144 => FEAT_BF16_IMPLEMENTED
+  | 145 => FEAT_DGH_IMPLEMENTED
+  | 146 => FEAT_ECV_IMPLEMENTED
+  | 147 => FEAT_FGT_IMPLEMENTED
+  | 148 => FEAT_HPMN0_IMPLEMENTED
+  | 149 => FEAT_MPAMv0p1_IMPLEMENTED
+  | 150 => FEAT_MPAMv1p1_IMPLEMENTED
+  | 151 => FEAT_MTPMU_IMPLEMENTED
+  | 152 => FEAT_PAuth2_IMPLEMENTED
+  | 153 => FEAT_TWED_IMPLEMENTED
+  | 154 => FEAT_AFP_IMPLEMENTED
+  | 155 => FEAT_EBF16_IMPLEMENTED
+  | 156 => FEAT_HCX_IMPLEMENTED
+  | 157 => FEAT_LPA2_IMPLEMENTED
+  | 158 => FEAT_LS64_IMPLEMENTED
+  | 159 => FEAT_LS64_ACCDATA_IMPLEMENTED
+  | 160 => FEAT_LS64_V_IMPLEMENTED
+  | 161 => FEAT_MTE3_IMPLEMENTED
+  | 162 => FEAT_PAN3_IMPLEMENTED
+  | 163 => FEAT_PMUv3p7_IMPLEMENTED
+  | 164 => FEAT_RPRES_IMPLEMENTED
+  | 165 => FEAT_SPEv1p2_IMPLEMENTED
+  | 166 => FEAT_WFxT_IMPLEMENTED
+  | 167 => FEAT_XS_IMPLEMENTED
+  | 168 => FEAT_CMOW_IMPLEMENTED
+  | 169 => FEAT_Debugv8p8_IMPLEMENTED
+  | 170 => FEAT_GICv3_NMI_IMPLEMENTED
+  | 171 => FEAT_HBC_IMPLEMENTED
+  | 172 => FEAT_MOPS_IMPLEMENTED
+  | 173 => FEAT_NMI_IMPLEMENTED
+  | 174 => FEAT_PMUv3_EXT64_IMPLEMENTED
+  | 175 => FEAT_PMUv3_TH_IMPLEMENTED
+  | 176 => FEAT_PMUv3p8_IMPLEMENTED
+  | 177 => FEAT_SCTLR2_IMPLEMENTED
+  | 178 => FEAT_SPEv1p3_IMPLEMENTED
+  | 179 => FEAT_TCR2_IMPLEMENTED
+  | 180 => FEAT_TIDCP1_IMPLEMENTED
+  | 181 => FEAT_ADERR_IMPLEMENTED
+  | 182 => FEAT_AIE_IMPLEMENTED
+  | 183 => FEAT_ANERR_IMPLEMENTED
+  | 184 => FEAT_CLRBHB_IMPLEMENTED
+  | 185 => FEAT_CSSC_IMPLEMENTED
+  | 186 => FEAT_Debugv8p9_IMPLEMENTED
+  | 187 => FEAT_DoubleFault2_IMPLEMENTED
+  | 188 => FEAT_ECBHB_IMPLEMENTED
+  | 189 => FEAT_FGT2_IMPLEMENTED
+  | 190 => FEAT_HAFT_IMPLEMENTED
+  | 191 => FEAT_LRCPC3_IMPLEMENTED
+  | 192 => FEAT_MTE4_IMPLEMENTED
+  | 193 => FEAT_MTE_ASYM_FAULT_IMPLEMENTED
+  | 194 => FEAT_MTE_ASYNC_IMPLEMENTED
+  | 195 => FEAT_MTE_CANONICAL_TAGS_IMPLEMENTED
+  | 196 => FEAT_MTE_NO_ADDRESS_TAGS_IMPLEMENTED
+  | 197 => FEAT_MTE_PERM_IMPLEMENTED
+  | 198 => FEAT_MTE_STORE_ONLY_IMPLEMENTED
+  | 199 => FEAT_MTE_TAGGED_FAR_IMPLEMENTED
+  | 200 => FEAT_PCSRv8p9_IMPLEMENTED
+  | 201 => FEAT_PFAR_IMPLEMENTED
+  | 202 => FEAT_PMUv3_EDGE_IMPLEMENTED
+  | 203 => FEAT_PMUv3_ICNTR_IMPLEMENTED
+  | 204 => FEAT_PMUv3_SS_IMPLEMENTED
+  | 205 => FEAT_PMUv3p9_IMPLEMENTED
+  | 206 => FEAT_PRFMSLC_IMPLEMENTED
+  | 207 => FEAT_RASSAv2_IMPLEMENTED
+  | 208 => FEAT_RASv2_IMPLEMENTED
+  | 209 => FEAT_RPRFM_IMPLEMENTED
+  | 210 => FEAT_S1PIE_IMPLEMENTED
+  | 211 => FEAT_S1POE_IMPLEMENTED
+  | 212 => FEAT_S2PIE_IMPLEMENTED
+  | 213 => FEAT_S2POE_IMPLEMENTED
+  | 214 => FEAT_SPECRES2_IMPLEMENTED
+  | 215 => FEAT_SPE_CRR_IMPLEMENTED
+  | 216 => FEAT_SPE_FDS_IMPLEMENTED
+  | 217 => FEAT_SPEv1p4_IMPLEMENTED
+  | 218 => FEAT_SPMU_IMPLEMENTED
+  | 219 => FEAT_THE_IMPLEMENTED
+  | 220 => FEAT_DoPD_IMPLEMENTED
+  | 221 => FEAT_ETE_IMPLEMENTED
+  | 222 => FEAT_SVE2_IMPLEMENTED
+  | 223 => FEAT_SVE_AES_IMPLEMENTED
+  | 224 => FEAT_SVE_BitPerm_IMPLEMENTED
+  | 225 => FEAT_SVE_PMULL128_IMPLEMENTED
+  | 226 => FEAT_SVE_SHA3_IMPLEMENTED
+  | 227 => FEAT_SVE_SM4_IMPLEMENTED
+  | 228 => FEAT_TME_IMPLEMENTED
+  | 229 => FEAT_TRBE_IMPLEMENTED
+  | 230 => FEAT_ETEv1p1_IMPLEMENTED
+  | 231 => FEAT_BRBE_IMPLEMENTED
+  | 232 => FEAT_ETEv1p2_IMPLEMENTED
+  | 233 => FEAT_RME_IMPLEMENTED
+  | 234 => FEAT_SME_IMPLEMENTED
+  | 235 => FEAT_SME_F64F64_IMPLEMENTED
+  | 236 => FEAT_SME_FA64_IMPLEMENTED
+  | 237 => FEAT_SME_I16I64_IMPLEMENTED
+  | 238 => FEAT_BRBEv1p1_IMPLEMENTED
+  | 239 => FEAT_MEC_IMPLEMENTED
+  | 240 => FEAT_SME2_IMPLEMENTED
+  | 241 => FEAT_ABLE_IMPLEMENTED
+  | 242 => FEAT_CHK_IMPLEMENTED
+  | 243 => FEAT_D128_IMPLEMENTED
+  | 244 => FEAT_EBEP_IMPLEMENTED
+  | 245 => FEAT_ETEv1p3_IMPLEMENTED
+  | 246 => FEAT_GCS_IMPLEMENTED
+  | 247 => FEAT_ITE_IMPLEMENTED
+  | 248 => FEAT_LSE128_IMPLEMENTED
+  | 249 => FEAT_LVA3_IMPLEMENTED
+  | 250 => FEAT_SEBEP_IMPLEMENTED
+  | 251 => FEAT_SME2p1_IMPLEMENTED
+  | 252 => FEAT_SME_F16F16_IMPLEMENTED
+  | 253 => FEAT_SVE2p1_IMPLEMENTED
+  | 254 => FEAT_SVE_B16B16_IMPLEMENTED
+  | 255 => FEAT_SYSINSTR128_IMPLEMENTED
+  | 256 => FEAT_SYSREG128_IMPLEMENTED
+  | 257 => FEAT_TRBE_EXT_IMPLEMENTED
+  | 258 => FEAT_TRBE_MPAM_IMPLEMENTED
+  | 259 => v8Ap0_IMPLEMENTED
+  | 260 => v8Ap1_IMPLEMENTED
+  | 261 => v8Ap2_IMPLEMENTED
+  | 262 => v8Ap3_IMPLEMENTED
+  | 263 => v8Ap4_IMPLEMENTED
+  | 264 => v8Ap5_IMPLEMENTED
+  | 265 => v8Ap6_IMPLEMENTED
+  | 266 => v8Ap7_IMPLEMENTED
+  | 267 => v8Ap8_IMPLEMENTED
+  | 268 => v8Ap9_IMPLEMENTED
+  | 269 => v9Ap0_IMPLEMENTED
+  | 270 => v9Ap1_IMPLEMENTED
+  | 271 => v9Ap2_IMPLEMENTED
+  | 272 => v9Ap3_IMPLEMENTED
+  | 273 => v9Ap4_IMPLEMENTED
+  | 274 => IsWFIsleep
+  | 275 => IsWFEsleep
+  | 276 => ShouldAdvanceIT
+  | 277 => ShouldAdvanceSS
+  | 278 => InGuardedPage
+  | 279 => BTypeCompatible
+  | 280 => SPESampleInFlight
+  | 281 => SPESampleContextEL1Valid
+  | 282 => SPESampleContextEL2Valid
+  | 283 => SPESampleInstIsNV2
+  | 284 => SPESamplePreviousBranchAddressValid
+  | 285 => SPESampleDataSourceValid
+  | 286 => SPESampleSubclassValid
+  | 287 => SPESampleTimestampValid
+  | 288 => __SPE_LFSR_initialized
+  | 289 => __last_branch_valid
+  | 290 => __InstructionStep
+  | 291 => __BranchTaken
+  | 292 => __ExclusiveMonitorSet
+  | 293 => __highest_el_aarch32
+  | 294 => __apply_effective_shareability
+  | 295 => __cpy_mops_option_a_supported
+  | 296 => __cpyf_mops_option_a_supported
+  | 297 => __empam_force_ns_RAO
+  | 298 => __empam_force_ns_implemented
+  | 299 => __empam_sdeflt_implemented
+  | 300 => __empam_tidr_implemented
+  | 301 => __feat_rpres
+  | 302 => __has_sme_priority_control
+  | 303 => __isb_is_branch
+  | 304 => __set_mops_option_a_supported
+  | 305 => __setg_mops_option_a_supported
+  | 306 => __sme_only
+  | 307 => __mpam_has_hcr
+  | 308 => __tlb_enabled
+  | 309 => __mpam_has_altsp
+  | 310 => __syncAbortOnReadNormCache
+  | 311 => __syncAbortOnReadNormNonCache
+  | 312 => __syncAbortOnDeviceRead
+  | 313 => __syncAbortOnSoRead
+  | 314 => __syncAbortOnSoWrite
+  | 315 => __syncAbortOnPrefetch
+  | 316 => __syncAbortOnTTWCache
+  | 317 => __syncAbortOnTTWNonCache
+  | 318 => __syncAbortOnWriteNormCache
+  | 319 => __syncAbortOnWriteNormNonCache
+  | 320 => __syncAbortOnDeviceWrite
+  | 321 => __unpred_tsize_aborts
+  | 322 => __ignore_rvbar_in_aarch32
+  | 323 => __trickbox_enabled
+  | 324 => __mops_forward_copy
+  | 325 => __has_spe_pseudo_cycles
+  | _ => PCUpdated
   end.
 Lemma register_bool_num_of_roundtrip (x : register_bool) : register_bool_of_num (num_of_register_bool x) = x.
   destruct x; reflexivity.
@@ -17343,6 +17325,7 @@ Qed.
 Hint Rewrite register_bool_beq_iff : register_beq_iffs.
 Hint Rewrite register_bool_beq_refl : register_beq_refls.
 Definition register_bool_list : list (string * register_bool) := [
+  ("PCUpdated", PCUpdated);
   ("FEAT_AA32EL0_IMPLEMENTED", FEAT_AA32EL0_IMPLEMENTED);
   ("FEAT_AA32EL1_IMPLEMENTED", FEAT_AA32EL1_IMPLEMENTED);
   ("FEAT_AA32EL2_IMPLEMENTED", FEAT_AA32EL2_IMPLEMENTED);
@@ -20887,6 +20870,8 @@ Definition __DBG_ROM_ADDR_ref : register_ref register _ :=
   Build_register_ref register _ "__DBG_ROM_ADDR" __DBG_ROM_ADDR.
 Instance dummy_register_bitvector_56 : Inhabited (register_ref register _) := populate __CNTReadBase_ref.
 
+Definition PC_ref : register_ref register _ :=
+  Build_register_ref register _ "PC" PC.
 Definition R0_ref : register_ref register _ :=
   Build_register_ref register _ "R0" R0.
 Definition R1_ref : register_ref register _ :=
@@ -21893,7 +21878,7 @@ Definition ERXMISC2_EL1_ref : register_ref register _ :=
   Build_register_ref register _ "ERXMISC2_EL1" ERXMISC2_EL1.
 Definition ERXPFGCTL_EL1_ref : register_ref register _ :=
   Build_register_ref register _ "ERXPFGCTL_EL1" ERXPFGCTL_EL1.
-Instance dummy_register_bitvector_64 : Inhabited (register_ref register _) := populate R0_ref.
+Instance dummy_register_bitvector_64 : Inhabited (register_ref register _) := populate PC_ref.
 
 Definition SPESampleSubclass_ref : register_ref register _ :=
   Build_register_ref register _ "SPESampleSubclass" SPESampleSubclass.
@@ -21905,6 +21890,8 @@ Definition PhysicalCount_ref : register_ref register _ :=
   Build_register_ref register _ "PhysicalCount" PhysicalCount.
 Instance dummy_register_bitvector_88 : Inhabited (register_ref register _) := populate PhysicalCount_ref.
 
+Definition PCUpdated_ref : register_ref register _ :=
+  Build_register_ref register _ "PCUpdated" PCUpdated.
 Definition FEAT_AA32EL0_IMPLEMENTED_ref : register_ref register _ :=
   Build_register_ref register _ "FEAT_AA32EL0_IMPLEMENTED" FEAT_AA32EL0_IMPLEMENTED.
 Definition FEAT_AA32EL1_IMPLEMENTED_ref : register_ref register _ :=
@@ -22555,7 +22542,7 @@ Definition __mops_forward_copy_ref : register_ref register _ :=
   Build_register_ref register _ "__mops_forward_copy" __mops_forward_copy.
 Definition __has_spe_pseudo_cycles_ref : register_ref register _ :=
   Build_register_ref register _ "__has_spe_pseudo_cycles" __has_spe_pseudo_cycles.
-Instance dummy_register_bool : Inhabited (register_ref register _) := populate FEAT_AA32EL0_IMPLEMENTED_ref.
+Instance dummy_register_bool : Inhabited (register_ref register _) := populate PCUpdated_ref.
 
 Definition SEE_ref : register_ref register _ :=
   Build_register_ref register _ "SEE" SEE.
@@ -23195,28 +23182,45 @@ Module Arch <: Arch.
   Definition regval_cnt := @Countable_register_values.
   Definition regval_transport A B := @register_transport A B (fun x => x).
   Definition regval_transport_sound A := @register_transport_sound A (fun x => x).
-  Definition va_size := 64%N.
-  Definition pa : Type := mword 56.
-  Definition pa_eq : EqDecision pa := _.
-  Definition pa_countable : Countable pa := _.
-  Definition arch_ak : Type := arm_acc_type.
-  Definition arch_ak_eq : EqDecision arch_ak := _.
-  Definition translation : Type := option TranslationInfo.
-  Definition translation_eq : EqDecision translation := _.
-  Definition trans_start := TranslationStartInfo.
+  Definition addr_size : N := Z.to_N (56).
+  Definition addr_space : Type := PASpace.
+  Definition addr_space_eq : EqDecision addr_space := _.
+  Definition addr_space_countable : Countable addr_space := _.
+  Definition mem_acc : Type := AccessDescriptor.
+  Definition mem_acc_eq : EqDecision mem_acc := _.
+  Definition mem_acc_countable : Countable mem_acc := _.
+  Definition CHERI : bool := (false).
+  Definition cap_size_log : N := 0.
+  Definition mem_acc_is_explicit := mem_acc_is_explicit.
+  Definition mem_acc_is_ifetch := mem_acc_is_ifetch.
+  Definition mem_acc_is_ttw := mem_acc_is_ttw.
+  Definition mem_acc_is_relaxed := mem_acc_is_relaxed.
+  Definition mem_acc_is_rel_acq_rcpc := mem_acc_is_rel_acq_rcpc.
+  Definition mem_acc_is_rel_acq_rcsc := mem_acc_is_rel_acq_rcsc.
+  Definition mem_acc_is_standalone := mem_acc_is_standalone.
+  Definition mem_acc_is_exclusive := mem_acc_is_exclusive.
+  Definition mem_acc_is_atomic_rmw := mem_acc_is_atomic_rmw.
+  Definition trans_start : Type := TranslationStartInfo.
   Definition trans_start_eq : EqDecision trans_start := _.
-  Definition trans_end := AddressDescriptor.
+  Definition trans_start_countable : Countable trans_start := _.
+  Definition trans_end : Type := AddressDescriptor.
   Definition trans_end_eq : EqDecision trans_end := _.
+  Definition trans_end_countable : Countable trans_end := _.
   Definition abort : Type := Fault.
   Definition abort_eq : EqDecision abort := _.
+  Definition abort_countable : Countable abort := _.
   Definition barrier : Type := Barrier.
   Definition barrier_eq : EqDecision barrier := _.
+  Definition barrier_countable : Countable barrier := _.
   Definition cache_op : Type := CacheRecord.
   Definition cache_op_eq : EqDecision cache_op := _.
-  Definition tlb_op : Type := TLBIInfo.
-  Definition tlb_op_eq : EqDecision tlb_op := _.
-  Definition fault : Type := option FaultRecord.
-  Definition fault_eq : EqDecision fault := _.
+  Definition cache_op_countable : Countable cache_op := _.
+  Definition tlbi : Type := TLBIInfo.
+  Definition tlbi_eq : EqDecision tlbi := _.
+  Definition tlbi_countable : Countable tlbi := _.
+  Definition exn : Type := (option FaultRecord).
+  Definition exn_eq : EqDecision exn := _.
+  Definition exn_countable : Countable exn := _.
   Definition sys_reg_id : Type := unit.
   Definition sys_reg_id_eq : EqDecision sys_reg_id := _.
   Definition sys_reg_id_countable : Countable sys_reg_id := _.

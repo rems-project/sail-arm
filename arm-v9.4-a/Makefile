@@ -99,8 +99,7 @@ gen_lean lean lean.stamp: $(SAIL_SRCS) src/termination_measures.sail lean/ArmExt
 c/armv9.c: $(SAIL_SRCS) $(SAIL_MAIN)
 	mkdir -p c
 	$(SAIL) -dprofile $(VERBOSE_FLAG) -memo_z3 \
-		-c $(SAIL_C_FLAGS) $(SAIL_FLAGS) $(SAIL_SRCS) $(SAIL_MAIN) > c/armv9.c.temp
-	mv c/armv9.c.temp c/armv9.c
+		-c $(SAIL_C_FLAGS) $(SAIL_FLAGS) $(SAIL_SRCS) $(SAIL_MAIN) -o c/armv9
 
 gen_c c c.stamp: c/armv9.c
 	$(CC) -O2 -DHAVE_SETCONFIG c/armv9.c $(SAIL_DIR)/lib/*.c -lgmp -lz -I $(SAIL_DIR)/lib/ -o c/armv9
@@ -129,5 +128,6 @@ clean:
 	  isabelle/Prelude.thy isabelle/ArmAuxiliary.thy
 	rm -f coq.stamp coq/{arm_extras,armv9,armv9_types}.{v,vo,vok,vos,glob}
 	rm -rf lean.stamp lean/armv9
+	rm -f c/armv9.c
 	rm -f ir/armv9.ir
 	rm -f interface_types.sail

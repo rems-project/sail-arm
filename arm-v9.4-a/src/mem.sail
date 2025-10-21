@@ -182,7 +182,7 @@ function PhysMemRead (desc, size, accdesc, translation_info) = {
   } else if (paddress[(length(paddress) - 1) .. 16] == ZeroExtend(UART_BASE)) then {
     (CreatePhysMemRetStatus(Fault_None), __ReadUART(paddress[15 .. 0], size))
   } else {
-     match sail_mem_read(read_request(accdesc, size, desc.paddress)) {
+     match sail_mem_read(memory_request(accdesc, size, desc.paddress)) {
       Ok((value, _)) => (CreatePhysMemRetStatus(Fault_None), from_bytes_le(value)),
       Err(statuscode) => (CreatePhysMemRetStatus(statuscode), sail_zeros(8 * size))
     }
@@ -190,7 +190,7 @@ function PhysMemRead (desc, size, accdesc, translation_info) = {
 }
 $else
 function PhysMemRead (desc, size, accdesc, translation_info) = {
-  match sail_mem_read(read_request(accdesc, size, desc.paddress)) {
+  match sail_mem_read(memory_request(accdesc, size, desc.paddress)) {
     Ok((value, _)) => (CreatePhysMemRetStatus(Fault_None), from_bytes_le(value)),
     Err(statuscode) => (CreatePhysMemRetStatus(statuscode), sail_zeros(8 * size))
   }
@@ -208,7 +208,7 @@ function PhysMemWrite (desc, size, accdesc, translation_info, data) = {
     CreatePhysMemRetStatus(Fault_None)
   } else {
     if size > 0 then {
-      match sail_mem_write(write_request(accdesc, size, desc.paddress, data)) {
+      match sail_mem_write(memory_request(accdesc, size, desc.paddress), to_bytes_le(data), []) {
         Ok(_) => CreatePhysMemRetStatus(Fault_None),
         Err(statuscode) => CreatePhysMemRetStatus(statuscode)
       }
@@ -220,7 +220,7 @@ function PhysMemWrite (desc, size, accdesc, translation_info, data) = {
 $else
 function PhysMemWrite (desc, size, accdesc, translation_info, data) = {
   if size > 0 then {
-    match sail_mem_write(write_request(accdesc, size, desc.paddress, data)) {
+    match sail_mem_write(write_request(accdesc, size, desc.paddress), to_bytes_le(data), []) {
       Ok(_) => CreatePhysMemRetStatus(Fault_None),
       Err(statuscode) => CreatePhysMemRetStatus(statuscode)
     }

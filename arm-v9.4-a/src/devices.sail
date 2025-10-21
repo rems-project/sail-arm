@@ -128,7 +128,7 @@ $else
 function gic_read_ram(offset : bits(16)) -> bits(32) = {
   let accdesc = CreateAccDescGPR(MemOp_LOAD, false, true, false);
   let pa = ZeroExtend(GIC_BASE @ offset, 56);
-  match sail_mem_read(read_request(accdesc, 4, struct { address = pa, paspace = PAS_NonSecure })) {
+  match sail_mem_read(memory_request(accdesc, 4, struct { address = pa, paspace = PAS_NonSecure })) {
     Ok((value, _)) => from_bytes_le(value),
     Err(_) => {
       assert(false);
@@ -140,7 +140,7 @@ function gic_read_ram(offset : bits(16)) -> bits(32) = {
 function gic_write_ram(offset : bits(16), data : bits(32)) -> unit = {
   let accdesc = CreateAccDescGPR(MemOp_STORE, false, true, false);
   let pa = ZeroExtend(GIC_BASE @ offset, 56);
-  match sail_mem_write(write_request(accdesc, 4, struct { address = pa, paspace = PAS_NonSecure },data)) {
+  match sail_mem_write(memory_request(accdesc, 4, struct { address = pa, paspace = PAS_NonSecure }), to_bytes_le(data), []) {
     Ok(_) => (),
     Err(_) => assert(false),
   }

@@ -71,9 +71,9 @@ instantiation sail_mem_read with
   mem_acc_is_exclusive = mem_acc_is_exclusive,
   mem_acc_is_atomic_rmw = mem_acc_is_atomic_rmw
 
-val read_request : forall 'n, 'n > 0. (AccessDescriptor, int('n), FullAddress) -> Mem_read_request('n, 0, 56, PASpace, AccessDescriptor)
+val memory_request : forall 'n, 'n > 0. (AccessDescriptor, int('n), FullAddress) -> Mem_request('n, 0, 56, PASpace, AccessDescriptor)
 
-function read_request(accdesc, size, pa) = struct {
+function memory_request(accdesc, size, pa) = struct {
   access_kind = accdesc,
   address = pa.address,
   address_space = pa.paspace,
@@ -98,18 +98,6 @@ instantiation sail_mem_write with
   mem_acc_is_exclusive = mem_acc_is_exclusive,
   mem_acc_is_atomic_rmw = mem_acc_is_atomic_rmw
 
-val write_request : forall 'n, 'n > 0. (AccessDescriptor, int('n), FullAddress, bits(8 * 'n)) -> Mem_write_request('n, 0, 56, PASpace, AccessDescriptor)
-
-function write_request(accdesc, size, pa, value) = struct {
-  access_kind = accdesc,
-  address = pa.address,
-  address_space = pa.paspace,
-  size = size,
-  value = to_bytes_le(value),
-  num_tag = 0,
-  tags = [],
-}
-
 instantiation sail_mem_address_announce with
   'addr_size = 56,
   'addr_space = PASpace,
@@ -121,14 +109,7 @@ instantiation sail_mem_address_announce with
 val address_announce : forall 'n, 'n > 0. (AccessDescriptor, int('n), FullAddress) -> unit
 
 function address_announce(accdesc, size, pa) = {
-  let announcement : Mem_address_announce('n, 0, 56, PASpace, AccessDescriptor) = struct {
-    access_kind = accdesc,
-    address = pa.address,
-    address_space = pa.paspace,
-    size = size,
-    num_tag = 0
-  };
-  sail_mem_address_announce(announcement)
+  sail_mem_address_announce(memory_request(accdesc, size, pa))
 }
 
 instantiation sail_translation_start with

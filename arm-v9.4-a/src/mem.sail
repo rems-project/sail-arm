@@ -220,7 +220,7 @@ function PhysMemWrite (desc, size, accdesc, translation_info, data) = {
 $else
 function PhysMemWrite (desc, size, accdesc, translation_info, data) = {
   if size > 0 then {
-    match sail_mem_write(write_request(accdesc, size, desc.paddress), to_bytes_le(data), []) {
+    match sail_mem_write(memory_request(accdesc, size, desc.paddress), to_bytes_le(data), []) {
       Ok(_) => CreatePhysMemRetStatus(Fault_None),
       Err(statuscode) => CreatePhysMemRetStatus(statuscode)
     }

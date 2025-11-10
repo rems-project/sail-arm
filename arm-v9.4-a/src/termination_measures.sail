@@ -40,7 +40,8 @@
 
 termination_measure Reduce__1(op,input,esize,altfp) = 'N
 
-$iftarget coq
+$iftarget lean
+$else
 
 termination_measure BranchEncCycleCount
   while cc

@@ -71,7 +71,7 @@ function main() = {
     check_cycle_count();
     while true do {
       if verbosity[0] == bitone then {
-          nzcv = (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V);
+          nzcv = (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V);
           print(concat_str("[Sail] ",
                 concat_str(DecStr(get_cycle_count()),
                 concat_str(" PC=",

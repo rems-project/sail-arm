@@ -61,7 +61,7 @@ function AArch32_SetLSInstructionSyndrome (size, sign_extend, Rt, acq_rel) = {
 // Accidentally left out of the translation; this is the 9.3 Sail, but it appears to be the same in 9.4
 function AArch64_CheckNVCondsIfCurrentEL (op0, op1, crn, crm, op2) = {
     let is_reg_current_el : bool = (((op0 == 3 & op1 == 0) & crn == 4) & crm == 2) & op2 == 2;
-    let have_nv_trap_conds : bool = ((HaveNVExt() & PSTATE.EL == EL1) & EL2Enabled()) & Slice(HCR_EL2.bits, 42, 1) == 0b1;
+    let have_nv_trap_conds : bool = ((HaveNVExt() & PSTATE_EL == EL1) & EL2Enabled()) & Slice(HCR_EL2.bits, 42, 1) == 0b1;
     return(is_reg_current_el & have_nv_trap_conds)
 }
 

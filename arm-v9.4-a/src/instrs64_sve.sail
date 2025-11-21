@@ -15778,7 +15778,7 @@ function execute_WHILELO_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 + 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -15860,7 +15860,7 @@ function execute_WHILELS_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 + 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -15942,7 +15942,7 @@ function execute_WHILELT_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 + 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16024,7 +16024,7 @@ function execute_WHILELE_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 + 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16106,7 +16106,7 @@ function execute_WHILEHI_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 - 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16188,7 +16188,7 @@ function execute_WHILEHS_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 - 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16270,7 +16270,7 @@ function execute_WHILEGT_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 - 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16352,7 +16352,7 @@ function execute_WHILEGE_P_P_RR__ (VL, d, esize, m, n, op, rsize, is_unsigned) =
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 - 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16450,7 +16450,7 @@ function execute_CMPEQ_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16546,7 +16546,7 @@ function execute_CMPNE_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16642,7 +16642,7 @@ function execute_CMPHS_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16739,7 +16739,7 @@ function execute_CMPHI_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16836,7 +16836,7 @@ function execute_CMPLO_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -16933,7 +16933,7 @@ function execute_CMPLS_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17030,7 +17030,7 @@ function execute_CMPGE_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17127,7 +17127,7 @@ function execute_CMPGT_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17224,7 +17224,7 @@ function execute_CMPLT_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17321,7 +17321,7 @@ function execute_CMPLE_P_P_ZI__ (VL, d, esize, g, imm, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17423,7 +17423,7 @@ function execute_CMPEQ_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17527,7 +17527,7 @@ function execute_CMPNE_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17631,7 +17631,7 @@ function execute_CMPHS_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17737,7 +17737,7 @@ function execute_CMPHI_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17843,7 +17843,7 @@ function execute_CMPLO_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -17949,7 +17949,7 @@ function execute_CMPLS_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18055,7 +18055,7 @@ function execute_CMPGE_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18161,7 +18161,7 @@ function execute_CMPGT_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18267,7 +18267,7 @@ function execute_CMPLT_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18373,7 +18373,7 @@ function execute_CMPLE_P_P_ZW__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18479,7 +18479,7 @@ function execute_CMPEQ_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18580,7 +18580,7 @@ function execute_CMPNE_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18681,7 +18681,7 @@ function execute_CMPGE_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18782,7 +18782,7 @@ function execute_CMPGT_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18883,7 +18883,7 @@ function execute_CMPHS_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -18984,7 +18984,7 @@ function execute_CMPHI_P_P_ZZ__ (VL, d, esize, g, m, n, op, is_unsigned) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -23292,11 +23292,11 @@ function execute_CTERMEQ_RR__ (esize, m, n, op) = {
       _ => ()
     };
     if term then {
-        PSTATE.N = 0b1;
-        PSTATE.V = 0b0
+        PSTATE_N = 0b1;
+        PSTATE_V = 0b0
     } else {
-        PSTATE.N = 0b0;
-        PSTATE.V = not_vec(PSTATE.C)
+        PSTATE_N = 0b0;
+        PSTATE_V = not_vec(PSTATE_C)
     }
 }
 
@@ -23343,11 +23343,11 @@ function execute_CTERMNE_RR__ (esize, m, n, op) = {
       _ => ()
     };
     if term then {
-        PSTATE.N = 0b1;
-        PSTATE.V = 0b0
+        PSTATE_N = 0b1;
+        PSTATE_V = 0b0
     } else {
-        PSTATE.N = 0b0;
-        PSTATE.V = not_vec(PSTATE.C)
+        PSTATE_N = 0b0;
+        PSTATE_V = not_vec(PSTATE_C)
     }
 }
 
@@ -29170,7 +29170,7 @@ function execute_PTRUE_P_S__ (VL, d, esize, pat, setflags) = {
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(result, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(result, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -29232,7 +29232,7 @@ function execute_PTRUES_P_S__ (VL, d, esize, pat, setflags) = {
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize))
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(result, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(result, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -29433,7 +29433,7 @@ function execute_RDFFR_P_P_F__ (VL, d, g, setflags) = {
     let ffr : bits('PL) = FFR_read(PL);
     let result : bits('PL) = ffr & mask;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, 8)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, 8)
     };
     P_set(d, PL) = result
 }
@@ -29488,7 +29488,7 @@ function execute_RDFFRS_P_P_F__ (VL, d, g, setflags) = {
     let ffr : bits('PL) = FFR_read(PL);
     let result : bits('PL) = ffr & mask;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, 8)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, 8)
     };
     P_set(d, PL) = result
 }
@@ -29541,7 +29541,7 @@ function execute_PTEST__P_P__ (VL, esize, g, n) = {
     let 'PL = DIV(VL, 8);
     let mask : bits('PL) = P_read(g, PL);
     let result : bits('PL) = P_read(n, PL);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
 }
 
 val decode_PTEST__P_P__ : (bits(1), bits(4), bits(4)) -> unit
@@ -29611,7 +29611,7 @@ function execute_BRKA_P_P_P__ (VL, d, esize, g, merging, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -29689,7 +29689,7 @@ function execute_BRKAS_P_P_P_Z (VL, d, esize, g, merging, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -29767,7 +29767,7 @@ function execute_BRKB_P_P_P__ (VL, d, esize, g, merging, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -29845,7 +29845,7 @@ function execute_BRKBS_P_P_P_Z (VL, d, esize, g, merging, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -29918,7 +29918,7 @@ function execute_AND_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -29990,7 +29990,7 @@ function execute_ANDS_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30062,7 +30062,7 @@ function execute_BIC_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30134,7 +30134,7 @@ function execute_BICS_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30206,7 +30206,7 @@ function execute_EOR_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30278,7 +30278,7 @@ function execute_EORS_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30350,7 +30350,7 @@ function execute_NAND_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30422,7 +30422,7 @@ function execute_NANDS_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30494,7 +30494,7 @@ function execute_NOR_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30566,7 +30566,7 @@ function execute_NORS_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30638,7 +30638,7 @@ function execute_ORN_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30710,7 +30710,7 @@ function execute_ORNS_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30782,7 +30782,7 @@ function execute_ORR_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30854,7 +30854,7 @@ function execute_ORRS_P_P_PP_Z (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -30993,7 +30993,7 @@ function execute_PFIRST_P_P_P__ (VL, dn, esize, g) = {
     if first >= 0 then {
         result = Elem_set(result, first, psize, ZeroExtend(0b1, psize))
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(dn, PL) = result
 }
 
@@ -31056,7 +31056,7 @@ function execute_PNEXT_P_P_P__ (VL, dn, esize, v) = {
     if next < elements then {
         result = Elem_set(result, next, psize, ZeroExtend(0b1, psize))
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(dn, PL) = result
 }
 
@@ -33877,7 +33877,7 @@ function execute_BRKPA_P_P_PP__ (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -33950,7 +33950,7 @@ function execute_BRKPAS_P_P_PP__ (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -34023,7 +34023,7 @@ function execute_BRKPB_P_P_PP__ (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -34096,7 +34096,7 @@ function execute_BRKPBS_P_P_PP__ (VL, d, esize, g, m, n, setflags) = {
         }
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize)
     };
     P_set(d, PL) = result
 }
@@ -34163,7 +34163,7 @@ function execute_BRKN_P_P_PP__ (VL, dm, g, n, setflags) = {
         result = Zeros(PL)
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(Ones(PL), result, 8)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(Ones(PL), result, 8)
     };
     P_set(dm, PL) = result
 }
@@ -34226,7 +34226,7 @@ function execute_BRKNS_P_P_PP__ (VL, dm, g, n, setflags) = {
         result = Zeros(PL)
     };
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(Ones(PL), result, 8)
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(Ones(PL), result, 8)
     };
     P_set(dm, PL) = result
 }
@@ -50231,7 +50231,7 @@ function execute_MATCH_P_P_ZZ__ (VL, d, esize, g, m, n) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -50324,7 +50324,7 @@ function execute_NMATCH_P_P_ZZ__ (VL, d, esize, g, m, n) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -50563,7 +50563,7 @@ function execute_WHILEWR_P_RR__ (VL, d, esize, m, n) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -50632,7 +50632,7 @@ function execute_WHILERW_P_RR__ (VL, d, esize, m, n) = {
             result = Elem_set(result, e, psize, ZeroExtend(0b0, psize))
         }
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d, PL) = result
 }
 
@@ -53775,7 +53775,7 @@ function execute_WHILELO_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 + 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d0, PL) = result[PL - 1 .. 0];
     P_set(d1, PL) = result[PL * 2 - 1 .. PL]
 }
@@ -53858,7 +53858,7 @@ function execute_WHILELS_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 + 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d0, PL) = result[PL - 1 .. 0];
     P_set(d1, PL) = result[PL * 2 - 1 .. PL]
 }
@@ -53941,7 +53941,7 @@ function execute_WHILELT_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 + 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d0, PL) = result[PL - 1 .. 0];
     P_set(d1, PL) = result[PL * 2 - 1 .. PL]
 }
@@ -54024,7 +54024,7 @@ function execute_WHILELE_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 + 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d0, PL) = result[PL - 1 .. 0];
     P_set(d1, PL) = result[PL * 2 - 1 .. PL]
 }
@@ -54107,7 +54107,7 @@ function execute_WHILEHI_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 - 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d0, PL) = result[PL - 1 .. 0];
     P_set(d1, PL) = result[PL * 2 - 1 .. PL]
 }
@@ -54190,7 +54190,7 @@ function execute_WHILEHS_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 - 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d0, PL) = result[PL - 1 .. 0];
     P_set(d1, PL) = result[PL * 2 - 1 .. PL]
 }
@@ -54273,7 +54273,7 @@ function execute_WHILEGT_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 - 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d0, PL) = result[PL - 1 .. 0];
     P_set(d1, PL) = result[PL * 2 - 1 .. PL]
 }
@@ -54356,7 +54356,7 @@ function execute_WHILEGE_PP_RR__ (VL, d0, d1, esize, m, n, op, rsize, is_unsigne
         result = Elem_set(result, e, psize, ZeroExtend(pbit, psize));
         operand1 = operand1 - 1
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredTest(mask, result, esize);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredTest(mask, result, esize);
     P_set(d0, PL) = result[PL - 1 .. 0];
     P_set(d1, PL) = result[PL * 2 - 1 .. PL]
 }
@@ -56671,7 +56671,7 @@ function execute_WHILELO_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
     };
     let 'count = count;
     let result : bits('PL) = EncodePredCount(esize, elements, count, invert, PL);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredCountTest(elements, count, invert);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredCountTest(elements, count, invert);
     P_set(d, PL) = result
 }
 
@@ -56765,7 +56765,7 @@ function execute_WHILELS_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
     };
     let 'count = count;
     let result : bits('PL) = EncodePredCount(esize, elements, count, invert, PL);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredCountTest(elements, count, invert);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredCountTest(elements, count, invert);
     P_set(d, PL) = result
 }
 
@@ -56859,7 +56859,7 @@ function execute_WHILELT_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
     };
     let 'count = count;
     let result : bits('PL) = EncodePredCount(esize, elements, count, invert, PL);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredCountTest(elements, count, invert);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredCountTest(elements, count, invert);
     P_set(d, PL) = result
 }
 
@@ -56953,7 +56953,7 @@ function execute_WHILELE_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
     };
     let 'count = count;
     let result : bits('PL) = EncodePredCount(esize, elements, count, invert, PL);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredCountTest(elements, count, invert);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredCountTest(elements, count, invert);
     P_set(d, PL) = result
 }
 
@@ -57047,7 +57047,7 @@ function execute_WHILEHI_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
     };
     let 'count = count;
     let result : bits('PL) = EncodePredCount(esize, elements, count, invert, PL);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredCountTest(elements, count, invert);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredCountTest(elements, count, invert);
     P_set(d, PL) = result
 }
 
@@ -57141,7 +57141,7 @@ function execute_WHILEHS_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
     };
     let 'count = count;
     let result : bits('PL) = EncodePredCount(esize, elements, count, invert, PL);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredCountTest(elements, count, invert);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredCountTest(elements, count, invert);
     P_set(d, PL) = result
 }
 
@@ -57235,7 +57235,7 @@ function execute_WHILEGT_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
     };
     let 'count = count;
     let result : bits('PL) = EncodePredCount(esize, elements, count, invert, PL);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredCountTest(elements, count, invert);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredCountTest(elements, count, invert);
     P_set(d, PL) = result
 }
 
@@ -57329,7 +57329,7 @@ function execute_WHILEGE_PN_RR__ (VL, d, esize, invert, m, n, op, rsize, is_unsi
     };
     let 'count = count;
     let result : bits('PL) = EncodePredCount(esize, elements, count, invert, PL);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = PredCountTest(elements, count, invert);
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = PredCountTest(elements, count, invert);
     P_set(d, PL) = result
 }
 

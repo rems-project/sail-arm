@@ -177,7 +177,7 @@ function getISR () = {
     };
     value_name[7] = Bit(if irq_pending then 0b1 else 0b0);
     value_name[6] = Bit(if fiq_pending then 0b1 else 0b0);
-    if (PSTATE.EL == EL1 & EL2Enabled()) & HCR_EL2[TGE] == 0b0 then {
+    if (PSTATE_EL == EL1 & EL2Enabled()) & HCR_EL2[TGE] == 0b0 then {
         if (HaveFeatNMI() & not_bool(UsingAArch32())) & IsHCRXEL2Enabled() then {
             if (HCR_EL2[IMO] & HCR_EL2[VI]) == 0b1 then {
                 value_name[10] = Bit(HCRX_EL2[VINMI])
@@ -202,7 +202,7 @@ function getISR () = {
 }
 
 function genRandomNum isRNDRRS = {
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = 0b0000;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = 0b0000;
     let x : bits(128) = __cycle_count[127 .. 0];
     let y : bits(128) = (__cycle_count + 1)[127 .. 0];
     let w : bits(128) = (__cycle_count + 2)[127 .. 0];
@@ -272,7 +272,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
         } else ()
     };
     if (((op0 == 3 & op1 == 3) & crn == 14) & (crm[3 .. 2] == 0b10 | crm[3 .. 2] == 0b11)) & (crm[1 .. 0] @ op2[2 .. 0]) != 0b11111 then {
-        if UInt(crm[1 .. 0] @ op2[2 .. 0]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE.EL == EL1 | PSTATE.EL == EL0 & (crm[3 .. 2] == 0b10 & (PMUSERENR_EL0[ER] @ PMUSERENR_EL0[EN]) != 0b00 | crm[3 .. 2] == 0b11 & PMUSERENR_EL0[EN] == 0b1))) & UInt(crm[1 .. 0] @ op2[2 .. 0]) > AArch64_GetNumEventCountersAccessible() - 1 then {
+        if UInt(crm[1 .. 0] @ op2[2 .. 0]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE_EL == EL1 | PSTATE_EL == EL0 & (crm[3 .. 2] == 0b10 & (PMUSERENR_EL0[ER] @ PMUSERENR_EL0[EN]) != 0b00 | crm[3 .. 2] == 0b11 & PMUSERENR_EL0[EN] == 0b1))) & UInt(crm[1 .. 0] @ op2[2 .. 0]) > AArch64_GetNumEventCountersAccessible() - 1 then {
             if UInt(crm[1 .. 0] @ op2[2 .. 0]) > GetNumEventCounters() - 1 then {
                 throw(Error_Undefined())
             } else {
@@ -282,7 +282,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
         ()
     };
     if ((((op0 == 3 & op1 == 3) & crn == 9) & crm == 13) & (op2 == 1 | op2 == 2)) & PMSELR_EL0[SEL] != 0b11111 then {
-        if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE.EL == EL1 | PSTATE.EL == EL0 & (op2 == 2 & (PMUSERENR_EL0[ER] @ PMUSERENR_EL0[EN]) != 0b00 | op2 == 1 & PMUSERENR_EL0[EN] == 0b1))) & UInt(PMSELR_EL0[SEL]) > AArch64_GetNumEventCountersAccessible() - 1 then {
+        if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE_EL == EL1 | PSTATE_EL == EL0 & (op2 == 2 & (PMUSERENR_EL0[ER] @ PMUSERENR_EL0[EN]) != 0b00 | op2 == 1 & PMUSERENR_EL0[EN] == 0b1))) & UInt(PMSELR_EL0[SEL]) > AArch64_GetNumEventCountersAccessible() - 1 then {
             if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 then {
                 throw(Error_Undefined())
             } else {
@@ -292,7 +292,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
         ()
     };
     let temp : bits(64) = X_read(t, 64);
-    AArch64_AutoGen_SysRegRead(PSTATE.EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t);
+    AArch64_AutoGen_SysRegRead(PSTATE_EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t);
     if (((op0 == 3 & crn == 10) & crm == 5) & op2 == 0) & (op1 == 0 | op1 == 5) then {
         if HaveRME() & MPAMIDR_EL1[HAS_ALTSP] == 0b1 then {
             X_set(t, 64) = [X_read(t, 64) with 54 .. 54 = if not_bool(UsePrimarySpaceEL10()) then
@@ -320,7 +320,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
     };
     if (((op0 == 3 & op1 == 3) & crn == 9) & crm == 13) & (op2 == 1 | op2 == 2) then {
         if op2 == 1 then {
-            if ((EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & PMSELR_EL0[SEL] != 0b11111) & UInt(PMSELR_EL0[SEL]) > AArch64_GetNumEventCountersAccessible() - 1 then {
+            if ((EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & PMSELR_EL0[SEL] != 0b11111) & UInt(PMSELR_EL0[SEL]) > AArch64_GetNumEventCountersAccessible() - 1 then {
                 if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 then {
                     X_set(t, 64) = temp;
                     throw(Error_Undefined())
@@ -337,7 +337,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
             }
         };
         if op2 == 2 then {
-            if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 & PMSELR_EL0[SEL] != 0b11111 | (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & UInt(PMSELR_EL0[SEL]) > AArch64_GetNumEventCountersAccessible() - 1 then {
+            if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 & PMSELR_EL0[SEL] != 0b11111 | (EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & UInt(PMSELR_EL0[SEL]) > AArch64_GetNumEventCountersAccessible() - 1 then {
                 if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 then {
                     X_set(t, 64) = temp;
                     throw(Error_Undefined())
@@ -357,7 +357,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
         X_set(t, 64) = [X_read(t, 64) with 15 .. 11 = AArch64_GetNumEventCountersAccessible()[4 .. 0]]
     };
     if ((op0 == 3 & crn == 14) & op1 == 3) & (crm[3 .. 2] == 0b10 | crm[3 .. 2] == 0b11 & (crm[1 .. 0] @ op2[2 .. 0]) != 0b11111) then {
-        if UInt(crm[1 .. 0] @ op2[2 .. 0]) > GetNumEventCounters() - 1 & (crm[1 .. 0] @ op2[2 .. 0]) != 0b11111 | (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & UInt(crm[1 .. 0] @ op2[2 .. 0]) > AArch64_GetNumEventCountersAccessible() - 1 then {
+        if UInt(crm[1 .. 0] @ op2[2 .. 0]) > GetNumEventCounters() - 1 & (crm[1 .. 0] @ op2[2 .. 0]) != 0b11111 | (EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & UInt(crm[1 .. 0] @ op2[2 .. 0]) > AArch64_GetNumEventCountersAccessible() - 1 then {
             if UInt(crm[1 .. 0] @ op2[2 .. 0]) > GetNumEventCounters() - 1 then {
                 throw(Error_Undefined())
             } else {
@@ -409,7 +409,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
         } else ()
     };
     if (((op0 == 3 & crn == 0) & op1 == 3) & op2 == 7) & crm == 0 then {
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             if IsInHost() then {
                 X_set(t, 64) = [X_read(t, 64) with 4 .. 4 = if SCTLR_EL2[DZE] == 0b0 then
                   0b1
@@ -421,7 +421,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
                 else
                   0b0]
             }
-        } else if PSTATE.EL == EL1 then {
+        } else if PSTATE_EL == EL1 then {
             X_set(t, 64) = [X_read(t, 64) with 4 .. 4 = if EL2Enabled() & HCR_EL2[TDZ] == 0b1 then
               0b1
             else
@@ -497,7 +497,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
         X_set(t, 64) = SetSlice(32, X_read(t, 64), 0, Slice(DBGDTRRX_EL0, 0, 32))
     };
     if (((op0 == 3 & crn == 12) & op1 == 4) & op2 == 7) & crm == 11 then {
-        if PSTATE.EL == EL2 | PSTATE.EL == EL3 then {
+        if PSTATE_EL == EL2 | PSTATE_EL == EL3 then {
             X_set(t, 64) = [X_read(t, 64) with 26 .. 24 = 0b000]
         };
         ()
@@ -506,7 +506,7 @@ function AArch64_SysRegRead (op0, op1, crn, crm, op2, t) = {
         X_set(t, 64) = [X_read(t, 64) with 2 .. 0 = 0b000]
     };
     if (((op0 == 3 & crn == 1) & op1 == 4) & op2 == 0) & crm == 1 then {
-        if not_bool(ELUsingAArch32(EL1)) & PSTATE.EL != EL1 then {
+        if not_bool(ELUsingAArch32(EL1)) & PSTATE_EL != EL1 then {
             X_set(t, 64) = [X_read(t, 64) with 31 .. 31 = 0b1]
         };
         ()
@@ -543,7 +543,7 @@ function AArch64_SysRegWrite (op0, op1, crn, crm, op2, t) = {
         tempxt[14] = Bit(ICC_CTLR_EL3[SEIS])
     };
     if (((op0 == 3 & crn == 12) & op1 == 4) & op2 == 7) & crm == 11 then {
-        if PSTATE.EL == EL2 | PSTATE.EL == EL3 then {
+        if PSTATE_EL == EL2 | PSTATE_EL == EL3 then {
             if UInt(tempxt[23 .. 21]) < 6 - UInt(ICH_VTR_EL2[PREbits]) then {
                 tempxt[23 .. 21] = (6 - UInt(ICH_VTR_EL2[PREbits]))[2 .. 0]
             };
@@ -637,7 +637,7 @@ function AArch64_SysRegWrite (op0, op1, crn, crm, op2, t) = {
         ()
     };
     if ((op0 == 3 & crn == 14) & op1 == 3) & (crm[3 .. 2] == 0b10 | crm[3 .. 2] == 0b11 & (crm[1 .. 0] @ op2[2 .. 0]) != 0b11111) then {
-        if UInt(crm[1 .. 0] @ op2[2 .. 0]) > GetNumEventCounters() - 1 & (crm[1 .. 0] @ op2[2 .. 0]) != 0b11111 | ((EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & PMUSERENR_EL0[EN] == 0b1) & UInt(crm[1 .. 0] @ op2[2 .. 0]) > AArch64_GetNumEventCountersAccessible() - 1 then {
+        if UInt(crm[1 .. 0] @ op2[2 .. 0]) > GetNumEventCounters() - 1 & (crm[1 .. 0] @ op2[2 .. 0]) != 0b11111 | ((EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & PMUSERENR_EL0[EN] == 0b1) & UInt(crm[1 .. 0] @ op2[2 .. 0]) > AArch64_GetNumEventCountersAccessible() - 1 then {
             if UInt(crm[1 .. 0] @ op2[2 .. 0]) > GetNumEventCounters() - 1 then {
                 throw(Error_Undefined())
             } else {
@@ -647,7 +647,7 @@ function AArch64_SysRegWrite (op0, op1, crn, crm, op2, t) = {
         ()
     };
     if (((op0 == 3 & op1 == 3) & crn == 9) & crm == 13) & (op2 == 2 | op2 == 1 & PMSELR_EL0[SEL] != 0b11111) then {
-        if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 & PMSELR_EL0[SEL] != 0b11111 | ((EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & PMUSERENR_EL0[EN] == 0b1) & UInt(PMSELR_EL0[SEL]) > AArch64_GetNumEventCountersAccessible() - 1 then {
+        if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 & PMSELR_EL0[SEL] != 0b11111 | ((EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & PMUSERENR_EL0[EN] == 0b1) & UInt(PMSELR_EL0[SEL]) > AArch64_GetNumEventCountersAccessible() - 1 then {
             if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 then {
                 throw(Error_Undefined())
             } else {
@@ -674,7 +674,7 @@ function AArch64_SysRegWrite (op0, op1, crn, crm, op2, t) = {
     } else {
         restore_xt = false
     };
-    AArch64_AutoGen_SysRegWrite(PSTATE.EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t);
+    AArch64_AutoGen_SysRegWrite(PSTATE_EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t);
     if restore_xt then {
         X_set(t, 64) = tempxt2
     };
@@ -813,21 +813,21 @@ function AArch64_SysRegWrite (op0, op1, crn, crm, op2, t) = {
 }
 
 function AArch64_SysInstr (op0, op1, crn, crm, op2, t) = {
-    AArch64_AutoGen_SysOpsWrite(PSTATE.EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t)
+    AArch64_AutoGen_SysOpsWrite(PSTATE_EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t)
 }
 
 function AArch64_SysInstrWithResult (op0, op1, crn, crm, op2, t) = {
-    AArch64_AutoGen_SysInstrWithResult(PSTATE.EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t)
+    AArch64_AutoGen_SysInstrWithResult(PSTATE_EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t)
 }
 
 function AArch64_UnallocatedSysRegAccess (op0, op1, crn, op2, crm, read, t) = {
     rcs_el0_trap : bool = undefined;
     tid3_trap : bool = false;
-    if ((PSTATE.EL == EL1 & read) & EL2Enabled()) & HCR_EL2[TID3] == 0b1 then {
+    if ((PSTATE_EL == EL1 & read) & EL2Enabled()) & HCR_EL2[TID3] == 0b1 then {
         tid3_trap = if HaveFGTExt() then true else
           __IMPDEF_boolean("Unallocated encodings trapped by HCR_EL2.TID3")
     };
-    if (PSTATE.EL == EL1 | PSTATE.EL == EL2 | PSTATE.EL == EL3) & read then {
+    if (PSTATE_EL == EL1 | PSTATE_EL == EL2 | PSTATE_EL == EL3) & read then {
         if (op0 == 0b11 & op1 == 0b000) & crn == 0b0000 then {
             if crm == 0b0010 & op2 == 0b111 then {
                 if tid3_trap then {
@@ -889,25 +889,25 @@ function AArch64_UnallocatedSysRegAccess (op0, op1, crn, op2, crm, read, t) = {
     };
     let 'ec_val = ec_val;
     if in_feature_space & read then {
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             if (EL2Enabled() & not_bool(ELUsingAArch32(EL2))) & HCR_EL2[TGE] == 0b1 then {
                 AArch64_SystemAccessTrap(EL2, ec_val)
             } else {
                 AArch64_SystemAccessTrap(EL1, ec_val)
             }
-        } else if PSTATE.EL == EL1 then {
+        } else if PSTATE_EL == EL1 then {
             if (EL2Enabled() & not_bool(ELUsingAArch32(EL2))) & HCR_EL2[TID3] == 0b1 then {
                 AArch64_SystemAccessTrap(EL2, ec_val)
             } else {
                 AArch64_SystemAccessTrap(EL1, ec_val)
             }
-        } else if PSTATE.EL == EL2 then {
+        } else if PSTATE_EL == EL2 then {
             AArch64_SystemAccessTrap(EL2, ec_val)
-        } else if PSTATE.EL == EL3 then {
+        } else if PSTATE_EL == EL3 then {
             AArch64_SystemAccessTrap(EL3, ec_val)
         } else ()
     };
-    if (HaveFeatTIDCP1() & PSTATE.EL == EL0) & (match crn {
+    if (HaveFeatTIDCP1() & PSTATE_EL == EL0) & (match crn {
       [bitone, _, bitone, bitone] => true,
       _ => false
     }) : bool then {
@@ -923,9 +923,9 @@ function AArch64_UnallocatedSysRegAccess (op0, op1, crn, op2, crm, read, t) = {
         };
         ()
     };
-    if ((((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & HCR_EL2[TIDCP] == 0b1) & (op0 == 0b01 | op0 == 0b11)) & (crn == 0b1011 | crn == 0b1111) then {
+    if ((((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & HCR_EL2[TIDCP] == 0b1) & (op0 == 0b01 | op0 == 0b11)) & (crn == 0b1011 | crn == 0b1111) then {
         let rcs_el0_trap : bool = __IMPDEF_boolean("Reserved Control Space EL0 Trapped");
-        if PSTATE.EL == EL1 | rcs_el0_trap then {
+        if PSTATE_EL == EL1 | rcs_el0_trap then {
             AArch64_SystemAccessTrap(EL2, UInt(0x18))
         };
         ()
@@ -938,17 +938,17 @@ function AArch64_UnallocatedSysRegAccess (op0, op1, crn, op2, crm, read, t) = {
 }
 
 function AArch64_SysRegRead128 (op0, op1, crn, crm, op2, t, t2) = {
-    AArch64_AutoGen_SysRegRead128(PSTATE.EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t, t2);
+    AArch64_AutoGen_SysRegRead128(PSTATE_EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t, t2);
     return()
 }
 
 function AArch64_SysRegWrite128 (op0, op1, crn, crm, op2, t, t2) = {
-    AArch64_AutoGen_SysRegWrite128(PSTATE.EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t, t2);
+    AArch64_AutoGen_SysRegWrite128(PSTATE_EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t, t2);
     return()
 }
 
 function AArch64_SysInstr128 (op0, op1, crn, crm, op2, t, t2) = {
-    AArch64_AutoGen_SysOpsWrite128(PSTATE.EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t, t2);
+    AArch64_AutoGen_SysOpsWrite128(PSTATE_EL, op0[1 .. 0], op1[2 .. 0], crn[3 .. 0], op2[2 .. 0], crm[3 .. 0], t, t2);
     return()
 }
 
@@ -964,7 +964,7 @@ function AArch32_SysRegRead__1 (cp_num, instr, t) = {
     el : bits(2) = undefined;
     index : int = undefined;
     n : int = undefined;
-    let (_, __tup_1 : bits(2)) = ELFromM32(PSTATE.M) in
+    let (_, __tup_1 : bits(2)) = ELFromM32(PSTATE_M) in
       {
           el = __tup_1
       };
@@ -992,7 +992,7 @@ function AArch32_SysRegRead__1 (cp_num, instr, t) = {
         ()
     };
     if (((cp_num == 15 & opc1 == 0b000) & CRn == 0b1110) & (CRm[3 .. 2] == 0b10 | CRm[3 .. 2] == 0b11)) & (CRm[1 .. 0] @ opc2[2 .. 0]) != 0b11111 then {
-        if UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE.EL == EL1 | PSTATE.EL == EL0 & (CRm[3 .. 2] == 0b10 & (PMUSERENR_EL0[ER] @ PMUSERENR_EL0[EN]) != 0b00 | CRm[3 .. 2] == 0b11 & PMUSERENR_EL0[EN] == 0b1))) & UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > AArch32_GetNumEventCountersAccessible() - 1 then {
+        if UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE_EL == EL1 | PSTATE_EL == EL0 & (CRm[3 .. 2] == 0b10 & (PMUSERENR_EL0[ER] @ PMUSERENR_EL0[EN]) != 0b00 | CRm[3 .. 2] == 0b11 & PMUSERENR_EL0[EN] == 0b1))) & UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > AArch32_GetNumEventCountersAccessible() - 1 then {
             if UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > GetNumEventCounters() - 1 then {
                 throw(Error_Undefined())
             } else if ELUsingAArch32(EL2) then {
@@ -1004,7 +1004,7 @@ function AArch32_SysRegRead__1 (cp_num, instr, t) = {
         ()
     };
     if ((((cp_num == 15 & opc1 == 0b000) & CRn == 0b1001) & CRm == 0b1101) & (opc2 == 0b001 | opc2 == 0b010)) & PMSELR_EL0[SEL] != 0b11111 then {
-        if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE.EL == EL1 | PSTATE.EL == EL0 & (opc2 == 0b010 & (PMUSERENR_EL0[ER] @ PMUSERENR_EL0[EN]) != 0b00 | opc2 == 0b001 & PMUSERENR_EL0[EN] == 0b1))) & UInt(PMSELR_read()[SEL]) > AArch32_GetNumEventCountersAccessible() - 1 then {
+        if UInt(PMSELR_EL0[SEL]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE_EL == EL1 | PSTATE_EL == EL0 & (opc2 == 0b010 & (PMUSERENR_EL0[ER] @ PMUSERENR_EL0[EN]) != 0b00 | opc2 == 0b001 & PMUSERENR_EL0[EN] == 0b1))) & UInt(PMSELR_read()[SEL]) > AArch32_GetNumEventCountersAccessible() - 1 then {
             if UInt(PMSELR_read()[SEL]) > GetNumEventCounters() - 1 then {
                 throw(Error_Undefined())
             } else if ELUsingAArch32(EL2) then {
@@ -1024,7 +1024,7 @@ function AArch32_SysRegRead__1 (cp_num, instr, t) = {
     if (((cp_num == 15 & opc1 == 0b000) & CRn == 0b1001) & CRm == 0b1101) & (opc2 == 0b001 | opc2 == 0b010) then {
         if opc2 == 0b001 then {
             let 'pmselr = UInt(PMSELR_read()[SEL]);
-            if ((EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & PMSELR_read()[SEL] != 0b11111) & UInt(PMSELR_read()[SEL]) > AArch32_GetNumEventCountersAccessible() - 1 then {
+            if ((EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & PMSELR_read()[SEL] != 0b11111) & UInt(PMSELR_read()[SEL]) > AArch32_GetNumEventCountersAccessible() - 1 then {
                 if UInt(PMSELR_read()[SEL]) > GetNumEventCounters() - 1 then {
                     R_set(t) = temp;
                     throw(Error_Undefined())
@@ -1042,7 +1042,7 @@ function AArch32_SysRegRead__1 (cp_num, instr, t) = {
             }
         };
         if opc2 == 0b010 then {
-            if UInt(PMSELR_read()[SEL]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & UInt(PMSELR_read()[SEL]) > AArch32_GetNumEventCountersAccessible() - 1 then {
+            if UInt(PMSELR_read()[SEL]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & UInt(PMSELR_read()[SEL]) > AArch32_GetNumEventCountersAccessible() - 1 then {
                 if UInt(PMSELR_read()[SEL]) > GetNumEventCounters() - 1 then {
                     R_set(t) = temp;
                     throw(Error_Undefined())
@@ -1065,7 +1065,7 @@ function AArch32_SysRegRead__1 (cp_num, instr, t) = {
         R_set(t) = [R_read(t) with 15 .. 11 = AArch32_GetNumEventCountersAccessible()[4 .. 0]]
     };
     if ((cp_num == 15 & opc1 == 0b000) & CRn == 0b1110) & (CRm[3 .. 2] == 0b10 | CRm[3 .. 2] == 0b11 & (CRm[1 .. 0] @ opc2[2 .. 0]) != 0b11111) then {
-        if UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > AArch32_GetNumEventCountersAccessible() - 1 then {
+        if UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > GetNumEventCounters() - 1 | (EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > AArch32_GetNumEventCountersAccessible() - 1 then {
             if UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > GetNumEventCounters() - 1 then {
                 R_set(t) = temp;
                 throw(Error_Undefined())
@@ -1156,7 +1156,7 @@ function AArch32_SysRegWriteM (cp_num, instr, address) = {
 function AArch32_SysRegRead64 (cp_num, instr, t, t2) = {
     el : bits(2) = undefined;
     n : int = undefined;
-    let (_, __tup_1 : bits(2)) = ELFromM32(PSTATE.M) in
+    let (_, __tup_1 : bits(2)) = ELFromM32(PSTATE_M) in
       {
           el = __tup_1
       };
@@ -1185,7 +1185,7 @@ function AArch32_SysRegRead64 (cp_num, instr, t, t2) = {
 function AArch32_SysRegWrite (cp_num, instr, t) = {
     el : bits(2) = undefined;
     temprt : bits(32) = R_read(t);
-    let (_, __tup_1 : bits(2)) = ELFromM32(PSTATE.M) in
+    let (_, __tup_1 : bits(2)) = ELFromM32(PSTATE_M) in
       {
           el = __tup_1
       };
@@ -1233,7 +1233,7 @@ function AArch32_SysRegWrite (cp_num, instr, t) = {
         ()
     };
     if ((cp_num == 15 & opc1 == 0b000) & CRn == 0b1110) & (CRm[3 .. 2] == 0b10 | CRm[3 .. 2] == 0b11 & (CRm[1 .. 0] @ opc2[2 .. 0]) != 0b11111) then {
-        if UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > GetNumEventCounters() - 1 & (CRm[1 .. 0] @ opc2[2 .. 0]) != 0b11111 | ((EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & PMUSERENR_EL0[EN] == 0b1) & UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > AArch32_GetNumEventCountersAccessible() - 1 then {
+        if UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > GetNumEventCounters() - 1 & (CRm[1 .. 0] @ opc2[2 .. 0]) != 0b11111 | ((EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & PMUSERENR_EL0[EN] == 0b1) & UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > AArch32_GetNumEventCountersAccessible() - 1 then {
             if UInt(CRm[1 .. 0] @ opc2[2 .. 0]) > GetNumEventCounters() - 1 then {
                 throw(Error_Undefined())
             } else if ELUsingAArch32(EL2) then {
@@ -1245,7 +1245,7 @@ function AArch32_SysRegWrite (cp_num, instr, t) = {
         ()
     };
     if (((cp_num == 15 & opc1 == 0b000) & CRn == 0b1001) & CRm == 0b1101) & (opc2 == 0b001 & PMSELR_read()[SEL] != 0b11111 | opc2 == 0b010) then {
-        if UInt(PMSELR_read()[SEL]) > GetNumEventCounters() - 1 & PMSELR_read()[SEL] != 0b11111 | ((EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & PMUSERENR_EL0[EN] == 0b1) & UInt(PMSELR_read()[SEL]) > AArch32_GetNumEventCountersAccessible() - 1 then {
+        if UInt(PMSELR_read()[SEL]) > GetNumEventCounters() - 1 & PMSELR_read()[SEL] != 0b11111 | ((EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & PMUSERENR_EL0[EN] == 0b1) & UInt(PMSELR_read()[SEL]) > AArch32_GetNumEventCountersAccessible() - 1 then {
             if UInt(PMSELR_read()[SEL]) > GetNumEventCounters() - 1 then {
                 throw(Error_Undefined())
             } else if ELUsingAArch32(EL2) then {
@@ -1360,7 +1360,7 @@ function AArch32_SysRegWrite (cp_num, instr, t) = {
 function AArch32_SysRegWrite64 (cp_num, instr, t, t2) = {
     el : bits(2) = undefined;
     n : int = undefined;
-    let (_, __tup_1 : bits(2)) = ELFromM32(PSTATE.M) in
+    let (_, __tup_1 : bits(2)) = ELFromM32(PSTATE_M) in
       {
           el = __tup_1
       };
@@ -1405,7 +1405,7 @@ function GetNreg () = {
 
 function AArch32_UnallocatedSysRegAccess (coproc, opc1, CRn, opc2, CRm, read, t) = {
     tid3_trap : bool = false;
-    if ((PLOfEL(PSTATE.EL) == PL1 & read) & EL2Enabled()) & HCR_EL2[TID3] == 0b1 then {
+    if ((PLOfEL(PSTATE_EL) == PL1 & read) & EL2Enabled()) & HCR_EL2[TID3] == 0b1 then {
         tid3_trap = if HaveFGTExt() then true else
           __IMPDEF_boolean("Unallocated encodings trapped by HCR_EL2.TID3")
     };
@@ -1418,7 +1418,7 @@ function AArch32_UnallocatedSysRegAccess (coproc, opc1, CRn, opc2, CRm, read, t)
     };
     AArch32_CheckCP15InstrCoarseTraps(UInt(CRn), GetNreg(), UInt(CRm));
     if (((UInt(coproc) == 15 & opc1 == 0b000) & CRn == 0b0000) & CRm == 0b0010) & opc2 == 0b111 then {
-        if PSTATE.EL != EL0 & read then {
+        if PSTATE_EL != EL0 & read then {
             R_set(t) = __UNKNOWN_bits(32);
             return()
         } else {
@@ -1426,7 +1426,7 @@ function AArch32_UnallocatedSysRegAccess (coproc, opc1, CRn, opc2, CRm, read, t)
         }
     };
     if ((UInt(coproc) == 15 & opc1 == 0b000) & CRn == 0b0000) & UInt(CRm) >= 3 then {
-        if PSTATE.EL != EL0 & read then {
+        if PSTATE_EL != EL0 & read then {
             R_set(t) = __UNKNOWN_bits(32);
             return()
         } else {

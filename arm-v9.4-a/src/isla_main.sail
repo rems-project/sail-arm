@@ -80,7 +80,7 @@ function isla_footprint(opcode) = {
   InitFeatureImpl();
   TakeReset(COLD_RESET);
   AArch64_ResetGeneralRegisters();
-  PSTATE.EL = EL0;
+  PSTATE_EL = EL0;
 
   isla_footprint_no_init(opcode)
 }

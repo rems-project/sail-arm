@@ -60,7 +60,7 @@ function execute_aarch64_instrs_memory_mcpymset_setg (d, n, options_name, s, sta
     toaddress : bits(64) = X_read(d, 64);
     setsize : bits(64) = X_read(n, 64);
     let data : bits(8) = X_read(s, 8);
-    nzcv : bits(4) = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
+    nzcv : bits(4) = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
     stagesetsize : bits(64) = undefined;
     let is_setg : bool = true;
     B : int = undefined;
@@ -68,7 +68,7 @@ function execute_aarch64_instrs_memory_mcpymset_setg (d, n, options_name, s, sta
     let privileged : bool = if [options_name[0]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let nontemporal : bool = [options_name[1]] == 0b1;
     let accdesc : AccessDescriptor = CreateAccDescSTGMOPS(privileged, nontemporal);
     if stage == MOPSStage_Prologue then {
@@ -207,7 +207,7 @@ function execute_aarch64_instrs_memory_mcpymset_setg (d, n, options_name, s, sta
     if stage == MOPSStage_Prologue then {
         X_set(n, 64) = setsize;
         X_set(d, 64) = toaddress;
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -221,7 +221,7 @@ function execute_aarch64_instrs_memory_mcpymset_cpy (d, n, options_name, s, stag
     toaddress : bits(64) = X_read(d, 64);
     fromaddress : bits(64) = X_read(s, 64);
     cpysize : bits(64) = X_read(n, 64);
-    nzcv : bits(4) = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
+    nzcv : bits(4) = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
     stagecpysize : bits(64) = undefined;
     // readdata : bits(8 * 'N) = undefined;
     B : int = undefined;
@@ -229,11 +229,11 @@ function execute_aarch64_instrs_memory_mcpymset_cpy (d, n, options_name, s, stag
     let rprivileged : bool = if [options_name[1]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let wprivileged : bool = if [options_name[0]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let rnontemporal : bool = [options_name[3]] == 0b1;
     let wnontemporal : bool = [options_name[2]] == 0b1;
     let raccdesc : AccessDescriptor = CreateAccDescMOPS(MemOp_LOAD, rprivileged, rnontemporal);
@@ -480,7 +480,7 @@ function execute_aarch64_instrs_memory_mcpymset_cpy (d, n, options_name, s, stag
         X_set(n, 64) = cpysize;
         X_set(d, 64) = toaddress;
         X_set(s, 64) = fromaddress;
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -494,7 +494,7 @@ function execute_aarch64_instrs_memory_mcpymset_cpyf (d, n, options_name, s, sta
     toaddress : bits(64) = X_read(d, 64);
     fromaddress : bits(64) = X_read(s, 64);
     cpysize : bits(64) = X_read(n, 64);
-    nzcv : bits(4) = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
+    nzcv : bits(4) = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
     stagecpysize : bits(64) = undefined;
     // readdata : bits(8 * 'N) = undefined;
     B : int = undefined;
@@ -502,11 +502,11 @@ function execute_aarch64_instrs_memory_mcpymset_cpyf (d, n, options_name, s, sta
     let rprivileged : bool = if [options_name[1]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let wprivileged : bool = if [options_name[0]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let rnontemporal : bool = [options_name[3]] == 0b1;
     let wnontemporal : bool = [options_name[2]] == 0b1;
     let raccdesc : AccessDescriptor = CreateAccDescMOPS(MemOp_LOAD, rprivileged, rnontemporal);
@@ -665,7 +665,7 @@ function execute_aarch64_instrs_memory_mcpymset_cpyf (d, n, options_name, s, sta
         X_set(n, 64) = cpysize;
         X_set(d, 64) = toaddress;
         X_set(s, 64) = fromaddress;
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -678,7 +678,7 @@ function execute_aarch64_instrs_memory_mcpymset_set (d, n, options_name, s, stag
     toaddress : bits(64) = X_read(d, 64);
     setsize : bits(64) = X_read(n, 64);
     let data : bits(8) = X_read(s, 8);
-    nzcv : bits(4) = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
+    nzcv : bits(4) = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
     stagesetsize : bits(64) = undefined;
     let is_setg : bool = false;
     B : int = undefined;
@@ -686,7 +686,7 @@ function execute_aarch64_instrs_memory_mcpymset_set (d, n, options_name, s, stag
     let privileged : bool = if [options_name[0]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let nontemporal : bool = [options_name[1]] == 0b1;
     let accdesc : AccessDescriptor = CreateAccDescMOPS(MemOp_STORE, privileged, nontemporal);
     if stage == MOPSStage_Prologue then {
@@ -797,7 +797,7 @@ function execute_aarch64_instrs_memory_mcpymset_set (d, n, options_name, s, stag
     if stage == MOPSStage_Prologue then {
         X_set(n, 64) = setsize;
         X_set(d, 64) = toaddress;
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }

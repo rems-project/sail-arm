@@ -201,9 +201,9 @@ function execute_aarch64_instrs_integer_arithmetic_add_sub_carry (d, datasize, m
     if sub_op then {
         operand2 = not_vec(operand2)
     };
-    (result, nzcv) = AddWithCarry(operand1, operand2, PSTATE.C);
+    (result, nzcv) = AddWithCarry(operand1, operand2, PSTATE_C);
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     X_set(d, datasize) = result
 }
@@ -448,7 +448,7 @@ function execute_aarch64_instrs_integer_arithmetic_add_sub_shiftedreg (d, datasi
     };
     (result, nzcv) = AddWithCarry(operand1, operand2, carry_in);
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     X_set(d, datasize) = result
 }
@@ -607,7 +607,7 @@ function execute_aarch64_instrs_integer_arithmetic_add_sub_immediate (d, datasiz
     };
     (result, nzcv) = AddWithCarry(operand1, operand2, carry_in);
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     if d == 31 & not_bool(setflags) then {
         SP_set() = ZeroExtend(result, 64)
@@ -770,7 +770,7 @@ function execute_aarch64_instrs_integer_arithmetic_add_sub_extendedreg (d, datas
     };
     (result, nzcv) = AddWithCarry(operand1, operand2, carry_in);
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     if d == 31 & not_bool(setflags) then {
         SP_set() = ZeroExtend(result, 64)
@@ -909,7 +909,7 @@ function execute_aarch64_instrs_integer_tags_mcaddtag (ADD, d, n, offset, tag_of
     let exclude : bits(16) = GCR_EL1[Exclude];
     result : bits(64) = undefined;
     rtag : bits(4) = undefined;
-    if AArch64_AllocationTagAccessIsEnabled(PSTATE.EL) then {
+    if AArch64_AllocationTagAccessIsEnabled(PSTATE_EL) then {
         rtag = AArch64_ChooseNonExcludedTag(start_tag, tag_offset, exclude)
     } else {
         rtag = 0b0000
@@ -1412,7 +1412,7 @@ function execute_aarch64_instrs_integer_logical_immediate (d, datasize, imm, n, 
     };
     let result = result;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = ([result[datasize - 1]] @ IsZeroBit(result)) @ 0b00
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = ([result[datasize - 1]] @ IsZeroBit(result)) @ 0b00
     };
     if d == 31 & not_bool(setflags) then {
         SP_set() = ZeroExtend(result, 64)
@@ -1782,7 +1782,7 @@ function execute_aarch64_instrs_integer_logical_shiftedreg (d, datasize, invert,
     };
     let result = result;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = ([result[datasize - 1]] @ IsZeroBit(result)) @ 0b00
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = ([result[datasize - 1]] @ IsZeroBit(result)) @ 0b00
     };
     X_set(d, datasize) = result
 }
@@ -2597,13 +2597,13 @@ val execute_aarch64_instrs_integer_flags_axflag : unit -> unit
 function execute_aarch64_instrs_integer_flags_axflag () = {
     PCNormalStep();
     let n : bits(1) = 0b0;
-    let z : bits(1) = PSTATE.Z | PSTATE.V;
-    let c : bits(1) = PSTATE.C & not_vec(PSTATE.V);
+    let z : bits(1) = PSTATE_Z | PSTATE_V;
+    let c : bits(1) = PSTATE_C & not_vec(PSTATE_V);
     let v : bits(1) = 0b0;
-    PSTATE.N = n;
-    PSTATE.Z = z;
-    PSTATE.C = c;
-    PSTATE.V = v
+    PSTATE_N = n;
+    PSTATE_Z = z;
+    PSTATE_C = c;
+    PSTATE_V = v
 }
 
 val decode_axflag_aarch64_instrs_integer_flags_axflag : bits(4) -> unit
@@ -2629,7 +2629,7 @@ val execute_aarch64_instrs_branch_unconditional_immediate : (BranchType, bits(64
 
 function execute_aarch64_instrs_branch_unconditional_immediate (branch_type, offset) = {
     if branch_type == BranchType_DIRCALL then {
-        if HaveGCS() & GCSPCREnabled(PSTATE.EL) then {
+        if HaveGCS() & GCSPCREnabled(PSTATE_EL) then {
             AddGCSRecord(PC_read() + 4)
         };
         X_set(30, 64) = PC_read() + 4
@@ -3742,7 +3742,7 @@ function execute_aarch64_instrs_branch_unconditional_register (branch_type, m, n
             target = AuthIB(target, modifier, auth_then_branch)
         }
     };
-    if (branch_type == BranchType_RET & HaveGCS()) & GCSPCREnabled(PSTATE.EL) then {
+    if (branch_type == BranchType_RET & HaveGCS()) & GCSPCREnabled(PSTATE_EL) then {
         if not_bool(pac) then {
             inst_type = GCSInstType_PRET
         } else {
@@ -3756,7 +3756,7 @@ function execute_aarch64_instrs_branch_unconditional_register (branch_type, m, n
         SetCurrentGCSPointer(GetCurrentGCSPointer() + 8)
     };
     if branch_type == BranchType_INDCALL then {
-        if HaveGCS() & GCSPCREnabled(PSTATE.EL) then {
+        if HaveGCS() & GCSPCREnabled(PSTATE_EL) then {
             AddGCSRecord(PC_read() + 4)
         };
         X_set(30, 64) = PC_read() + 4
@@ -4180,7 +4180,7 @@ function execute_aarch64_instrs_system_hints op = {
           };
           SynchronizeErrors();
           AArch64_ESBOperation();
-          if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
+          if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
               AArch64_vESBOperation()
           };
           TakeUnmaskedSErrorInterrupts()
@@ -6656,7 +6656,7 @@ function execute_aarch64_instrs_integer_conditional_compare_register (condition,
           };
         taken = true
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = flags;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = flags;
     if SPESampleInFlight then {
         let conditional : bool = true;
         SPESampleAddOpOther(conditional, taken)
@@ -6733,7 +6733,7 @@ function execute_aarch64_instrs_integer_conditional_compare_immediate (condition
           };
         taken = true
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = flags;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = flags;
     if SPESampleInFlight then {
         let conditional : bool = true;
         SPESampleAddOpOther(conditional, taken)
@@ -6791,7 +6791,7 @@ val execute_aarch64_instrs_integer_flags_cfinv : unit -> unit
 
 function execute_aarch64_instrs_integer_flags_cfinv () = {
     PCNormalStep();
-    PSTATE.C = not_vec(PSTATE.C)
+    PSTATE_C = not_vec(PSTATE_C)
 }
 
 val decode_cfinv_aarch64_instrs_integer_flags_cfinv : bits(4) -> unit
@@ -7860,7 +7860,7 @@ function execute_aarch64_instrs_memory_mcpymset_cpy (d, n, options_name, s, stag
     toaddress : bits(64) = X_read(d, 64);
     fromaddress : bits(64) = X_read(s, 64);
     cpysize : bits(64) = X_read(n, 64);
-    nzcv : bits(4) = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
+    nzcv : bits(4) = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
     stagecpysize : bits(64) = undefined;
     readdata : bits(8 * 'N) = undefined;
     B : int = undefined;
@@ -7868,11 +7868,11 @@ function execute_aarch64_instrs_memory_mcpymset_cpy (d, n, options_name, s, stag
     let rprivileged : bool = if [options_name[1]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let wprivileged : bool = if [options_name[0]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let rnontemporal : bool = [options_name[3]] == 0b1;
     let wnontemporal : bool = [options_name[2]] == 0b1;
     let raccdesc : AccessDescriptor = CreateAccDescMOPS(MemOp_LOAD, rprivileged, rnontemporal);
@@ -8015,7 +8015,7 @@ function execute_aarch64_instrs_memory_mcpymset_cpy (d, n, options_name, s, stag
         X_set(n, 64) = cpysize;
         X_set(d, 64) = toaddress;
         X_set(s, 64) = fromaddress;
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -8941,7 +8941,7 @@ function execute_aarch64_instrs_memory_mcpymset_cpyf (d, n, options_name, s, sta
     toaddress : bits(64) = X_read(d, 64);
     fromaddress : bits(64) = X_read(s, 64);
     cpysize : bits(64) = X_read(n, 64);
-    nzcv : bits(4) = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
+    nzcv : bits(4) = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
     stagecpysize : bits(64) = undefined;
     readdata : bits(8 * 'N) = undefined;
     B : int = undefined;
@@ -8949,11 +8949,11 @@ function execute_aarch64_instrs_memory_mcpymset_cpyf (d, n, options_name, s, sta
     let rprivileged : bool = if [options_name[1]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let wprivileged : bool = if [options_name[0]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let rnontemporal : bool = [options_name[3]] == 0b1;
     let wnontemporal : bool = [options_name[2]] == 0b1;
     let raccdesc : AccessDescriptor = CreateAccDescMOPS(MemOp_LOAD, rprivileged, rnontemporal);
@@ -9070,7 +9070,7 @@ function execute_aarch64_instrs_memory_mcpymset_cpyf (d, n, options_name, s, sta
         X_set(n, 64) = cpysize;
         X_set(d, 64) = toaddress;
         X_set(s, 64) = fromaddress;
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -10350,7 +10350,7 @@ function execute_aarch64_instrs_branch_unconditional_dret () = {
 val decode_drps_aarch64_instrs_branch_unconditional_dret : unit -> unit
 
 function decode_drps_aarch64_instrs_branch_unconditional_dret () = {
-    if not_bool(Halted()) | PSTATE.EL == EL0 then {
+    if not_bool(Halted()) | PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     };
     execute_aarch64_instrs_branch_unconditional_dret()
@@ -10379,7 +10379,7 @@ function execute_aarch64_instrs_system_barriers_dsb (alias, domain, nXS__arg, ty
               FailTransaction(TMFailure_ERR, false)
           };
           if not_bool(nXS) & HaveFeatXS() then {
-              nXS = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & IsHCRXEL2Enabled()) & HCRX_EL2[FnXS] == 0b1
+              nXS = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & IsHCRXEL2Enabled()) & HCRX_EL2[FnXS] == 0b1
           };
           DataSynchronizationBarrier(domain, types, nXS)
       },
@@ -10654,7 +10654,7 @@ function execute_aarch64_instrs_branch_unconditional_eret (pac, use_key_a) = {
 val decode_eret_aarch64_instrs_branch_unconditional_eret : (bits(5), bits(5), bits(1), bits(1)) -> unit
 
 function decode_eret_aarch64_instrs_branch_unconditional_eret (op4, Rn, M, A) = {
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     };
     let pac : bool = A == 0b1;
@@ -10682,7 +10682,7 @@ function clause __DecodeA64_BranchExcSys ((pc, (0b110101101001111100000011111000
 val decode_ereta_aarch64_instrs_branch_unconditional_eret : (bits(5), bits(5), bits(1), bits(1)) -> unit
 
 function decode_ereta_aarch64_instrs_branch_unconditional_eret (op4, Rn, M, A) = {
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     };
     let pac : bool = A == 0b1;
@@ -12777,7 +12777,7 @@ function execute_aarch64_instrs_float_compare_cond (condition, datasize, flags__
         flags = FPCompare(operand1, operand2, signal_all_nans, FPCR_read());
         taken = true
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = flags;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = flags;
     if SPESampleInFlight then {
         let conditional : bool = true;
         SPESampleAddOpOther(conditional, taken)
@@ -13861,7 +13861,7 @@ function execute_aarch64_instrs_float_compare_uncond (cmp_with_zero, datasize, m
     let operand2 : bits('datasize) = if cmp_with_zero then FPZero(0b0, datasize)
     else
       V_read(m, datasize);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = FPCompare(operand1, operand2, signal_all_nans, FPCR_read())
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = FPCompare(operand1, operand2, signal_all_nans, FPCR_read())
 }
 
 val decode_fcmp_float_aarch64_instrs_float_compare_uncond : (bits(2), bits(5), bits(5), bits(2)) -> unit
@@ -14321,7 +14321,7 @@ function execute_aarch64_instrs_float_convert_int (d, fltsize, intsize, n, op, p
           assert(constraint('fsize == 64));
           assert(constraint('intsize == 32));
           (intval, z) = FPToFixedJS(fltval, fpcr, true, intsize);
-          (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = (0b0 @ z) @ 0b00;
+          (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = (0b0 @ z) @ 0b00;
           X_set(d, intsize) = intval
       }
     }
@@ -22413,10 +22413,10 @@ val execute_aarch64_instrs_memory_gcs_general_register : forall ('is_gcssttr : B
 function execute_aarch64_instrs_memory_gcs_general_register (is_gcssttr, n, t) = {
     address : bits(64) = undefined;
     let effective_el : bits(2) = if not_bool(is_gcssttr) | AArch64_IsUnprivAccessPriv() then
-      PSTATE.EL
+      PSTATE_EL
     else
       EL0;
-    if effective_el == PSTATE.EL then {
+    if effective_el == PSTATE_EL then {
         CheckGCSSTREnabled()
     };
     let accdesc : AccessDescriptor = CreateAccDescGCS(effective_el, MemOp_STORE);
@@ -22530,7 +22530,7 @@ function clause __DecodeA64_BranchExcSys ((pc, ([bitone, bitone, bitzero, bitone
 val execute_aarch64_instrs_system_exceptions_runtime_hvc : bits(16) -> unit
 
 function execute_aarch64_instrs_system_exceptions_runtime_hvc imm = {
-    if (not_bool(HaveEL(EL2)) | PSTATE.EL == EL0) | PSTATE.EL == EL1 & not_bool(EL2Enabled()) then {
+    if (not_bool(HaveEL(EL2)) | PSTATE_EL == EL0) | PSTATE_EL == EL1 & not_bool(EL2Enabled()) then {
         throw(Error_Undefined())
     };
     let hvc_enable : bits(1) = if HaveEL(EL3) then SCR_EL3[HCE] else
@@ -22723,7 +22723,7 @@ function execute_aarch64_instrs_integer_tags_mcinsertrandomtag (d, m, n) = {
     let exclude_reg : bits(64) = X_read(m, 64);
     let exclude : bits(16) = exclude_reg[15 .. 0] | GCR_EL1[Exclude];
     rtag : bits(4) = undefined;
-    if AArch64_AllocationTagAccessIsEnabled(PSTATE.EL) then {
+    if AArch64_AllocationTagAccessIsEnabled(PSTATE_EL) then {
         if GCR_EL1[RRND] == 0b1 then {
             if IsOnes(exclude) then {
                 rtag = 0b0000
@@ -30616,7 +30616,7 @@ val execute_aarch64_instrs_integer_tags_mcgettagarray : forall 'n 't,
   (int('n), int('t)) -> unit
 
 function execute_aarch64_instrs_integer_tags_mcgettagarray (n, t) = {
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     };
     data : bits(64) = Zeros(64);
@@ -30857,7 +30857,7 @@ function execute_aarch64_instrs_memory_pair_general_no_alloc (datasize, memop, n
     data1 : bits('datasize) = undefined;
     data2 : bits('datasize) = undefined;
     let 'dbytes = DIV(datasize, 8);
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     let accdesc : AccessDescriptor = CreateAccDescGPR(memop, nontemporal, privileged, tagchecked);
     if n == 31 then {
         CheckSPAlignment();
@@ -31536,7 +31536,7 @@ function execute_aarch64_instrs_memory_pair_general_post_idx (datasize, memop, n
     data1 : bits('datasize) = undefined;
     data2 : bits('datasize) = undefined;
     let 'dbytes = DIV(datasize, 8);
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     let accdesc : AccessDescriptor = CreateAccDescGPR(memop, nontemporal, privileged, tagchecked);
     if n == 31 then {
         CheckSPAlignment();
@@ -32655,7 +32655,7 @@ val execute_aarch64_instrs_memory_literal_general : forall ('is_signed : Bool) (
 function execute_aarch64_instrs_memory_literal_general (memop, nontemporal, offset, is_signed, size, t, tagchecked) = {
     let address : bits(64) = PC_read() + offset;
     data : bits('size * 8) = undefined;
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     let accdesc : AccessDescriptor = CreateAccDescGPR(memop, nontemporal, privileged, tagchecked);
     match memop {
       MemOp_LOAD => {
@@ -32794,7 +32794,7 @@ val execute_aarch64_instrs_memory_literal_simdfp : forall ('nontemporal : Bool) 
 
 function execute_aarch64_instrs_memory_literal_simdfp (nontemporal, offset, size, t, tagchecked) = {
     let address : bits(64) = PC_read() + offset;
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     CheckFPEnabled64();
     let accdesc : AccessDescriptor = CreateAccDescASIMD(MemOp_LOAD, nontemporal, tagchecked);
     let data : bits('size * 8) = Mem_read(address, size, accdesc);
@@ -32846,7 +32846,7 @@ val execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx : for
 function execute_aarch64_instrs_memory_single_general_immediate_signed_post_idx (datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback) = {
     address : bits(64) = undefined;
     data : bits('datasize) = undefined;
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     let accdesc : AccessDescriptor = CreateAccDescGPR(memop, nontemporal, privileged, tagchecked);
     if n == 31 then {
         if memop != MemOp_PREFETCH then {
@@ -35241,7 +35241,7 @@ function execute_aarch64_instrs_memory_single_general_register (datasize, extend
     let offset : bits(64) = ExtendReg(m, extend_type, shift, 64);
     address : bits(64) = undefined;
     data : bits('datasize) = undefined;
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     let accdesc : AccessDescriptor = CreateAccDescGPR(memop, nontemporal, privileged, tagchecked);
     if n == 31 then {
         if memop != MemOp_PREFETCH then {
@@ -36407,7 +36407,7 @@ val execute_aarch64_instrs_memory_single_general_immediate_signed_pac : forall '
 function execute_aarch64_instrs_memory_single_general_immediate_signed_pac (memop, n, nontemporal, offset, t, tagchecked, use_key_a, wback__arg) = {
     wback : bool = wback__arg;
     address : bits(64) = undefined;
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     wb_unknown : bool = false;
     let auth_then_branch : bool = true;
     let accdesc : AccessDescriptor = CreateAccDescGPR(memop, nontemporal, privileged, tagchecked);
@@ -37525,7 +37525,7 @@ val execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal 
 function execute_aarch64_instrs_memory_single_general_immediate_signed_offset_normal (datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback) = {
     address : bits(64) = undefined;
     data : bits('datasize) = undefined;
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     let accdesc : AccessDescriptor = CreateAccDescGPR(memop, nontemporal, privileged, tagchecked);
     if n == 31 then {
         if memop != MemOp_PREFETCH then {
@@ -39032,40 +39032,40 @@ val execute_aarch64_instrs_system_register_cpsr : (PSTATEField, bits(4)) -> unit
 function execute_aarch64_instrs_system_register_cpsr (field, operand) = {
     match field {
       PSTATEField_SSBS => {
-          PSTATE.SSBS = [operand[0]]
+          PSTATE_SSBS = [operand[0]]
       },
       PSTATEField_SP => {
-          PSTATE.SP = [operand[0]]
+          PSTATE_SP = [operand[0]]
       },
       PSTATEField_DAIFSet => {
-          PSTATE.D = PSTATE.D | [operand[3]];
-          PSTATE.A = PSTATE.A | [operand[2]];
-          PSTATE.I = PSTATE.I | [operand[1]];
-          PSTATE.F = PSTATE.F | [operand[0]]
+          PSTATE_D = PSTATE_D | [operand[3]];
+          PSTATE_A = PSTATE_A | [operand[2]];
+          PSTATE_I = PSTATE_I | [operand[1]];
+          PSTATE_F = PSTATE_F | [operand[0]]
       },
       PSTATEField_DAIFClr => {
-          PSTATE.D = PSTATE.D & not_vec([operand[3]]);
-          PSTATE.A = PSTATE.A & not_vec([operand[2]]);
-          PSTATE.I = PSTATE.I & not_vec([operand[1]]);
-          PSTATE.F = PSTATE.F & not_vec([operand[0]])
+          PSTATE_D = PSTATE_D & not_vec([operand[3]]);
+          PSTATE_A = PSTATE_A & not_vec([operand[2]]);
+          PSTATE_I = PSTATE_I & not_vec([operand[1]]);
+          PSTATE_F = PSTATE_F & not_vec([operand[0]])
       },
       PSTATEField_PAN => {
-          PSTATE.PAN = [operand[0]]
+          PSTATE_PAN = [operand[0]]
       },
       PSTATEField_UAO => {
-          PSTATE.UAO = [operand[0]]
+          PSTATE_UAO = [operand[0]]
       },
       PSTATEField_DIT => {
-          PSTATE.DIT = [operand[0]]
+          PSTATE_DIT = [operand[0]]
       },
       PSTATEField_TCO => {
-          PSTATE.TCO = [operand[0]]
+          PSTATE_TCO = [operand[0]]
       },
       PSTATEField_ALLINT => {
-          if ((PSTATE.EL == EL1 & IsHCRXEL2Enabled()) & HCRX_EL2[TALLINT] == 0b1) & [operand[0]] == 0b1 then {
+          if ((PSTATE_EL == EL1 & IsHCRXEL2Enabled()) & HCRX_EL2[TALLINT] == 0b1) & [operand[0]] == 0b1 then {
               AArch64_SystemAccessTrap(EL2, UInt(0x18))
           };
-          PSTATE.ALLINT = [operand[0]]
+          PSTATE_ALLINT = [operand[0]]
       },
       PSTATEField_SVCRSM => {
           CheckSMEAccess();
@@ -39081,7 +39081,7 @@ function execute_aarch64_instrs_system_register_cpsr (field, operand) = {
           SetPSTATE_ZA([operand[0]])
       },
       PSTATEField_PM => {
-          PSTATE.PM = [operand[0]]
+          PSTATE_PM = [operand[0]]
       }
     }
 }
@@ -39129,7 +39129,7 @@ function decode_msr_imm_aarch64_instrs_system_register_cpsr (op2, CRm, op1) = {
       }
     };
     let min_EL = min_EL;
-    if UInt(PSTATE.EL) < UInt(min_EL) | need_secure & CurrentSecurityState() != SS_Secure then {
+    if UInt(PSTATE_EL) < UInt(min_EL) | need_secure & CurrentSecurityState() != SS_Secure then {
         throw(Error_Undefined())
     };
     let operand : bits(4) = CRm;
@@ -39222,7 +39222,7 @@ function decode_msr_imm_aarch64_instrs_system_register_cpsr (op2, CRm, op1) = {
           throw(Error_Undefined())
       }
     };
-    if PSTATE.EL == EL0 & (field == PSTATEField_DAIFSet | field == PSTATEField_DAIFClr) then {
+    if PSTATE_EL == EL0 & (field == PSTATEField_DAIFSet | field == PSTATEField_DAIFClr) then {
         if IsInHost() | SCTLR_EL1[UMA] == 0b0 then {
             if EL2Enabled() & HCR_EL2[TGE] == 0b1 then {
                 AArch64_SystemAccessTrap(EL2, UInt(0x18))
@@ -39817,7 +39817,7 @@ val execute_aarch64_instrs_memory_single_general_immediate_unsigned : forall 'da
 function execute_aarch64_instrs_memory_single_general_immediate_unsigned (datasize, memop, n, nontemporal, offset, postindex, regsize, rt_unknown, is_signed, t, tagchecked, wb_unknown, wback) = {
     address : bits(64) = undefined;
     data : bits('datasize) = undefined;
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     let accdesc : AccessDescriptor = CreateAccDescGPR(memop, nontemporal, privileged, tagchecked);
     if n == 31 then {
         if memop != MemOp_PREFETCH then {
@@ -40073,7 +40073,7 @@ val execute_aarch64_instrs_memory_rcw_cas : forall ('acquire : Bool) 'n ('releas
   (bool('acquire), int('n), bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcw_cas (acquire, n, release, s, soft, t, tagchecked) = {
-    if IsD128Enabled(PSTATE.EL) then {
+    if IsD128Enabled(PSTATE_EL) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40089,7 +40089,7 @@ function execute_aarch64_instrs_memory_rcw_cas (acquire, n, release, s, soft, t,
         address = X_read(n, 64)
     };
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     X_set(s, 64) = readdata
 }
 
@@ -40125,7 +40125,7 @@ val execute_aarch64_instrs_memory_rcw_cas_128 : forall ('acquire : Bool) 'n ('re
   (bool('acquire), int('n), bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcw_cas_128 (acquire, n, release, s, soft, t, tagchecked) = {
-    if not_bool(IsD128Enabled(PSTATE.EL)) then {
+    if not_bool(IsD128Enabled(PSTATE_EL)) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40147,7 +40147,7 @@ function execute_aarch64_instrs_memory_rcw_cas_128 (acquire, n, release, s, soft
         address = X_read(n, 64)
     };
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     if BigEndian(accdesc.acctype) then {
         X_set(s, 64) = readdata[127 .. 64];
         X_set(s + 1, 64) = readdata[63 .. 0]
@@ -40195,7 +40195,7 @@ val execute_aarch64_instrs_memory_rcw_ld_rcwclr : forall ('acquire : Bool) 'n ('
   (bool('acquire), int('n), MemAtomicOp, bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcw_ld_rcwclr (acquire, n, op, release, s, soft, t, tagchecked) = {
-    if IsD128Enabled(PSTATE.EL) then {
+    if IsD128Enabled(PSTATE_EL) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40211,7 +40211,7 @@ function execute_aarch64_instrs_memory_rcw_ld_rcwclr (acquire, n, op, release, s
     };
     let compdata : bits(64) = __UNKNOWN_bits(64);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     X_set(t, 64) = readdata
 }
 
@@ -40251,7 +40251,7 @@ val execute_aarch64_instrs_memory_rcw_ld_128_rcwclrp : forall ('acquire : Bool) 
   (bool('acquire), int('n), MemAtomicOp, bool('release), bool('soft), int('t), int('t2), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcw_ld_128_rcwclrp (acquire, n, op, release, soft, t, t2, tagchecked) = {
-    if not_bool(IsD128Enabled(PSTATE.EL)) then {
+    if not_bool(IsD128Enabled(PSTATE_EL)) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40272,7 +40272,7 @@ function execute_aarch64_instrs_memory_rcw_ld_128_rcwclrp (acquire, n, op, relea
       value2_name @ value1_name;
     let compdata : bits(128) = __UNKNOWN_bits(128);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     if BigEndian(accdesc.acctype) then {
         X_set(t, 64) = readdata[127 .. 64];
         X_set(t2, 64) = readdata[63 .. 0]
@@ -40324,7 +40324,7 @@ val execute_aarch64_instrs_memory_rcws_cas : forall ('acquire : Bool) 'n ('relea
   (bool('acquire), int('n), bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcws_cas (acquire, n, release, s, soft, t, tagchecked) = {
-    if IsD128Enabled(PSTATE.EL) then {
+    if IsD128Enabled(PSTATE_EL) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40340,7 +40340,7 @@ function execute_aarch64_instrs_memory_rcws_cas (acquire, n, release, s, soft, t
         address = X_read(n, 64)
     };
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     X_set(s, 64) = readdata
 }
 
@@ -40376,7 +40376,7 @@ val execute_aarch64_instrs_memory_rcws_cas_128 : forall ('acquire : Bool) 'n ('r
   (bool('acquire), int('n), bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcws_cas_128 (acquire, n, release, s, soft, t, tagchecked) = {
-    if not_bool(IsD128Enabled(PSTATE.EL)) then {
+    if not_bool(IsD128Enabled(PSTATE_EL)) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40398,7 +40398,7 @@ function execute_aarch64_instrs_memory_rcws_cas_128 (acquire, n, release, s, sof
         address = X_read(n, 64)
     };
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     if BigEndian(accdesc.acctype) then {
         X_set(s, 64) = readdata[127 .. 64];
         X_set(s + 1, 64) = readdata[63 .. 0]
@@ -40446,7 +40446,7 @@ val execute_aarch64_instrs_memory_rcws_ld_rcwsclr : forall ('acquire : Bool) 'n 
   (bool('acquire), int('n), MemAtomicOp, bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcws_ld_rcwsclr (acquire, n, op, release, s, soft, t, tagchecked) = {
-    if IsD128Enabled(PSTATE.EL) then {
+    if IsD128Enabled(PSTATE_EL) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40462,7 +40462,7 @@ function execute_aarch64_instrs_memory_rcws_ld_rcwsclr (acquire, n, op, release,
     };
     let compdata : bits(64) = __UNKNOWN_bits(64);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     X_set(t, 64) = readdata
 }
 
@@ -40502,7 +40502,7 @@ val execute_aarch64_instrs_memory_rcws_ld_128_rcwsclrp : forall ('acquire : Bool
   (bool('acquire), int('n), MemAtomicOp, bool('release), bool('soft), int('t), int('t2), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcws_ld_128_rcwsclrp (acquire, n, op, release, soft, t, t2, tagchecked) = {
-    if not_bool(IsD128Enabled(PSTATE.EL)) then {
+    if not_bool(IsD128Enabled(PSTATE_EL)) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40523,7 +40523,7 @@ function execute_aarch64_instrs_memory_rcws_ld_128_rcwsclrp (acquire, n, op, rel
       value2_name @ value1_name;
     let compdata : bits(128) = __UNKNOWN_bits(128);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     if BigEndian(accdesc.acctype) then {
         X_set(t, 64) = readdata[127 .. 64];
         X_set(t2, 64) = readdata[63 .. 0]
@@ -40575,7 +40575,7 @@ val execute_aarch64_instrs_memory_rcw_ld_rcwset : forall ('acquire : Bool) 'n ('
   (bool('acquire), int('n), MemAtomicOp, bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcw_ld_rcwset (acquire, n, op, release, s, soft, t, tagchecked) = {
-    if IsD128Enabled(PSTATE.EL) then {
+    if IsD128Enabled(PSTATE_EL) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40591,7 +40591,7 @@ function execute_aarch64_instrs_memory_rcw_ld_rcwset (acquire, n, op, release, s
     };
     let compdata : bits(64) = __UNKNOWN_bits(64);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     X_set(t, 64) = readdata
 }
 
@@ -40631,7 +40631,7 @@ val execute_aarch64_instrs_memory_rcw_ld_128_rcwsetp : forall ('acquire : Bool) 
   (bool('acquire), int('n), MemAtomicOp, bool('release), bool('soft), int('t), int('t2), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcw_ld_128_rcwsetp (acquire, n, op, release, soft, t, t2, tagchecked) = {
-    if not_bool(IsD128Enabled(PSTATE.EL)) then {
+    if not_bool(IsD128Enabled(PSTATE_EL)) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40652,7 +40652,7 @@ function execute_aarch64_instrs_memory_rcw_ld_128_rcwsetp (acquire, n, op, relea
       value2_name @ value1_name;
     let compdata : bits(128) = __UNKNOWN_bits(128);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     if BigEndian(accdesc.acctype) then {
         X_set(t, 64) = readdata[127 .. 64];
         X_set(t2, 64) = readdata[63 .. 0]
@@ -40704,7 +40704,7 @@ val execute_aarch64_instrs_memory_rcws_ld_rcwsset : forall ('acquire : Bool) 'n 
   (bool('acquire), int('n), MemAtomicOp, bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcws_ld_rcwsset (acquire, n, op, release, s, soft, t, tagchecked) = {
-    if IsD128Enabled(PSTATE.EL) then {
+    if IsD128Enabled(PSTATE_EL) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40720,7 +40720,7 @@ function execute_aarch64_instrs_memory_rcws_ld_rcwsset (acquire, n, op, release,
     };
     let compdata : bits(64) = __UNKNOWN_bits(64);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     X_set(t, 64) = readdata
 }
 
@@ -40760,7 +40760,7 @@ val execute_aarch64_instrs_memory_rcws_ld_128_rcwssetp : forall ('acquire : Bool
   (bool('acquire), int('n), MemAtomicOp, bool('release), bool('soft), int('t), int('t2), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcws_ld_128_rcwssetp (acquire, n, op, release, soft, t, t2, tagchecked) = {
-    if not_bool(IsD128Enabled(PSTATE.EL)) then {
+    if not_bool(IsD128Enabled(PSTATE_EL)) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40781,7 +40781,7 @@ function execute_aarch64_instrs_memory_rcws_ld_128_rcwssetp (acquire, n, op, rel
       value2_name @ value1_name;
     let compdata : bits(128) = __UNKNOWN_bits(128);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     if BigEndian(accdesc.acctype) then {
         X_set(t, 64) = readdata[127 .. 64];
         X_set(t2, 64) = readdata[63 .. 0]
@@ -40833,7 +40833,7 @@ val execute_aarch64_instrs_memory_rcws_swp : forall ('acquire : Bool) 'n ('relea
   (bool('acquire), int('n), bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcws_swp (acquire, n, release, s, soft, t, tagchecked) = {
-    if IsD128Enabled(PSTATE.EL) then {
+    if IsD128Enabled(PSTATE_EL) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40849,7 +40849,7 @@ function execute_aarch64_instrs_memory_rcws_swp (acquire, n, release, s, soft, t
     };
     let compdata : bits(64) = __UNKNOWN_bits(64);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     X_set(t, 64) = readdata
 }
 
@@ -40887,7 +40887,7 @@ val execute_aarch64_instrs_memory_rcws_swp_128 : forall ('acquire : Bool) 'n ('r
   (bool('acquire), int('n), bool('release), bool('soft), int('t), int('t2), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcws_swp_128 (acquire, n, release, soft, t, t2, tagchecked) = {
-    if not_bool(IsD128Enabled(PSTATE.EL)) then {
+    if not_bool(IsD128Enabled(PSTATE_EL)) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40908,7 +40908,7 @@ function execute_aarch64_instrs_memory_rcws_swp_128 (acquire, n, release, soft, 
       value2_name @ value1_name;
     let compdata : bits(128) = __UNKNOWN_bits(128);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     if BigEndian(accdesc.acctype) then {
         X_set(t, 64) = readdata[127 .. 64];
         X_set(t2, 64) = readdata[63 .. 0]
@@ -40958,7 +40958,7 @@ val execute_aarch64_instrs_memory_rcw_swp : forall ('acquire : Bool) 'n ('releas
   (bool('acquire), int('n), bool('release), int('s), bool('soft), int('t), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcw_swp (acquire, n, release, s, soft, t, tagchecked) = {
-    if IsD128Enabled(PSTATE.EL) then {
+    if IsD128Enabled(PSTATE_EL) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -40974,7 +40974,7 @@ function execute_aarch64_instrs_memory_rcw_swp (acquire, n, release, s, soft, t,
     };
     let compdata : bits(64) = __UNKNOWN_bits(64);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     X_set(t, 64) = readdata
 }
 
@@ -41012,7 +41012,7 @@ val execute_aarch64_instrs_memory_rcw_swp_128 : forall ('acquire : Bool) 'n ('re
   (bool('acquire), int('n), bool('release), bool('soft), int('t), int('t2), bool('tagchecked)) -> unit
 
 function execute_aarch64_instrs_memory_rcw_swp_128 (acquire, n, release, soft, t, t2, tagchecked) = {
-    if not_bool(IsD128Enabled(PSTATE.EL)) then {
+    if not_bool(IsD128Enabled(PSTATE_EL)) then {
         throw(Error_Undefined())
     };
     address : bits(64) = undefined;
@@ -41033,7 +41033,7 @@ function execute_aarch64_instrs_memory_rcw_swp_128 (acquire, n, release, soft, t
       value2_name @ value1_name;
     let compdata : bits(128) = __UNKNOWN_bits(128);
     (nzcv, readdata) = MemAtomicRCW(address, compdata, newdata, accdesc);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv;
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv;
     if BigEndian(accdesc.acctype) then {
         X_set(t, 64) = readdata[127 .. 64];
         X_set(t2, 64) = readdata[63 .. 0]
@@ -41375,16 +41375,16 @@ function execute_aarch64_instrs_integer_flags_rmif (lsb, mask, n) = {
     let tmpreg : bits(64) = X_read(n, 64);
     let tmp : bits(4) = (tmpreg @ tmpreg)[lsb + 3 .. lsb];
     if [mask[3]] == 0b1 then {
-        PSTATE.N = [tmp[3]]
+        PSTATE_N = [tmp[3]]
     };
     if [mask[2]] == 0b1 then {
-        PSTATE.Z = [tmp[2]]
+        PSTATE_Z = [tmp[2]]
     };
     if [mask[1]] == 0b1 then {
-        PSTATE.C = [tmp[1]]
+        PSTATE_C = [tmp[1]]
     };
     if [mask[0]] == 0b1 then {
-        PSTATE.V = [tmp[0]]
+        PSTATE_V = [tmp[0]]
     };
     ()
 }
@@ -43005,7 +43005,7 @@ function execute_aarch64_instrs_memory_mcpymset_set (d, n, options_name, s, stag
     toaddress : bits(64) = X_read(d, 64);
     setsize : bits(64) = X_read(n, 64);
     let data : bits(8) = X_read(s, 8);
-    nzcv : bits(4) = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
+    nzcv : bits(4) = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
     stagesetsize : bits(64) = undefined;
     let is_setg : bool = false;
     B : int = undefined;
@@ -43013,7 +43013,7 @@ function execute_aarch64_instrs_memory_mcpymset_set (d, n, options_name, s, stag
     let privileged : bool = if [options_name[0]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let nontemporal : bool = [options_name[1]] == 0b1;
     let accdesc : AccessDescriptor = CreateAccDescMOPS(MemOp_STORE, privileged, nontemporal);
     if stage == MOPSStage_Prologue then {
@@ -43114,7 +43114,7 @@ function execute_aarch64_instrs_memory_mcpymset_set (d, n, options_name, s, stag
     if stage == MOPSStage_Prologue then {
         X_set(n, 64) = setsize;
         X_set(d, 64) = toaddress;
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -43350,9 +43350,9 @@ val execute_aarch64_instrs_integer_flags_setf : forall 'msb 'n,
 function execute_aarch64_instrs_integer_flags_setf (msb, n) = {
     PCNormalStep();
     let tmpreg : bits(32) = X_read(n, 32);
-    PSTATE.N = [tmpreg[msb]];
-    PSTATE.Z = if tmpreg[msb .. 0] == Zeros(msb + 1) then 0b1 else 0b0;
-    PSTATE.V = EOR([tmpreg[msb + 1]], [tmpreg[msb]])
+    PSTATE_N = [tmpreg[msb]];
+    PSTATE_Z = if tmpreg[msb .. 0] == Zeros(msb + 1) then 0b1 else 0b0;
+    PSTATE_V = EOR([tmpreg[msb + 1]], [tmpreg[msb]])
 }
 
 val decode_setf_aarch64_instrs_integer_flags_setf : (bits(5), bits(1), bits(1)) -> unit
@@ -43382,7 +43382,7 @@ function execute_aarch64_instrs_memory_mcpymset_setg (d, n, options_name, s, sta
     toaddress : bits(64) = X_read(d, 64);
     setsize : bits(64) = X_read(n, 64);
     let data : bits(8) = X_read(s, 8);
-    nzcv : bits(4) = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
+    nzcv : bits(4) = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
     stagesetsize : bits(64) = undefined;
     let is_setg : bool = true;
     B : int = undefined;
@@ -43390,7 +43390,7 @@ function execute_aarch64_instrs_memory_mcpymset_setg (d, n, options_name, s, sta
     let privileged : bool = if [options_name[0]] == 0b1 then
       AArch64_IsUnprivAccessPriv()
     else
-      PSTATE.EL != EL0;
+      PSTATE_EL != EL0;
     let nontemporal : bool = [options_name[1]] == 0b1;
     let accdesc : AccessDescriptor = CreateAccDescSTGMOPS(privileged, nontemporal);
     if stage == MOPSStage_Prologue then {
@@ -43525,7 +43525,7 @@ function execute_aarch64_instrs_memory_mcpymset_setg (d, n, options_name, s, sta
     if stage == MOPSStage_Prologue then {
         X_set(n, 64) = setsize;
         X_set(d, 64) = toaddress;
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -50848,7 +50848,7 @@ val execute_aarch64_instrs_integer_tags_mcsettagarray : forall 'n 't,
   (int('n), int('t)) -> unit
 
 function execute_aarch64_instrs_integer_tags_mcsettagarray (n, t) = {
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     };
     let data : bits(64) = X_read(t, 64);
@@ -51409,7 +51409,7 @@ val execute_aarch64_instrs_integer_tags_mcsettagandzeroarray : forall 'n 't,
   (int('n), int('t)) -> unit
 
 function execute_aarch64_instrs_integer_tags_mcsettagandzeroarray (n, t) = {
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     };
     let data : bits(64) = X_read(t, 64);
@@ -51460,7 +51460,7 @@ function execute_aarch64_instrs_integer_tags_mcsubtag (ADD, d, n, offset, tag_of
     let exclude : bits(16) = GCR_EL1[Exclude];
     result : bits(64) = undefined;
     rtag : bits(4) = undefined;
-    if AArch64_AllocationTagAccessIsEnabled(PSTATE.EL) then {
+    if AArch64_AllocationTagAccessIsEnabled(PSTATE_EL) then {
         rtag = AArch64_ChooseNonExcludedTag(start_tag, tag_offset, exclude)
     } else {
         rtag = 0b0000
@@ -51522,7 +51522,7 @@ function execute_aarch64_instrs_integer_arithmetic_pointer_mcsubtracttaggedaddre
     let operand2 : bits(64) = not_vec(operand2);
     (result, nzcv) = AddWithCarry(operand1, operand2, 0b1);
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     X_set(d, 64) = result
 }
@@ -51562,7 +51562,7 @@ function execute_aarch64_instrs_integer_arithmetic_pointer_mcsubtracttaggedaddre
     let operand2 : bits(64) = not_vec(operand2);
     (result, nzcv) = AddWithCarry(operand1, operand2, 0b1);
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     X_set(d, 64) = result
 }
@@ -52364,7 +52364,7 @@ function execute_aarch64_instrs_system_tme_tstart (VL, t) = {
     IsEL1Regime : bool = undefined;
     tme : bits(1) = undefined;
     tmt : bits(1) = undefined;
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           let IsEL1Regime : bool = S1TranslationRegime__1() == EL1;
           if IsEL1Regime then {
@@ -52399,7 +52399,7 @@ function execute_aarch64_instrs_system_tme_tstart (VL, t) = {
         TSTATE.nPC = NextInstrAddr(64);
         TSTATE.Rt = t;
         FailTransaction(TMFailure_TRIVIAL, false)
-    } else if HaveSME() & PSTATE.SM == 0b1 then {
+    } else if HaveSME() & PSTATE_SM == 0b1 then {
         FailTransaction(TMFailure_ERR, false)
     } else if TSTATE.depth == 255 then {
         FailTransaction(TMFailure_NEST, false)
@@ -52933,14 +52933,14 @@ val execute_aarch64_instrs_integer_flags_xaflag : unit -> unit
 
 function execute_aarch64_instrs_integer_flags_xaflag () = {
     PCNormalStep();
-    let n : bits(1) = not_vec(PSTATE.C) & not_vec(PSTATE.Z);
-    let z : bits(1) = PSTATE.Z & PSTATE.C;
-    let c : bits(1) = PSTATE.C | PSTATE.Z;
-    let v : bits(1) = not_vec(PSTATE.C) & PSTATE.Z;
-    PSTATE.N = n;
-    PSTATE.Z = z;
-    PSTATE.C = c;
-    PSTATE.V = v
+    let n : bits(1) = not_vec(PSTATE_C) & not_vec(PSTATE_Z);
+    let z : bits(1) = PSTATE_Z & PSTATE_C;
+    let c : bits(1) = PSTATE_C | PSTATE_Z;
+    let v : bits(1) = not_vec(PSTATE_C) & PSTATE_Z;
+    PSTATE_N = n;
+    PSTATE_Z = z;
+    PSTATE_C = c;
+    PSTATE_V = v
 }
 
 val decode_xaflag_aarch64_instrs_integer_flags_xaflag : bits(4) -> unit

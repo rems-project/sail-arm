@@ -51,8 +51,8 @@ function AArch64_PendingUnmaskedPhysicalInterrupts mask_in = {
     let fiq_pending : bits(1) = if fiq then 0b1 else 0b0;
     allintmask : bits(1) = undefined;
     if HaveFeatNMI() & SCTLR_read__1()[NMI] == 0b1 then {
-        allintmask = PSTATE.ALLINT | PSTATE.SP & SCTLR_read__1()[SPINTMASK];
-        if PSTATE.EL == EL0 | allintmask == 0b0 then {
+        allintmask = PSTATE_ALLINT | PSTATE_SP & SCTLR_read__1()[SPINTMASK];
+        if PSTATE_EL == EL0 | allintmask == 0b0 then {
             if irq_nmi then {
                 mask[1] = Bit(0b0)
             };
@@ -75,9 +75,9 @@ function AArch64_PendingUnmaskedPhysicalInterrupts mask_in = {
         } else {
             mask_override = HCR_EL2[AMO] @ (HCR_EL2[IMO] @ HCR_EL2[FMO])
         };
-        if PSTATE.EL == EL0 | PSTATE.EL == EL1 then {
+        if PSTATE_EL == EL0 | PSTATE_EL == EL1 then {
             mask = mask & not_vec(mask_override)
-        } else if PSTATE.EL == EL2 then {
+        } else if PSTATE_EL == EL2 then {
             if not_bool(ELUsingAArch32(EL2)) & HCR_EL2[TGE] == 0b0 then {
                 mask = mask | not_vec(mask_override)
             };
@@ -85,14 +85,14 @@ function AArch64_PendingUnmaskedPhysicalInterrupts mask_in = {
         } else ()
     };
     if HaveEL(EL3) then {
-        if PSTATE.EL != EL3 then {
+        if PSTATE_EL != EL3 then {
             mask = mask & not_vec(SCR_EL3[EA] @ (SCR_EL3[IRQ] @ SCR_EL3[FIQ]))
         } else {
             mask = mask | not_vec(SCR_EL3[EA] @ (SCR_EL3[IRQ] @ SCR_EL3[FIQ]))
         }
     };
-    if PSTATE.EL != EL0 & allintmask == 0b1 then {
-        if PSTATE.EL == EL1 then {
+    if PSTATE_EL != EL0 & allintmask == 0b1 then {
+        if PSTATE_EL == EL1 then {
             if HCR_EL2[FMO] == 0b0 & SCR_EL3[FIQ] == 0b0 then {
                 mask[0] = Bit(0b1)
             };
@@ -100,7 +100,7 @@ function AArch64_PendingUnmaskedPhysicalInterrupts mask_in = {
                 mask[1] = Bit(0b1)
             };
             ()
-        } else if PSTATE.EL == EL2 then {
+        } else if PSTATE_EL == EL2 then {
             if HCR_EL2[FMO] == 0b1 then {
                 mask[0] = Bit(0b1)
             };
@@ -126,11 +126,11 @@ function AArch64_PendingUnmaskedVirtualInterrupts mask_in = {
     allintmask : bits(1) = undefined;
     mask : bits(3) = mask_in;
     pending : bits(3) = undefined;
-    if ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & HCR_EL2[TGE] == 0b0 then {
+    if ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & HCR_EL2[TGE] == 0b0 then {
         pending = (HCR_EL2[VSE] @ (HCR_EL2[VI] @ HCR_EL2[VF])) & (HCR_EL2[AMO] @ (HCR_EL2[IMO] @ HCR_EL2[FMO]));
         if HaveFeatNMI() & SCTLR_read__1()[NMI] == 0b1 then {
-            let allintmask : bits(1) = PSTATE.ALLINT | PSTATE.SP & SCTLR_read__1()[SPINTMASK];
-            if IsHCRXEL2Enabled() & (PSTATE.EL == EL0 | allintmask == 0b0) then {
+            let allintmask : bits(1) = PSTATE_ALLINT | PSTATE_SP & SCTLR_read__1()[SPINTMASK];
+            if IsHCRXEL2Enabled() & (PSTATE_EL == EL0 | allintmask == 0b0) then {
                 if HCRX_EL2[VFNMI] == 0b1 then {
                     mask[0] = Bit(0b0)
                 };
@@ -139,7 +139,7 @@ function AArch64_PendingUnmaskedVirtualInterrupts mask_in = {
                 };
                 ()
             };
-            if PSTATE.EL == EL1 & allintmask == 0b1 then {
+            if PSTATE_EL == EL1 & allintmask == 0b1 then {
                 if HCR_EL2[FMO] == 0b1 then {
                     mask[0] = Bit(0b1)
                 };
@@ -163,7 +163,7 @@ function AArch32_PendingUnmaskedPhysicalInterrupts () = {
     irq : bool = undefined;
     mask_override : bits(3) = undefined;
     if HaveEL(EL3) & not_bool(ELUsingAArch32(EL3)) then {
-        return(AArch64_PendingUnmaskedPhysicalInterrupts(PSTATE.A @ (PSTATE.I @ PSTATE.F)))
+        return(AArch64_PendingUnmaskedPhysicalInterrupts(PSTATE_A @ (PSTATE_I @ PSTATE_F)))
     };
     let se_pending : bits(1) = if IsPhysicalSErrorPending() then 0b1 else 0b0;
     let (__tup_0 : bool, _) = IRQPending() in
@@ -177,14 +177,14 @@ function AArch32_PendingUnmaskedPhysicalInterrupts () = {
     let irq_pending : bits(1) = if irq then 0b1 else 0b0;
     let fiq_pending : bits(1) = if fiq then 0b1 else 0b0;
     let pending : bits(3) = (se_pending @ irq_pending) @ fiq_pending;
-    mask : bits(3) = PSTATE.A @ (PSTATE.I @ PSTATE.F);
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
+    mask : bits(3) = PSTATE_A @ (PSTATE_I @ PSTATE_F);
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
         let mask_override : bits(3) = if HCR_read()[TGE] == 0b1 then 0b111 else
           HCR_read()[AMO] @ (HCR_read()[IMO] @ HCR_read()[FMO]);
         mask = mask & not_vec(mask_override)
     };
     if HaveEL(EL3) & CurrentSecurityState() != SS_Secure then {
-        if PSTATE.EL != EL3 then {
+        if PSTATE_EL != EL3 then {
             if SCR[FIQ] == 0b1 & (SCR[FW] == 0b0 | HCR_read()[FMO] == 0b1) then {
                 mask[0] = Bit(0b0)
             };
@@ -204,11 +204,11 @@ function AArch32_PendingUnmaskedPhysicalInterrupts () = {
 
 function AArch32_PendingUnmaskedVirtualInterrupts () = {
     if HaveEL(EL2) & not_bool(ELUsingAArch32(EL2)) | HaveEL(EL3) & not_bool(ELUsingAArch32(EL3)) then {
-        return(AArch64_PendingUnmaskedVirtualInterrupts(PSTATE.A @ (PSTATE.I @ PSTATE.F)))
+        return(AArch64_PendingUnmaskedVirtualInterrupts(PSTATE_A @ (PSTATE_I @ PSTATE_F)))
     };
-    let mask : bits(3) = PSTATE.A @ (PSTATE.I @ PSTATE.F);
+    let mask : bits(3) = PSTATE_A @ (PSTATE_I @ PSTATE_F);
     pending : bits(3) = undefined;
-    if ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & HCR_read()[TGE] == 0b0 then {
+    if ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & HCR_read()[TGE] == 0b0 then {
         pending = (HCR_read()[VA] @ (HCR_read()[VI] @ HCR_read()[VF])) & (HCR_read()[AMO] @ (HCR_read()[IMO] @ HCR_read()[FMO]))
     } else {
         pending = 0b000
@@ -268,8 +268,8 @@ function TakePendingInterrupts interrupt_req = {
             AArch32_TakePhysicalSErrorException(interrupt_req.iesb_req)
         } else ()
     } else {
-        (vSE, vIRQ, vFIQ) = AArch64_PendingUnmaskedVirtualInterrupts(PSTATE.A @ (PSTATE.I @ PSTATE.F));
-        (SE, IRQ, FIQ) = AArch64_PendingUnmaskedPhysicalInterrupts(PSTATE.A @ (PSTATE.I @ PSTATE.F));
+        (vSE, vIRQ, vFIQ) = AArch64_PendingUnmaskedVirtualInterrupts(PSTATE_A @ (PSTATE_I @ PSTATE_F));
+        (SE, IRQ, FIQ) = AArch64_PendingUnmaskedPhysicalInterrupts(PSTATE_A @ (PSTATE_I @ PSTATE_F));
         if not_bool(interrupt_req.take_SE) then {
             SE = false
         };
@@ -360,7 +360,7 @@ function TakeUnmaskedPhysicalSErrorInterrupts iesb_req = {
             ThrowSError(iesb_req)
         } else ()
     } else {
-        let (SE, IRQ, FIQ) = AArch64_PendingUnmaskedPhysicalInterrupts(PSTATE.A @ (PSTATE.I @ PSTATE.F));
+        let (SE, IRQ, FIQ) = AArch64_PendingUnmaskedPhysicalInterrupts(PSTATE_A @ (PSTATE_I @ PSTATE_F));
         if SE then {
             ThrowSError(iesb_req)
         } else ()

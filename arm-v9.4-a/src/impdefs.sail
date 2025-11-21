@@ -70,7 +70,7 @@ function ImpDefBool x = {
     } else if x == "Has LRCPC3 support" then {
         return(true)
     } else if x == "accessed from EL0" then {
-        return(PSTATE.EL == EL0)
+        return(PSTATE_EL == EL0)
     } else if x == "Highest EL using AArch64" then {
         return(not_bool(__highest_el_aarch32))
     } else if x == "PE can reset into AArch64 state" then {

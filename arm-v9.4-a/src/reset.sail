@@ -1371,16 +1371,16 @@ function ResetControlRegisters cold = {
 }
 
 function AArch32_ResetControlRegisters cold_reset = {
-    PSTATE.SS = 0b0;
+    PSTATE_SS = 0b0;
     ResetControlRegisters(cold_reset);
     _TLBInvalidate()
 }
 
 function AArch64_ResetControlRegisters cold_reset = {
-    PSTATE.ZA = 0b0;
-    PSTATE.SM = 0b0;
-    PSTATE.ALLINT = 0b0;
-    PSTATE.EXLOCK = 0b0;
+    PSTATE_ZA = 0b0;
+    PSTATE_SM = 0b0;
+    PSTATE_ALLINT = 0b0;
+    PSTATE_EXLOCK = 0b0;
     ResetControlRegisters(cold_reset);
     _TLBInvalidate()
 }

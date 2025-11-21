@@ -1528,42 +1528,38 @@ let EL1 : bits(2) = 0b01
 
 let EL0 : bits(2) = 0b00
 
-struct ProcState = {
-  N : bits(1),
-  Z : bits(1),
-  C : bits(1),
-  V : bits(1),
-  D : bits(1),
-  A : bits(1),
-  I : bits(1),
-  F : bits(1),
-  EXLOCK : bits(1),
-  PAN : bits(1),
-  UAO : bits(1),
-  DIT : bits(1),
-  TCO : bits(1),
-  PM : bits(1),
-  PPEND : bits(1),
-  BTYPE : bits(2),
-  ZA : bits(1),
-  SM : bits(1),
-  ALLINT : bits(1),
-  SS : bits(1),
-  IL : bits(1),
-  EL : bits(2),
-  nRW : bits(1),
-  SP : bits(1),
-  Q : bits(1),
-  GE : bits(4),
-  SSBS : bits(1),
-  IT : bits(8),
-  J : bits(1),
-  T : bits(1),
-  E : bits(1),
-  M : bits(5)
-}
-
-register PSTATE : ProcState
+register PSTATE_N : bits(1)
+register PSTATE_Z : bits(1)
+register PSTATE_C : bits(1)
+register PSTATE_V : bits(1)
+register PSTATE_D : bits(1)
+register PSTATE_A : bits(1)
+register PSTATE_I : bits(1)
+register PSTATE_F : bits(1)
+register PSTATE_EXLOCK : bits(1)
+register PSTATE_PAN : bits(1)
+register PSTATE_UAO : bits(1)
+register PSTATE_DIT : bits(1)
+register PSTATE_TCO : bits(1)
+register PSTATE_PM : bits(1)
+register PSTATE_PPEND : bits(1)
+register PSTATE_BTYPE : bits(2)
+register PSTATE_ZA : bits(1)
+register PSTATE_SM : bits(1)
+register PSTATE_ALLINT : bits(1)
+register PSTATE_SS : bits(1)
+register PSTATE_IL : bits(1)
+register PSTATE_EL : bits(2)
+register PSTATE_nRW : bits(1)
+register PSTATE_SP : bits(1)
+register PSTATE_Q : bits(1)
+register PSTATE_GE : bits(4)
+register PSTATE_SSBS : bits(1)
+register PSTATE_IT : bits(8)
+register PSTATE_J : bits(1)
+register PSTATE_T : bits(1)
+register PSTATE_E : bits(1)
+register PSTATE_M : bits(5)
 
 register ShouldAdvanceIT : bool
 
@@ -3442,8 +3438,8 @@ function ELStateUsingAArch32K (el, secure) = {
     let aarch32_below_el3 : bool = (HaveEL(EL3) & ((not_bool(secure) | not_bool(HaveSecureEL2Ext())) | SCR_EL3[EEL2] == 0b0)) & SCR_EL3[RW] == 0b0;
     let aarch32_at_el1 : bool = aarch32_below_el3 | ((HaveEL(EL2) & (not_bool(secure) | HaveSecureEL2Ext() & SCR_EL3[EEL2] == 0b1)) & not_bool(HaveVirtHostExt() & (HCR_EL2[E2H] @ HCR_EL2[TGE]) == 0b11)) & HCR_EL2[RW] == 0b0;
     if el == EL0 & not_bool(aarch32_at_el1) then {
-        if PSTATE.EL == EL0 then {
-            aarch32 = PSTATE.nRW == 0b1
+        if PSTATE_EL == EL0 then {
+            aarch32 = PSTATE_nRW == 0b1
         } else {
             known = false
         }
@@ -3992,7 +3988,7 @@ val AArch32_GetNumEventCountersAccessible : unit -> int
 function AArch32_GetNumEventCountersAccessible () = {
     n : int = undefined;
     let 'total_counters = GetNumEventCounters();
-    if (PSTATE.EL == EL1 | PSTATE.EL == EL0) & EL2Enabled() then {
+    if (PSTATE_EL == EL1 | PSTATE_EL == EL0) & EL2Enabled() then {
         n = UInt(if not_bool(ELUsingAArch32(EL2)) then MDCR_EL2[HPMN] else
           HDCR_read()[HPMN]);
         if n > total_counters | not_bool(HaveFeatHPMN0()) & n == 0 then {
@@ -4012,7 +4008,7 @@ val AArch64_GetNumEventCountersAccessible : unit -> int
 function AArch64_GetNumEventCountersAccessible () = {
     n : int = undefined;
     let 'total_counters = GetNumEventCounters();
-    if (PSTATE.EL == EL1 | PSTATE.EL == EL0) & EL2Enabled() then {
+    if (PSTATE_EL == EL1 | PSTATE_EL == EL0) & EL2Enabled() then {
         n = UInt(MDCR_EL2[HPMN]);
         if n > total_counters | not_bool(HaveFeatHPMN0()) & n == 0 then {
             let (_, __tup_1 : int) = ConstrainUnpredictableInteger(0, total_counters, Unpredictable_PMUEVENTCOUNTER);
@@ -4037,7 +4033,7 @@ val HaveAArch32 : unit -> bool
 val UsingAArch32 : unit -> bool
 
 function UsingAArch32 () = {
-    let aarch32 : bool = PSTATE.nRW == 0b1;
+    let aarch32 : bool = PSTATE_nRW == 0b1;
     if not_bool(HaveAArch32()) then {
         assert(not_bool(aarch32))
     };
@@ -4158,7 +4154,7 @@ function SecurityStateAtEL EL = {
 val CurrentSecurityState : unit -> SecurityState
 
 function CurrentSecurityState () = {
-    return(SecurityStateAtEL(PSTATE.EL))
+    return(SecurityStateAtEL(PSTATE_EL))
 }
 
 val ExternalInvasiveDebugEnabled : unit -> bool
@@ -4995,7 +4991,7 @@ function CountPMUEvents idx = {
         } else {
             prohibited = SDCR[SPME] == 0b0
         };
-        if prohibited & PSTATE.EL == EL0 then {
+        if prohibited & PSTATE_EL == EL0 then {
             if ELUsingAArch32(EL3) then {
                 prohibited = SDER_read()[SUNIDEN] == 0b0
             } else if ELUsingAArch32(EL1) then {
@@ -5004,10 +5000,10 @@ function CountPMUEvents idx = {
         };
         ()
     };
-    if ((not_bool(prohibited) & HavePMUv3p7()) & PSTATE.EL == EL3) & HaveAArch64() then {
+    if ((not_bool(prohibited) & HavePMUv3p7()) & PSTATE_EL == EL3) & HaveAArch64() then {
         prohibited = MDCR_EL3[MPMX] == 0b1 & (MDCR_EL3[SPME] == 0b0 | not_bool(resvd_for_el2))
     };
-    if ((not_bool(prohibited) & PSTATE.EL == EL2) & HaveHPMDExt()) & not_bool(resvd_for_el2) then {
+    if ((not_bool(prohibited) & PSTATE_EL == EL2) & HaveHPMDExt()) & not_bool(resvd_for_el2) then {
         let hpmd : bits(1) = if HaveAArch64() then MDCR_EL2[HPMD] else
           HDCR_read()[HPMD];
         prohibited = hpmd == 0b1
@@ -5041,7 +5037,7 @@ function CountPMUEvents idx = {
             };
             ()
         };
-        if PSTATE.EL == EL2 then {
+        if PSTATE_EL == EL2 then {
             let hccd : bits(1) = if HaveAArch64() then MDCR_EL2[HCCD] else
               HDCR_read()[HCCD];
             if hccd == 0b1 then {
@@ -5052,7 +5048,7 @@ function CountPMUEvents idx = {
         ()
     };
     if HavePMUv3p7() & idx == CYCLE_COUNTER_ID then {
-        if (PSTATE.EL == EL3 & HaveAArch64()) & MDCR_EL3[MCCD] == 0b1 then {
+        if (PSTATE_EL == EL3 & HaveAArch64()) & MDCR_EL3[MCCD] == 0b1 then {
             prohibited = true
         };
         ()
@@ -5090,7 +5086,7 @@ function CountPMUEvents idx = {
     let RLU : bits(1) = if HaveRME() then [filter[21]] else 0b0;
     let RLH : bits(1) = if HaveRME() then [filter[20]] else 0b0;
     let ss : SecurityState = CurrentSecurityState();
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           match ss {
             SS_NonSecure => {
@@ -5952,7 +5948,7 @@ function S1TranslationRegime el = {
 }
 
 function S1TranslationRegime__1 () = {
-    return(S1TranslationRegime(PSTATE.EL))
+    return(S1TranslationRegime(PSTATE_EL))
 }
 
 bitfield TCR_EL1_Type : bits(64) =
@@ -6156,7 +6152,7 @@ function AddrTop (address, IsInstr, el) = {
 val IsInHost : unit -> bool
 
 function IsInHost () = {
-    return(ELIsInHost(PSTATE.EL))
+    return(ELIsInHost(PSTATE_EL))
 }
 
 val AArch64_BranchAddr : (bits(64), bits(2)) -> bits(64)
@@ -6289,7 +6285,7 @@ val CurrentInstrSet : unit -> InstrSet
 function CurrentInstrSet () = {
     result : InstrSet = undefined;
     if UsingAArch32() then {
-        result = if PSTATE.T == 0b0 then InstrSet_A32 else InstrSet_T32
+        result = if PSTATE_T == 0b0 then InstrSet_A32 else InstrSet_T32
     } else {
         result = InstrSet_A64
     };
@@ -6414,7 +6410,7 @@ function R_read n = {
         let 'offset = if CurrentInstrSet() == InstrSet_A32 then 8 else 4;
         return(_PC[31 .. 0] + offset)
     } else {
-        return(Rmode_read(n, PSTATE.M))
+        return(Rmode_read(n, PSTATE_M))
     }
 }
 
@@ -6474,7 +6470,7 @@ val BRBEBranch : forall ('cond : Bool).
   (BranchType, bool('cond), bits(64)) -> unit
 
 function BRBEBranch (br_type, cond, target_address) = {
-    let branch_valid : bool = BranchRecordAllowed(PSTATE.EL);
+    let branch_valid : bool = BranchRecordAllowed(PSTATE_EL);
     if branch_valid & FilterBranchRecord(br_type, cond) then {
         branch_type : bits(6) = undefined;
         match br_type {
@@ -6505,7 +6501,7 @@ function BRBEBranch (br_type, cond, target_address) = {
         let transactional : bits(1) = if HaveTME() & TSTATE.depth > 0 then 0b1
         else
           0b0;
-        let el : bits(2) = PSTATE.EL;
+        let el : bits(2) = PSTATE_EL;
         let mispredict : bits(1) = if BRBEMispredictAllowed() & BranchMispredict() then
           0b1
         else
@@ -6669,7 +6665,7 @@ val StatisticalProfilingEnabled : unit -> bool
 val StatisticalProfilingEnabled__1 : bits(2) -> bool
 
 function StatisticalProfilingEnabled () = {
-    return(StatisticalProfilingEnabled__1(PSTATE.EL))
+    return(StatisticalProfilingEnabled__1(PSTATE_EL))
 }
 
 function StatisticalProfilingEnabled__1 el = {
@@ -6763,7 +6759,7 @@ function SPEBranch__1 (target, branch_type, conditional, taken_flag, is_isb) = {
         };
         SPESamplePreviousBranchAddress[63] = Bit(ns);
         SPESamplePreviousBranchAddress[60] = Bit(nse);
-        SPESamplePreviousBranchAddress[62 .. 61] = PSTATE.EL;
+        SPESamplePreviousBranchAddress[62 .. 61] = PSTATE_EL;
         SPESamplePreviousBranchAddressValid = true
     };
     if not_bool(StatisticalProfilingEnabled()) then {
@@ -6802,7 +6798,7 @@ function SPEBranch__1 (target, branch_type, conditional, taken_flag, is_isb) = {
             };
             SPESampleAddress[SPEAddrPosBranchTarget][63] = Bit(ns);
             SPESampleAddress[SPEAddrPosBranchTarget][60] = Bit(nse);
-            SPESampleAddress[SPEAddrPosBranchTarget][62 .. 61] = PSTATE.EL;
+            SPESampleAddress[SPEAddrPosBranchTarget][62 .. 61] = PSTATE_EL;
             SPESampleAddressValid[SPEAddrPosBranchTarget] = true
         };
         SPESampleEvents[6] = Bit(if not_bool(taken_flag) then 0b1 else 0b0)
@@ -6822,7 +6818,7 @@ function BranchTo (target, branch_type, branch_conditional) = {
         _PC = PC
     } else {
         assert('N == 64 & not_bool(UsingAArch32()));
-        let target_vaddress : bits(64) = AArch64_BranchAddr(target[63 .. 0], PSTATE.EL);
+        let target_vaddress : bits(64) = AArch64_BranchAddr(target[63 .. 0], PSTATE_EL);
         if HaveBRBExt() & (branch_type == BranchType_DIR | branch_type == BranchType_INDIR | branch_type == BranchType_DIRCALL | branch_type == BranchType_INDCALL | branch_type == BranchType_RET) then {
             BRBEBranch(branch_type, branch_conditional, target_vaddress)
         };
@@ -6921,15 +6917,15 @@ val CurrentNSVL_read : unit -> vector_length
 
 function CurrentNSVL_read () = {
     vl : int = undefined;
-    if PSTATE.EL == EL1 | PSTATE.EL == EL0 & not_bool(IsInHost()) then {
+    if PSTATE_EL == EL1 | PSTATE_EL == EL0 & not_bool(IsInHost()) then {
         vl = UInt(ZCR_EL1[LEN])
     };
-    if PSTATE.EL == EL2 | PSTATE.EL == EL0 & IsInHost() then {
+    if PSTATE_EL == EL2 | PSTATE_EL == EL0 & IsInHost() then {
         vl = UInt(ZCR_EL2[LEN])
-    } else if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
+    } else if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
         vl = Min(vl, UInt(ZCR_EL2[LEN]))
     } else ();
-    if PSTATE.EL == EL3 then {
+    if PSTATE_EL == EL3 then {
         vl = UInt(ZCR_EL3[LEN])
     } else if HaveEL(EL3) then {
         vl = Min(vl, UInt(ZCR_EL3[LEN]))
@@ -6987,15 +6983,15 @@ val CurrentSVL_read : unit -> vector_length
 
 function CurrentSVL_read () = {
     vl : int = undefined;
-    if PSTATE.EL == EL1 | PSTATE.EL == EL0 & not_bool(IsInHost()) then {
+    if PSTATE_EL == EL1 | PSTATE_EL == EL0 & not_bool(IsInHost()) then {
         vl = UInt(SMCR_EL1[LEN])
     };
-    if PSTATE.EL == EL2 | PSTATE.EL == EL0 & IsInHost() then {
+    if PSTATE_EL == EL2 | PSTATE_EL == EL0 & IsInHost() then {
         vl = UInt(SMCR_EL2[LEN])
-    } else if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
+    } else if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
         vl = Min(vl, UInt(SMCR_EL2[LEN]))
     } else ();
-    if PSTATE.EL == EL3 then {
+    if PSTATE_EL == EL3 then {
         vl = UInt(SMCR_EL3[LEN])
     } else if HaveEL(EL3) then {
         vl = Min(vl, UInt(SMCR_EL3[LEN]))
@@ -7015,7 +7011,7 @@ val CurrentVL_read : unit -> vector_length
 
 function CurrentVL_read () = {
     let 'SVL = CurrentSVL_read();
-    return(if HaveSME() & PSTATE.SM == 0b1 then SVL else CurrentNSVL_read())
+    return(if HaveSME() & PSTATE_SM == 0b1 then SVL else CurrentNSVL_read())
 }
 
 val FFR_set : forall 'width, 'width >= 0. (int('width), bits('width)) -> unit
@@ -7364,7 +7360,7 @@ function IsSMEEnabled el = {
 val IsSVEEnabled : bits(2) -> bool
 
 function IsSVEEnabled el = {
-    if HaveSME() & PSTATE.SM == 0b1 then {
+    if HaveSME() & PSTATE_SM == 0b1 then {
         return(IsSMEEnabled(el))
     } else if HaveSVE() then {
         return(IsOriginalSVEEnabled(el))
@@ -7408,10 +7404,10 @@ register SP_EL3 : SP_EL3_Type
 val SP_set : bits(64) -> unit
 
 function SP_set value_name = {
-    if PSTATE.SP == 0b0 then {
+    if PSTATE_SP == 0b0 then {
         SP_EL0 = value_name
     } else {
-        match PSTATE.EL {
+        match PSTATE_EL {
           ? if ? == EL0 => {
               SP_EL0 = value_name
           },
@@ -7438,7 +7434,7 @@ function V_set (n, width, value_name) = {
     let 'VL = CurrentVL_read();
     assert(n >= 0 & n <= 31);
     assert(width == 8 | width == 16 | width == 32 | width == 64 | width == 128);
-    let 'vlen = if IsSVEEnabled(PSTATE.EL) then VL else 128;
+    let 'vlen = if IsSVEEnabled(PSTATE_EL) then VL else 128;
     if ConstrainUnpredictableBool(Unpredictable_SVEZEROUPPER) then {
         _Z[n] = ZeroExtend(value_name, MAX_VL)
     } else {
@@ -7480,13 +7476,13 @@ function RestoreTransactionCheckpointParameterised (vl, pl) = {
     assert(((((((((((((((vl == 128 | vl == 256) | vl == 384) | vl == 512) | vl == 640) | vl == 768) | vl == 896) | vl == 1024) | vl == 1152) | vl == 1280) | vl == 1408) | vl == 1536) | vl == 1664) | vl == 1792) | vl == 1920) | vl == 2048);
     SP_set() = TSTATE.SP;
     ICC_PMR_EL1 = Mk_ICC_PMR_EL1_Type(TSTATE.ICC_PMR_EL1);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = TSTATE.nzcv;
-    (PSTATE.D @ PSTATE.A @ PSTATE.I @ PSTATE.F) = TSTATE.D @ (TSTATE.A @ (TSTATE.I @ TSTATE.F));
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = TSTATE.nzcv;
+    (PSTATE_D @ PSTATE_A @ PSTATE_I @ PSTATE_F) = TSTATE.D @ (TSTATE.A @ (TSTATE.I @ TSTATE.F));
     foreach (n from 0 to 30 by 1 in inc) {
         X_set(n, 64) = TSTATE.X[n]
     };
-    if IsFPEnabled(PSTATE.EL) then {
-        if IsSVEEnabled(PSTATE.EL) then {
+    if IsFPEnabled(PSTATE_EL) then {
+        if IsSVEEnabled(PSTATE_EL) then {
             foreach (n from 0 to 31 by 1 in inc) {
                 Z_set(n, vl) = TSTATE.Z[n][vl - 1 .. 0]
             };
@@ -7503,7 +7499,7 @@ function RestoreTransactionCheckpointParameterised (vl, pl) = {
         FPSR = Mk_FPSR_Type(TSTATE.FPSR)
     };
     if HaveGCS() then {
-        match PSTATE.EL {
+        match PSTATE_EL {
           ? if ? == EL0 => {
               GCSPR_EL0 = Mk_GCSPR_EL0_Type(TSTATE.GCSPR_ELx)
           },
@@ -7594,7 +7590,7 @@ function FailTransaction (cause, retry) = {
 
 function FailTransaction__1 (cause, retry, interrupt, reason) = {
     assert(not_bool(retry) | not_bool(interrupt));
-    if HaveBRBExt() & BranchRecordAllowed(PSTATE.EL) then {
+    if HaveBRBExt() & BranchRecordAllowed(PSTATE_EL) then {
         BRBFCR_EL1[LASTFAILED] = 0b1
     };
     DiscardTransactionalWrites();
@@ -7692,62 +7688,62 @@ function GetPSRFromPSTATE (targetELState, N) = {
         assert(N == 64)
     };
     spsr : bits('N) = Zeros(N);
-    spsr[31 .. 28] = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
+    spsr[31 .. 28] = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
     if HavePANExt() then {
-        spsr[22] = Bit(PSTATE.PAN)
+        spsr[22] = Bit(PSTATE_PAN)
     };
-    spsr[20] = Bit(PSTATE.IL);
-    if PSTATE.nRW == 0b1 then {
-        spsr[27] = Bit(PSTATE.Q);
-        spsr[26 .. 25] = PSTATE.IT[1 .. 0];
+    spsr[20] = Bit(PSTATE_IL);
+    if PSTATE_nRW == 0b1 then {
+        spsr[27] = Bit(PSTATE_Q);
+        spsr[26 .. 25] = PSTATE_IT[1 .. 0];
         if HaveSSBSExt() then {
-            spsr[23] = Bit(PSTATE.SSBS)
+            spsr[23] = Bit(PSTATE_SSBS)
         };
         if HaveDITExt() then {
             if targetELState == AArch32_NonDebugState then {
-                spsr[21] = Bit(PSTATE.DIT)
+                spsr[21] = Bit(PSTATE_DIT)
             } else {
-                spsr[24] = Bit(PSTATE.DIT)
+                spsr[24] = Bit(PSTATE_DIT)
             }
         };
         if targetELState == AArch64_NonDebugState | targetELState == DebugState then {
-            spsr[21] = Bit(PSTATE.SS)
+            spsr[21] = Bit(PSTATE_SS)
         };
-        spsr[19 .. 16] = PSTATE.GE;
-        spsr[15 .. 10] = PSTATE.IT[7 .. 2];
-        spsr[9] = Bit(PSTATE.E);
-        spsr[8 .. 6] = PSTATE.A @ (PSTATE.I @ PSTATE.F);
-        spsr[5] = Bit(PSTATE.T);
-        assert([PSTATE.M[4]] == PSTATE.nRW);
-        spsr[4 .. 0] = PSTATE.M
+        spsr[19 .. 16] = PSTATE_GE;
+        spsr[15 .. 10] = PSTATE_IT[7 .. 2];
+        spsr[9] = Bit(PSTATE_E);
+        spsr[8 .. 6] = PSTATE_A @ (PSTATE_I @ PSTATE_F);
+        spsr[5] = Bit(PSTATE_T);
+        assert([PSTATE_M[4]] == PSTATE_nRW);
+        spsr[4 .. 0] = PSTATE_M
     } else {
         if HaveMTEExt() then {
-            spsr[25] = Bit(PSTATE.TCO)
+            spsr[25] = Bit(PSTATE_TCO)
         };
         if HaveGCS() then {
             assert(constraint(34 < 'N));
-            spsr[34] = Bit(PSTATE.EXLOCK)
+            spsr[34] = Bit(PSTATE_EXLOCK)
         };
         if HaveDITExt() then {
-            spsr[24] = Bit(PSTATE.DIT)
+            spsr[24] = Bit(PSTATE_DIT)
         };
         if HaveUAOExt() then {
-            spsr[23] = Bit(PSTATE.UAO)
+            spsr[23] = Bit(PSTATE_UAO)
         };
-        spsr[21] = Bit(PSTATE.SS);
+        spsr[21] = Bit(PSTATE_SS);
         if HaveFeatNMI() then {
-            spsr[13] = Bit(PSTATE.ALLINT)
+            spsr[13] = Bit(PSTATE_ALLINT)
         };
         if HaveSSBSExt() then {
-            spsr[12] = Bit(PSTATE.SSBS)
+            spsr[12] = Bit(PSTATE_SSBS)
         };
         if HaveBTIExt() then {
-            spsr[11 .. 10] = PSTATE.BTYPE
+            spsr[11 .. 10] = PSTATE_BTYPE
         };
-        spsr[9 .. 6] = PSTATE.D @ (PSTATE.A @ (PSTATE.I @ PSTATE.F));
-        spsr[4] = Bit(PSTATE.nRW);
-        spsr[3 .. 2] = PSTATE.EL;
-        spsr[0] = Bit(PSTATE.SP)
+        spsr[9 .. 6] = PSTATE_D @ (PSTATE_A @ (PSTATE_I @ PSTATE_F));
+        spsr[4] = Bit(PSTATE_nRW);
+        spsr[3 .. 2] = PSTATE_EL;
+        spsr[0] = Bit(PSTATE_SP)
     };
     return(spsr)
 }
@@ -7792,7 +7788,7 @@ function UpdateEDSCRFields () = {
         };
         EDSCR_write() = [EDSCR_read() with RW = 0b1111]
     } else {
-        EDSCR_write() = [EDSCR_read() with EL = PSTATE.EL];
+        EDSCR_write() = [EDSCR_read() with EL = PSTATE_EL];
         let ss : SecurityState = CurrentSecurityState();
         if HaveRME() then {
             match ss {
@@ -7832,7 +7828,7 @@ function UpdateEDSCRFields () = {
         };
         RW : bits(4) = undefined;
         RW[1] = Bit(if ELUsingAArch32(EL1) then 0b0 else 0b1);
-        if PSTATE.EL != EL0 then {
+        if PSTATE_EL != EL0 then {
             RW[0] = Bit([RW[1]])
         } else {
             RW[0] = Bit(if UsingAArch32() then 0b0 else 0b1)
@@ -7892,7 +7888,7 @@ function Halt__1 (reason, is_async) = {
     EDSCR_write() = [EDSCR_read() with ITE = 0b1];
     EDSCR_write() = [EDSCR_read() with ITO = 0b0];
     if HaveRME() then {
-        if PSTATE.EL == EL3 then {
+        if PSTATE_EL == EL3 then {
             EDSCR_write() = [EDSCR_read() with SDD = 0b0]
         } else {
             EDSCR_write() = [EDSCR_read() with SDD = if ExternalRootInvasiveDebugEnabled() then
@@ -7912,13 +7908,13 @@ function Halt__1 (reason, is_async) = {
     };
     EDSCR_write() = [EDSCR_read() with MA = 0b0];
     if UsingAArch32() then {
-        (PSTATE.IT @ PSTATE.SS @ PSTATE.SSBS @ PSTATE.A @ PSTATE.I @ PSTATE.F @ PSTATE.T) = __UNKNOWN_bits(14)
+        (PSTATE_IT @ PSTATE_SS @ PSTATE_SSBS @ PSTATE_A @ PSTATE_I @ PSTATE_F @ PSTATE_T) = __UNKNOWN_bits(14)
     } else {
-        (PSTATE.SS @ PSTATE.SSBS @ PSTATE.D @ PSTATE.A @ PSTATE.I @ PSTATE.F) = __UNKNOWN_bits(6);
-        PSTATE.TCO = 0b1;
-        PSTATE.BTYPE = 0b00
+        (PSTATE_SS @ PSTATE_SSBS @ PSTATE_D @ PSTATE_A @ PSTATE_I @ PSTATE_F) = __UNKNOWN_bits(6);
+        PSTATE_TCO = 0b1;
+        PSTATE_BTYPE = 0b00
     };
-    PSTATE.IL = 0b0;
+    PSTATE_IL = 0b0;
     StopInstructionPrefetchAndEnableITR();
     EDSCR_write() = [EDSCR_read() with STATUS = reason];
     UpdateEDSCRFields();
@@ -8015,7 +8011,7 @@ val SetInterruptRequestLevel : (InterruptID, Signal) -> unit
 val ShouldBRBEFreeze : unit -> bool
 
 function ShouldBRBEFreeze () = {
-    if not_bool(BranchRecordAllowed(PSTATE.EL)) then {
+    if not_bool(BranchRecordAllowed(PSTATE_EL)) then {
         return(false)
     };
     let check_e : bool = false;
@@ -8232,7 +8228,7 @@ register GCSCR_EL3 : GCSCR_EL3_Type
 val GetCurrentEXLOCKEN : unit -> bool
 
 function GetCurrentEXLOCKEN () = {
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           Unreachable();
           return(undefined : bool)
@@ -8263,7 +8259,7 @@ function IllegalExceptionReturn spsr = {
     if not_bool(valid_name) then {
         return(true)
     };
-    if UInt(target) > UInt(PSTATE.EL) then {
+    if UInt(target) > UInt(PSTATE_EL) then {
         return(true)
     };
     let spsr_mode_is_aarch32 : bool = [spsr[4]] == 0b1;
@@ -8281,7 +8277,7 @@ function IllegalExceptionReturn spsr = {
         };
         ()
     };
-    if (((HaveGCS() & PSTATE.EXLOCK == 0b0) & PSTATE.EL == target) & GetCurrentEXLOCKEN()) & not_bool(Halted()) then {
+    if (((HaveGCS() & PSTATE_EXLOCK == 0b0) & PSTATE_EL == target) & GetCurrentEXLOCKEN()) & not_bool(Halted()) then {
         return(true)
     };
     return(false)
@@ -8294,10 +8290,10 @@ function AArch32_WriteMode mode = {
     valid_name : bool = undefined;
     (valid_name, el) = ELFromM32(mode);
     assert(valid_name);
-    PSTATE.M = mode;
-    PSTATE.EL = el;
-    PSTATE.nRW = 0b1;
-    PSTATE.SP = if mode == M32_User | mode == M32_System then 0b0 else 0b1;
+    PSTATE_M = mode;
+    PSTATE_EL = el;
+    PSTATE_nRW = 0b1;
+    PSTATE_SP = if mode == M32_User | mode == M32_System then 0b0 else 0b1;
     return()
 }
 
@@ -8490,14 +8486,14 @@ val AArch32_GenerateDebugExceptions : unit -> bool
 
 function AArch32_GenerateDebugExceptions () = {
     let ss : SecurityState = CurrentSecurityState();
-    return(AArch32_GenerateDebugExceptionsFrom(PSTATE.EL, ss))
+    return(AArch32_GenerateDebugExceptionsFrom(PSTATE_EL, ss))
 }
 
 val AArch64_GenerateDebugExceptions : unit -> bool
 
 function AArch64_GenerateDebugExceptions () = {
     let ss : SecurityState = CurrentSecurityState();
-    return(AArch64_GenerateDebugExceptionsFrom(PSTATE.EL, ss, PSTATE.D))
+    return(AArch64_GenerateDebugExceptionsFrom(PSTATE_EL, ss, PSTATE_D))
 }
 
 val Restarting : unit -> bool
@@ -8509,7 +8505,7 @@ function Restarting () = {
 val DebugExceptionReturnSS : forall 'N, 4 < 'N. bits('N) -> bits(1)
 
 function DebugExceptionReturnSS spsr = {
-    assert((Halted() | Restarting()) | PSTATE.EL != EL0);
+    assert((Halted() | Restarting()) | PSTATE_EL != EL0);
     enabled_at_source : bool = undefined;
     if Restarting() then {
         enabled_at_source = false
@@ -8521,7 +8517,7 @@ function DebugExceptionReturnSS spsr = {
     valid_name : bool = undefined;
     dest_el : bits(2) = undefined;
     if IllegalExceptionReturn(spsr) then {
-        dest_el = PSTATE.EL
+        dest_el = PSTATE_EL
     } else {
         (valid_name, dest_el) = ELFromSPSR(spsr);
         assert(valid_name)
@@ -8817,7 +8813,7 @@ val RestoredITBits : forall 'N, 26 < 'N. bits('N) -> bits(8)
 
 function RestoredITBits spsr = {
     let it : bits(8) = spsr[15 .. 10] @ spsr[26 .. 25];
-    if PSTATE.IL == 0b1 then {
+    if PSTATE_IL == 0b1 then {
         if ConstrainUnpredictableBool(Unpredictable_ILZEROIT) then {
             return(0b00000000)
         } else {
@@ -8827,7 +8823,7 @@ function RestoredITBits spsr = {
     if not_bool(IsZero(it[7 .. 4])) & IsZero(it[3 .. 0]) then {
         return(0b00000000)
     };
-    let itd : bits(1) = if PSTATE.EL == EL2 then HSCTLR_read()[ITD] else
+    let itd : bits(1) = if PSTATE_EL == EL2 then HSCTLR_read()[ITD] else
       SCTLR_read__2()[ITD];
     if [spsr[5]] == 0b0 & not_bool(IsZero(it)) | itd == 0b1 & not_bool(IsZero(it[2 .. 0])) then {
         return(0b00000000)
@@ -8849,93 +8845,93 @@ function SetPSTATEFromPSR spsr = {
 function SetPSTATEFromPSR__1 (spsr_in, illegal_psr_state) = {
     spsr : bits('N) = spsr_in;
     let from_aarch64 : bool = not_bool(UsingAArch32());
-    PSTATE.SS = DebugExceptionReturnSS(spsr);
+    PSTATE_SS = DebugExceptionReturnSS(spsr);
     ShouldAdvanceSS = false;
     if illegal_psr_state then {
-        PSTATE.IL = 0b1;
+        PSTATE_IL = 0b1;
         if HaveSSBSExt() then {
-            PSTATE.SSBS = __UNKNOWN_bit()
+            PSTATE_SSBS = __UNKNOWN_bit()
         };
         if HaveBTIExt() then {
-            PSTATE.BTYPE = __UNKNOWN_bits(2)
+            PSTATE_BTYPE = __UNKNOWN_bits(2)
         };
         if HaveUAOExt() then {
-            PSTATE.UAO = __UNKNOWN_bit()
+            PSTATE_UAO = __UNKNOWN_bit()
         };
         if HaveDITExt() then {
-            PSTATE.DIT = __UNKNOWN_bit()
+            PSTATE_DIT = __UNKNOWN_bit()
         };
         if HaveMTEExt() then {
-            PSTATE.TCO = __UNKNOWN_bit()
+            PSTATE_TCO = __UNKNOWN_bit()
         };
         ()
     } else {
         assert(constraint(20 < 'N));
-        PSTATE.IL = [spsr[20]];
+        PSTATE_IL = [spsr[20]];
         if [spsr[4]] == 0b1 then {
             AArch32_WriteMode(spsr[4 .. 0]);
             if HaveSSBSExt() then {
                 assert(constraint(23 < 'N));
-                PSTATE.SSBS = [spsr[23]]
+                PSTATE_SSBS = [spsr[23]]
             };
             ()
         } else {
-            PSTATE.nRW = 0b0;
-            PSTATE.EL = spsr[3 .. 2];
-            PSTATE.SP = [spsr[0]];
+            PSTATE_nRW = 0b0;
+            PSTATE_EL = spsr[3 .. 2];
+            PSTATE_SP = [spsr[0]];
             if HaveBTIExt() then {
-                PSTATE.BTYPE = spsr[11 .. 10]
+                PSTATE_BTYPE = spsr[11 .. 10]
             };
             if HaveSSBSExt() then {
-                PSTATE.SSBS = [spsr[12]]
+                PSTATE_SSBS = [spsr[12]]
             };
             if HaveUAOExt() then {
                 assert(constraint(23 < 'N));
-                PSTATE.UAO = [spsr[23]]
+                PSTATE_UAO = [spsr[23]]
             };
             if HaveDITExt() then {
                 assert(constraint(24 < 'N));
-                PSTATE.DIT = [spsr[24]]
+                PSTATE_DIT = [spsr[24]]
             };
             if HaveMTEExt() then {
                 assert(constraint(25 < 'N));
-                PSTATE.TCO = [spsr[25]]
+                PSTATE_TCO = [spsr[25]]
             };
             if HaveGCS() then {
                 assert(constraint(34 < 'N));
-                PSTATE.EXLOCK = [spsr[34]]
+                PSTATE_EXLOCK = [spsr[34]]
             };
             ()
         }
     };
-    if PSTATE.IL == 0b1 & PSTATE.nRW == 0b1 then {
+    if PSTATE_IL == 0b1 & PSTATE_nRW == 0b1 then {
         if ConstrainUnpredictableBool(Unpredictable_ILZEROT) then {
             assert(constraint(5 < 'N));
             spsr[5] = Bit(0b0)
         };
         ()
     };
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = spsr[31 .. 28];
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = spsr[31 .. 28];
     if HavePANExt() then {
-        PSTATE.PAN = [spsr[22]]
+        PSTATE_PAN = [spsr[22]]
     };
-    if PSTATE.nRW == 0b1 then {
-        PSTATE.Q = [spsr[27]];
-        PSTATE.IT = RestoredITBits(spsr);
+    if PSTATE_nRW == 0b1 then {
+        PSTATE_Q = [spsr[27]];
+        PSTATE_IT = RestoredITBits(spsr);
         ShouldAdvanceIT = false;
         if HaveDITExt() then {
-            PSTATE.DIT = if Restarting() | from_aarch64 then [spsr[24]] else
+            PSTATE_DIT = if Restarting() | from_aarch64 then [spsr[24]] else
               [spsr[21]]
         };
-        PSTATE.GE = spsr[19 .. 16];
-        PSTATE.E = [spsr[9]];
-        (PSTATE.A @ PSTATE.I @ PSTATE.F) = spsr[8 .. 6];
-        PSTATE.T = [spsr[5]]
+        PSTATE_GE = spsr[19 .. 16];
+        PSTATE_E = [spsr[9]];
+        (PSTATE_A @ PSTATE_I @ PSTATE_F) = spsr[8 .. 6];
+        PSTATE_T = [spsr[5]]
     } else {
         if HaveFeatNMI() then {
-            PSTATE.ALLINT = [spsr[13]]
+            PSTATE_ALLINT = [spsr[13]]
         };
-        (PSTATE.D @ PSTATE.A @ PSTATE.I @ PSTATE.F) = spsr[9 .. 6]
+        (PSTATE_D @ PSTATE_A @ PSTATE_I @ PSTATE_F) = spsr[9 .. 6]
     };
     return()
 }
@@ -8974,25 +8970,25 @@ function ConditionHolds cond = {
     result : bool = undefined;
     match cond[3 .. 1] {
       0b000 => {
-          result = PSTATE.Z == 0b1
+          result = PSTATE_Z == 0b1
       },
       0b001 => {
-          result = PSTATE.C == 0b1
+          result = PSTATE_C == 0b1
       },
       0b010 => {
-          result = PSTATE.N == 0b1
+          result = PSTATE_N == 0b1
       },
       0b011 => {
-          result = PSTATE.V == 0b1
+          result = PSTATE_V == 0b1
       },
       0b100 => {
-          result = PSTATE.C == 0b1 & PSTATE.Z == 0b0
+          result = PSTATE_C == 0b1 & PSTATE_Z == 0b0
       },
       0b101 => {
-          result = PSTATE.N == PSTATE.V
+          result = PSTATE_N == PSTATE_V
       },
       0b110 => {
-          result = PSTATE.N == PSTATE.V & PSTATE.Z == 0b0
+          result = PSTATE_N == PSTATE_V & PSTATE_Z == 0b0
       },
       0b111 => {
           result = true
@@ -9011,11 +9007,11 @@ function AArch64_MaybeZeroRegisterUppers () = {
     first : {'first, 'first == 0. int('first)} = 0;
     last : {14, 30} = 14;
     include_R15_name : bool = undefined;
-    if PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1)) then {
+    if PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1)) then {
         first = 0;
         last = 14;
         include_R15_name = false
-    } else if ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & not_bool(ELUsingAArch32(EL2)) then {
+    } else if ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & not_bool(ELUsingAArch32(EL2)) then {
         first = 0;
         last = 30;
         include_R15_name = false
@@ -9190,7 +9186,7 @@ function AArch64_ExceptionClass (exceptype, target_el) = {
           Unreachable()
       }
     };
-    if (ec == UInt(0x20) | ec == UInt(0x24) | ec == UInt(0x30) | ec == UInt(0x32) | ec == UInt(0x34)) & target_el == PSTATE.EL then {
+    if (ec == UInt(0x20) | ec == UInt(0x24) | ec == UInt(0x30) | ec == UInt(0x32) | ec == UInt(0x34)) & target_el == PSTATE_EL then {
         ec = ec + 1
     };
     if (ec == UInt(0x11) | ec == UInt(0x12) | ec == UInt(0x13) | ec == UInt(0x28) | ec == UInt(0x38)) & not_bool(from_32) then {
@@ -9434,8 +9430,8 @@ function ELR_set (el, value_name) = {
 }
 
 function ELR_set__1 value_name = {
-    assert(PSTATE.EL != EL0);
-    ELR_set(PSTATE.EL) = value_name;
+    assert(PSTATE_EL != EL0);
+    ELR_set(PSTATE_EL) = value_name;
     return()
 }
 
@@ -9457,7 +9453,7 @@ function MaybeZeroSVEUppers target_el = {
     let 'SVL = CurrentSVL_read();
     let 'VL = CurrentVL_read();
     lower_enabled : bool = undefined;
-    if UInt(target_el) <= UInt(PSTATE.EL) | not_bool(IsSVEEnabled(target_el)) then {
+    if UInt(target_el) <= UInt(PSTATE_EL) | not_bool(IsSVEEnabled(target_el)) then {
         return()
     };
     if target_el == EL3 then {
@@ -9478,7 +9474,7 @@ function MaybeZeroSVEUppers target_el = {
         lower_enabled = IsFPEnabled(EL0)
     };
     if lower_enabled then {
-        let 'VL = if IsSVEEnabled(PSTATE.EL) then VL else 128;
+        let 'VL = if IsSVEEnabled(PSTATE_EL) then VL else 128;
         let 'PL = DIV(VL, 8);
         foreach (n from 0 to 31 by 1 in inc) {
             if ConstrainUnpredictableBool(Unpredictable_SVEZEROUPPER) then {
@@ -9495,7 +9491,7 @@ function MaybeZeroSVEUppers target_el = {
         if ConstrainUnpredictableBool(Unpredictable_SVEZEROUPPER) then {
             _FFR = ZeroExtend(_FFR[PL - 1 .. 0], MAX_PL)
         };
-        if HaveSME() & PSTATE.ZA == 0b1 then {
+        if HaveSME() & PSTATE_ZA == 0b1 then {
             let 'SVL = SVL;
             let 'accessiblevecs = DIV(SVL, 8);
             let 'allvecs = DIV(MaxImplementedSVL(), 8);
@@ -9828,7 +9824,7 @@ val SPSR_set : forall 'N, 'N >= 0. (implicit('N), bits('N)) -> unit
 function SPSR_set (N, value_name) = {
     if UsingAArch32() then {
         assert(N == 32);
-        match PSTATE.M {
+        match PSTATE_M {
           ? if ? == M32_FIQ => {
               SPSR_fiq.bits[N - 1 .. 0] = value_name[N - 1 .. 0]
           },
@@ -9856,7 +9852,7 @@ function SPSR_set (N, value_name) = {
         }
     } else {
         assert(N == 64);
-        match PSTATE.EL {
+        match PSTATE_EL {
           ? if ? == EL1 => {
               SPSR_EL1.bits[N - 1 .. 0] = value_name[N - 1 .. 0]
           },
@@ -9881,7 +9877,7 @@ val SynchronizeErrors : unit -> unit
 val AArch64_TakeExceptionInDebugState : (bits(2), ExceptionRecord) -> unit
 
 function AArch64_TakeExceptionInDebugState (target_el, exception_in) = {
-    assert((HaveEL(target_el) & not_bool(ELUsingAArch32(target_el))) & UInt(target_el) >= UInt(PSTATE.EL));
+    assert((HaveEL(target_el) & not_bool(ELUsingAArch32(target_el))) & UInt(target_el) >= UInt(PSTATE_EL));
     assert(target_el != EL3 | EDSCR_read()[SDD] == 0b0);
     let except : ExceptionRecord = exception_in;
     sync_errors : bool = undefined;
@@ -9924,40 +9920,40 @@ function AArch64_TakeExceptionInDebugState (target_el, exception_in) = {
     if from_32 then {
         AArch64_MaybeZeroRegisterUppers()
     };
-    if (from_32 & HaveSME()) & PSTATE.SM == 0b1 then {
+    if (from_32 & HaveSME()) & PSTATE_SM == 0b1 then {
         ResetSVEState()
     } else {
         MaybeZeroSVEUppers(target_el)
     };
     AArch64_ReportException(except, target_el);
     if HaveGCS() then {
-        PSTATE.EXLOCK = 0b0
+        PSTATE_EXLOCK = 0b0
     };
-    PSTATE.EL = target_el;
-    PSTATE.nRW = 0b0;
-    PSTATE.SP = 0b1;
+    PSTATE_EL = target_el;
+    PSTATE_nRW = 0b0;
+    PSTATE_SP = 0b1;
     SPSR_set(64) = __UNKNOWN_bits(64);
     ELR_set__1() = __UNKNOWN_bits(64);
-    (PSTATE.SS @ PSTATE.D @ PSTATE.A @ PSTATE.I @ PSTATE.F) = __UNKNOWN_bits(5);
-    PSTATE.IL = 0b0;
+    (PSTATE_SS @ PSTATE_D @ PSTATE_A @ PSTATE_I @ PSTATE_F) = __UNKNOWN_bits(5);
+    PSTATE_IL = 0b0;
     if from_32 then {
-        PSTATE.IT = 0b00000000;
-        PSTATE.T = 0b0
+        PSTATE_IT = 0b00000000;
+        PSTATE_T = 0b0
     };
-    if (HavePANExt() & (PSTATE.EL == EL1 | PSTATE.EL == EL2 & ELIsInHost(EL0))) & SCTLR_read__1()[SPAN] == 0b0 then {
-        PSTATE.PAN = 0b1
+    if (HavePANExt() & (PSTATE_EL == EL1 | PSTATE_EL == EL2 & ELIsInHost(EL0))) & SCTLR_read__1()[SPAN] == 0b0 then {
+        PSTATE_PAN = 0b1
     };
     if HaveUAOExt() then {
-        PSTATE.UAO = 0b0
+        PSTATE_UAO = 0b0
     };
     if HaveBTIExt() then {
-        PSTATE.BTYPE = 0b00
+        PSTATE_BTYPE = 0b00
     };
     if HaveSSBSExt() then {
-        PSTATE.SSBS = __UNKNOWN_bit()
+        PSTATE_SSBS = __UNKNOWN_bit()
     };
     if HaveMTEExt() then {
-        PSTATE.TCO = 0b1
+        PSTATE_TCO = 0b1
     };
     DLR_EL0 = __UNKNOWN_bits(64);
     DSPSR_EL0 = Mk_DSPSR_EL0_Type(__UNKNOWN_bits(64));
@@ -9997,7 +9993,7 @@ function BRBEException (erec, preferred_exception_return, target_address_in, tar
       },
       _ => ()
     };
-    let source_valid : bool = BranchRecordAllowed(PSTATE.EL);
+    let source_valid : bool = BranchRecordAllowed(PSTATE_EL);
     let target_valid : bool = BranchRecordAllowed(target_el);
     let branch_valid : bool = source_valid | target_valid;
     if branch_valid then {
@@ -10230,7 +10226,7 @@ function CheckExceptionCatch exception_entry = {
     ctrl : bits(2) = undefined;
     exception_exit : bool = undefined;
     increment_name : int = undefined;
-    let ss : SecurityState = SecurityStateAtEL(PSTATE.EL);
+    let ss : SecurityState = SecurityStateAtEL(PSTATE_EL);
     base : {0, 4, 16} = 0;
     match ss {
       SS_Secure => {
@@ -10252,7 +10248,7 @@ function CheckExceptionCatch exception_entry = {
         if HaveExtendedECDebugEvents() then {
             let exception_exit : bool = not_bool(exception_entry);
             let 'increment_name = if ss == SS_Realm then 4 else 8;
-            let ctrl : bits(2) = [EDECCR_read().bits[UInt(PSTATE.EL) + base + increment_name]] @ [EDECCR_read().bits[UInt(PSTATE.EL) + base]];
+            let ctrl : bits(2) = [EDECCR_read().bits[UInt(PSTATE_EL) + base + increment_name]] @ [EDECCR_read().bits[UInt(PSTATE_EL) + base]];
             match ctrl {
               0b00 => {
                   halt = false
@@ -10268,7 +10264,7 @@ function CheckExceptionCatch exception_entry = {
               }
             }
         } else {
-            halt = [EDECCR_read().bits[UInt(PSTATE.EL) + base]] == 0b1
+            halt = [EDECCR_read().bits[UInt(PSTATE_EL) + base]] == 0b1
         };
         if halt then {
             if Havev8p8Debug() & exception_entry then {
@@ -10372,7 +10368,7 @@ val AArch64_TakeException : forall 'vect_offset_in.
   (bits(2), ExceptionRecord, bits(64), int('vect_offset_in)) -> unit
 
 function AArch64_TakeException (target_el, exception_in, preferred_exception_return, vect_offset_in) = {
-    assert((HaveEL(target_el) & not_bool(ELUsingAArch32(target_el))) & UInt(target_el) >= UInt(PSTATE.EL));
+    assert((HaveEL(target_el) & not_bool(ELUsingAArch32(target_el))) & UInt(target_el) >= UInt(PSTATE_EL));
     if Halted() then {
         AArch64_TakeExceptionInDebugState(target_el, exception_in);
         return()
@@ -10422,13 +10418,13 @@ function AArch64_TakeException (target_el, exception_in, preferred_exception_ret
     if from_32 then {
         AArch64_MaybeZeroRegisterUppers()
     };
-    if (from_32 & HaveSME()) & PSTATE.SM == 0b1 then {
+    if (from_32 & HaveSME()) & PSTATE_SM == 0b1 then {
         ResetSVEState()
     } else {
         MaybeZeroSVEUppers(target_el)
     };
     vect_offset : int = vect_offset_in;
-    if UInt(target_el) > UInt(PSTATE.EL) then {
+    if UInt(target_el) > UInt(PSTATE_EL) then {
         lower_32 : bool = undefined;
         if target_el == EL3 then {
             if EL2Enabled() then {
@@ -10436,19 +10432,19 @@ function AArch64_TakeException (target_el, exception_in, preferred_exception_ret
             } else {
                 lower_32 = ELUsingAArch32(EL1)
             }
-        } else if (IsInHost() & PSTATE.EL == EL0) & target_el == EL2 then {
+        } else if (IsInHost() & PSTATE_EL == EL0) & target_el == EL2 then {
             lower_32 = ELUsingAArch32(EL0)
         } else {
             lower_32 = ELUsingAArch32(target_el - 1)
         };
         vect_offset = vect_offset + (if lower_32 then UInt(0x600) else
           UInt(0x400))
-    } else if PSTATE.SP == 0b1 then {
+    } else if PSTATE_SP == 0b1 then {
         vect_offset = vect_offset + UInt(0x200)
     } else ();
     let 'vect_offset = vect_offset;
     spsr : bits(64) = GetPSRFromPSTATE(AArch64_NonDebugState, 64);
-    if (PSTATE.EL == EL1 & target_el == EL1) & EL2Enabled() then {
+    if (PSTATE_EL == EL1 & target_el == EL1) & EL2Enabled() then {
         if HaveNV2Ext() & ((HCR_EL2[NV] @ (HCR_EL2[NV1] @ HCR_EL2[NV2])) == 0b100 | (HCR_EL2[NV] @ (HCR_EL2[NV1] @ HCR_EL2[NV2])) == 0b111) then {
             spsr[3 .. 2] = 0b10
         } else {
@@ -10480,45 +10476,45 @@ function AArch64_TakeException (target_el, exception_in, preferred_exception_ret
         BRBEException(except, preferred_exception_return, VBAR_read(target_el)[63 .. 11] @ vect_offset[10 .. 0], target_el, except.trappedsyscallinst)
     };
     if HaveGCS() then {
-        if PSTATE.EL == target_el then {
+        if PSTATE_EL == target_el then {
             if GetCurrentEXLOCKEN() then {
-                PSTATE.EXLOCK = 0b1
+                PSTATE_EXLOCK = 0b1
             } else {
-                PSTATE.EXLOCK = 0b0
+                PSTATE_EXLOCK = 0b0
             }
         } else {
-            PSTATE.EXLOCK = 0b0
+            PSTATE_EXLOCK = 0b0
         }
     };
-    PSTATE.EL = target_el;
-    PSTATE.nRW = 0b0;
-    PSTATE.SP = 0b1;
+    PSTATE_EL = target_el;
+    PSTATE_nRW = 0b0;
+    PSTATE_SP = 0b1;
     SPSR_set(64) = spsr;
     ELR_set__1() = preferred_exception_return;
-    PSTATE.SS = 0b0;
+    PSTATE_SS = 0b0;
     if HaveFeatNMI() & not_bool(ELUsingAArch32(target_el)) then {
-        PSTATE.ALLINT = not_vec(SCTLR_read__1()[SPINTMASK])
+        PSTATE_ALLINT = not_vec(SCTLR_read__1()[SPINTMASK])
     };
-    (PSTATE.D @ PSTATE.A @ PSTATE.I @ PSTATE.F) = 0b1111;
-    PSTATE.IL = 0b0;
+    (PSTATE_D @ PSTATE_A @ PSTATE_I @ PSTATE_F) = 0b1111;
+    PSTATE_IL = 0b0;
     if from_32 then {
-        PSTATE.IT = 0b00000000;
-        PSTATE.T = 0b0
+        PSTATE_IT = 0b00000000;
+        PSTATE_T = 0b0
     };
-    if (HavePANExt() & (PSTATE.EL == EL1 | PSTATE.EL == EL2 & ELIsInHost(EL0))) & SCTLR_read__1()[SPAN] == 0b0 then {
-        PSTATE.PAN = 0b1
+    if (HavePANExt() & (PSTATE_EL == EL1 | PSTATE_EL == EL2 & ELIsInHost(EL0))) & SCTLR_read__1()[SPAN] == 0b0 then {
+        PSTATE_PAN = 0b1
     };
     if HaveUAOExt() then {
-        PSTATE.UAO = 0b0
+        PSTATE_UAO = 0b0
     };
     if HaveBTIExt() then {
-        PSTATE.BTYPE = 0b00
+        PSTATE_BTYPE = 0b00
     };
     if HaveSSBSExt() then {
-        PSTATE.SSBS = SCTLR_read__1()[DSSBS]
+        PSTATE_SSBS = SCTLR_read__1()[DSSBS]
     };
     if HaveMTEExt() then {
-        PSTATE.TCO = 0b1
+        PSTATE_TCO = 0b1
     };
     let branch_conditional : bool = false;
     BranchTo(VBAR_read__1()[63 .. 11] @ vect_offset[10 .. 0], BranchType_EXCEPTION, branch_conditional);
@@ -10554,12 +10550,12 @@ function AArch64_BranchTargetException vaddress = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_BranchTarget);
-    except.syndrome[1 .. 0] = PSTATE.BTYPE;
+    except.syndrome[1 .. 0] = PSTATE_BTYPE;
     except.syndrome[24 .. 2] = Zeros(23);
     target_el : bits(2) = EL1;
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        target_el = PSTATE.EL
-    } else if (PSTATE.EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1 then {
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        target_el = PSTATE_EL
+    } else if (PSTATE_EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1 then {
         target_el = EL2
     } else ();
     AArch64_TakeException(target_el, except, preferred_exception_return, vect_offset)
@@ -10605,7 +10601,7 @@ val BranchTargetCheck : unit -> unit
 
 function BranchTargetCheck () = {
     assert(HaveBTIExt() & not_bool(UsingAArch32()));
-    if ((InGuardedPage & PSTATE.BTYPE != 0b00) & not_bool(BTypeCompatible)) & not_bool(Halted()) then {
+    if ((InGuardedPage & PSTATE_BTYPE != 0b00) & not_bool(BTypeCompatible)) & not_bool(Halted()) then {
         let pc : bits(64) = ThisInstrAddr(64);
         AArch64_BranchTargetException(pc[51 .. 0])
     };
@@ -10632,7 +10628,7 @@ function ConditionSyndrome () = {
     syndrome : bits(5) = undefined;
     if UsingAArch32() then {
         let cond : bits(4) = AArch32_CurrentCond();
-        if PSTATE.T == 0b0 then {
+        if PSTATE_T == 0b0 then {
             syndrome[4] = Bit(0b1);
             if ConditionHolds(cond) & ConstrainUnpredictableBool(Unpredictable_ESRCONDPASS) then {
                 syndrome[3 .. 0] = 0b1110
@@ -10658,7 +10654,7 @@ function ConditionSyndrome () = {
 val AArch64_WFxTrap : (WFxType, bits(2)) -> unit
 
 function AArch64_WFxTrap (wfxtype, target_el) = {
-    assert(UInt(target_el) > UInt(PSTATE.EL));
+    assert(UInt(target_el) > UInt(PSTATE_EL));
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_WFxTrap);
@@ -10800,7 +10796,7 @@ function Hint_WFE (localtimeout, wfxtype) = {
     } else {
         target_el : bits(2) = undefined;
         trap : bool = false;
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             if HaveTWEDExt() then {
                 let sctlr : SCTLRType = SCTLR_read__1();
                 trap = sctlr[nTWE] == 0b0;
@@ -10809,7 +10805,7 @@ function Hint_WFE (localtimeout, wfxtype) = {
                 AArch64_CheckForWFxTrap(EL1, wfxtype)
             }
         };
-        if ((not_bool(trap) & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & EL2Enabled()) & not_bool(IsInHost()) then {
+        if ((not_bool(trap) & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & EL2Enabled()) & not_bool(IsInHost()) then {
             if HaveTWEDExt() then {
                 trap = HCR_EL2[TWE] == 0b1;
                 target_el = EL2
@@ -10817,7 +10813,7 @@ function Hint_WFE (localtimeout, wfxtype) = {
                 AArch64_CheckForWFxTrap(EL2, wfxtype)
             }
         };
-        if (not_bool(trap) & HaveEL(EL3)) & PSTATE.EL != EL3 then {
+        if (not_bool(trap) & HaveEL(EL3)) & PSTATE_EL != EL3 then {
             if HaveTWEDExt() then {
                 trap = SCR_EL3[TWE] == 0b1;
                 target_el = EL3
@@ -10825,7 +10821,7 @@ function Hint_WFE (localtimeout, wfxtype) = {
                 AArch64_CheckForWFxTrap(EL3, wfxtype)
             }
         };
-        if trap & PSTATE.EL != EL3 then {
+        if trap & PSTATE_EL != EL3 then {
             (delay_enabled, delay) = WFETrapDelay(target_el);
             let 'delay = delay;
             if not_bool(WaitForEventUntilDelay(delay_enabled, delay)) then {
@@ -10863,7 +10859,7 @@ function InterruptPending () = {
           fiq_pending = __tup_0
       };
     let pending_physical_interrupt : bool = (irq_pending | fiq_pending) | IsPhysicalSErrorPending();
-    if (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & HCR_EL2[TGE] == 0b0 then {
+    if (EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & HCR_EL2[TGE] == 0b0 then {
         let virq_pending : bool = HCR_EL2[IMO] == 0b1 & (VirtualIRQPending() | HCR_EL2[VI] == 0b1);
         let vfiq_pending : bool = HCR_EL2[FMO] == 0b1 & (VirtualFIQPending() | HCR_EL2[VF] == 0b1);
         let vsei_pending : bool = HCR_EL2[AMO] == 0b1 & (IsVirtualSErrorPending() | HCR_EL2[VSE] == 0b1);
@@ -10892,13 +10888,13 @@ function Hint_WFI (localtimeout, wfxtype) = {
     if InterruptPending() | HaveFeatWFxT() & LocalTimeoutEvent(localtimeout) then {
         EndOfInstruction()
     } else {
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             AArch64_CheckForWFxTrap(EL1, wfxtype)
         };
-        if ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & not_bool(IsInHost()) then {
+        if ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & not_bool(IsInHost()) then {
             AArch64_CheckForWFxTrap(EL2, wfxtype)
         };
-        if HaveEL(EL3) & PSTATE.EL != EL3 then {
+        if HaveEL(EL3) & PSTATE_EL != EL3 then {
             AArch64_CheckForWFxTrap(EL3, wfxtype)
         };
         WaitForInterrupt(localtimeout)
@@ -11043,7 +11039,7 @@ val AArch64_ChkFeat : bits(64) -> bits(64)
 
 function AArch64_ChkFeat feat_select = {
     feat_en : bits(64) = Zeros(64);
-    feat_en[0] = Bit(if HaveGCS() & GCSEnabled(PSTATE.EL) then 0b1 else 0b0);
+    feat_en[0] = Bit(if HaveGCS() & GCSEnabled(PSTATE_EL) then 0b1 else 0b0);
     return(feat_select & not_vec(feat_en))
 }
 
@@ -11072,8 +11068,8 @@ function BigEndian acctype = {
         return(SCTLR_EL2[EE] == 0b1)
     };
     if UsingAArch32() then {
-        bigend = PSTATE.E != 0b0
-    } else if PSTATE.EL == EL0 then {
+        bigend = PSTATE_E != 0b0
+    } else if PSTATE_EL == EL0 then {
         bigend = SCTLR_read__1()[E0E] != 0b0
     } else {
         bigend = SCTLR_read__1()[EE] != 0b0
@@ -11819,7 +11815,7 @@ function GenMPAMatEL (acctype, el) = {
         return(DefaultMPAMinfo(pspace))
     };
     if UsingAArch32() then {
-        (validEL_name, mpamEL) = ELFromM32(PSTATE.M)
+        (validEL_name, mpamEL) = ELFromM32(PSTATE_M)
     } else {
         mpamEL = if acctype == AccessType_NV2 then EL2 else el;
         validEL_name = true
@@ -11835,10 +11831,10 @@ function GenMPAMatEL (acctype, el) = {
           InSM = __IMPDEF_boolean("Shared SMCU") | __IMPDEF_boolean("MPAMSM_EL1 label precedence")
       },
       AccessType_ASIMD => {
-          InSM = (HaveSME() & PSTATE.SM == 0b1) & (__IMPDEF_boolean("Shared SMCU") | __IMPDEF_boolean("MPAMSM_EL1 label precedence"))
+          InSM = (HaveSME() & PSTATE_SM == 0b1) & (__IMPDEF_boolean("Shared SMCU") | __IMPDEF_boolean("MPAMSM_EL1 label precedence"))
       },
       AccessType_SVE => {
-          InSM = (HaveSME() & PSTATE.SM == 0b1) & (__IMPDEF_boolean("Shared SMCU") | __IMPDEF_boolean("MPAMSM_EL1 label precedence"))
+          InSM = (HaveSME() & PSTATE_SM == 0b1) & (__IMPDEF_boolean("Shared SMCU") | __IMPDEF_boolean("MPAMSM_EL1 label precedence"))
       },
       _ => {
           InD = false
@@ -11871,7 +11867,7 @@ function GenMPAMatEL (acctype, el) = {
 val GenMPAMcurEL : AccessType -> MPAMinfo
 
 function GenMPAMcurEL acctype = {
-    return(GenMPAMatEL(acctype, PSTATE.EL))
+    return(GenMPAMatEL(acctype, PSTATE_EL))
 }
 
 val NewAccDesc : AccessType -> AccessDescriptor
@@ -11879,8 +11875,8 @@ val NewAccDesc : AccessType -> AccessDescriptor
 function NewAccDesc acctype = {
     accdesc : AccessDescriptor = undefined;
     accdesc.acctype = acctype;
-    accdesc.el = PSTATE.EL;
-    accdesc.ss = SecurityStateAtEL(PSTATE.EL);
+    accdesc.el = PSTATE_EL;
+    accdesc.ss = SecurityStateAtEL(PSTATE_EL);
     accdesc.acqsc = false;
     accdesc.acqpc = false;
     accdesc.relsc = false;
@@ -11920,7 +11916,7 @@ val CreateAccDescGPR : forall ('nontemporal : Bool) ('privileged : Bool) ('tagch
 
 function CreateAccDescGPR (memop, nontemporal, privileged, tagchecked) = {
     accdesc : AccessDescriptor = NewAccDesc(AccessType_GPR);
-    accdesc.el = if not_bool(privileged) then EL0 else PSTATE.EL;
+    accdesc.el = if not_bool(privileged) then EL0 else PSTATE_EL;
     accdesc.nontemporal = nontemporal;
     accdesc.read = memop == MemOp_LOAD;
     accdesc.write = memop == MemOp_STORE;
@@ -11963,7 +11959,7 @@ val CreateAccDescMOPS : forall ('nontemporal : Bool) ('privileged : Bool).
 
 function CreateAccDescMOPS (memop, privileged, nontemporal) = {
     accdesc : AccessDescriptor = NewAccDesc(AccessType_GPR);
-    accdesc.el = if not_bool(privileged) then EL0 else PSTATE.EL;
+    accdesc.el = if not_bool(privileged) then EL0 else PSTATE_EL;
     accdesc.nontemporal = nontemporal;
     accdesc.read = memop == MemOp_LOAD;
     accdesc.write = memop == MemOp_STORE;
@@ -11979,7 +11975,7 @@ val CreateAccDescSTGMOPS : forall ('nontemporal : Bool) ('privileged : Bool).
 
 function CreateAccDescSTGMOPS (privileged, nontemporal) = {
     accdesc : AccessDescriptor = NewAccDesc(AccessType_GPR);
-    accdesc.el = if not_bool(privileged) then EL0 else PSTATE.EL;
+    accdesc.el = if not_bool(privileged) then EL0 else PSTATE_EL;
     accdesc.nontemporal = nontemporal;
     accdesc.write = true;
     accdesc.pan = true;
@@ -12098,7 +12094,7 @@ function CreateAccDescLS64 (memop, tagchecked) = {
 val InStreamingMode : unit -> bool
 
 function InStreamingMode () = {
-    return(HaveSME() & PSTATE.SM == 0b1)
+    return(HaveSME() & PSTATE_SM == 0b1)
 }
 
 val CreateAccDescASIMD : forall ('nontemporal : Bool) ('tagchecked : Bool).
@@ -12386,7 +12382,7 @@ function TranslationRegime el = {
 val AlignmentEnforced : unit -> bool
 
 function AlignmentEnforced () = {
-    let regime : Regime = TranslationRegime(PSTATE.EL);
+    let regime : Regime = TranslationRegime(PSTATE_EL);
     A : bits(1) = undefined;
     match regime {
       Regime_EL3 => {
@@ -12807,7 +12803,7 @@ function Sbox sboxin = {
 val TargetSecurityState : (bits(1), bits(1)) -> SecurityState
 
 function TargetSecurityState (NS, NSE) = {
-    let curr_ss : SecurityState = SecurityStateAtEL(PSTATE.EL);
+    let curr_ss : SecurityState = SecurityStateAtEL(PSTATE_EL);
     if curr_ss == SS_NonSecure then {
         return(SS_NonSecure)
     } else if curr_ss == SS_Secure then {
@@ -13801,7 +13797,7 @@ function AArch32_ExceptionClass exceptype = {
           Unreachable()
       }
     };
-    if (ec == UInt(0x20) | ec == UInt(0x24)) & PSTATE.EL == EL2 then {
+    if (ec == UInt(0x20) | ec == UInt(0x24)) & PSTATE_EL == EL2 then {
         ec = ec + 1
     };
     let 'ec = ec;
@@ -13926,15 +13922,15 @@ function AArch32_EnterHypModeInDebugState except = {
     AArch32_WriteMode(M32_Hyp);
     SPSR_set(32) = __UNKNOWN_bits(32);
     ELR_hyp_write() = __UNKNOWN_bits(32);
-    PSTATE.T = 0b1;
-    (PSTATE.SS @ PSTATE.A @ PSTATE.I @ PSTATE.F) = __UNKNOWN_bits(4);
+    PSTATE_T = 0b1;
+    (PSTATE_SS @ PSTATE_A @ PSTATE_I @ PSTATE_F) = __UNKNOWN_bits(4);
     DLR_write() = __UNKNOWN_bits(32);
     DSPSR_write() = Mk_DSPSR_Type(__UNKNOWN_bits(32));
-    PSTATE.E = HSCTLR_read()[EE];
-    PSTATE.IL = 0b0;
-    PSTATE.IT = 0b00000000;
+    PSTATE_E = HSCTLR_read()[EE];
+    PSTATE_IL = 0b0;
+    PSTATE_IT = 0b00000000;
     if HaveSSBSExt() then {
-        PSTATE.SSBS = __UNKNOWN_bit()
+        PSTATE_SSBS = __UNKNOWN_bit()
     };
     EDSCR_write() = [EDSCR_read() with ERR = 0b1];
     UpdateEDSCRFields();
@@ -13970,22 +13966,22 @@ function AArch32_EnterHypMode (except, preferred_exception_return, vect_offset) 
     AArch32_WriteMode(M32_Hyp);
     SPSR_set(32) = spsr;
     ELR_hyp_write() = preferred_exception_return;
-    PSTATE.T = HSCTLR_read()[TE];
-    PSTATE.SS = 0b0;
+    PSTATE_T = HSCTLR_read()[TE];
+    PSTATE_SS = 0b0;
     if not_bool(HaveEL(EL3)) | SCR_GEN_read()[EA] == 0b0 then {
-        PSTATE.A = 0b1
+        PSTATE_A = 0b1
     };
     if not_bool(HaveEL(EL3)) | SCR_GEN_read()[IRQ] == 0b0 then {
-        PSTATE.I = 0b1
+        PSTATE_I = 0b1
     };
     if not_bool(HaveEL(EL3)) | SCR_GEN_read()[FIQ] == 0b0 then {
-        PSTATE.F = 0b1
+        PSTATE_F = 0b1
     };
-    PSTATE.E = HSCTLR_read()[EE];
-    PSTATE.IL = 0b0;
-    PSTATE.IT = 0b00000000;
+    PSTATE_E = HSCTLR_read()[EE];
+    PSTATE_IL = 0b0;
+    PSTATE_IT = 0b00000000;
     if HaveSSBSExt() then {
-        PSTATE.SSBS = HSCTLR_read()[DSSBS]
+        PSTATE_SSBS = HSCTLR_read()[DSSBS]
     };
     let branch_conditional : bool = false;
     BranchTo(HVBAR_read()[31 .. 5] @ vect_offset[4 .. 0], BranchType_EXCEPTION, branch_conditional);
@@ -14022,7 +14018,7 @@ function Rmode_set (n, mode, value_name) = {
 val R_set : forall 'n. (int('n), bits(32)) -> unit
 
 function R_set (n, value_name) = {
-    Rmode_set(n, PSTATE.M) = value_name;
+    Rmode_set(n, PSTATE_M) = value_name;
     return()
 }
 
@@ -14030,25 +14026,25 @@ val AArch32_EnterModeInDebugState : bits(5) -> unit
 
 function AArch32_EnterModeInDebugState target_mode = {
     SynchronizeContext();
-    assert(ELUsingAArch32(EL1) & PSTATE.EL != EL2);
-    if PSTATE.M == M32_Monitor then {
+    assert(ELUsingAArch32(EL1) & PSTATE_EL != EL2);
+    if PSTATE_M == M32_Monitor then {
         SCR[NS] = 0b0
     };
     AArch32_WriteMode(target_mode);
     SPSR_set(32) = __UNKNOWN_bits(32);
     R_set(14) = __UNKNOWN_bits(32);
-    PSTATE.T = 0b1;
-    (PSTATE.SS @ PSTATE.A @ PSTATE.I @ PSTATE.F) = __UNKNOWN_bits(4);
+    PSTATE_T = 0b1;
+    (PSTATE_SS @ PSTATE_A @ PSTATE_I @ PSTATE_F) = __UNKNOWN_bits(4);
     DLR_write() = __UNKNOWN_bits(32);
     DSPSR_write() = Mk_DSPSR_Type(__UNKNOWN_bits(32));
-    PSTATE.E = SCTLR_read__2()[EE];
-    PSTATE.IL = 0b0;
-    PSTATE.IT = 0b00000000;
+    PSTATE_E = SCTLR_read__2()[EE];
+    PSTATE_IL = 0b0;
+    PSTATE_IT = 0b00000000;
     if HavePANExt() & SCTLR_read__2()[SPAN] == 0b0 then {
-        PSTATE.PAN = 0b1
+        PSTATE_PAN = 0b1
     };
     if HaveSSBSExt() then {
-        PSTATE.SSBS = __UNKNOWN_bit()
+        PSTATE_SSBS = __UNKNOWN_bit()
     };
     EDSCR_write() = [EDSCR_read() with ERR = 0b1];
     UpdateEDSCRFields();
@@ -14070,35 +14066,35 @@ val AArch32_EnterMode : forall 'lr_offset 'vect_offset.
 
 function AArch32_EnterMode (target_mode, preferred_exception_return, lr_offset, vect_offset) = {
     SynchronizeContext();
-    assert(ELUsingAArch32(EL1) & PSTATE.EL != EL2);
+    assert(ELUsingAArch32(EL1) & PSTATE_EL != EL2);
     if Halted() then {
         AArch32_EnterModeInDebugState(target_mode);
         return()
     };
     let spsr : bits(32) = GetPSRFromPSTATE(AArch32_NonDebugState, 32);
-    if PSTATE.M == M32_Monitor then {
+    if PSTATE_M == M32_Monitor then {
         SCR[NS] = 0b0
     };
     AArch32_WriteMode(target_mode);
     SPSR_set(32) = spsr;
     R_set(14) = preferred_exception_return + lr_offset;
-    PSTATE.T = SCTLR_read__2()[TE];
-    PSTATE.SS = 0b0;
+    PSTATE_T = SCTLR_read__2()[TE];
+    PSTATE_SS = 0b0;
     if target_mode == M32_FIQ then {
-        (PSTATE.A @ PSTATE.I @ PSTATE.F) = 0b111
+        (PSTATE_A @ PSTATE_I @ PSTATE_F) = 0b111
     } else if target_mode == M32_Abort | target_mode == M32_IRQ then {
-        (PSTATE.A @ PSTATE.I) = 0b11
+        (PSTATE_A @ PSTATE_I) = 0b11
     } else {
-        PSTATE.I = 0b1
+        PSTATE_I = 0b1
     };
-    PSTATE.E = SCTLR_read__2()[EE];
-    PSTATE.IL = 0b0;
-    PSTATE.IT = 0b00000000;
+    PSTATE_E = SCTLR_read__2()[EE];
+    PSTATE_IL = 0b0;
+    PSTATE_IT = 0b00000000;
     if HavePANExt() & SCTLR_read__2()[SPAN] == 0b0 then {
-        PSTATE.PAN = 0b1
+        PSTATE_PAN = 0b1
     };
     if HaveSSBSExt() then {
-        PSTATE.SSBS = SCTLR_read__2()[DSSBS]
+        PSTATE_SSBS = SCTLR_read__2()[DSSBS]
     };
     let branch_conditional : bool = false;
     BranchTo(ExcVectorBase()[31 .. 5] @ vect_offset[4 .. 0], BranchType_EXCEPTION, branch_conditional);
@@ -14112,26 +14108,26 @@ function AArch32_EnterMonitorModeInDebugState () = {
     SynchronizeContext();
     assert(HaveEL(EL3) & ELUsingAArch32(EL3));
     let from_secure : bool = CurrentSecurityState() == SS_Secure;
-    if PSTATE.M == M32_Monitor then {
+    if PSTATE_M == M32_Monitor then {
         SCR[NS] = 0b0
     };
     AArch32_WriteMode(M32_Monitor);
     SPSR_set(32) = __UNKNOWN_bits(32);
     R_set(14) = __UNKNOWN_bits(32);
-    PSTATE.T = 0b1;
-    (PSTATE.SS @ PSTATE.A @ PSTATE.I @ PSTATE.F) = __UNKNOWN_bits(4);
-    PSTATE.E = SCTLR_read__2()[EE];
-    PSTATE.IL = 0b0;
-    PSTATE.IT = 0b00000000;
+    PSTATE_T = 0b1;
+    (PSTATE_SS @ PSTATE_A @ PSTATE_I @ PSTATE_F) = __UNKNOWN_bits(4);
+    PSTATE_E = SCTLR_read__2()[EE];
+    PSTATE_IL = 0b0;
+    PSTATE_IT = 0b00000000;
     if HavePANExt() then {
         if not_bool(from_secure) then {
-            PSTATE.PAN = 0b0
+            PSTATE_PAN = 0b0
         } else if SCTLR_read__2()[SPAN] == 0b0 then {
-            PSTATE.PAN = 0b1
+            PSTATE_PAN = 0b1
         } else ()
     };
     if HaveSSBSExt() then {
-        PSTATE.SSBS = __UNKNOWN_bit()
+        PSTATE_SSBS = __UNKNOWN_bit()
     };
     DLR_write() = __UNKNOWN_bits(32);
     DSPSR_write() = Mk_DSPSR_Type(__UNKNOWN_bits(32));
@@ -14156,27 +14152,27 @@ function AArch32_EnterMonitorMode (preferred_exception_return, lr_offset, vect_o
         return()
     };
     let spsr : bits(32) = GetPSRFromPSTATE(AArch32_NonDebugState, 32);
-    if PSTATE.M == M32_Monitor then {
+    if PSTATE_M == M32_Monitor then {
         SCR[NS] = 0b0
     };
     AArch32_WriteMode(M32_Monitor);
     SPSR_set(32) = spsr;
     R_set(14) = preferred_exception_return + lr_offset;
-    PSTATE.T = SCTLR_read__2()[TE];
-    PSTATE.SS = 0b0;
-    (PSTATE.A @ PSTATE.I @ PSTATE.F) = 0b111;
-    PSTATE.E = SCTLR_read__2()[EE];
-    PSTATE.IL = 0b0;
-    PSTATE.IT = 0b00000000;
+    PSTATE_T = SCTLR_read__2()[TE];
+    PSTATE_SS = 0b0;
+    (PSTATE_A @ PSTATE_I @ PSTATE_F) = 0b111;
+    PSTATE_E = SCTLR_read__2()[EE];
+    PSTATE_IL = 0b0;
+    PSTATE_IT = 0b00000000;
     if HavePANExt() then {
         if not_bool(from_secure) then {
-            PSTATE.PAN = 0b0
+            PSTATE_PAN = 0b0
         } else if SCTLR_read__2()[SPAN] == 0b0 then {
-            PSTATE.PAN = 0b1
+            PSTATE_PAN = 0b1
         } else ()
     };
     if HaveSSBSExt() then {
-        PSTATE.SSBS = SCTLR_read__2()[DSSBS]
+        PSTATE_SSBS = SCTLR_read__2()[DSSBS]
     };
     let branch_conditional : bool = false;
     BranchTo(MVBAR.bits[31 .. 5] @ vect_offset[4 .. 0], BranchType_EXCEPTION, branch_conditional);
@@ -14392,7 +14388,7 @@ val AArch32_ReportDataAbort : forall ('route_to_monitor : Bool).
 function AArch32_ReportDataAbort (route_to_monitor, fault, vaddress) = {
     long_format : bool = undefined;
     if route_to_monitor & CurrentSecurityState() != SS_Secure then {
-        long_format = TTBCR_S[EAE] == 0b1 | IsExternalSyncAbort__1(fault) & ((PSTATE.EL == EL2 | TTBCR_read()[EAE] == 0b1) | fault.secondstage & __IMPDEF_boolean("Report abort using Long-descriptor format"))
+        long_format = TTBCR_S[EAE] == 0b1 | IsExternalSyncAbort__1(fault) & ((PSTATE_EL == EL2 | TTBCR_read()[EAE] == 0b1) | fault.secondstage & __IMPDEF_boolean("Report abort using Long-descriptor format"))
     } else {
         long_format = TTBCR_read()[EAE] == 0b1
     };
@@ -14547,7 +14543,7 @@ val AArch32_TakeDataAbortException : (bits(32), FaultRecord) -> unit
 function AArch32_TakeDataAbortException (vaddress, fault) = {
     except : ExceptionRecord = undefined;
     let route_to_monitor : bool = (HaveEL(EL3) & EffectiveEA() == 0b1) & IsExternalAbort__1(fault);
-    let route_to_hyp : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & (((HCR_read()[TGE] == 0b1 | (HaveRASExt() & HCR2_read()[TEA] == 0b1) & IsExternalAbort__1(fault)) | IsDebugException(fault) & HDCR_read()[TDE] == 0b1) | IsSecondStage(fault));
+    let route_to_hyp : bool = (EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & (((HCR_read()[TGE] == 0b1 | (HaveRASExt() & HCR2_read()[TEA] == 0b1) & IsExternalAbort__1(fault)) | IsDebugException(fault) & HDCR_read()[TDE] == 0b1) | IsSecondStage(fault));
     let preferred_exception_return : bits(32) = ThisInstrAddr(32);
     let 'vect_offset = UInt(0x10);
     let 'lr_offset = 8;
@@ -14557,9 +14553,9 @@ function AArch32_TakeDataAbortException (vaddress, fault) = {
     if route_to_monitor then {
         AArch32_ReportDataAbort(route_to_monitor, fault, vaddress);
         AArch32_EnterMonitorMode(preferred_exception_return, lr_offset, vect_offset)
-    } else if PSTATE.EL == EL2 | route_to_hyp then {
+    } else if PSTATE_EL == EL2 | route_to_hyp then {
         let except : ExceptionRecord = AArch32_AbortSyndrome(Exception_DataAbort, fault, vaddress, EL2);
-        if PSTATE.EL == EL2 then {
+        if PSTATE_EL == EL2 then {
             AArch32_EnterHypMode(except, preferred_exception_return, vect_offset)
         } else {
             AArch32_EnterHypMode(except, preferred_exception_return, UInt(0x14))
@@ -14624,7 +14620,7 @@ val AArch32_ReportPrefetchAbort : forall ('route_to_monitor : Bool).
 function AArch32_ReportPrefetchAbort (route_to_monitor, fault, vaddress) = {
     long_format : bool = false;
     if route_to_monitor & CurrentSecurityState() != SS_Secure then {
-        long_format = (TTBCR_S[EAE] == 0b1 | PSTATE.EL == EL2) | TTBCR_read()[EAE] == 0b1
+        long_format = (TTBCR_S[EAE] == 0b1 | PSTATE_EL == EL2) | TTBCR_read()[EAE] == 0b1
     } else {
         long_format = TTBCR_read()[EAE] == 0b1
     };
@@ -14643,7 +14639,7 @@ val AArch32_TakePrefetchAbortException : (bits(32), FaultRecord) -> unit
 
 function AArch32_TakePrefetchAbortException (vaddress, fault) = {
     let route_to_monitor : bool = (HaveEL(EL3) & EffectiveEA() == 0b1) & IsExternalAbort__1(fault);
-    let route_to_hyp : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & (((HCR_read()[TGE] == 0b1 | (HaveRASExt() & HCR2_read()[TEA] == 0b1) & IsExternalAbort__1(fault)) | IsDebugException(fault) & HDCR_read()[TDE] == 0b1) | IsSecondStage(fault));
+    let route_to_hyp : bool = (EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & (((HCR_read()[TGE] == 0b1 | (HaveRASExt() & HCR2_read()[TEA] == 0b1) & IsExternalAbort__1(fault)) | IsDebugException(fault) & HDCR_read()[TDE] == 0b1) | IsSecondStage(fault));
     except : ExceptionRecord = undefined;
     let preferred_exception_return : bits(32) = ThisInstrAddr(32);
     let 'vect_offset = UInt(0x0C);
@@ -14654,14 +14650,14 @@ function AArch32_TakePrefetchAbortException (vaddress, fault) = {
     if route_to_monitor then {
         AArch32_ReportPrefetchAbort(route_to_monitor, fault, vaddress);
         AArch32_EnterMonitorMode(preferred_exception_return, lr_offset, vect_offset)
-    } else if PSTATE.EL == EL2 | route_to_hyp then {
+    } else if PSTATE_EL == EL2 | route_to_hyp then {
         if fault.statuscode == Fault_Alignment then {
             except = ExceptionSyndrome(Exception_PCAlignment);
             except.vaddress = ThisInstrAddr(64)
         } else {
             except = AArch32_AbortSyndrome(Exception_InstructionAbort, fault, vaddress, EL2)
         };
-        if PSTATE.EL == EL2 then {
+        if PSTATE_EL == EL2 then {
             AArch32_EnterHypMode(except, preferred_exception_return, vect_offset)
         } else {
             AArch32_EnterHypMode(except, preferred_exception_return, UInt(0x14))
@@ -14695,7 +14691,7 @@ function AArch64_EncodeSyncErrorSyndrome errorstate = {
 val ExtAbortToA64 : FaultRecord -> bool
 
 function ExtAbortToA64 fault = {
-    route_to_aarch64 : bool = PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1));
+    route_to_aarch64 : bool = PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1));
     if (not_bool(route_to_aarch64) & EL2Enabled()) & not_bool(ELUsingAArch32(EL2)) then {
         route_to_aarch64 = ((HCR_EL2[TGE] == 0b1 | IsSecondStage(fault)) | (HaveRASExt() & HCR_EL2[TEA] == 0b1) & IsExternalAbort__1(fault)) | IsDebugException(fault) & MDCR_EL2[TDE] == 0b1
     };
@@ -14851,11 +14847,11 @@ function AArch64_AbortSyndrome (exceptype, fault, vaddress, target_el) = {
 val AArch64_BreakpointException : FaultRecord -> unit
 
 function AArch64_BreakpointException fault = {
-    assert(PSTATE.EL != EL3);
-    let route_to_el2 : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | MDCR_EL2[TDE] == 0b1);
+    assert(PSTATE_EL != EL3);
+    let route_to_el2 : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | MDCR_EL2[TDE] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
-    let target_el : bits(2) = if PSTATE.EL == EL2 | route_to_el2 then EL2 else
+    let target_el : bits(2) = if PSTATE_EL == EL2 | route_to_el2 then EL2 else
       EL1;
     let vaddress : bits(64) = __UNKNOWN_bits(64);
     let except : ExceptionRecord = AArch64_AbortSyndrome(Exception_Breakpoint, fault, vaddress, target_el);
@@ -14952,16 +14948,16 @@ val AArch64_SyncExternalAbortTarget : FaultRecord -> bits(2)
 
 function AArch64_SyncExternalAbortTarget fault = {
     route_to_el3 : bool = undefined;
-    if PSTATE.EL != EL3 then {
+    if PSTATE_EL != EL3 then {
         route_to_el3 = HaveEL(EL3) & EffectiveEA() == 0b1
     } else {
         route_to_el3 = false
     };
     let tea_bit : bits(1) = if HaveRASExt() then HCR_EL2[TEA] else 0b0;
     route_to_el2 : bool = undefined;
-    if (not_bool(route_to_el3) & EL2Enabled()) & PSTATE.EL == EL1 then {
+    if (not_bool(route_to_el3) & EL2Enabled()) & PSTATE_EL == EL1 then {
         route_to_el2 = (tea_bit == 0b1 | fault.access.acctype == AccessType_NV2) | IsSecondStage(fault)
-    } else if (not_bool(route_to_el3) & EL2Enabled()) & PSTATE.EL == EL0 then {
+    } else if (not_bool(route_to_el3) & EL2Enabled()) & PSTATE_EL == EL0 then {
         route_to_el2 = not_bool(IsInHost()) & ((HCR_EL2[TGE] == 0b1 | tea_bit == 0b1) | IsSecondStage(fault))
     } else {
         route_to_el2 = false
@@ -14969,15 +14965,15 @@ function AArch64_SyncExternalAbortTarget fault = {
     route_masked_to_el3 : bool = undefined;
     route_masked_to_el2 : bool = undefined;
     if HaveDoubleFault2Ext() then {
-        route_masked_to_el2 = (((EL2Enabled() & not_bool(route_to_el3)) & PSTATE.EL == EL1 & PSTATE.A == 0b1) & IsHCRXEL2Enabled()) & HCRX_EL2[TMEA] == 0b1;
-        route_masked_to_el3 = ((HaveEL(EL3) & not_bool(route_to_el2 | route_masked_to_el2)) & (PSTATE.EL == EL2 | PSTATE.EL == EL1) & PSTATE.A == 0b1) & SCR_EL3[TMEA] == 0b1
+        route_masked_to_el2 = (((EL2Enabled() & not_bool(route_to_el3)) & PSTATE_EL == EL1 & PSTATE_A == 0b1) & IsHCRXEL2Enabled()) & HCRX_EL2[TMEA] == 0b1;
+        route_masked_to_el3 = ((HaveEL(EL3) & not_bool(route_to_el2 | route_masked_to_el2)) & (PSTATE_EL == EL2 | PSTATE_EL == EL1) & PSTATE_A == 0b1) & SCR_EL3[TMEA] == 0b1
     } else {
         route_masked_to_el2 = false;
         route_masked_to_el3 = false
     };
-    let take_in_el3 : bool = PSTATE.EL == EL3;
-    let take_in_el2_0 : bool = (PSTATE.EL == EL2 | IsInHost()) & not_bool(route_to_el3 | route_masked_to_el3);
-    let take_in_el1_0 : bool = ((PSTATE.EL == EL1 | PSTATE.EL == EL0 & not_bool(IsInHost())) & not_bool(route_to_el2 | route_masked_to_el2)) & not_bool(route_to_el3 | route_masked_to_el3);
+    let take_in_el3 : bool = PSTATE_EL == EL3;
+    let take_in_el2_0 : bool = (PSTATE_EL == EL2 | IsInHost()) & not_bool(route_to_el3 | route_masked_to_el3);
+    let take_in_el1_0 : bool = ((PSTATE_EL == EL1 | PSTATE_EL == EL0 & not_bool(IsInHost())) & not_bool(route_to_el2 | route_masked_to_el2)) & not_bool(route_to_el3 | route_masked_to_el3);
     target_el : bits(2) = undefined;
     if (take_in_el3 | route_to_el3) | route_masked_to_el3 then {
         target_el = EL3
@@ -15001,10 +14997,10 @@ function AArch64_DataAbort (vaddress, fault) = {
     if IsExternalAbort__1(fault) then {
         target_el = AArch64_SyncExternalAbortTarget(fault)
     } else {
-        let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & (((HCR_EL2[TGE] == 0b1 | (HaveRME() & fault.gpcf.gpf == GPCF_Fail) & HCR_EL2[GPF] == 0b1) | HaveNV2Ext() & fault.access.acctype == AccessType_NV2) | IsSecondStage(fault));
-        if PSTATE.EL == EL3 then {
+        let route_to_el2 : bool = (EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & (((HCR_EL2[TGE] == 0b1 | (HaveRME() & fault.gpcf.gpf == GPCF_Fail) & HCR_EL2[GPF] == 0b1) | HaveNV2Ext() & fault.access.acctype == AccessType_NV2) | IsSecondStage(fault));
+        if PSTATE_EL == EL3 then {
             target_el = EL3
-        } else if PSTATE.EL == EL2 | route_to_el2 then {
+        } else if PSTATE_EL == EL2 | route_to_el2 then {
             target_el = EL2
         } else {
             target_el = EL1
@@ -15039,10 +15035,10 @@ function AArch64_InstructionAbort (vaddress, fault) = {
     if IsExternalAbort__1(fault) then {
         target_el = AArch64_SyncExternalAbortTarget(fault)
     } else {
-        let route_to_el2 : bool = (EL2Enabled() & (PSTATE.EL == EL0 | PSTATE.EL == EL1)) & ((HCR_EL2[TGE] == 0b1 | (HaveRME() & fault.gpcf.gpf == GPCF_Fail) & HCR_EL2[GPF] == 0b1) | IsSecondStage(fault));
-        if PSTATE.EL == EL3 then {
+        let route_to_el2 : bool = (EL2Enabled() & (PSTATE_EL == EL0 | PSTATE_EL == EL1)) & ((HCR_EL2[TGE] == 0b1 | (HaveRME() & fault.gpcf.gpf == GPCF_Fail) & HCR_EL2[GPF] == 0b1) | IsSecondStage(fault));
+        if PSTATE_EL == EL3 then {
             target_el = EL3
-        } else if PSTATE.EL == EL2 | route_to_el2 then {
+        } else if PSTATE_EL == EL2 | route_to_el2 then {
             target_el = EL2
         } else {
             target_el = EL1
@@ -15064,7 +15060,7 @@ function AArch64_InstructionAbort (vaddress, fault) = {
 val AArch64_VectorCatchException : FaultRecord -> unit
 
 function AArch64_VectorCatchException fault = {
-    assert(PSTATE.EL != EL2);
+    assert(PSTATE_EL != EL2);
     assert(EL2Enabled() & (HCR_EL2[TGE] == 0b1 | MDCR_EL2[TDE] == 0b1));
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
@@ -15076,11 +15072,11 @@ function AArch64_VectorCatchException fault = {
 val AArch64_WatchpointException : (bits(64), FaultRecord) -> unit
 
 function AArch64_WatchpointException (vaddress, fault) = {
-    assert(PSTATE.EL != EL3);
-    let route_to_el2 : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | MDCR_EL2[TDE] == 0b1);
+    assert(PSTATE_EL != EL3);
+    let route_to_el2 : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | MDCR_EL2[TDE] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
-    let target_el : bits(2) = if PSTATE.EL == EL2 | route_to_el2 then EL2 else
+    let target_el : bits(2) = if PSTATE_EL == EL2 | route_to_el2 then EL2 else
       EL1;
     except : ExceptionRecord = undefined;
     if HaveNV2Ext() & fault.access.acctype == AccessType_NV2 then {
@@ -15108,7 +15104,7 @@ function ReportAsGPCException fault = {
           return(true)
       },
       GPCF_Fail => {
-          return(SCR_EL3[GPF] == 0b1 & PSTATE.EL != EL3)
+          return(SCR_EL3[GPF] == 0b1 & PSTATE_EL != EL3)
       },
       _ => {
           return(undefined : bool)
@@ -15249,7 +15245,7 @@ function AArch64_Abort (vaddress, fault) = {
 val AArch32_Abort : (bits(32), FaultRecord) -> unit
 
 function AArch32_Abort (vaddress, fault) = {
-    route_to_aarch64 : bool = PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1));
+    route_to_aarch64 : bool = PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1));
     if (not_bool(route_to_aarch64) & EL2Enabled()) & not_bool(ELUsingAArch32(EL2)) then {
         route_to_aarch64 = ((HCR_EL2[TGE] == 0b1 | IsSecondStage(fault)) | (HaveRASExt() & HCR_EL2[TEA] == 0b1) & IsExternalAbort__1(fault)) | IsDebugException(fault) & MDCR_EL2[TDE] == 0b1
     };
@@ -15416,7 +15412,7 @@ function FPMaxNormal (sign, N) = {
 val AArch32_GeneralExceptionsToAArch64 : unit -> bool
 
 function AArch32_GeneralExceptionsToAArch64 () = {
-    return(PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1)) | (EL2Enabled() & not_bool(ELUsingAArch32(EL2))) & HCR_EL2[TGE] == 0b1)
+    return(PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1)) | (EL2Enabled() & not_bool(ELUsingAArch32(EL2))) & HCR_EL2[TGE] == 0b1)
 }
 
 val AArch32_TakeUndefInstrException : unit -> unit
@@ -15429,11 +15425,11 @@ function AArch32_TakeUndefInstrException () = {
 }
 
 function AArch32_TakeUndefInstrException__1 except = {
-    let route_to_hyp : bool = (PSTATE.EL == EL0 & EL2Enabled()) & HCR_read()[TGE] == 0b1;
+    let route_to_hyp : bool = (PSTATE_EL == EL0 & EL2Enabled()) & HCR_read()[TGE] == 0b1;
     let preferred_exception_return : bits(32) = ThisInstrAddr(32);
     let 'vect_offset = UInt(0x04);
     let 'lr_offset = if CurrentInstrSet() == InstrSet_A32 then 4 else 2;
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         AArch32_EnterHypMode(except, preferred_exception_return, vect_offset)
     } else if route_to_hyp then {
         AArch32_EnterHypMode(except, preferred_exception_return, UInt(0x14))
@@ -15465,8 +15461,8 @@ function AArch64_FPTrappedException (is_ase, accumulated_exceptions) = {
     let route_to_el2 : bool = EL2Enabled() & HCR_EL2[TGE] == 0b1;
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        AArch64_TakeException(PSTATE_EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
@@ -15571,13 +15567,13 @@ function IsFullA64Enabled () = {
     if not_bool(HaveSMEFullA64()) then {
         return(false)
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & not_bool(IsInHost()) then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & not_bool(IsInHost()) then {
         if SMCR_EL1[FA64] == 0b0 then {
             return(false)
         };
         ()
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1 | PSTATE.EL == EL2) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1 | PSTATE_EL == EL2) & EL2Enabled() then {
         if SMCR_EL2[FA64] == 0b0 then {
             return(false)
         };
@@ -15619,7 +15615,7 @@ function FPProcessException (except, fpcr) = {
     };
     let 'cumul = cumul;
     let 'enable = cumul + 8;
-    if [fpcr.bits[enable]] == 0b1 & ((not_bool(HaveSME()) | PSTATE.SM == 0b0) | IsFullA64Enabled()) then {
+    if [fpcr.bits[enable]] == 0b1 & ((not_bool(HaveSME()) | PSTATE_SM == 0b0) | IsFullA64Enabled()) then {
         accumulated_exceptions : bits(8) = GetAccumulatedFPExceptions();
         accumulated_exceptions[cumul] = Bit(0b1);
         if __IMPDEF_boolean("Support trapping of floating-point exceptions") then {
@@ -16725,7 +16721,7 @@ function FPMaxNum (op1_in, op2_in, fpcr) = {
 val IsMerging : FPCRType -> bool
 
 function IsMerging fpcr = {
-    let nep : bits(1) = if (HaveSME() & PSTATE.SM == 0b1) & not_bool(IsFullA64Enabled()) then
+    let nep : bits(1) = if (HaveSME() & PSTATE_SM == 0b1) & not_bool(IsFullA64Enabled()) then
       0b0
     else
       fpcr[NEP];
@@ -17971,7 +17967,7 @@ function SPSR_read N = {
     result : bits('N) = undefined;
     if UsingAArch32() then {
         assert(N == 32);
-        match PSTATE.M {
+        match PSTATE_M {
           ? if ? == M32_FIQ => {
               result = SPSR_fiq.bits[N - 1 .. 0]
           },
@@ -17999,7 +17995,7 @@ function SPSR_read N = {
         }
     } else {
         assert(N == 64);
-        match PSTATE.EL {
+        match PSTATE_EL {
           ? if ? == EL1 => {
               result = SPSR_EL1.bits[N - 1 .. 0]
           },
@@ -21052,7 +21048,7 @@ function AArch64_GetS1TTWParams (regime, ss, va) = {
 val CalculateBottomPACBit : bits(1) -> int
 
 function CalculateBottomPACBit top_bit = {
-    let regime : Regime = TranslationRegime(PSTATE.EL);
+    let regime : Regime = TranslationRegime(PSTATE_EL);
     let ss : SecurityState = CurrentSecurityState();
     let walkparams : S1TTWParams = AArch64_GetS1TTWParams(regime, ss, Replicate(top_bit, 64));
     let 'bottom_PAC_bit = 64 - UInt(AArch64_PACEffectiveTxSZ(regime, walkparams));
@@ -21128,7 +21124,7 @@ function HavePACIMPAuth () = {
 val PtrHasUpperAndLowerAddRanges : unit -> bool
 
 function PtrHasUpperAndLowerAddRanges () = {
-    let regime : Regime = TranslationRegime(PSTATE.EL);
+    let regime : Regime = TranslationRegime(PSTATE_EL);
     return(HasUnprivileged(regime))
 }
 
@@ -21583,8 +21579,8 @@ val Strip : forall ('data : Bool). (bits(64), bool('data)) -> bits(64)
 
 function Strip (A, data) = {
     original_ptr : bits(64) = undefined;
-    let tbi : bool = EffectiveTBI(A, not_bool(data), PSTATE.EL) == 0b1;
-    let mtx : bool = EffectiveMTX(A, not_bool(data), PSTATE.EL) == 0b1;
+    let tbi : bool = EffectiveTBI(A, not_bool(data), PSTATE_EL) == 0b1;
+    let mtx : bool = EffectiveMTX(A, not_bool(data), PSTATE_EL) == 0b1;
     let 'bottom_PAC_bit = CalculateBottomPACBit([A[55]]);
     let extfield : bits(64) = Replicate([A[55]], 64);
     if tbi & bottom_PAC_bit >= 55 then {
@@ -21609,14 +21605,14 @@ function Strip (A, data) = {
 val AArch64_PACFailException : bits(2) -> unit
 
 function AArch64_PACFailException syndrome = {
-    let route_to_el2 : bool = (PSTATE.EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
+    let route_to_el2 : bool = (PSTATE_EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_PACFail);
     except.syndrome[1 .. 0] = syndrome;
     except.syndrome[24 .. 2] = Zeros(23);
-    if UInt(PSTATE.EL) > UInt(EL0) then {
-        AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
+    if UInt(PSTATE_EL) > UInt(EL0) then {
+        AArch64_TakeException(PSTATE_EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
@@ -21632,8 +21628,8 @@ function Auth (ptr, modifier, K, data, key_number, is_combined) = {
     original_ptr : bits(64) = undefined;
     error_code : bits(2) = undefined;
     let isgeneric : bool = false;
-    let tbi : bool = EffectiveTBI(ptr, not_bool(data), PSTATE.EL) == 0b1;
-    let mtx : bool = EffectiveMTX(ptr, not_bool(data), PSTATE.EL) == 0b1;
+    let tbi : bool = EffectiveTBI(ptr, not_bool(data), PSTATE_EL) == 0b1;
+    let mtx : bool = EffectiveMTX(ptr, not_bool(data), PSTATE_EL) == 0b1;
     let 'bottom_PAC_bit = CalculateBottomPACBit([ptr[55]]);
     let extfield : bits(64) = Replicate([ptr[55]], 64);
     if tbi & bottom_PAC_bit >= 55 then {
@@ -21719,7 +21715,7 @@ function Auth (ptr, modifier, K, data, key_number, is_combined) = {
 val TrapPACUse : bits(2) -> unit
 
 function TrapPACUse target_el = {
-    assert((HaveEL(target_el) & target_el != EL0) & UInt(target_el) >= UInt(PSTATE.EL));
+    assert((HaveEL(target_el) & target_el != EL0) & UInt(target_el) >= UInt(PSTATE_EL));
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = 0;
     let except : ExceptionRecord = ExceptionSyndrome(Exception_PACTrap);
@@ -21734,8 +21730,8 @@ function AddPAC (ptr, modifier, K, data) = {
     ext_ptr : bits(64) = undefined;
     selbit : bits(1) = undefined;
     let isgeneric : bool = false;
-    let tbi : bool = EffectiveTBI(ptr, not_bool(data), PSTATE.EL) == 0b1;
-    let mtx : bool = EffectiveMTX(ptr, not_bool(data), PSTATE.EL) == 0b1;
+    let tbi : bool = EffectiveTBI(ptr, not_bool(data), PSTATE_EL) == 0b1;
+    let mtx : bool = EffectiveMTX(ptr, not_bool(data), PSTATE_EL) == 0b1;
     let 'top_bit = if tbi then 55 else 63;
     if PtrHasUpperAndLowerAddRanges() then {
         assert(S1TranslationRegime__1() == EL1 | S1TranslationRegime__1() == EL2);
@@ -21848,7 +21844,7 @@ function AddPACIA (x, y) = {
     TrapEL3 : bool = undefined;
     Enable : bits(1) = undefined;
     let APIAKey_EL1 : bits(128) = APIAKeyHi_EL1[63 .. 0] @ APIAKeyLo_EL1[63 .. 0];
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           let IsEL1Regime : bool = S1TranslationRegime__1() == EL1;
           Enable = if IsEL1Regime then SCTLR_EL1[EnIA] else SCTLR_EL2[EnIA];
@@ -21908,7 +21904,7 @@ function AddPACIB (x, y) = {
     TrapEL3 : bool = undefined;
     Enable : bits(1) = undefined;
     let APIBKey_EL1 : bits(128) = APIBKeyHi_EL1[63 .. 0] @ APIBKeyLo_EL1[63 .. 0];
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           let IsEL1Regime : bool = S1TranslationRegime__1() == EL1;
           Enable = if IsEL1Regime then SCTLR_EL1[EnIB] else SCTLR_EL2[EnIB];
@@ -21968,7 +21964,7 @@ function AddPACDA (x, y) = {
     TrapEL3 : bool = undefined;
     Enable : bits(1) = undefined;
     let APDAKey_EL1 : bits(128) = APDAKeyHi_EL1[63 .. 0] @ APDAKeyLo_EL1[63 .. 0];
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           let IsEL1Regime : bool = S1TranslationRegime__1() == EL1;
           Enable = if IsEL1Regime then SCTLR_EL1[EnDA] else SCTLR_EL2[EnDA];
@@ -22028,7 +22024,7 @@ function AddPACDB (x, y) = {
     TrapEL3 : bool = undefined;
     Enable : bits(1) = undefined;
     let APDBKey_EL1 : bits(128) = APDBKeyHi_EL1[63 .. 0] @ APDBKeyLo_EL1[63 .. 0];
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           let IsEL1Regime : bool = S1TranslationRegime__1() == EL1;
           Enable = if IsEL1Regime then SCTLR_EL1[EnDB] else SCTLR_EL2[EnDB];
@@ -22088,7 +22084,7 @@ function AddPACGA (x, y) = {
     TrapEL3 : bool = undefined;
     let isgeneric : bool = true;
     let APGAKey_EL1 : bits(128) = APGAKeyHi_EL1[63 .. 0] @ APGAKeyLo_EL1[63 .. 0];
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           TrapEL2 = (EL2Enabled() & HCR_EL2[API] == 0b0) & (HCR_EL2[TGE] == 0b0 | HCR_EL2[E2H] == 0b0);
           TrapEL3 = HaveEL(EL3) & SCR_EL3[API] == 0b0
@@ -22134,7 +22130,7 @@ function AuthIA (x, y, is_combined) = {
     TrapEL3 : bool = undefined;
     Enable : bits(1) = undefined;
     let APIAKey_EL1 : bits(128) = APIAKeyHi_EL1[63 .. 0] @ APIAKeyLo_EL1[63 .. 0];
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           let IsEL1Regime : bool = S1TranslationRegime__1() == EL1;
           Enable = if IsEL1Regime then SCTLR_EL1[EnIA] else SCTLR_EL2[EnIA];
@@ -22187,7 +22183,7 @@ function AuthIB (x, y, is_combined) = {
     TrapEL3 : bool = undefined;
     Enable : bits(1) = undefined;
     let APIBKey_EL1 : bits(128) = APIBKeyHi_EL1[63 .. 0] @ APIBKeyLo_EL1[63 .. 0];
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           let IsEL1Regime : bool = S1TranslationRegime__1() == EL1;
           Enable = if IsEL1Regime then SCTLR_EL1[EnIB] else SCTLR_EL2[EnIB];
@@ -22240,7 +22236,7 @@ function AuthDA (x, y, is_combined) = {
     TrapEL3 : bool = undefined;
     Enable : bits(1) = undefined;
     let APDAKey_EL1 : bits(128) = APDAKeyHi_EL1[63 .. 0] @ APDAKeyLo_EL1[63 .. 0];
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           let IsEL1Regime : bool = S1TranslationRegime__1() == EL1;
           Enable = if IsEL1Regime then SCTLR_EL1[EnDA] else SCTLR_EL2[EnDA];
@@ -22293,7 +22289,7 @@ function AuthDB (x, y, is_combined) = {
     TrapEL3 : bool = undefined;
     Enable : bits(1) = undefined;
     let APDBKey_EL1 : bits(128) = APDBKeyHi_EL1[63 .. 0] @ APDBKeyLo_EL1[63 .. 0];
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           let IsEL1Regime : bool = S1TranslationRegime__1() == EL1;
           Enable = if IsEL1Regime then SCTLR_EL1[EnDB] else SCTLR_EL2[EnDB];
@@ -22468,8 +22464,8 @@ function ELR_read el = {
 }
 
 function ELR_read__1 () = {
-    assert(PSTATE.EL != EL0);
-    return(ELR_read(PSTATE.EL))
+    assert(PSTATE_EL != EL0);
+    return(ELR_read(PSTATE_EL))
 }
 
 bitfield CNTKCTL_Type : bits(32) =
@@ -22517,16 +22513,16 @@ function CheckTransactionalSystemAccess (op0, op1, crn, crm, op2, read) = {
           return(true)
       },
       0b11101100100101001 => {
-          return(PSTATE.EL == EL0)
+          return(PSTATE_EL == EL0)
       },
       0b11100000100101001 => {
-          return(PSTATE.EL == EL1 | PSTATE.EL == EL2 & HCR_EL2[E2H] == 0b1)
+          return(PSTATE_EL == EL1 | PSTATE_EL == EL2 & HCR_EL2[E2H] == 0b1)
       },
       0b11110000100101001 => {
-          return(PSTATE.EL == EL2 & HCR_EL2[E2H] == 0b0)
+          return(PSTATE_EL == EL2 & HCR_EL2[E2H] == 0b0)
       },
       0b11111000100101001 => {
-          return(PSTATE.EL == EL3)
+          return(PSTATE_EL == EL3)
       },
       0b00101101110111000 => {
           return(true)
@@ -22623,10 +22619,10 @@ function BTypeCompatible_BTI hintcode = {
           return(false)
       },
       0b01 => {
-          return(PSTATE.BTYPE != 0b11)
+          return(PSTATE_BTYPE != 0b11)
       },
       0b10 => {
-          return(PSTATE.BTYPE != 0b10)
+          return(PSTATE_BTYPE != 0b10)
       },
       0b11 => {
           return(true)
@@ -22641,10 +22637,10 @@ val BTypeCompatible_PACIXSP : unit -> bool
 
 function BTypeCompatible_PACIXSP () = {
     index : int = undefined;
-    if PSTATE.BTYPE == 0b01 | PSTATE.BTYPE == 0b10 then {
+    if PSTATE_BTYPE == 0b01 | PSTATE_BTYPE == 0b10 then {
         return(true)
-    } else if PSTATE.BTYPE == 0b11 then {
-        let 'index = if PSTATE.EL == EL0 then 35 else 36;
+    } else if PSTATE_BTYPE == 0b11 then {
+        let 'index = if PSTATE_EL == EL0 then 35 else 36;
         return([SCTLR_read__1().bits[index]] == 0b0)
     } else {
         return(false)
@@ -22770,8 +22766,8 @@ function AArch64_SPAlignmentFault () = {
     let 'vect_offset = UInt(0x0);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_SPAlignment);
     target_el : bits(2) = EL1;
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        target_el = PSTATE.EL
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        target_el = PSTATE_EL
     } else if EL2Enabled() & HCR_EL2[TGE] == 0b1 then {
         target_el = EL2
     } else ();
@@ -22781,10 +22777,10 @@ function AArch64_SPAlignmentFault () = {
 val SP_read : unit -> bits(64)
 
 function SP_read () = {
-    if PSTATE.SP == 0b0 then {
+    if PSTATE_SP == 0b0 then {
         return(SP_EL0)
     } else {
-        match PSTATE.EL {
+        match PSTATE_EL {
           ? if ? == EL0 => {
               return(SP_EL0)
           },
@@ -22809,7 +22805,7 @@ val CheckSPAlignment : unit -> unit
 function CheckSPAlignment () = {
     let sp : bits(64) = SP_read();
     stack_align_check : bool = undefined;
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         stack_align_check = SCTLR_read__1()[SA0] != 0b0
     } else {
         stack_align_check = SCTLR_read__1()[SA] != 0b0
@@ -22875,16 +22871,16 @@ function AArch64_AccessIsTagChecked (vaddr, accdesc) = {
         return(false)
     };
     let is_instr : bool = false;
-    if EffectiveMTX(vaddr, is_instr, PSTATE.EL) == 0b0 & EffectiveTBI(vaddr, is_instr, PSTATE.EL) == 0b0 then {
+    if EffectiveMTX(vaddr, is_instr, PSTATE_EL) == 0b0 & EffectiveTBI(vaddr, is_instr, PSTATE_EL) == 0b0 then {
         return(false)
     };
-    if EffectiveTCMA(vaddr, PSTATE.EL) == 0b1 & (vaddr[59 .. 55] == 0b00000 | vaddr[59 .. 55] == 0b11111) then {
+    if EffectiveTCMA(vaddr, PSTATE_EL) == 0b1 & (vaddr[59 .. 55] == 0b00000 | vaddr[59 .. 55] == 0b11111) then {
         return(false)
     };
     if not_bool(AArch64_AllocationTagAccessIsEnabled(accdesc.el)) then {
         return(false)
     };
-    if PSTATE.TCO == 0b1 then {
+    if PSTATE_TCO == 0b1 then {
         return(false)
     };
     if (HaveMTEStoreOnlyExt() & not_bool(accdesc.write)) & StoreOnlyTagCheckingEnabled(accdesc.el) then {
@@ -22977,9 +22973,9 @@ function AArch64_RaiseTagCheckFault (va, fault) = {
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     target_el : bits(2) = EL1;
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        target_el = PSTATE.EL
-    } else if (PSTATE.EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1 then {
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        target_el = PSTATE_EL
+    } else if (PSTATE_EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1 then {
         target_el = EL2
     } else ();
     let except : ExceptionRecord = AArch64_AbortSyndrome(Exception_DataAbort, fault, va, target_el);
@@ -23411,10 +23407,10 @@ function AArch64_BreakpointValueMatch (n_in, vaddress, linked_to, isbreakpnt) = 
         if IsInHost() then {
             bvr_match = CONTEXTIDR_EL2.bits[31 .. 0] == DBGBVR_EL1[n].bits[31 .. 0]
         } else {
-            bvr_match = (PSTATE.EL == EL0 | PSTATE.EL == EL1) & CONTEXTIDR_EL1.bits[31 .. 0] == DBGBVR_EL1[n].bits[31 .. 0]
+            bvr_match = (PSTATE_EL == EL0 | PSTATE_EL == EL1) & CONTEXTIDR_EL1.bits[31 .. 0] == DBGBVR_EL1[n].bits[31 .. 0]
         }
     } else if match_cid1 then {
-        bvr_match = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & not_bool(IsInHost())) & CONTEXTIDR_EL1.bits[31 .. 0] == DBGBVR_EL1[n].bits[31 .. 0]
+        bvr_match = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & not_bool(IsInHost())) & CONTEXTIDR_EL1.bits[31 .. 0] == DBGBVR_EL1[n].bits[31 .. 0]
     } else ();
     if match_vmid then {
         vmid : bits(16) = undefined;
@@ -23426,9 +23422,9 @@ function AArch64_BreakpointValueMatch (n_in, vaddress, linked_to, isbreakpnt) = 
             vmid = VTTBR_EL2_read()[VMID];
             bvr_vmid = DBGBVR_EL1[n].bits[47 .. 32]
         };
-        bxvr_match = (((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & not_bool(IsInHost())) & vmid == bvr_vmid
+        bxvr_match = (((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & not_bool(IsInHost())) & vmid == bvr_vmid
     } else if match_cid2 then {
-        bxvr_match = (PSTATE.EL != EL3 & EL2Enabled()) & DBGBVR_EL1[n].bits[63 .. 32] == CONTEXTIDR_EL2.bits[31 .. 0]
+        bxvr_match = (PSTATE_EL != EL3 & EL2Enabled()) & DBGBVR_EL1[n].bits[63 .. 32] == CONTEXTIDR_EL2.bits[31 .. 0]
     } else ();
     let bvr_match_valid : bool = (match_addr | match_cid) | match_cid1;
     let bxvr_match_valid : bool = match_vmid | match_cid2;
@@ -24001,7 +23997,7 @@ function AArch64_S1DirectBasePermissions (regime, walkstate, walkparams, accdesc
             if ((__IMPDEF_boolean("Realm EL2&0 regime affects EPAN") & accdesc.ss == SS_Realm) & regime == Regime_EL20) & walkstate.baseaddress.paspace != PAS_Realm then {
                 ux = 0b0
             };
-            let pan : bits(1) = PSTATE.PAN & ((ur | uw) | walkparams.epan & ux);
+            let pan : bits(1) = PSTATE_PAN & ((ur | uw) | walkparams.epan & ux);
             pr = pr & not_vec(pan);
             pw = pw & not_vec(pan)
         };
@@ -24197,7 +24193,7 @@ function AArch64_S1IndirectBasePermissions (regime, walkstate, walkparams, accde
             (ur, uw, ux, ugcs) = (0b0, 0b0, 0b0, 0b0)
         };
         if (HavePANExt() & accdesc.pan) & not_bool(regime == Regime_EL10 & walkparams.nv1 == 0b1) then {
-            if PSTATE.PAN == 0b1 & permissions.upi != 0b0000 then {
+            if PSTATE_PAN == 0b1 & permissions.upi != 0b0000 then {
                 (pr, pw) = (0b0, 0b0)
             };
             ()
@@ -27945,7 +27941,7 @@ function SPESetDataPhysicalAddress (addrdesc, accdesc) = {
 val SPESetDataVirtualAddress : bits(64) -> unit
 
 function SPESetDataVirtualAddress vaddress = {
-    let tbi : bits(1) = EffectiveTBI(vaddress, false, PSTATE.EL);
+    let tbi : bits(1) = EffectiveTBI(vaddress, false, PSTATE_EL);
     let non_tbi_is_zeros : bool = __IMPDEF_boolean("SPE non-tbi tag is zero");
     if tbi == 0b1 | not_bool(non_tbi_is_zeros) then {
         SPESampleAddress[SPEAddrPosDataVirtual][63 .. 0] = vaddress[63 .. 0]
@@ -28559,7 +28555,7 @@ function RCWCheck (old, new, soft) = {
     if 'N == 64 then {
         rcwsoftmask[49 .. 18] = Replicate([rcwsoftmask[17]], 32);
         rcwsoftmask[0] = Bit(0b0);
-        if ProtectionEnabled(PSTATE.EL) then {
+        if ProtectionEnabled(PSTATE_EL) then {
             rcwsoftmask[52] = Bit(0b0)
         };
         ()
@@ -28568,7 +28564,7 @@ function RCWCheck (old, new, soft) = {
         (rcwsoftmask[126 .. 125] @ rcwsoftmask[120 .. 119] @ rcwsoftmask[107 .. 101] @ rcwsoftmask[90 .. 56] @ rcwsoftmask[1 .. 0]) = Zeros(48);
         rcwsoftmask[114] = Bit(0b0)
     };
-    if ProtectionEnabled(PSTATE.EL) then {
+    if ProtectionEnabled(PSTATE_EL) then {
         assert(constraint((0 <= 'protectedbit & 'protectedbit < 'N)));
         if [old[protectedbit]] == 0b1 then {
             rcw_state_fail = ([new[protectedbit]] @ [new[0]]) != ([old[protectedbit]] @ [old[0]])
@@ -28576,7 +28572,7 @@ function RCWCheck (old, new, soft) = {
             rcw_state_fail = [new[protectedbit]] != [old[protectedbit]]
         } else ()
     };
-    if ProtectionEnabled(PSTATE.EL) then {
+    if ProtectionEnabled(PSTATE_EL) then {
         assert(constraint((0 <= 'protectedbit & 'protectedbit < 'N)));
         if ([old[protectedbit]] @ [old[0]]) == 0b11 then {
             rcw_mask_fail = not_bool(IsZero(EOR(new, old) & not_vec(rcwmask)))
@@ -28588,7 +28584,7 @@ function RCWCheck (old, new, soft) = {
             rcws_state_fail = [new[0]] != [old[0]]
         } else {
             assert(constraint((0 <= 'protectedbit & 'protectedbit < 'N)));
-            if not_bool(ProtectionEnabled(PSTATE.EL)) | ProtectionEnabled(PSTATE.EL) & [old[protectedbit]] == 0b0 then {
+            if not_bool(ProtectionEnabled(PSTATE_EL)) | ProtectionEnabled(PSTATE_EL) & [old[protectedbit]] == 0b0 then {
                 rcws_state_fail = [new[0]] != [old[0]]
             };
             ()
@@ -28704,7 +28700,7 @@ val AArch64_AddressWithAllocationTag : (bits(64), bits(4)) -> bits(64)
 function AArch64_AddressWithAllocationTag (address, allocation_tag) = {
     result : bits(64) = address;
     tag : bits(4) = undefined;
-    if AArch64_AllocationTagAccessIsEnabled(PSTATE.EL) then {
+    if AArch64_AllocationTagAccessIsEnabled(PSTATE_EL) then {
         tag = allocation_tag
     } else {
         tag = 0b0000
@@ -28967,7 +28963,7 @@ val AArch64_IsUnprivAccessPriv : unit -> bool
 
 function AArch64_IsUnprivAccessPriv () = {
     privileged : bool = undefined;
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           privileged = false
       },
@@ -28982,8 +28978,8 @@ function AArch64_IsUnprivAccessPriv () = {
       },
       _ => ()
     };
-    if HaveUAOExt() & PSTATE.UAO == 0b1 then {
-        privileged = PSTATE.EL != EL0
+    if HaveUAOExt() & PSTATE_UAO == 0b1 then {
+        privileged = PSTATE_EL != EL0
     };
     let privileged = privileged;
     return(privileged)
@@ -29264,7 +29260,7 @@ function AArch64_AdvSIMDFPAccessTrap target_el = {
 val SVEAccessTrap : bits(2) -> unit
 
 function SVEAccessTrap target_el = {
-    assert((UInt(target_el) >= UInt(PSTATE.EL) & target_el != EL0) & HaveEL(target_el));
+    assert((UInt(target_el) >= UInt(PSTATE_EL) & target_el != EL0) & HaveEL(target_el));
     let route_to_el2 : bool = (target_el == EL1 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
     let except : ExceptionRecord = ExceptionSyndrome(Exception_SVEAccessTrap);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
@@ -29284,13 +29280,13 @@ function CheckOriginalSVEEnabled () = {
     if (HaveEL(EL3) & (CPTR_EL3[EZ] == 0b0 | CPTR_EL3[TFP] == 0b1)) & EL3SDDUndefPriority() then {
         throw(Error_Undefined())
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & not_bool(IsInHost()) then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & not_bool(IsInHost()) then {
         match CPACR_EL1[ZEN] {
           [_, bitzero] => {
               disabled = true
           },
           0b01 => {
-              disabled = PSTATE.EL == EL0
+              disabled = PSTATE_EL == EL0
           },
           0b11 => {
               disabled = false
@@ -29304,7 +29300,7 @@ function CheckOriginalSVEEnabled () = {
               disabled = true
           },
           0b01 => {
-              disabled = PSTATE.EL == EL0
+              disabled = PSTATE_EL == EL0
           },
           0b11 => {
               disabled = false
@@ -29315,14 +29311,14 @@ function CheckOriginalSVEEnabled () = {
         };
         ()
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1 | PSTATE.EL == EL2) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1 | PSTATE_EL == EL2) & EL2Enabled() then {
         if HaveVirtHostExt() & HCR_EL2[E2H] == 0b1 then {
             match CPTR_EL2[ZEN] {
               [_, bitzero] => {
                   disabled = true
               },
               0b01 => {
-                  disabled = PSTATE.EL == EL0 & HCR_EL2[TGE] == 0b1
+                  disabled = PSTATE_EL == EL0 & HCR_EL2[TGE] == 0b1
               },
               0b11 => {
                   disabled = false
@@ -29336,7 +29332,7 @@ function CheckOriginalSVEEnabled () = {
                   disabled = true
               },
               0b01 => {
-                  disabled = PSTATE.EL == EL0 & HCR_EL2[TGE] == 0b1
+                  disabled = PSTATE_EL == EL0 & HCR_EL2[TGE] == 0b1
               },
               0b11 => {
                   disabled = false
@@ -29380,11 +29376,11 @@ val SMEAccessTrap : (SMEExceptionType, bits(2)) -> unit
 
 function SMEAccessTrap (etype, target_el_in) = {
     target_el : bits(2) = target_el_in;
-    assert(UInt(target_el) >= UInt(PSTATE.EL));
+    assert(UInt(target_el) >= UInt(PSTATE_EL));
     if target_el == EL0 then {
         target_el = EL1
     };
-    let route_to_el2 : bool = ((PSTATE.EL == EL0 & target_el == EL1) & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
+    let route_to_el2 : bool = ((PSTATE_EL == EL0 & target_el == EL1) & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
     except : ExceptionRecord = ExceptionSyndrome(Exception_SMEAccessTrap);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
@@ -29416,13 +29412,13 @@ val CheckSMEEnabled : unit -> unit
 
 function CheckSMEEnabled () = {
     disabled : bool = undefined;
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & not_bool(IsInHost()) then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & not_bool(IsInHost()) then {
         match CPACR_EL1[SMEN] {
           [_, bitzero] => {
               disabled = true
           },
           0b01 => {
-              disabled = PSTATE.EL == EL0
+              disabled = PSTATE_EL == EL0
           },
           0b11 => {
               disabled = false
@@ -29436,7 +29432,7 @@ function CheckSMEEnabled () = {
               disabled = true
           },
           0b01 => {
-              disabled = PSTATE.EL == EL0
+              disabled = PSTATE_EL == EL0
           },
           0b11 => {
               disabled = false
@@ -29447,14 +29443,14 @@ function CheckSMEEnabled () = {
         };
         ()
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1 | PSTATE.EL == EL2) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1 | PSTATE_EL == EL2) & EL2Enabled() then {
         if HaveVirtHostExt() & HCR_EL2[E2H] == 0b1 then {
             match CPTR_EL2[SMEN] {
               [_, bitzero] => {
                   disabled = true
               },
               0b01 => {
-                  disabled = PSTATE.EL == EL0 & HCR_EL2[TGE] == 0b1
+                  disabled = PSTATE_EL == EL0 & HCR_EL2[TGE] == 0b1
               },
               0b11 => {
                   disabled = false
@@ -29468,7 +29464,7 @@ function CheckSMEEnabled () = {
                   disabled = true
               },
               0b01 => {
-                  disabled = PSTATE.EL == EL0 & HCR_EL2[TGE] == 0b1
+                  disabled = PSTATE_EL == EL0 & HCR_EL2[TGE] == 0b1
               },
               0b11 => {
                   disabled = false
@@ -29504,8 +29500,8 @@ val CheckStreamingSVEEnabled : unit -> unit
 
 function CheckStreamingSVEEnabled () = {
     CheckSMEEnabled();
-    if PSTATE.SM == 0b0 then {
-        SMEAccessTrap(SMEExceptionType_NotStreaming, PSTATE.EL)
+    if PSTATE_SM == 0b0 then {
+        SMEAccessTrap(SMEExceptionType_NotStreaming, PSTATE_EL)
     };
     ()
 }
@@ -29513,7 +29509,7 @@ function CheckStreamingSVEEnabled () = {
 val CheckSVEEnabled : unit -> unit
 
 function CheckSVEEnabled () = {
-    if HaveSME() & PSTATE.SM == 0b1 then {
+    if HaveSME() & PSTATE_SM == 0b1 then {
         CheckSMEEnabled()
     } else if HaveSME() & not_bool(HaveSVE()) then {
         CheckStreamingSVEEnabled()
@@ -29526,8 +29522,8 @@ val CheckSMEAndZAEnabled : unit -> unit
 
 function CheckSMEAndZAEnabled () = {
     CheckSMEEnabled();
-    if PSTATE.ZA == 0b0 then {
-        SMEAccessTrap(SMEExceptionType_InactiveZA, PSTATE.EL)
+    if PSTATE_ZA == 0b0 then {
+        SMEAccessTrap(SMEExceptionType_InactiveZA, PSTATE_EL)
     };
     ()
 }
@@ -29536,8 +29532,8 @@ val CheckNonStreamingSVEEnabled : unit -> unit
 
 function CheckNonStreamingSVEEnabled () = {
     CheckSVEEnabled();
-    if (HaveSME() & PSTATE.SM == 0b1) & not_bool(IsFullA64Enabled()) then {
-        SMEAccessTrap(SMEExceptionType_Streaming, PSTATE.EL)
+    if (HaveSME() & PSTATE_SM == 0b1) & not_bool(IsFullA64Enabled()) then {
+        SMEAccessTrap(SMEExceptionType_Streaming, PSTATE_EL)
     };
     ()
 }
@@ -29546,8 +29542,8 @@ val CheckStreamingSVEAndZAEnabled : unit -> unit
 
 function CheckStreamingSVEAndZAEnabled () = {
     CheckStreamingSVEEnabled();
-    if PSTATE.ZA == 0b0 then {
-        SMEAccessTrap(SMEExceptionType_InactiveZA, PSTATE.EL)
+    if PSTATE_ZA == 0b0 then {
+        SMEAccessTrap(SMEExceptionType_InactiveZA, PSTATE_EL)
     };
     ()
 }
@@ -29555,16 +29551,16 @@ function CheckStreamingSVEAndZAEnabled () = {
 val CheckSMEZT0Enabled : unit -> unit
 
 function CheckSMEZT0Enabled () = {
-    if PSTATE.ZA == 0b0 then {
-        SMEAccessTrap(SMEExceptionType_InactiveZA, PSTATE.EL)
+    if PSTATE_ZA == 0b0 then {
+        SMEAccessTrap(SMEExceptionType_InactiveZA, PSTATE_EL)
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & not_bool(IsInHost()) then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & not_bool(IsInHost()) then {
         if SMCR_EL1[EZT0] == 0b0 then {
             SMEAccessTrap(SMEExceptionType_InaccessibleZT0, EL1)
         };
         ()
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1 | PSTATE.EL == EL2) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1 | PSTATE_EL == EL2) & EL2Enabled() then {
         if SMCR_EL2[EZT0] == 0b0 then {
             SMEAccessTrap(SMEExceptionType_InaccessibleZT0, EL2)
         };
@@ -29583,13 +29579,13 @@ val CheckSMEAccess : unit -> unit
 
 function CheckSMEAccess () = {
     disabled : bool = undefined;
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & not_bool(IsInHost()) then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & not_bool(IsInHost()) then {
         match CPACR_EL1[SMEN] {
           [_, bitzero] => {
               disabled = true
           },
           0b01 => {
-              disabled = PSTATE.EL == EL0
+              disabled = PSTATE_EL == EL0
           },
           0b11 => {
               disabled = false
@@ -29600,14 +29596,14 @@ function CheckSMEAccess () = {
         };
         ()
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1 | PSTATE.EL == EL2) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1 | PSTATE_EL == EL2) & EL2Enabled() then {
         if HaveVirtHostExt() & HCR_EL2[E2H] == 0b1 then {
             match CPTR_EL2[SMEN] {
               [_, bitzero] => {
                   disabled = true
               },
               0b01 => {
-                  disabled = PSTATE.EL == EL0 & HCR_EL2[TGE] == 0b1
+                  disabled = PSTATE_EL == EL0 & HCR_EL2[TGE] == 0b1
               },
               0b11 => {
                   disabled = false
@@ -29646,9 +29642,9 @@ function ResetSMEState () = {
 val SetPSTATE_SM : bits(1) -> unit
 
 function SetPSTATE_SM value_name = {
-    if PSTATE.SM != value_name then {
+    if PSTATE_SM != value_name then {
         ResetSVEState();
-        PSTATE.SM = value_name
+        PSTATE_SM = value_name
     };
     ()
 }
@@ -29656,9 +29652,9 @@ function SetPSTATE_SM value_name = {
 val SetPSTATE_ZA : bits(1) -> unit
 
 function SetPSTATE_ZA value_name = {
-    if PSTATE.ZA != value_name then {
+    if PSTATE_ZA != value_name then {
         ResetSMEState();
-        PSTATE.ZA = value_name
+        PSTATE_ZA = value_name
     };
     ()
 }
@@ -31493,7 +31489,7 @@ val GetCurrentGCSPointer : unit -> bits(64)
 
 function GetCurrentGCSPointer () = {
     ptr : bits(64) = undefined;
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           ptr = GCSPR_EL0[PTR] @ 0b000
       },
@@ -31514,7 +31510,7 @@ function GetCurrentGCSPointer () = {
 val SetCurrentGCSPointer : bits(64) -> unit
 
 function SetCurrentGCSPointer ptr = {
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           GCSPR_EL0[PTR] = ptr[63 .. 3]
       },
@@ -31535,7 +31531,7 @@ function SetCurrentGCSPointer ptr = {
 val AddGCSRecord : bits(64) -> unit
 
 function AddGCSRecord vaddress = {
-    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE.EL, MemOp_STORE);
+    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE_EL, MemOp_STORE);
     ptr : bits(64) = GetCurrentGCSPointer();
     Mem_set(ptr - 8, 8, accdesc) = vaddress;
     let ptr : bits(64) = ptr - 8;
@@ -31546,7 +31542,7 @@ function AddGCSRecord vaddress = {
 val AddGCSExRecord : (bits(64), bits(64), bits(64)) -> unit
 
 function AddGCSExRecord (elr, spsr, lr) = {
-    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE.EL, MemOp_STORE);
+    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE_EL, MemOp_STORE);
     ptr : bits(64) = GetCurrentGCSPointer();
     Mem_set(ptr - 8, 8, accdesc) = lr;
     Mem_set(ptr - 16, 8, accdesc) = spsr;
@@ -31565,10 +31561,10 @@ function GCSDataCheckException gcsinst_type = {
     let 'vect_offset = UInt(0x0);
     rn_unknown : bool = false;
     is_ret : bool = false;
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         target_el = if HCR_EL2[TGE] == 0b0 then EL1 else EL2
     } else {
-        target_el = PSTATE.EL
+        target_el = PSTATE_EL
     };
     except : ExceptionRecord = ExceptionSyndrome(Exception_GCSFail);
     match gcsinst_type {
@@ -31617,10 +31613,10 @@ function GCSDataCheckException gcsinst_type = {
 val LoadCheckGCSRecord : (bits(64), GCSInstruction) -> bits(64)
 
 function LoadCheckGCSRecord (vaddress, gcsinst_type) = {
-    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE.EL, MemOp_LOAD);
+    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE_EL, MemOp_LOAD);
     let ptr : bits(64) = GetCurrentGCSPointer();
     let recorded_va : bits(64) = Mem_read(ptr, 8, accdesc);
-    if GCSReturnValueCheckEnabled(PSTATE.EL) & recorded_va != vaddress then {
+    if GCSReturnValueCheckEnabled(PSTATE_EL) & recorded_va != vaddress then {
         GCSDataCheckException(gcsinst_type)
     };
     return(recorded_va)
@@ -31629,7 +31625,7 @@ function LoadCheckGCSRecord (vaddress, gcsinst_type) = {
 val CheckGCSExRecord : (bits(64), bits(64), bits(64), GCSInstruction) -> unit
 
 function CheckGCSExRecord (elr, spsr, lr, gcsinst_type) = {
-    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE.EL, MemOp_LOAD);
+    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE_EL, MemOp_LOAD);
     ptr : bits(64) = GetCurrentGCSPointer();
     let recorded_first_dword : bits(64) = Mem_read(ptr, 8, accdesc);
     if recorded_first_dword != (Zeros(60) @ 0b1001) then {
@@ -31661,7 +31657,7 @@ function EXLOCKException () = {
     except.syndrome[24] = Bit(Zeros());
     except.syndrome[23 .. 20] = 0b0001;
     except.syndrome[19 .. 0] = Zeros();
-    AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
+    AArch64_TakeException(PSTATE_EL, except, preferred_exception_return, vect_offset)
 }
 
 val GCSSTRTrapException : bits(2) -> unit
@@ -31682,10 +31678,10 @@ function GCSSTRTrapException target_el = {
 val GCSSS1 : bits(64) -> unit
 
 function GCSSS1 incoming_pointer_name = {
-    if not_bool(GCSEnabled(PSTATE.EL)) then {
+    if not_bool(GCSEnabled(PSTATE_EL)) then {
         EndOfInstruction()
     };
-    let accdesc : AccessDescriptor = CreateAccDescGCSSS1(PSTATE.EL);
+    let accdesc : AccessDescriptor = CreateAccDescGCSSS1(PSTATE_EL);
     let outgoing_pointer : bits(64) = GetCurrentGCSPointer();
     let cmpoperand : bits(64) = incoming_pointer_name[63 .. 12] @ 0b000000000001;
     let operand : bits(64) = outgoing_pointer[63 .. 3] @ 0b101;
@@ -31702,9 +31698,9 @@ val GCSSS2 : unit -> bits(64)
 
 function GCSSS2 () = {
     outgoing_pointer : bits(64) = undefined;
-    let accdesc_ld : AccessDescriptor = CreateAccDescGCS(PSTATE.EL, MemOp_LOAD);
-    let accdesc_st : AccessDescriptor = CreateAccDescGCS(PSTATE.EL, MemOp_STORE);
-    if not_bool(GCSEnabled(PSTATE.EL)) then {
+    let accdesc_ld : AccessDescriptor = CreateAccDescGCS(PSTATE_EL, MemOp_LOAD);
+    let accdesc_st : AccessDescriptor = CreateAccDescGCS(PSTATE_EL, MemOp_STORE);
+    if not_bool(GCSEnabled(PSTATE_EL)) then {
         EndOfInstruction()
     };
     let incoming_pointer_name : bits(64) = GetCurrentGCSPointer();
@@ -31725,7 +31721,7 @@ function GCSSS2 () = {
 val GCSPUSHM : bits(64) -> unit
 
 function GCSPUSHM value_name = {
-    if not_bool(GCSEnabled(PSTATE.EL)) then {
+    if not_bool(GCSEnabled(PSTATE_EL)) then {
         EndOfInstruction()
     };
     AddGCSRecord(value_name);
@@ -31735,8 +31731,8 @@ function GCSPUSHM value_name = {
 val GCSPOPM : unit -> bits(64)
 
 function GCSPOPM () = {
-    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE.EL, MemOp_LOAD);
-    if not_bool(GCSEnabled(PSTATE.EL)) then {
+    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE_EL, MemOp_LOAD);
+    if not_bool(GCSEnabled(PSTATE_EL)) then {
         EndOfInstruction()
     };
     ptr : bits(64) = GetCurrentGCSPointer();
@@ -31753,11 +31749,11 @@ val GCSPUSHX : unit -> unit
 
 function GCSPUSHX () = {
     let spsr : bits(64) = SPSR_read(64);
-    if not_bool(GCSEnabled(PSTATE.EL)) then {
+    if not_bool(GCSEnabled(PSTATE_EL)) then {
         EndOfInstruction()
     };
     AddGCSExRecord(ELR_read__1(), spsr, X_read(30, 64));
-    PSTATE.EXLOCK = 0b0;
+    PSTATE_EXLOCK = 0b0;
     return()
 }
 
@@ -31765,21 +31761,21 @@ val GCSPOPCX : unit -> unit
 
 function GCSPOPCX () = {
     let spsr : bits(64) = SPSR_read(64);
-    if not_bool(GCSEnabled(PSTATE.EL)) then {
+    if not_bool(GCSEnabled(PSTATE_EL)) then {
         EndOfInstruction()
     };
     CheckGCSExRecord(ELR_read__1(), spsr, X_read(30, 64), GCSInstType_POPCX);
-    PSTATE.EXLOCK = if GetCurrentEXLOCKEN() then 0b1 else 0b0;
+    PSTATE_EXLOCK = if GetCurrentEXLOCKEN() then 0b1 else 0b0;
     return()
 }
 
 val GCSPOPX : unit -> unit
 
 function GCSPOPX () = {
-    if not_bool(GCSEnabled(PSTATE.EL)) then {
+    if not_bool(GCSEnabled(PSTATE_EL)) then {
         EndOfInstruction()
     };
-    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE.EL, MemOp_LOAD);
+    let accdesc : AccessDescriptor = CreateAccDescGCS(PSTATE_EL, MemOp_LOAD);
     ptr : bits(64) = GetCurrentGCSPointer();
     let recorded_first_dword : bits(64) = Mem_read(ptr, 8, accdesc);
     if recorded_first_dword != (Zeros(60) @ 0b1001) then {
@@ -31863,7 +31859,7 @@ register HFGITR_EL2 : HFGITR_EL2_Type
 val CheckGCSSTREnabled : unit -> unit
 
 function CheckGCSSTREnabled () = {
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL0 => {
           if GCSCRE0_EL1[STREn] == 0b0 then {
               if HCR_EL2[TGE] == 0b0 then {
@@ -31901,13 +31897,13 @@ function CheckGCSSTREnabled () = {
 val CheckMOPSEnabled : unit -> unit
 
 function CheckMOPSEnabled () = {
-    if (((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b0 | HCR_EL2[E2H] == 0b0)) & (not_bool(IsHCRXEL2Enabled()) | HCRX_EL2[MSCEn] == 0b0) then {
+    if (((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b0 | HCR_EL2[E2H] == 0b0)) & (not_bool(IsHCRXEL2Enabled()) | HCRX_EL2[MSCEn] == 0b0) then {
         throw(Error_Undefined())
     };
-    if (PSTATE.EL == EL0 & SCTLR_EL1[MSCEn] == 0b0) & ((not_bool(EL2Enabled()) | HCR_EL2[TGE] == 0b0) | HCR_EL2[E2H] == 0b0) then {
+    if (PSTATE_EL == EL0 & SCTLR_EL1[MSCEn] == 0b0) & ((not_bool(EL2Enabled()) | HCR_EL2[TGE] == 0b0) | HCR_EL2[E2H] == 0b0) then {
         throw(Error_Undefined())
     };
-    if (PSTATE.EL == EL0 & IsInHost()) & SCTLR_EL2[MSCEn] == 0b0 then {
+    if (PSTATE_EL == EL0 & IsInHost()) & SCTLR_EL2[MSCEn] == 0b0 then {
         throw(Error_Undefined())
     };
     ()
@@ -31917,11 +31913,11 @@ val MismatchedCpySetTargetEL : unit -> bits(2)
 
 function MismatchedCpySetTargetEL () = {
     target_el : bits(2) = undefined;
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        target_el = PSTATE.EL
-    } else if (PSTATE.EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1 then {
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        target_el = PSTATE_EL
+    } else if (PSTATE_EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1 then {
         target_el = EL2
-    } else if ((PSTATE.EL == EL1 & EL2Enabled()) & IsHCRXEL2Enabled()) & HCRX_EL2[MCE2] == 0b1 then {
+    } else if ((PSTATE_EL == EL1 & EL2Enabled()) & IsHCRXEL2Enabled()) & HCRX_EL2[MCE2] == 0b1 then {
         target_el = EL2
     } else {
         target_el = EL1
@@ -33081,7 +33077,7 @@ val AArch32_PhysicalSErrorSyndrome : unit -> bits(16)
 function AArch32_PhysicalSErrorSyndrome () = {
     syndrome : bits(32) = Zeros(32);
     let fault : FaultRecord = GetPendingPhysicalSError();
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         let errstate : ErrorState = AArch32_PEErrorState(fault);
         syndrome[11 .. 10] = AArch32_EncodeAsyncErrorSyndrome(errstate);
         syndrome[9] = Bit(fault.extflag);
@@ -33146,37 +33142,37 @@ val AArch64_PhysicalSErrorTarget : unit -> (bool, bits(2))
 function AArch64_PhysicalSErrorTarget () = {
     route_to_el3 : bool = undefined;
     route_to_el2 : bool = undefined;
-    if PSTATE.EL != EL3 then {
+    if PSTATE_EL != EL3 then {
         route_to_el3 = HaveEL(EL3) & EffectiveEA() == 0b1
     } else {
         route_to_el3 = false
     };
-    if (not_bool(route_to_el3) & EL2Enabled()) & PSTATE.EL == EL1 then {
+    if (not_bool(route_to_el3) & EL2Enabled()) & PSTATE_EL == EL1 then {
         route_to_el2 = HCR_EL2[AMO] == 0b1
-    } else if (not_bool(route_to_el3) & EL2Enabled()) & PSTATE.EL == EL0 then {
+    } else if (not_bool(route_to_el3) & EL2Enabled()) & PSTATE_EL == EL0 then {
         route_to_el2 = not_bool(IsInHost()) & (HCR_EL2[TGE] @ HCR_EL2[AMO]) != 0b00
     } else {
         route_to_el2 = false
     };
     masked : bool = undefined;
-    match PSTATE.EL {
+    match PSTATE_EL {
       ? if ? == EL3 => {
-          masked = EffectiveEA() == 0b0 | PSTATE.A == 0b1
+          masked = EffectiveEA() == 0b0 | PSTATE_A == 0b1
       },
       ? if ? == EL2 => {
-          masked = not_bool(route_to_el3) & ((HCR_EL2[TGE] @ HCR_EL2[AMO]) == 0b00 | PSTATE.A == 0b1)
+          masked = not_bool(route_to_el3) & ((HCR_EL2[TGE] @ HCR_EL2[AMO]) == 0b00 | PSTATE_A == 0b1)
       },
       ? if ? == EL1 => {
-          masked = (not_bool(route_to_el3) & not_bool(route_to_el2)) & PSTATE.A == 0b1
+          masked = (not_bool(route_to_el3) & not_bool(route_to_el2)) & PSTATE_A == 0b1
       },
       ? if ? == EL0 => {
-          masked = (not_bool(route_to_el3) & not_bool(route_to_el2)) & PSTATE.A == 0b1
+          masked = (not_bool(route_to_el3) & not_bool(route_to_el2)) & PSTATE_A == 0b1
       },
       _ => ()
     };
     if HaveDoubleFault2Ext() then {
         nmea_bit : bits(1) = undefined;
-        match PSTATE.EL {
+        match PSTATE_EL {
           ? if ? == EL3 => {
               nmea_bit = SCR_EL3[NMEA]
           },
@@ -33198,22 +33194,22 @@ function AArch64_PhysicalSErrorTarget () = {
           _ => ()
         };
         masked = masked & nmea_bit == 0b0
-    } else if HaveDoubleFaultExt() & PSTATE.EL == EL3 then {
+    } else if HaveDoubleFaultExt() & PSTATE_EL == EL3 then {
         let nmea_bit : bits(1) = SCR_EL3[NMEA] & EffectiveEA();
         masked = masked & nmea_bit == 0b0
     } else ();
     route_masked_to_el3 : bool = undefined;
     route_masked_to_el2 : bool = undefined;
     if HaveDoubleFault2Ext() then {
-        route_masked_to_el2 = (((EL2Enabled() & not_bool(route_to_el3)) & IsHCRXEL2Enabled()) & HCRX_EL2[TMEA] == 0b1) & (PSTATE.EL == EL1 & (PSTATE.A == 0b1 | masked) | (PSTATE.EL == EL0 & masked) & not_bool(IsInHost()));
-        route_masked_to_el3 = ((HaveEL(EL3) & SCR_EL3[TMEA] == 0b1) & not_bool(route_to_el2 | route_masked_to_el2)) & ((PSTATE.EL == EL2 | PSTATE.EL == EL1) & (PSTATE.A == 0b1 | masked) | PSTATE.EL == EL0 & masked)
+        route_masked_to_el2 = (((EL2Enabled() & not_bool(route_to_el3)) & IsHCRXEL2Enabled()) & HCRX_EL2[TMEA] == 0b1) & (PSTATE_EL == EL1 & (PSTATE_A == 0b1 | masked) | (PSTATE_EL == EL0 & masked) & not_bool(IsInHost()));
+        route_masked_to_el3 = ((HaveEL(EL3) & SCR_EL3[TMEA] == 0b1) & not_bool(route_to_el2 | route_masked_to_el2)) & ((PSTATE_EL == EL2 | PSTATE_EL == EL1) & (PSTATE_A == 0b1 | masked) | PSTATE_EL == EL0 & masked)
     } else {
         route_masked_to_el2 = false;
         route_masked_to_el3 = false
     };
-    let take_in_el3 : bool = PSTATE.EL == EL3 & not_bool(masked);
-    let take_in_el2_0 : bool = ((PSTATE.EL == EL2 | IsInHost()) & not_bool(route_to_el3 | route_masked_to_el3)) & not_bool(masked);
-    let take_in_el1_0 : bool = (((PSTATE.EL == EL1 | PSTATE.EL == EL0 & not_bool(IsInHost())) & not_bool(route_to_el2 | route_masked_to_el2)) & not_bool(route_to_el3 | route_masked_to_el3)) & not_bool(masked);
+    let take_in_el3 : bool = PSTATE_EL == EL3 & not_bool(masked);
+    let take_in_el2_0 : bool = ((PSTATE_EL == EL2 | IsInHost()) & not_bool(route_to_el3 | route_masked_to_el3)) & not_bool(masked);
+    let take_in_el1_0 : bool = (((PSTATE_EL == EL1 | PSTATE_EL == EL0 & not_bool(IsInHost())) & not_bool(route_to_el2 | route_masked_to_el2)) & not_bool(route_to_el3 | route_masked_to_el3)) & not_bool(masked);
     target_el : bits(2) = undefined;
     if (take_in_el3 | route_to_el3) | route_masked_to_el3 then {
         masked = false;
@@ -33391,11 +33387,11 @@ function VDISR_write value_name = {
 val AArch64_vESBOperation : unit -> unit
 
 function AArch64_vESBOperation () = {
-    assert((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled());
+    assert((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled());
     let vSEI_enabled : bool = HCR_EL2[TGE] == 0b0 & HCR_EL2[AMO] == 0b1;
     let vSEI_pending : bool = vSEI_enabled & HCR_EL2[VSE] == 0b1;
     let vintdis : bool = Halted() | ExternalDebugInterruptsDisabled(EL1);
-    let vmasked : bool = vintdis | PSTATE.A == 0b1;
+    let vmasked : bool = vintdis | PSTATE_A == 0b1;
     if vSEI_pending & vmasked then {
         if ELUsingAArch32(EL1) then {
             target : bits(32) = Zeros(32);
@@ -33429,13 +33425,13 @@ val TakeTransactionCheckpoint : forall 'pl 'vl. (int('vl), int('pl)) -> unit
 function TakeTransactionCheckpoint (vl, pl) = {
     TSTATE.SP = SP_read();
     TSTATE.ICC_PMR_EL1 = ICC_PMR_EL1.bits;
-    TSTATE.nzcv = PSTATE.N @ (PSTATE.Z @ (PSTATE.C @ PSTATE.V));
-    (TSTATE.D @ TSTATE.A @ TSTATE.I @ TSTATE.F) = PSTATE.D @ (PSTATE.A @ (PSTATE.I @ PSTATE.F));
+    TSTATE.nzcv = PSTATE_N @ (PSTATE_Z @ (PSTATE_C @ PSTATE_V));
+    (TSTATE.D @ TSTATE.A @ TSTATE.I @ TSTATE.F) = PSTATE_D @ (PSTATE_A @ (PSTATE_I @ PSTATE_F));
     foreach (n from 0 to 30 by 1 in inc) {
         TSTATE.X[n] = X_read(n, 64)
     };
-    if IsFPEnabled(PSTATE.EL) then {
-        if IsSVEEnabled(PSTATE.EL) then {
+    if IsFPEnabled(PSTATE_EL) then {
+        if IsSVEEnabled(PSTATE_EL) then {
             foreach (n from 0 to 31 by 1 in inc) {
                 assert(constraint((0 <= 'vl - 1 & 'vl - 1 < 2048)));
                 TSTATE.Z[n][vl - 1 .. 0] = Z_read(n, vl)
@@ -33455,7 +33451,7 @@ function TakeTransactionCheckpoint (vl, pl) = {
         TSTATE.FPSR = FPSR.bits
     };
     if HaveGCS() then {
-        match PSTATE.EL {
+        match PSTATE_EL {
           ? if ? == EL0 => {
               TSTATE.GCSPR_ELx = GCSPR_EL0.bits
           },
@@ -33477,13 +33473,13 @@ function TakeTransactionCheckpoint (vl, pl) = {
 val IsTMEEnabled : unit -> bool
 
 function IsTMEEnabled () = {
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1 | PSTATE.EL == EL2) & HaveEL(EL3) then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1 | PSTATE_EL == EL2) & HaveEL(EL3) then {
         if SCR_EL3[TME] == 0b0 then {
             return(false)
         };
         ()
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
         if HCR_EL2[TME] == 0b0 then {
             return(false)
         };
@@ -33500,8 +33496,8 @@ function TransactionStartTrap dreg = {
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_TSTARTAccessTrap);
     except.syndrome[9 .. 5] = dreg[4 .. 0];
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        targetEL = PSTATE.EL
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        targetEL = PSTATE_EL
     } else if EL2Enabled() & HCR_EL2[TGE] == 0b1 then {
         targetEL = EL2
     } else {
@@ -33529,20 +33525,20 @@ val AArch64_TakeReset : forall ('cold_reset : Bool). bool('cold_reset) -> unit
 
 function AArch64_TakeReset cold_reset = {
     assert(HaveAArch64());
-    PSTATE.nRW = 0b0;
+    PSTATE_nRW = 0b0;
     if HaveEL(EL3) then {
-        PSTATE.EL = EL3
+        PSTATE_EL = EL3
     } else if HaveEL(EL2) then {
-        PSTATE.EL = EL2
+        PSTATE_EL = EL2
     } else {
-        PSTATE.EL = EL1
+        PSTATE_EL = EL1
     };
     AArch64_ResetControlRegisters(cold_reset);
-    PSTATE.SP = 0b1;
-    (PSTATE.D @ PSTATE.A @ PSTATE.I @ PSTATE.F) = 0b1111;
-    PSTATE.SS = 0b0;
-    PSTATE.DIT = 0b0;
-    PSTATE.IL = 0b0;
+    PSTATE_SP = 0b1;
+    (PSTATE_D @ PSTATE_A @ PSTATE_I @ PSTATE_F) = 0b1111;
+    PSTATE_SS = 0b0;
+    PSTATE_DIT = 0b0;
+    PSTATE_IL = 0b0;
     if HaveTME() then {
         TSTATE.depth = 0
     };
@@ -33566,10 +33562,10 @@ function AArch64_TakeReset cold_reset = {
 val AArch32_ITAdvance : unit -> unit
 
 function AArch32_ITAdvance () = {
-    if PSTATE.IT[2 .. 0] == 0b000 then {
-        PSTATE.IT = 0b00000000
+    if PSTATE_IT[2 .. 0] == 0b000 then {
+        PSTATE_IT = 0b00000000
     } else {
-        PSTATE.IT[4 .. 0] = LSL(PSTATE.IT[4 .. 0], 1)
+        PSTATE_IT[4 .. 0] = LSL(PSTATE_IT[4 .. 0], 1)
     };
     return()
 }
@@ -33586,9 +33582,9 @@ val SSAdvance : unit -> unit
 function SSAdvance () = {
     let target : bits(2) = DebugTarget();
     let step_enabled : bool = not_bool(ELUsingAArch32(target)) & MDSCR_EL1[SS] == 0b1;
-    let active_not_pending : bool = step_enabled & PSTATE.SS == 0b1;
+    let active_not_pending : bool = step_enabled & PSTATE_SS == 0b1;
     if active_not_pending then {
-        PSTATE.SS = 0b0
+        PSTATE_SS = 0b0
     };
     return()
 }
@@ -33620,7 +33616,7 @@ function AArch64_CallHypervisor immediate = {
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_HypervisorCall);
     except.syndrome[15 .. 0] = immediate;
-    if PSTATE.EL == EL3 then {
+    if PSTATE_EL == EL3 then {
         AArch64_TakeException(EL3, except, preferred_exception_return, vect_offset)
     } else {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
@@ -33635,13 +33631,13 @@ function AArch64_CallSupervisor immediate_in = {
         AArch32_ITAdvance()
     };
     SSAdvance();
-    let route_to_el2 : bool = (PSTATE.EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
+    let route_to_el2 : bool = (PSTATE_EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
     let preferred_exception_return : bits(64) = NextInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_SupervisorCall);
     except.syndrome[15 .. 0] = immediate;
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        AArch64_TakeException(PSTATE_EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
@@ -33652,12 +33648,12 @@ function AArch64_CallSupervisor immediate_in = {
 val AArch64_UndefinedFault : unit -> unit
 
 function AArch64_UndefinedFault () = {
-    let route_to_el2 : bool = (PSTATE.EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
+    let route_to_el2 : bool = (PSTATE_EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_Uncategorized);
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        AArch64_TakeException(PSTATE_EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
@@ -33671,13 +33667,13 @@ function AArch64_CheckIllegalState () = {
     except : ExceptionRecord = undefined;
     route_to_el2 : bool = undefined;
     vect_offset : int = undefined;
-    if PSTATE.IL == 0b1 then {
-        let route_to_el2 : bool = (PSTATE.EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
+    if PSTATE_IL == 0b1 then {
+        let route_to_el2 : bool = (PSTATE_EL == EL0 & EL2Enabled()) & HCR_EL2[TGE] == 0b1;
         let preferred_exception_return : bits(64) = ThisInstrAddr(64);
         let 'vect_offset = UInt(0x0);
         let except : ExceptionRecord = ExceptionSyndrome(Exception_IllegalState);
-        if UInt(PSTATE.EL) > UInt(EL1) then {
-            AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
+        if UInt(PSTATE_EL) > UInt(EL1) then {
+            AArch64_TakeException(PSTATE_EL, except, preferred_exception_return, vect_offset)
         } else if route_to_el2 then {
             AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
         } else {
@@ -33704,7 +33700,7 @@ function CheckLDST64BEnabled () = {
     trap : bool = false;
     let iss : bits(25) = ZeroExtend(0b10, 25);
     target_el : bits(2) = undefined;
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         if not_bool(IsInHost()) then {
             trap = SCTLR_EL1[EnALS] == 0b0;
             target_el = if EL2Enabled() & HCR_EL2[TGE] == 0b1 then EL2 else EL1
@@ -33715,7 +33711,7 @@ function CheckLDST64BEnabled () = {
     } else {
         target_el = EL1
     };
-    if (not_bool(trap) & EL2Enabled()) & (PSTATE.EL == EL0 & not_bool(IsInHost()) | PSTATE.EL == EL1) then {
+    if (not_bool(trap) & EL2Enabled()) & (PSTATE_EL == EL0 & not_bool(IsInHost()) | PSTATE_EL == EL1) then {
         trap = not_bool(IsHCRXEL2Enabled()) | HCRX_EL2[EnALS] == 0b0;
         target_el = EL2
     };
@@ -33732,7 +33728,7 @@ function CheckST64BVEnabled () = {
     trap : bool = false;
     let iss : bits(25) = Zeros(25);
     target_el : bits(2) = undefined;
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         if not_bool(IsInHost()) then {
             trap = SCTLR_EL1[EnASR] == 0b0;
             target_el = if EL2Enabled() & HCR_EL2[TGE] == 0b1 then EL2 else EL1
@@ -33741,7 +33737,7 @@ function CheckST64BVEnabled () = {
             target_el = EL2
         }
     };
-    if (not_bool(trap) & EL2Enabled()) & (PSTATE.EL == EL0 & not_bool(IsInHost()) | PSTATE.EL == EL1) then {
+    if (not_bool(trap) & EL2Enabled()) & (PSTATE_EL == EL0 & not_bool(IsInHost()) | PSTATE_EL == EL1) then {
         trap = not_bool(IsHCRXEL2Enabled()) | HCRX_EL2[EnASR] == 0b0;
         target_el = EL2
     };
@@ -33758,10 +33754,10 @@ function CheckST64BV0Enabled () = {
     trap : bool = false;
     let iss : bits(25) = ZeroExtend(0b1, 25);
     target_el : bits(2) = undefined;
-    if ((PSTATE.EL != EL3 & HaveEL(EL3)) & SCR_EL3[EnAS0] == 0b0) & EL3SDDUndefPriority() then {
+    if ((PSTATE_EL != EL3 & HaveEL(EL3)) & SCR_EL3[EnAS0] == 0b0) & EL3SDDUndefPriority() then {
         throw(Error_Undefined())
     };
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         if not_bool(IsInHost()) then {
             trap = SCTLR_EL1[EnAS0] == 0b0;
             target_el = if EL2Enabled() & HCR_EL2[TGE] == 0b1 then EL2 else EL1
@@ -33770,11 +33766,11 @@ function CheckST64BV0Enabled () = {
             target_el = EL2
         }
     };
-    if (not_bool(trap) & EL2Enabled()) & (PSTATE.EL == EL0 & not_bool(IsInHost()) | PSTATE.EL == EL1) then {
+    if (not_bool(trap) & EL2Enabled()) & (PSTATE_EL == EL0 & not_bool(IsInHost()) | PSTATE_EL == EL1) then {
         trap = not_bool(IsHCRXEL2Enabled()) | HCRX_EL2[EnAS0] == 0b0;
         target_el = EL2
     };
-    if not_bool(trap) & PSTATE.EL != EL3 then {
+    if not_bool(trap) & PSTATE_EL != EL3 then {
         trap = HaveEL(EL3) & SCR_EL3[EnAS0] == 0b0;
         target_el = EL3
     };
@@ -33794,7 +33790,7 @@ val AArch64_CheckForERetTrap : forall ('eret_with_pac : Bool) ('pac_uses_key_a :
 function AArch64_CheckForERetTrap (eret_with_pac, pac_uses_key_a) = {
     vect_offset : int = undefined;
     route_to_el2 : bool = false;
-    let route_to_el2 : bool = (PSTATE.EL == EL1 & EL2Enabled()) & (HaveNVExt() & HCR_EL2[NV] == 0b1 | (HaveFGTExt() & (not_bool(HaveEL(EL3)) | SCR_EL3[FGTEn] == 0b1)) & HFGITR_EL2[ERET] == 0b1);
+    let route_to_el2 : bool = (PSTATE_EL == EL1 & EL2Enabled()) & (HaveNVExt() & HCR_EL2[NV] == 0b1 | (HaveFGTExt() & (not_bool(HaveEL(EL3)) | SCR_EL3[FGTEn] == 0b1)) & HFGITR_EL2[ERET] == 0b1);
     if route_to_el2 then {
         let preferred_exception_return : bits(64) = ThisInstrAddr(64);
         let 'vect_offset = UInt(0x0);
@@ -33823,9 +33819,9 @@ function AArch64_CheckForSVCTrap immediate = {
     vect_offset : int = undefined;
     if HaveFGTExt() then {
         route_to_el2 : bool = false;
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             route_to_el2 = (((not_bool(UsingAArch32()) & not_bool(ELUsingAArch32(EL1))) & EL2Enabled()) & HFGITR_EL2[SVC_EL0] == 0b1) & (HCR_EL2[E2H] @ HCR_EL2[TGE]) != 0b11 & (not_bool(HaveEL(EL3)) | SCR_EL3[FGTEn] == 0b1)
-        } else if PSTATE.EL == EL1 then {
+        } else if PSTATE_EL == EL1 then {
             route_to_el2 = (EL2Enabled() & HFGITR_EL2[SVC_EL1] == 0b1) & (not_bool(HaveEL(EL3)) | SCR_EL3[FGTEn] == 0b1)
         } else ();
         if route_to_el2 then {
@@ -33847,15 +33843,15 @@ val AArch64_CheckForSMCUndefOrTrap : bits(16) -> unit
 function AArch64_CheckForSMCUndefOrTrap imm = {
     except : ExceptionRecord = undefined;
     vect_offset : int = undefined;
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     };
-    if (not_bool((PSTATE.EL == EL1 & EL2Enabled()) & HCR_EL2[TSC] == 0b1) & HaveEL(EL3)) & SCR_EL3[SMD] == 0b1 then {
+    if (not_bool((PSTATE_EL == EL1 & EL2Enabled()) & HCR_EL2[TSC] == 0b1) & HaveEL(EL3)) & SCR_EL3[SMD] == 0b1 then {
         throw(Error_Undefined())
     };
     route_to_el2 : bool = false;
     if not_bool(HaveEL(EL3)) then {
-        if PSTATE.EL == EL1 & EL2Enabled() then {
+        if PSTATE_EL == EL1 & EL2Enabled() then {
             if (HaveNVExt() & HCR_EL2[NV] == 0b1) & HCR_EL2[TSC] == 0b1 then {
                 route_to_el2 = true
             } else {
@@ -33865,7 +33861,7 @@ function AArch64_CheckForSMCUndefOrTrap imm = {
             throw(Error_Undefined())
         }
     } else {
-        route_to_el2 = (PSTATE.EL == EL1 & EL2Enabled()) & HCR_EL2[TSC] == 0b1
+        route_to_el2 = (PSTATE_EL == EL1 & EL2Enabled()) & HCR_EL2[TSC] == 0b1
     };
     if route_to_el2 then {
         let preferred_exception_return : bits(64) = ThisInstrAddr(64);
@@ -33942,7 +33938,7 @@ function AArch64_SystemAccessTrapSyndrome (instr_in, ec) = {
 val AArch64_SystemAccessTrap : forall 'ec. (bits(2), int('ec)) -> unit
 
 function AArch64_SystemAccessTrap (target_el, ec) = {
-    assert((HaveEL(target_el) & target_el != EL0) & UInt(target_el) >= UInt(PSTATE.EL));
+    assert((HaveEL(target_el) & target_el != EL0) & UInt(target_el) >= UInt(PSTATE_EL));
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     let except : ExceptionRecord = AArch64_SystemAccessTrapSyndrome(ThisInstr(), ec);
@@ -34003,19 +33999,19 @@ function AArch64_AArch32SystemAccessTrapSyndrome (instr, ec) = {
         } else if [instr[20]] == 0b0 & instr[15 .. 12] == 0b1111 then {
             iss[9 .. 5] = __UNKNOWN_bits(5)
         } else {
-            iss[9 .. 5] = LookUpRIndex(UInt(instr[15 .. 12]), PSTATE.M)[4 .. 0]
+            iss[9 .. 5] = LookUpRIndex(UInt(instr[15 .. 12]), PSTATE_M)[4 .. 0]
         }
     } else if except.exceptype == Exception_CP14RRTTrap | except.exceptype == Exception_AdvSIMDFPAccessTrap | except.exceptype == Exception_CP15RRTTrap then {
         iss[19 .. 16] = instr[7 .. 4];
         if instr[19 .. 16] == 0b1111 then {
             iss[14 .. 10] = __UNKNOWN_bits(5)
         } else {
-            iss[14 .. 10] = LookUpRIndex(UInt(instr[19 .. 16]), PSTATE.M)[4 .. 0]
+            iss[14 .. 10] = LookUpRIndex(UInt(instr[19 .. 16]), PSTATE_M)[4 .. 0]
         };
         if instr[15 .. 12] == 0b1111 then {
             iss[9 .. 5] = __UNKNOWN_bits(5)
         } else {
-            iss[9 .. 5] = LookUpRIndex(UInt(instr[15 .. 12]), PSTATE.M)[4 .. 0]
+            iss[9 .. 5] = LookUpRIndex(UInt(instr[15 .. 12]), PSTATE_M)[4 .. 0]
         };
         iss[4 .. 1] = instr[3 .. 0]
     } else if except.exceptype == Exception_CP14DTTrap then {
@@ -34037,7 +34033,7 @@ function AArch64_AArch32SystemAccessTrapSyndrome (instr, ec) = {
 val AArch64_AArch32SystemAccessTrap : forall 'ec. (bits(2), int('ec)) -> unit
 
 function AArch64_AArch32SystemAccessTrap (target_el, ec) = {
-    assert((HaveEL(target_el) & target_el != EL0) & UInt(target_el) >= UInt(PSTATE.EL));
+    assert((HaveEL(target_el) & target_el != EL0) & UInt(target_el) >= UInt(PSTATE_EL));
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     let except : ExceptionRecord = AArch64_AArch32SystemAccessTrapSyndrome(ThisInstr(), ec);
@@ -34050,7 +34046,7 @@ function AArch64_CheckFPAdvSIMDTrap () = {
     if (HaveEL(EL3) & CPTR_EL3[TFP] == 0b1) & EL3SDDUndefPriority() then {
         throw(Error_Undefined())
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1 | PSTATE.EL == EL2) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1 | PSTATE_EL == EL2) & EL2Enabled() then {
         if HaveVirtHostExt() & HCR_EL2[E2H] == 0b1 then {
             disabled : bool = undefined;
             match CPTR_EL2[FPEN] {
@@ -34058,7 +34054,7 @@ function AArch64_CheckFPAdvSIMDTrap () = {
                   disabled = true
               },
               0b01 => {
-                  disabled = PSTATE.EL == EL0 & HCR_EL2[TGE] == 0b1
+                  disabled = PSTATE_EL == EL0 & HCR_EL2[TGE] == 0b1
               },
               0b11 => {
                   disabled = false
@@ -34092,14 +34088,14 @@ function AArch64_CheckFPAdvSIMDTrap () = {
 val AArch64_CheckFPEnabled : unit -> unit
 
 function AArch64_CheckFPEnabled () = {
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & not_bool(IsInHost()) then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & not_bool(IsInHost()) then {
         disabled : bool = undefined;
         match CPACR_EL1[FPEN] {
           [_, bitzero] => {
               disabled = true
           },
           0b01 => {
-              disabled = PSTATE.EL == EL0
+              disabled = PSTATE_EL == EL0
           },
           0b11 => {
               disabled = false
@@ -34118,8 +34114,8 @@ val AArch64_CheckFPAdvSIMDEnabled : unit -> unit
 
 function AArch64_CheckFPAdvSIMDEnabled () = {
     AArch64_CheckFPEnabled();
-    if (HaveSME() & PSTATE.SM == 0b1) & not_bool(IsFullA64Enabled()) then {
-        SMEAccessTrap(SMEExceptionType_Streaming, PSTATE.EL)
+    if (HaveSME() & PSTATE_SM == 0b1) & not_bool(IsFullA64Enabled()) then {
+        SMEAccessTrap(SMEExceptionType_Streaming, PSTATE_EL)
     };
     ()
 }
@@ -34150,21 +34146,21 @@ val AArch64_CheckCP15InstrCoarseTraps : forall 'CRm 'CRn 'nreg.
 function AArch64_CheckCP15InstrCoarseTraps (CRn, nreg, CRm) = {
     major : int = undefined;
     let trapped_encoding : bool = (CRn == 9 & (CRm == 0 | CRm == 1 | CRm == 2 | CRm == 5 | CRm == 6 | CRm == 7 | CRm == 8) | CRn == 10 & (CRm == 0 | CRm == 1 | CRm == 4 | CRm == 8)) | CRn == 11 & (CRm == 0 | CRm == 1 | CRm == 2 | CRm == 3 | CRm == 4 | CRm == 5 | CRm == 6 | CRm == 7 | CRm == 8 | CRm == 15);
-    if ((((HaveFeatTIDCP1() & PSTATE.EL == EL0) & not_bool(IsInHost())) & not_bool(ELUsingAArch32(EL1))) & SCTLR_EL1[TIDCP] == 0b1) & trapped_encoding then {
+    if ((((HaveFeatTIDCP1() & PSTATE_EL == EL0) & not_bool(IsInHost())) & not_bool(ELUsingAArch32(EL1))) & SCTLR_EL1[TIDCP] == 0b1) & trapped_encoding then {
         if EL2Enabled() & HCR_EL2[TGE] == 0b1 then {
             AArch64_AArch32SystemAccessTrap(EL2, UInt(0x3))
         } else {
             AArch64_AArch32SystemAccessTrap(EL1, UInt(0x3))
         }
     };
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
-        if (((HaveFeatTIDCP1() & PSTATE.EL == EL0) & IsInHost()) & SCTLR_EL2[TIDCP] == 0b1) & trapped_encoding then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
+        if (((HaveFeatTIDCP1() & PSTATE_EL == EL0) & IsInHost()) & SCTLR_EL2[TIDCP] == 0b1) & trapped_encoding then {
             AArch64_AArch32SystemAccessTrap(EL2, UInt(0x3))
         };
         let 'major = if nreg == 1 then CRn else CRm;
         assert(constraint((0 <= 'major & 'major < 64)));
         if (not_bool(IsInHost()) & not_bool(major == 4 | major == 14)) & [HSTR_EL2.bits[major]] == 0b1 | (HCR_EL2[TIDCP] == 0b1 & nreg == 1) & trapped_encoding then {
-            if PSTATE.EL == EL0 & __IMPDEF_boolean("UNDEF unallocated CP15 access at EL0") then {
+            if PSTATE_EL == EL0 & __IMPDEF_boolean("UNDEF unallocated CP15 access at EL0") then {
                 throw(Error_Undefined())
             };
             AArch64_AArch32SystemAccessTrap(EL2, UInt(0x3))
@@ -34191,13 +34187,13 @@ val AArch64_TakePhysicalSErrorException : forall ('implicit_esb : Bool).
 
 function AArch64_TakePhysicalSErrorException implicit_esb = {
     let route_to_el3 : bool = HaveEL(EL3) & SCR_EL3[EA] == 0b1;
-    let route_to_el2 : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | not_bool(IsInHost()) & HCR_EL2[AMO] == 0b1);
+    let route_to_el2 : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | not_bool(IsInHost()) & HCR_EL2[AMO] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x180);
     target_el : bits(2) = undefined;
-    if PSTATE.EL == EL3 | route_to_el3 then {
+    if PSTATE_EL == EL3 | route_to_el3 then {
         target_el = EL3
-    } else if PSTATE.EL == EL2 | route_to_el2 then {
+    } else if PSTATE_EL == EL2 | route_to_el2 then {
         target_el = EL2
     } else {
         target_el = EL1
@@ -34215,7 +34211,7 @@ val AArch64_TakeVirtualSErrorException : unit -> unit
 
 function AArch64_TakeVirtualSErrorException () = {
     impdef_syndrome : bool = undefined;
-    assert((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled());
+    assert((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled());
     assert(HCR_EL2[TGE] == 0b0 & HCR_EL2[AMO] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x180);
@@ -34239,17 +34235,17 @@ val AArch64_TakePhysicalIRQException : unit -> unit
 
 function AArch64_TakePhysicalIRQException () = {
     let route_to_el3 : bool = HaveEL(EL3) & SCR_EL3[IRQ] == 0b1;
-    let route_to_el2 : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | HCR_EL2[IMO] == 0b1);
+    let route_to_el2 : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | HCR_EL2[IMO] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x80);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_IRQ);
     if route_to_el3 then {
         AArch64_TakeException(EL3, except, preferred_exception_return, vect_offset)
-    } else if PSTATE.EL == EL2 | route_to_el2 then {
-        assert(PSTATE.EL != EL3);
+    } else if PSTATE_EL == EL2 | route_to_el2 then {
+        assert(PSTATE_EL != EL3);
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
-        assert(PSTATE.EL == EL0 | PSTATE.EL == EL1);
+        assert(PSTATE_EL == EL0 | PSTATE_EL == EL1);
         AArch64_TakeException(EL1, except, preferred_exception_return, vect_offset)
     }
 }
@@ -34257,7 +34253,7 @@ function AArch64_TakePhysicalIRQException () = {
 val AArch64_TakeVirtualIRQException : unit -> unit
 
 function AArch64_TakeVirtualIRQException () = {
-    assert((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled());
+    assert((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled());
     assert(HCR_EL2[TGE] == 0b0 & HCR_EL2[IMO] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x80);
@@ -34269,17 +34265,17 @@ val AArch64_TakePhysicalFIQException : unit -> unit
 
 function AArch64_TakePhysicalFIQException () = {
     let route_to_el3 : bool = HaveEL(EL3) & SCR_EL3[FIQ] == 0b1;
-    let route_to_el2 : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | HCR_EL2[FMO] == 0b1);
+    let route_to_el2 : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | HCR_EL2[FMO] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x100);
     let except : ExceptionRecord = ExceptionSyndrome(Exception_FIQ);
     if route_to_el3 then {
         AArch64_TakeException(EL3, except, preferred_exception_return, vect_offset)
-    } else if PSTATE.EL == EL2 | route_to_el2 then {
-        assert(PSTATE.EL != EL3);
+    } else if PSTATE_EL == EL2 | route_to_el2 then {
+        assert(PSTATE_EL != EL3);
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
-        assert(PSTATE.EL == EL0 | PSTATE.EL == EL1);
+        assert(PSTATE_EL == EL0 | PSTATE_EL == EL1);
         AArch64_TakeException(EL1, except, preferred_exception_return, vect_offset)
     }
 }
@@ -34287,7 +34283,7 @@ function AArch64_TakePhysicalFIQException () = {
 val AArch64_TakeVirtualFIQException : unit -> unit
 
 function AArch64_TakeVirtualFIQException () = {
-    assert((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled());
+    assert((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled());
     assert(HCR_EL2[TGE] == 0b0 & HCR_EL2[FMO] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x100);
@@ -34298,13 +34294,13 @@ function AArch64_TakeVirtualFIQException () = {
 val AArch64_SoftwareBreakpoint : bits(16) -> unit
 
 function AArch64_SoftwareBreakpoint immediate = {
-    let route_to_el2 : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | MDCR_EL2[TDE] == 0b1);
+    let route_to_el2 : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | MDCR_EL2[TDE] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_SoftwareBreakpoint);
     except.syndrome[15 .. 0] = immediate;
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        AArch64_TakeException(PSTATE.EL, except, preferred_exception_return, vect_offset)
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        AArch64_TakeException(PSTATE_EL, except, preferred_exception_return, vect_offset)
     } else if route_to_el2 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
@@ -34319,8 +34315,8 @@ val SoftwareStep_SteppedEX : unit -> bool
 val AArch64_SoftwareStepException : unit -> unit
 
 function AArch64_SoftwareStepException () = {
-    assert(PSTATE.EL != EL3);
-    let route_to_el2 : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | MDCR_EL2[TDE] == 0b1);
+    assert(PSTATE_EL != EL3);
+    let route_to_el2 : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[TGE] == 0b1 | MDCR_EL2[TDE] == 0b1);
     let preferred_exception_return : bits(64) = ThisInstrAddr(64);
     let 'vect_offset = UInt(0x0);
     except : ExceptionRecord = ExceptionSyndrome(Exception_SoftwareStep);
@@ -34331,7 +34327,7 @@ function AArch64_SoftwareStepException () = {
         except.syndrome[6] = Bit(if SoftwareStep_SteppedEX() then 0b1 else 0b0)
     };
     except.syndrome[5 .. 0] = 0b100010;
-    if PSTATE.EL == EL2 | route_to_el2 then {
+    if PSTATE_EL == EL2 | route_to_el2 then {
         AArch64_TakeException(EL2, except, preferred_exception_return, vect_offset)
     } else {
         AArch64_TakeException(EL1, except, preferred_exception_return, vect_offset)
@@ -34346,8 +34342,8 @@ function AArch64_PCAlignmentFault () = {
     except : ExceptionRecord = ExceptionSyndrome(Exception_PCAlignment);
     except.vaddress = ThisInstrAddr(64);
     target_el : bits(2) = EL1;
-    if UInt(PSTATE.EL) > UInt(EL1) then {
-        target_el = PSTATE.EL
+    if UInt(PSTATE_EL) > UInt(EL1) then {
+        target_el = PSTATE_EL
     } else if EL2Enabled() & HCR_EL2[TGE] == 0b1 then {
         target_el = EL2
     } else ();
@@ -34376,7 +34372,7 @@ function EffectiveMDSELR_EL1_BANK () = {
     if num_bp <= 16 & num_wp <= 16 then {
         return(0b00)
     };
-    if (HaveEL(EL3) & MDCR_EL3[EBWE] == 0b0 | (PSTATE.EL != EL3 & EL2Enabled()) & MDCR_EL2[EBWE] == 0b0) | PSTATE.EL == EL1 & MDSCR_EL1[EMBWE] == 0b0 then {
+    if (HaveEL(EL3) & MDCR_EL3[EBWE] == 0b0 | (PSTATE_EL != EL3 & EL2Enabled()) & MDCR_EL2[EBWE] == 0b0) | PSTATE_EL == EL1 & MDSCR_EL1[EMBWE] == 0b0 then {
         return(0b00)
     };
     bank : bits(2) = MDSELR_EL1[BANK];
@@ -34535,7 +34531,7 @@ function SPESampleAddAddressPCVirtual () = {
           Unreachable()
       }
     };
-    let el : bits(2) = PSTATE.EL;
+    let el : bits(2) = PSTATE_EL;
     SPESampleAddress[SPEAddrPosPCVirtual][63 .. 56] = ((ns @ el) @ nse) @ Zeros(4);
     SPESampleAddressValid[SPEAddrPosPCVirtual] = true
 }
@@ -34546,7 +34542,7 @@ function CollectContextIDR1 () = {
     if not_bool(StatisticalProfilingEnabled()) then {
         return(false)
     };
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         return(false)
     };
     if EL2Enabled() & HCR_EL2[TGE] == 0b1 then {
@@ -35504,7 +35500,7 @@ function SPE_PMBIDR_P_Read () = {
     owning_ss : SecurityState = undefined;
     owning_el : bits(2) = undefined;
     (owning_ss, owning_el) = ProfilingBufferOwner();
-    if UInt(owning_el) > UInt(PSTATE.EL) | PSTATE.EL != EL3 & owning_ss != CurrentSecurityState() then {
+    if UInt(owning_el) > UInt(PSTATE_EL) | PSTATE_EL != EL3 & owning_ss != CurrentSecurityState() then {
         return(0b1)
     } else {
         return(0b0)
@@ -35612,7 +35608,7 @@ function BRBEExceptionReturn (target_address_in, source_el) = {
       _ => ()
     };
     let source_valid : bool = BranchRecordAllowed(source_el);
-    let target_valid : bool = BranchRecordAllowed(PSTATE.EL);
+    let target_valid : bool = BranchRecordAllowed(PSTATE_EL);
     let branch_valid : bool = source_valid | target_valid;
     if branch_valid then {
         let branch_type : bits(6) = 0b000111;
@@ -35625,7 +35621,7 @@ function BRBEExceptionReturn (target_address_in, source_el) = {
           0b1
         else
           0b0;
-        let el : bits(2) = if target_valid then PSTATE.EL else 0b00;
+        let el : bits(2) = if target_valid then PSTATE_EL else 0b00;
         let mispredict : bits(1) = if (source_valid & BRBEMispredictAllowed()) & BranchMispredict() then
           0b1
         else
@@ -35728,7 +35724,7 @@ function AArch64_ExceptionReturn (new_pc_in, spsr) = {
     if HaveIESB() then {
         sync_errors : bool = SCTLR_read__1()[IESB] == 0b1;
         if HaveDoubleFaultExt() then {
-            sync_errors = sync_errors | (SCR_EL3[EA] @ SCR_EL3[NMEA]) == 0b11 & PSTATE.EL == EL3
+            sync_errors = sync_errors | (SCR_EL3[EA] @ SCR_EL3[NMEA]) == 0b11 & PSTATE_EL == EL3
         };
         if sync_errors then {
             SynchronizeErrors();
@@ -35740,7 +35736,7 @@ function AArch64_ExceptionReturn (new_pc_in, spsr) = {
     let sync_errors = sync_errors;
     SynchronizeContext();
     __InstructionStep = false;
-    let source_el : bits(2) = PSTATE.EL;
+    let source_el : bits(2) = PSTATE_EL;
     let illegal_psr_state : bool = IllegalExceptionReturn(spsr);
     SetPSTATEFromPSR__1(spsr, illegal_psr_state);
     ClearExclusiveLocal(ProcessorID());
@@ -35749,19 +35745,19 @@ function AArch64_ExceptionReturn (new_pc_in, spsr) = {
         new_pc[63 .. 32] = __UNKNOWN_bits(32);
         new_pc[1 .. 0] = __UNKNOWN_bits(2)
     } else if UsingAArch32() then {
-        if PSTATE.T == 0b1 then {
+        if PSTATE_T == 0b1 then {
             new_pc[0] = Bit(0b0)
         } else {
             new_pc[1 .. 0] = 0b00
         }
     } else {
-        new_pc = AArch64_BranchAddr(new_pc, PSTATE.EL)
+        new_pc = AArch64_BranchAddr(new_pc, PSTATE_EL)
     };
     if HaveBRBExt() then {
         BRBEExceptionReturn(new_pc, source_el)
     };
     if UsingAArch32() then {
-        if HaveSME() & PSTATE.SM == 0b1 then {
+        if HaveSME() & PSTATE_SM == 0b1 then {
             ResetSVEState()
         };
         let branch_conditional : bool = false;
@@ -35945,7 +35941,7 @@ function Broadcast (shareability, r) = {
 val AArch64_TLBI_ALL : (SecurityState, Regime, Shareability, TLBIMemAttr) -> unit
 
 function AArch64_TLBI_ALL (security, regime, shareability, attr) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_ALL;
     r.from_aarch64 = true;
@@ -35963,7 +35959,7 @@ function AArch64_TLBI_ALL (security, regime, shareability, attr) = {
 val AArch64_TLBI_VMALL : (SecurityState, Regime, bits(16), Shareability, TLBIMemAttr) -> unit
 
 function AArch64_TLBI_VMALL (security, regime, vmid, shareability, attr) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_VMALL;
     r.from_aarch64 = true;
@@ -35982,7 +35978,7 @@ function AArch64_TLBI_VMALL (security, regime, vmid, shareability, attr) = {
 val AArch64_TLBI_VMALLS12 : (SecurityState, Regime, bits(16), Shareability, TLBIMemAttr) -> unit
 
 function AArch64_TLBI_VMALLS12 (security, regime, vmid, shareability, attr) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_VMALLS12;
     r.from_aarch64 = true;
@@ -36001,7 +35997,7 @@ function AArch64_TLBI_VMALLS12 (security, regime, vmid, shareability, attr) = {
 val AArch64_TLBI_ASID : (SecurityState, Regime, bits(16), Shareability, TLBIMemAttr, bits(64)) -> unit
 
 function AArch64_TLBI_ASID (security, regime, vmid, shareability, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_ASID;
     r.from_aarch64 = true;
@@ -36021,7 +36017,7 @@ function AArch64_TLBI_ASID (security, regime, vmid, shareability, attr, Xt) = {
 val AArch64_TLBI_VA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(64)) -> unit
 
 function AArch64_TLBI_VA (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_VA;
     r.from_aarch64 = true;
@@ -36048,7 +36044,7 @@ function AArch64_TLBI_VA (security, regime, vmid, shareability, level, attr, Xt)
 val AArch64_TLBIP_VA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(128)) -> unit
 
 function AArch64_TLBIP_VA (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_VA;
     r.from_aarch64 = true;
@@ -36075,7 +36071,7 @@ function AArch64_TLBIP_VA (security, regime, vmid, shareability, level, attr, Xt
 val AArch64_TLBI_VAA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(64)) -> unit
 
 function AArch64_TLBI_VAA (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_VAA;
     r.from_aarch64 = true;
@@ -36101,7 +36097,7 @@ function AArch64_TLBI_VAA (security, regime, vmid, shareability, level, attr, Xt
 val AArch64_TLBIP_VAA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(128)) -> unit
 
 function AArch64_TLBIP_VAA (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_VAA;
     r.from_aarch64 = true;
@@ -36127,7 +36123,7 @@ function AArch64_TLBIP_VAA (security, regime, vmid, shareability, level, attr, X
 val AArch64_TLBI_IPAS2 : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(64)) -> unit
 
 function AArch64_TLBI_IPAS2 (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_IPAS2;
     r.from_aarch64 = true;
@@ -36167,7 +36163,7 @@ function AArch64_TLBI_IPAS2 (security, regime, vmid, shareability, level, attr, 
 val AArch64_TLBIP_IPAS2 : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(128)) -> unit
 
 function AArch64_TLBIP_IPAS2 (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_IPAS2;
     r.from_aarch64 = true;
@@ -36327,7 +36323,7 @@ function TLBIPRange (regime, Xt) = {
 val AArch64_TLBI_RVA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(64)) -> unit
 
 function AArch64_TLBI_RVA (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_RVA;
     r.from_aarch64 = true;
@@ -36355,7 +36351,7 @@ function AArch64_TLBI_RVA (security, regime, vmid, shareability, level, attr, Xt
 val AArch64_TLBIP_RVA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(128)) -> unit
 
 function AArch64_TLBIP_RVA (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_RVA;
     r.from_aarch64 = true;
@@ -36383,7 +36379,7 @@ function AArch64_TLBIP_RVA (security, regime, vmid, shareability, level, attr, X
 val AArch64_TLBI_RVAA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(64)) -> unit
 
 function AArch64_TLBI_RVAA (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_RVAA;
     r.from_aarch64 = true;
@@ -36414,7 +36410,7 @@ function AArch64_TLBI_RVAA (security, regime, vmid, shareability, level, attr, X
 val AArch64_TLBIP_RVAA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(128)) -> unit
 
 function AArch64_TLBIP_RVAA (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_RVAA;
     r.from_aarch64 = true;
@@ -36445,7 +36441,7 @@ function AArch64_TLBIP_RVAA (security, regime, vmid, shareability, level, attr, 
 val AArch64_TLBI_RIPAS2 : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(64)) -> unit
 
 function AArch64_TLBI_RIPAS2 (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_RIPAS2;
     r.from_aarch64 = true;
@@ -36490,7 +36486,7 @@ function AArch64_TLBI_RIPAS2 (security, regime, vmid, shareability, level, attr,
 val AArch64_TLBIP_RIPAS2 : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(128)) -> unit
 
 function AArch64_TLBIP_RIPAS2 (security, regime, vmid, shareability, level, attr, Xt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_RIPAS2;
     r.from_aarch64 = true;
@@ -36535,7 +36531,7 @@ function AArch64_TLBIP_RIPAS2 (security, regime, vmid, shareability, level, attr
 val AArch64_TLBI_RPA : (TLBILevel, bits(64), Shareability) -> unit
 
 function AArch64_TLBI_RPA (level, Xt, shareability) = {
-    assert(HaveRME() & PSTATE.EL == EL3);
+    assert(HaveRME() & PSTATE_EL == EL3);
     r : TLBIRecord = undefined;
     range_bits : int = undefined;
     p : {12, 14, 16} = 12;
@@ -36622,7 +36618,7 @@ function AArch64_TLBI_RPA (level, Xt, shareability) = {
 val AArch64_TLBI_PAALL : Shareability -> unit
 
 function AArch64_TLBI_PAALL shareability = {
-    assert(HaveRME() & PSTATE.EL == EL3);
+    assert(HaveRME() & PSTATE_EL == EL3);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_PAALL;
     r.level = TLBILevel_Any;
@@ -36645,18 +36641,18 @@ function AArch64_DC (regval, cachetype, cacheop, opscope_in) = {
     cache.cacheop = cacheop;
     cache.opscope = opscope;
     if opscope == CacheOpScope_SetWay then {
-        let ss : SecurityState = SecurityStateAtEL(PSTATE.EL);
+        let ss : SecurityState = SecurityStateAtEL(PSTATE_EL);
         cache.cpas = CPASAtSecurityState(ss);
         cache.shareability = Shareability_NSH;
         (cache.setnum, cache.waynum, cache.level) = DecodeSW(regval, cachetype);
-        if ((cacheop == CacheOp_Invalidate & PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[SWIO] == 0b1 | (HCR_EL2[DC] @ HCR_EL2[VM]) != 0b00) then {
+        if ((cacheop == CacheOp_Invalidate & PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[SWIO] == 0b1 | (HCR_EL2[DC] @ HCR_EL2[VM]) != 0b00) then {
             cache.cacheop = CacheOp_CleanInvalidate
         };
         CACHE_OP(cache);
         return()
     };
     if EL2Enabled() & not_bool(IsInHost()) then {
-        if PSTATE.EL == EL0 | PSTATE.EL == EL1 then {
+        if PSTATE_EL == EL0 | PSTATE_EL == EL1 then {
             cache.is_vmid_valid = true;
             cache.vmid = VMID_read()
         } else {
@@ -36665,7 +36661,7 @@ function AArch64_DC (regval, cachetype, cacheop, opscope_in) = {
     } else {
         cache.is_vmid_valid = false
     };
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         cache.is_asid_valid = true;
         cache.asid = ASID_read()
     } else {
@@ -36736,7 +36732,7 @@ function AArch64_DC (regval, cachetype, cacheop, opscope_in) = {
         cache.shareability = __UNKNOWN_Shareability();
         cache.paddress = __UNKNOWN_FullAddress()
     };
-    if ((cacheop == CacheOp_Invalidate & PSTATE.EL == EL1) & EL2Enabled()) & (HCR_EL2[DC] @ HCR_EL2[VM]) != 0b00 then {
+    if ((cacheop == CacheOp_Invalidate & PSTATE_EL == EL1) & EL2Enabled()) & (HCR_EL2[DC] @ HCR_EL2[VM]) != 0b00 then {
         cache.cacheop = CacheOp_CleanInvalidate
     };
     if (cache.translated & cache.cpas == CPAS_Secure) & not_bool(HaveSecureState()) then {
@@ -36788,9 +36784,9 @@ function AArch64_IC__1 (regval, opscope) = {
     cache.cacheop = CacheOp_Invalidate;
     cache.opscope = opscope;
     if opscope == CacheOpScope_ALLU | opscope == CacheOpScope_ALLUIS then {
-        let ss : SecurityState = SecurityStateAtEL(PSTATE.EL);
+        let ss : SecurityState = SecurityStateAtEL(PSTATE_EL);
         cache.cpas = CPASAtSecurityState(ss);
-        if opscope == CacheOpScope_ALLUIS | ((opscope == CacheOpScope_ALLU & PSTATE.EL == EL1) & EL2Enabled()) & HCR_EL2[FB] == 0b1 then {
+        if opscope == CacheOpScope_ALLUIS | ((opscope == CacheOpScope_ALLU & PSTATE_EL == EL1) & EL2Enabled()) & HCR_EL2[FB] == 0b1 then {
             cache.shareability = Shareability_ISH
         } else {
             cache.shareability = Shareability_NSH
@@ -36800,7 +36796,7 @@ function AArch64_IC__1 (regval, opscope) = {
     } else {
         assert(opscope == CacheOpScope_PoU);
         if EL2Enabled() & not_bool(IsInHost()) then {
-            if PSTATE.EL == EL0 | PSTATE.EL == EL1 then {
+            if PSTATE_EL == EL0 | PSTATE_EL == EL1 then {
                 cache.is_vmid_valid = true;
                 cache.vmid = VMID_read()
             } else {
@@ -36809,7 +36805,7 @@ function AArch64_IC__1 (regval, opscope) = {
         } else {
             cache.is_vmid_valid = false
         };
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             cache.is_asid_valid = true;
             cache.asid = ASID_read()
         } else {
@@ -36844,7 +36840,7 @@ val AArch64_RestrictPrediction : (bits(64), RestrictType) -> unit
 function AArch64_RestrictPrediction (val_name, restriction) = {
     c : ExecutionCntxt = undefined;
     let target_el : bits(2) = val_name[25 .. 24];
-    if not_bool(HaveEL(target_el)) | UInt(target_el) > UInt(PSTATE.EL) then {
+    if not_bool(HaveEL(target_el)) | UInt(target_el) > UInt(PSTATE_EL) then {
         EndOfInstruction()
     };
     let ns : bits(1) = [val_name[26]];
@@ -36859,7 +36855,7 @@ function AArch64_RestrictPrediction (val_name, restriction) = {
     c.security = ss;
     c.target_el = target_el;
     if EL2Enabled() then {
-        if PSTATE.EL == EL0 & not_bool(IsInHost()) | PSTATE.EL == EL1 then {
+        if PSTATE_EL == EL0 & not_bool(IsInHost()) | PSTATE_EL == EL1 then {
             c.is_vmid_valid = true;
             c.all_vmid = false;
             c.vmid = VMID_read()
@@ -36873,7 +36869,7 @@ function AArch64_RestrictPrediction (val_name, restriction) = {
     } else {
         c.is_vmid_valid = false
     };
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         c.is_asid_valid = true;
         c.all_asid = false;
         c.asid = ASID_read()
@@ -37532,7 +37528,7 @@ function AArch32_S1LDHasPermissionsFault (regime, walkparams, perms, memtype, pa
         let ux : bits(1) = ur & not_vec(xn | uw & walkparams.wxn);
         let px : bits(1) = pr & not_vec(((xn | pxn) | pw & walkparams.wxn) | uw & walkparams.uwxn);
         if HavePANExt() & accdesc.pan then {
-            let pan : bits(1) = PSTATE.PAN & (ur | uw);
+            let pan : bits(1) = PSTATE_PAN & (ur | uw);
             pr = pr & not_vec(pan);
             pw = pw & not_vec(pan)
         };
@@ -38503,7 +38499,7 @@ function AArch32_S1SDHasPermissionsFault (regime, perms_in, memtype, paspace, ac
     let ux : bits(1) = ur & not_vec(perms.xn | uw & sctlr[WXN]);
     let px : bits(1) = pr & not_vec(((perms.xn | perms.pxn) | pw & sctlr[WXN]) | uw & sctlr[UWXN]);
     if HavePANExt() & accdesc.pan then {
-        let pan : bits(1) = PSTATE.PAN & (ur | uw);
+        let pan : bits(1) = PSTATE_PAN & (ur | uw);
         pr = pr & not_vec(pan);
         pw = pw & not_vec(pan)
     };
@@ -39346,7 +39342,7 @@ function AArch64_AT (address, stage_in, el_in, ataccess) = {
     stage : TranslationStage = stage_in;
     el : bits(2) = el_in;
     let effective_nse_ns : bits(2) = EffectiveSCR_EL3_NSE() @ EffectiveSCR_EL3_NS();
-    if ((HaveRME() & PSTATE.EL == EL3) & effective_nse_ns == 0b10) & el != EL3 then {
+    if ((HaveRME() & PSTATE_EL == EL3) & effective_nse_ns == 0b10) & el != EL3 then {
         throw(Error_Undefined())
     };
     if ((HCR_EL2[E2H] @ HCR_EL2[TGE]) == 0b11 & el == EL1) & stage == TranslationStage_1 then {
@@ -39400,7 +39396,7 @@ function AArch64_AT (address, stage_in, el_in, ataccess) = {
     let is_ATS1Ex : bool = stage != TranslationStage_12;
     if fault.statuscode != Fault_None then {
         addrdesc = CreateFaultyAddressDescriptor(address, fault);
-        if (IsExternalAbort__1(fault) | PSTATE.EL == EL1 & fault.s2fs1walk) | (HaveRME() & fault.gpcf.gpf != GPCF_None) & (ReportAsGPCException(fault) | ((HCR_EL2[GPF] == 0b1 & PSTATE.EL == EL1) & (el == EL1 | el == EL0)) & is_ATS1Ex) then {
+        if (IsExternalAbort__1(fault) | PSTATE_EL == EL1 & fault.s2fs1walk) | (HaveRME() & fault.gpcf.gpf != GPCF_None) & (ReportAsGPCException(fault) | ((HCR_EL2[GPF] == 0b1 & PSTATE_EL == EL1) & (el == EL1 | el == EL0)) & is_ATS1Ex) then {
             PAR_EL1_write() = Mk_PAR_EL1_Type(__UNKNOWN_bits(128));
             AArch64_Abort(address, addrdesc.fault)
         };
@@ -39518,8 +39514,8 @@ function DCPSInstruction target_el = {
     handle_el : bits(2) = undefined;
     match target_el {
       ? if ? == EL1 => {
-          if PSTATE.EL == EL2 | PSTATE.EL == EL3 & not_bool(UsingAArch32()) then {
-              handle_el = PSTATE.EL
+          if PSTATE_EL == EL2 | PSTATE_EL == EL3 & not_bool(UsingAArch32()) then {
+              handle_el = PSTATE_EL
           } else if EL2Enabled() & HCR_EL2[TGE] == 0b1 then {
               throw(Error_Undefined())
           } else {
@@ -39529,7 +39525,7 @@ function DCPSInstruction target_el = {
       ? if ? == EL2 => {
           if not_bool(HaveEL(EL2)) then {
               throw(Error_Undefined())
-          } else if PSTATE.EL == EL3 & not_bool(UsingAArch32()) then {
+          } else if PSTATE_EL == EL3 & not_bool(UsingAArch32()) then {
               handle_el = EL3
           } else if not_bool(IsSecureEL2Enabled()) & CurrentSecurityState() == SS_Secure then {
               throw(Error_Undefined())
@@ -39550,7 +39546,7 @@ function DCPSInstruction target_el = {
     };
     let from_secure : bool = CurrentSecurityState() == SS_Secure;
     if ELUsingAArch32(handle_el) then {
-        if PSTATE.M == M32_Monitor then {
+        if PSTATE_M == M32_Monitor then {
             SCR[NS] = 0b0
         };
         assert(UsingAArch32());
@@ -39558,7 +39554,7 @@ function DCPSInstruction target_el = {
           ? if ? == EL1 => {
               AArch32_WriteMode(M32_Svc);
               if HavePANExt() & SCTLR_read__2()[SPAN] == 0b0 then {
-                  PSTATE.PAN = 0b1
+                  PSTATE_PAN = 0b1
               };
               ()
           },
@@ -39569,9 +39565,9 @@ function DCPSInstruction target_el = {
               AArch32_WriteMode(M32_Monitor);
               if HavePANExt() then {
                   if not_bool(from_secure) then {
-                      PSTATE.PAN = 0b0
+                      PSTATE_PAN = 0b0
                   } else if SCTLR_read__2()[SPAN] == 0b0 then {
-                      PSTATE.PAN = 0b1
+                      PSTATE_PAN = 0b1
                   } else ()
               };
               ()
@@ -39585,7 +39581,7 @@ function DCPSInstruction target_el = {
             LR_write() = __UNKNOWN_bits(32)
         };
         SPSR_set(32) = __UNKNOWN_bits(32);
-        PSTATE.E = SCTLR_read__1()[EE];
+        PSTATE_E = SCTLR_read__1()[EE];
         DLR_write() = __UNKNOWN_bits(32);
         DSPSR_write() = Mk_DSPSR_Type(__UNKNOWN_bits(32))
     } else {
@@ -39593,16 +39589,16 @@ function DCPSInstruction target_el = {
         if from_32 then {
             AArch64_MaybeZeroRegisterUppers()
         };
-        if (from_32 & HaveSME()) & PSTATE.SM == 0b1 then {
+        if (from_32 & HaveSME()) & PSTATE_SM == 0b1 then {
             ResetSVEState()
         } else {
             MaybeZeroSVEUppers(target_el)
         };
-        PSTATE.nRW = 0b0;
-        PSTATE.SP = 0b1;
-        PSTATE.EL = handle_el;
+        PSTATE_nRW = 0b0;
+        PSTATE_SP = 0b1;
+        PSTATE_EL = handle_el;
         if HavePANExt() & (handle_el == EL1 & SCTLR_EL1[SPAN] == 0b0 | ((handle_el == EL2 & HCR_EL2[E2H] == 0b1) & HCR_EL2[TGE] == 0b1) & SCTLR_EL2[SPAN] == 0b0) then {
-            PSTATE.PAN = 0b1
+            PSTATE_PAN = 0b1
         };
         ELR_set__1() = __UNKNOWN_bits(64);
         SPSR_set(64) = __UNKNOWN_bits(64);
@@ -39610,20 +39606,20 @@ function DCPSInstruction target_el = {
         DLR_EL0 = __UNKNOWN_bits(64);
         DSPSR_EL0 = Mk_DSPSR_EL0_Type(__UNKNOWN_bits(64));
         if HaveUAOExt() then {
-            PSTATE.UAO = 0b0
+            PSTATE_UAO = 0b0
         };
         if HaveMTEExt() then {
-            PSTATE.TCO = 0b1
+            PSTATE_TCO = 0b1
         };
         if HaveGCS() then {
-            PSTATE.EXLOCK = 0b0
+            PSTATE_EXLOCK = 0b0
         };
         ()
     };
     UpdateEDSCRFields();
     sync_errors : bool = HaveIESB() & SCTLR_read__1()[IESB] == 0b1;
     if HaveDoubleFaultExt() & not_bool(UsingAArch32()) then {
-        sync_errors = sync_errors | (EffectiveEA() == 0b1 & SCR_EL3[NMEA] == 0b1) & PSTATE.EL == EL3
+        sync_errors = sync_errors | (EffectiveEA() == 0b1 & SCR_EL3[NMEA] == 0b1) & PSTATE_EL == EL3
     };
     if not_bool(ConstrainUnpredictableBool(Unpredictable_IESBinDebug)) then {
         sync_errors = false
@@ -39640,15 +39636,15 @@ function DebugRestorePSR () = {
     if UsingAArch32() then {
         let spsr : bits(32) = SPSR_read(32);
         SetPSTATEFromPSR(spsr);
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V @ PSTATE.Q @ PSTATE.GE @ PSTATE.SS @ PSTATE.A @ PSTATE.I @ PSTATE.F) = __UNKNOWN_bits(13);
-        PSTATE.IT = 0b00000000;
-        PSTATE.T = 0b1;
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V @ PSTATE_Q @ PSTATE_GE @ PSTATE_SS @ PSTATE_A @ PSTATE_I @ PSTATE_F) = __UNKNOWN_bits(13);
+        PSTATE_IT = 0b00000000;
+        PSTATE_T = 0b1;
         DLR_write() = __UNKNOWN_bits(32);
         DSPSR_write() = Mk_DSPSR_Type(__UNKNOWN_bits(32))
     } else {
         let spsr : bits(64) = SPSR_read(64);
         SetPSTATEFromPSR(spsr);
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V @ PSTATE.SS @ PSTATE.D @ PSTATE.A @ PSTATE.I @ PSTATE.F) = __UNKNOWN_bits(9);
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V @ PSTATE_SS @ PSTATE_D @ PSTATE_A @ PSTATE_I @ PSTATE_F) = __UNKNOWN_bits(9);
         DLR_EL0 = __UNKNOWN_bits(64);
         DSPSR_EL0 = Mk_DSPSR_EL0_Type(__UNKNOWN_bits(64))
     };
@@ -39661,7 +39657,7 @@ function DRPSInstruction () = {
     SynchronizeContext();
     sync_errors : bool = HaveIESB() & SCTLR_read__1()[IESB] == 0b1;
     if HaveDoubleFaultExt() & not_bool(UsingAArch32()) then {
-        sync_errors = sync_errors | (EffectiveEA() == 0b1 & SCR_EL3[NMEA] == 0b1) & PSTATE.EL == EL3
+        sync_errors = sync_errors | (EffectiveEA() == 0b1 & SCR_EL3[NMEA] == 0b1) & PSTATE_EL == EL3
     };
     if not_bool(ConstrainUnpredictableBool(Unpredictable_IESBinDebug)) then {
         sync_errors = false
@@ -39760,13 +39756,13 @@ val CheckSoftwareStep : unit -> unit
 
 function CheckSoftwareStep () = {
     let step_enabled : bool = (not_bool(ELUsingAArch32(DebugTarget())) & AArch64_GenerateDebugExceptions()) & MDSCR_EL1[SS] == 0b1;
-    if step_enabled & PSTATE.SS == 0b1 then {
+    if step_enabled & PSTATE_SS == 0b1 then {
         __InstructionStep = true
     };
     if not_bool(step_enabled) then {
         __InstructionStep = false
     };
-    if step_enabled & PSTATE.SS == 0b0 then {
+    if step_enabled & PSTATE_SS == 0b0 then {
         AArch64_SoftwareStepException()
     };
     ()
@@ -40349,7 +40345,7 @@ function AArch32_BreakpointValueMatch (n_in, vaddress, linked_to) = {
         let 'top = 31;
         bvr_match = vaddress[top .. 2] == DBGBVR_read(n).bits[top .. 2] & byte_select_match
     } else if match_cid1 then {
-        bvr_match = PSTATE.EL != EL2 & CONTEXTIDR_read().bits == DBGBVR_read(n).bits[31 .. 0]
+        bvr_match = PSTATE_EL != EL2 & CONTEXTIDR_read().bits == DBGBVR_read(n).bits[31 .. 0]
     } else ();
     if match_vmid then {
         vmid : bits(16) = undefined;
@@ -40364,9 +40360,9 @@ function AArch32_BreakpointValueMatch (n_in, vaddress, linked_to) = {
             vmid = VTTBR_EL2_read()[VMID];
             bvr_vmid = DBGBXVR_read(n).bits[15 .. 0]
         };
-        bxvr_match = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & vmid == bvr_vmid
+        bxvr_match = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & vmid == bvr_vmid
     } else if match_cid2 then {
-        bxvr_match = ((PSTATE.EL != EL3 & EL2Enabled()) & not_bool(ELUsingAArch32(EL2))) & DBGBXVR_read(n).bits[31 .. 0] == CONTEXTIDR_EL2.bits[31 .. 0]
+        bxvr_match = ((PSTATE_EL != EL3 & EL2Enabled()) & not_bool(ELUsingAArch32(EL2))) & DBGBXVR_read(n).bits[31 .. 0] == CONTEXTIDR_EL2.bits[31 .. 0]
     } else ();
     let bvr_match_valid : bool = match_addr | match_cid1;
     let bxvr_match_valid : bool = match_vmid | match_cid2;
@@ -40406,7 +40402,7 @@ function AArch32_StateMatch (ssc_in, hmc_in, pxc_in, linked_in, linked_n_in, isb
     let ssu_match : bool = ((isbreakpnt & hmc == 0b0) & pxc == 0b00) & ssc != 0b11;
     priv_match : bool = undefined;
     if ssu_match then {
-        priv_match = PSTATE.M == M32_User | PSTATE.M == M32_Svc | PSTATE.M == M32_System
+        priv_match = PSTATE_M == M32_User | PSTATE_M == M32_Svc | PSTATE_M == M32_System
     } else {
         match accdesc.el {
           ? if ? == EL3 => {
@@ -40606,7 +40602,7 @@ function AArch32_VCRMatch vaddress = {
     match_word : bits(32) = undefined;
     ss : SecurityState = undefined;
     val_match : bool = undefined;
-    if (UsingAArch32() & ELUsingAArch32(EL1)) & PSTATE.EL != EL2 then {
+    if (UsingAArch32() & ELUsingAArch32(EL1)) & PSTATE_EL != EL2 then {
         match_word : bits(32) = Zeros(32);
         let ss : SecurityState = CurrentSecurityState();
         if vaddress[31 .. 5] == ExcVectorBase()[31 .. 5] then {
@@ -40629,7 +40625,7 @@ function AArch32_VCRMatch vaddress = {
         };
         let match_word : bits(32) = (match_word & DBGVCR_read().bits) & mask;
         val_match = not_bool(IsZero(match_word));
-        if not_bool(IsZero(match_word[28 .. 27] @ (match_word[12 .. 11] @ match_word[4 .. 3]))) & DebugTarget() == PSTATE.EL then {
+        if not_bool(IsZero(match_word[28 .. 27] @ (match_word[12 .. 11] @ match_word[4 .. 3]))) & DebugTarget() == PSTATE_EL then {
             val_match = ConstrainUnpredictableBool(Unpredictable_VCMATCHDAPA)
         };
         if not_bool(IsZero(vaddress[1 .. 0])) & val_match then {
@@ -40878,7 +40874,7 @@ val AArch32_TranslateAddress : forall ('aligned : Bool) 'size.
   (bits(32), AccessDescriptor, bool('aligned), int('size)) -> AddressDescriptor
 
 function AArch32_TranslateAddress (va, accdesc, aligned, size) = {
-    let regime : Regime = TranslationRegime(PSTATE.EL);
+    let regime : Regime = TranslationRegime(PSTATE_EL);
     if not_bool(RegimeUsingAArch32(regime)) then {
         return(AArch64_TranslateAddress(ZeroExtend(va, 64), accdesc, aligned, size))
     };
@@ -40906,18 +40902,18 @@ function AArch32_DC (regval, cacheop, opscope) = {
     cache.cacheop = cacheop;
     cache.opscope = opscope;
     cache.cachetype = CacheType_Data;
-    cache.security = SecurityStateAtEL(PSTATE.EL);
+    cache.security = SecurityStateAtEL(PSTATE_EL);
     if opscope == CacheOpScope_SetWay then {
         cache.shareability = Shareability_NSH;
         (cache.setnum, cache.waynum, cache.level) = DecodeSW(ZeroExtend(regval, 64), CacheType_Data);
-        if ((cacheop == CacheOp_Invalidate & PSTATE.EL == EL1) & EL2Enabled()) & (not_bool(ELUsingAArch32(EL2)) & (HCR_EL2[SWIO] == 0b1 | (HCR_EL2[DC] @ HCR_EL2[VM]) != 0b00) | ELUsingAArch32(EL2) & (HCR_read()[SWIO] == 0b1 | (HCR_read()[DC] @ HCR_read()[VM]) != 0b00)) then {
+        if ((cacheop == CacheOp_Invalidate & PSTATE_EL == EL1) & EL2Enabled()) & (not_bool(ELUsingAArch32(EL2)) & (HCR_EL2[SWIO] == 0b1 | (HCR_EL2[DC] @ HCR_EL2[VM]) != 0b00) | ELUsingAArch32(EL2) & (HCR_read()[SWIO] == 0b1 | (HCR_read()[DC] @ HCR_read()[VM]) != 0b00)) then {
             cache.cacheop = CacheOp_CleanInvalidate
         };
         CACHE_OP(cache);
         return()
     };
     if EL2Enabled() then {
-        if PSTATE.EL == EL0 | PSTATE.EL == EL1 then {
+        if PSTATE_EL == EL0 | PSTATE_EL == EL1 then {
             cache.is_vmid_valid = true;
             cache.vmid = VMID_read()
         } else {
@@ -40926,7 +40922,7 @@ function AArch32_DC (regval, cacheop, opscope) = {
     } else {
         cache.is_vmid_valid = false
     };
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         cache.is_asid_valid = true;
         cache.asid = ASID_read()
     } else {
@@ -40961,7 +40957,7 @@ function AArch32_DC (regval, cacheop, opscope) = {
         cache.shareability = __UNKNOWN_Shareability();
         cache.paddress = __UNKNOWN_FullAddress()
     };
-    if ((cacheop == CacheOp_Invalidate & PSTATE.EL == EL1) & EL2Enabled()) & (not_bool(ELUsingAArch32(EL2)) & (HCR_EL2[DC] @ HCR_EL2[VM]) != 0b00 | ELUsingAArch32(EL2) & (HCR_read()[DC] @ HCR_read()[VM]) != 0b00) then {
+    if ((cacheop == CacheOp_Invalidate & PSTATE_EL == EL1) & EL2Enabled()) & (not_bool(ELUsingAArch32(EL2)) & (HCR_EL2[DC] @ HCR_EL2[VM]) != 0b00 | ELUsingAArch32(EL2) & (HCR_read()[DC] @ HCR_read()[VM]) != 0b00) then {
         cache.cacheop = CacheOp_CleanInvalidate
     };
     CACHE_OP(cache);
@@ -40984,9 +40980,9 @@ function AArch32_IC__1 (regval, opscope) = {
     cache.cachetype = CacheType_Instruction;
     cache.cacheop = CacheOp_Invalidate;
     cache.opscope = opscope;
-    cache.security = SecurityStateAtEL(PSTATE.EL);
+    cache.security = SecurityStateAtEL(PSTATE_EL);
     if opscope == CacheOpScope_ALLU | opscope == CacheOpScope_ALLUIS then {
-        if opscope == CacheOpScope_ALLUIS | ((opscope == CacheOpScope_ALLU & PSTATE.EL == EL1) & EL2Enabled()) & HCR_read()[FB] == 0b1 then {
+        if opscope == CacheOpScope_ALLUIS | ((opscope == CacheOpScope_ALLU & PSTATE_EL == EL1) & EL2Enabled()) & HCR_read()[FB] == 0b1 then {
             cache.shareability = Shareability_ISH
         } else {
             cache.shareability = Shareability_NSH
@@ -40996,7 +40992,7 @@ function AArch32_IC__1 (regval, opscope) = {
     } else {
         assert(opscope == CacheOpScope_PoU);
         if EL2Enabled() then {
-            if PSTATE.EL == EL0 | PSTATE.EL == EL1 then {
+            if PSTATE_EL == EL0 | PSTATE_EL == EL1 then {
                 cache.is_vmid_valid = true;
                 cache.vmid = VMID_read()
             } else {
@@ -41005,7 +41001,7 @@ function AArch32_IC__1 (regval, opscope) = {
         } else {
             cache.is_vmid_valid = false
         };
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             cache.is_asid_valid = true;
             cache.asid = ASID_read()
         } else {
@@ -41199,7 +41195,7 @@ function AArch32_AT (vaddress, stage_in, el, ataccess) = {
         ss = SS_NonSecure
     } else if stage == TranslationStage_1 | stage == TranslationStage_12 & not_bool(HaveEL(EL2)) then {
         stage = TranslationStage_1;
-        ss = SecurityStateAtEL(PSTATE.EL);
+        ss = SecurityStateAtEL(PSTATE_EL);
         regime = if ss == SS_Secure & ELUsingAArch32(EL3) then Regime_EL30 else
           Regime_EL10;
         eae = TTBCR_read()[EAE] == 0b1
@@ -41231,7 +41227,7 @@ function AArch32_AT (vaddress, stage_in, el, ataccess) = {
         (fault, addrdesc) = AArch32_S2Translate(fault, addrdesc, None(), aligned, accdesc)
     };
     if fault.statuscode != Fault_None then {
-        if IsExternalAbort__1(fault) | (PSTATE.EL == EL1 & EL2Enabled()) & fault.s2fs1walk then {
+        if IsExternalAbort__1(fault) | (PSTATE_EL == EL1 & EL2Enabled()) & fault.s2fs1walk then {
             PAR_write() = Mk_PAR_Type(__UNKNOWN_bits(64));
             AArch32_Abort(vaddress, fault)
         };
@@ -41241,7 +41237,7 @@ function AArch32_AT (vaddress, stage_in, el, ataccess) = {
     // Announce result
     end_translation(addrdesc);
     //
-    if (eae | stage == TranslationStage_12 & (HCR_read()[VM] == 0b1 | HCR_read()[DC] == 0b1)) | (stage == TranslationStage_1 & el != EL2) & PSTATE.EL == EL2 then {
+    if (eae | stage == TranslationStage_12 & (HCR_read()[VM] == 0b1 | HCR_read()[DC] == 0b1)) | (stage == TranslationStage_1 & el != EL2) & PSTATE_EL == EL2 then {
         AArch32_EncodePARLD(addrdesc, ss)
     } else {
         AArch32_EncodePARSD(addrdesc, supersection, ss)
@@ -41254,7 +41250,7 @@ val AArch32_RestrictPrediction : (bits(32), RestrictType) -> unit
 function AArch32_RestrictPrediction (val_name, restriction) = {
     c : ExecutionCntxt = undefined;
     let target_el : bits(2) = val_name[25 .. 24];
-    if not_bool(HaveEL(target_el)) | UInt(target_el) > UInt(PSTATE.EL) then {
+    if not_bool(HaveEL(target_el)) | UInt(target_el) > UInt(PSTATE_EL) then {
         EndOfInstruction()
     };
     let ns : bits(1) = [val_name[26]];
@@ -41263,7 +41259,7 @@ function AArch32_RestrictPrediction (val_name, restriction) = {
     c.security = ss;
     c.target_el = target_el;
     if EL2Enabled() then {
-        if PSTATE.EL == EL0 | PSTATE.EL == EL1 then {
+        if PSTATE_EL == EL0 | PSTATE_EL == EL1 then {
             c.is_vmid_valid = true;
             c.all_vmid = false;
             c.vmid = VMID_read()
@@ -41277,7 +41273,7 @@ function AArch32_RestrictPrediction (val_name, restriction) = {
     } else {
         c.is_vmid_valid = false
     };
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         c.is_asid_valid = true;
         c.all_asid = false;
         c.asid = ASID_read()
@@ -41348,7 +41344,7 @@ val A32ExpandImm : bits(12) -> bits(32)
 
 function A32ExpandImm imm12 = {
     imm32 : bits(32) = undefined;
-    let (__tup_0 : bits(32), _) = A32ExpandImm_C(imm12, PSTATE.C) in
+    let (__tup_0 : bits(32), _) = A32ExpandImm_C(imm12, PSTATE_C) in
       {
           imm32 = __tup_0
       };
@@ -41455,7 +41451,7 @@ val T32ExpandImm : bits(12) -> bits(32)
 
 function T32ExpandImm imm12 = {
     imm32 : bits(32) = undefined;
-    let (__tup_0 : bits(32), _) = T32ExpandImm_C(imm12, PSTATE.C) in
+    let (__tup_0 : bits(32), _) = T32ExpandImm_C(imm12, PSTATE_C) in
       {
           imm32 = __tup_0
       };
@@ -41556,7 +41552,7 @@ function AArch32_SystemAccessTrap (mode, ec) = {
     target_el : bits(2) = undefined;
     valid_name : bool = undefined;
     (valid_name, target_el) = ELFromM32(mode);
-    assert(((valid_name & HaveEL(target_el)) & target_el != EL0) & UInt(target_el) >= UInt(PSTATE.EL));
+    assert(((valid_name & HaveEL(target_el)) & target_el != EL0) & UInt(target_el) >= UInt(PSTATE_EL));
     if target_el == EL2 then {
         let except : ExceptionRecord = AArch32_SystemAccessTrapSyndrome(ThisInstr(), ec);
         AArch32_TakeHypTrapException__1(except)
@@ -41598,15 +41594,15 @@ val AArch32_CheckCP15InstrCoarseTraps : forall 'CRm 'CRn 'nreg.
 
 function AArch32_CheckCP15InstrCoarseTraps (CRn, nreg, CRm) = {
     major : int = undefined;
-    if PSTATE.EL == EL0 & (not_bool(ELUsingAArch32(EL1)) | EL2Enabled() & not_bool(ELUsingAArch32(EL2))) then {
+    if PSTATE_EL == EL0 & (not_bool(ELUsingAArch32(EL1)) | EL2Enabled() & not_bool(ELUsingAArch32(EL2))) then {
         AArch64_CheckCP15InstrCoarseTraps(CRn, nreg, CRm)
     };
     let trapped_encoding : bool = (CRn == 9 & (CRm == 0 | CRm == 1 | CRm == 2 | CRm == 5 | CRm == 6 | CRm == 7 | CRm == 8) | CRn == 10 & (CRm == 0 | CRm == 1 | CRm == 4 | CRm == 8)) | CRn == 11 & (CRm == 0 | CRm == 1 | CRm == 2 | CRm == 3 | CRm == 4 | CRm == 5 | CRm == 6 | CRm == 7 | CRm == 8 | CRm == 15);
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
         let 'major = if nreg == 1 then CRn else CRm;
         assert(constraint((0 <= 'major & 'major < 32)));
         if not_bool(major == 4 | major == 14) & [HSTR_read().bits[major]] == 0b1 | (HCR_read()[TIDCP] == 0b1 & nreg == 1) & trapped_encoding then {
-            if PSTATE.EL == EL0 & __IMPDEF_boolean("UNDEF unallocated CP15 access at EL0") then {
+            if PSTATE_EL == EL0 & __IMPDEF_boolean("UNDEF unallocated CP15 access at EL0") then {
                 throw(Error_Undefined())
             };
             if ELUsingAArch32(EL2) then {
@@ -41656,7 +41652,7 @@ function AArch32_CheckFPAdvSIMDTrap advsimd = {
                     except.syndrome[5] = Bit(0b0);
                     except.syndrome[3 .. 0] = 0b1010
                 };
-                if PSTATE.EL == EL2 then {
+                if PSTATE_EL == EL2 then {
                     AArch32_TakeUndefInstrException__1(except)
                 } else {
                     AArch32_TakeHypTrapException__1(except)
@@ -41685,10 +41681,10 @@ function AArch32_CheckAdvSIMDOrFPEnabled (fpexc_check, advsimd) = {
     cpacr_asedis : bits(1) = undefined;
     cpacr_cp10 : bits(2) = undefined;
     fpexc_en : bits(1) = undefined;
-    if (PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1))) & (not_bool(EL2Enabled()) | not_bool(ELUsingAArch32(EL2)) & HCR_EL2[TGE] == 0b0) then {
+    if (PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1))) & (not_bool(EL2Enabled()) | not_bool(ELUsingAArch32(EL2)) & HCR_EL2[TGE] == 0b0) then {
         AArch64_CheckFPEnabled();
         AArch64_CheckFPAdvSIMDEnabled()
-    } else if (((PSTATE.EL == EL0 & EL2Enabled()) & not_bool(ELUsingAArch32(EL2))) & HCR_EL2[TGE] == 0b1) & not_bool(ELUsingAArch32(EL1)) then {
+    } else if (((PSTATE_EL == EL0 & EL2Enabled()) & not_bool(ELUsingAArch32(EL2))) & HCR_EL2[TGE] == 0b1) & not_bool(ELUsingAArch32(EL1)) then {
         if fpexc_check & HCR_EL2[RW] == 0b0 then {
             let fpexc_en : bits(1) = __IMPDEF_bits(1, "FPEXC.EN value when TGE==1 and RW==0");
             if fpexc_en == 0b0 then {
@@ -41709,7 +41705,7 @@ function AArch32_CheckAdvSIMDOrFPEnabled (fpexc_check, advsimd) = {
             };
             ()
         };
-        if PSTATE.EL != EL2 then {
+        if PSTATE_EL != EL2 then {
             if advsimd & cpacr_asedis == 0b1 then {
                 throw(Error_Undefined())
             };
@@ -41719,7 +41715,7 @@ function AArch32_CheckAdvSIMDOrFPEnabled (fpexc_check, advsimd) = {
                   disabled = true
               },
               0b01 => {
-                  disabled = PSTATE.EL == EL0
+                  disabled = PSTATE_EL == EL0
               },
               0b10 => {
                   disabled = ConstrainUnpredictableBool(Unpredictable_RESCPACR)
@@ -42110,7 +42106,7 @@ val MemU_read : forall 'size,
 
 function MemU_read (address, size) = {
     let nontemporal : bool = false;
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     let tagchecked : bool = false;
     let accdesc : AccessDescriptor = CreateAccDescGPR(MemOp_LOAD, nontemporal, privileged, tagchecked);
     return(Mem_with_type_read(address, size, accdesc))
@@ -42121,7 +42117,7 @@ val MemU_set : forall 'size, 8 * 'size >= 0.
 
 function MemU_set (address, size, value_name) = {
     let nontemporal : bool = false;
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     let tagchecked : bool = false;
     let accdesc : AccessDescriptor = CreateAccDescGPR(MemOp_STORE, nontemporal, privileged, tagchecked);
     Mem_with_type_set(address, size, accdesc) = value_name;
@@ -42349,10 +42345,10 @@ function AArch32_ExceptionReturn (new_pc_in, spsr) = {
     SetPSTATEFromPSR(spsr);
     ClearExclusiveLocal(ProcessorID());
     SendEventLocal();
-    if PSTATE.IL == 0b1 then {
+    if PSTATE_IL == 0b1 then {
         new_pc[1 .. 0] = __UNKNOWN_bits(2)
     } else {
-        if PSTATE.T == 0b1 then {
+        if PSTATE_T == 0b1 then {
             new_pc[0] = Bit(0b0)
         } else {
             new_pc[1 .. 0] = 0b00
@@ -42369,9 +42365,9 @@ function AArch32_ExceptionReturn (new_pc_in, spsr) = {
 val ALUExceptionReturn : bits(32) -> unit
 
 function ALUExceptionReturn address = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Undefined())
-    } else if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+    } else if PSTATE_M == M32_User | PSTATE_M == M32_System then {
         let c : Constraint = ConstrainUnpredictable(Unpredictable_ALUEXCEPTIONRETURN);
         assert(c == Constraint_UNDEF | c == Constraint_NOP);
         match c {
@@ -42393,7 +42389,7 @@ val SelectInstrSet : InstrSet -> unit
 function SelectInstrSet iset = {
     assert(CurrentInstrSet() == InstrSet_A32 | CurrentInstrSet() == InstrSet_T32);
     assert(iset == InstrSet_A32 | iset == InstrSet_T32);
-    PSTATE.T = if iset == InstrSet_A32 then 0b0 else 0b1;
+    PSTATE_T = if iset == InstrSet_A32 then 0b0 else 0b1;
     return()
 }
 
@@ -42486,18 +42482,18 @@ function AArch32_WriteModeByInstr mode = {
     el : bits(2) = undefined;
     valid_name : bool = undefined;
     (valid_name, el) = ELFromM32(mode);
-    if UInt(el) > UInt(PSTATE.EL) then {
+    if UInt(el) > UInt(PSTATE_EL) then {
         valid_name = false
     };
-    if (PSTATE.M == M32_Hyp | mode == M32_Hyp) & PSTATE.M != mode then {
+    if (PSTATE_M == M32_Hyp | mode == M32_Hyp) & PSTATE_M != mode then {
         valid_name = false
     };
-    if (((PSTATE.M == M32_Monitor & HaveEL(EL2)) & el == EL1) & SCR[NS] == 0b1) & HCR_read()[TGE] == 0b1 then {
+    if (((PSTATE_M == M32_Monitor & HaveEL(EL2)) & el == EL1) & SCR[NS] == 0b1) & HCR_read()[TGE] == 0b1 then {
         valid_name = false
     };
     let valid_name = valid_name;
     if not_bool(valid_name) then {
-        PSTATE.IL = 0b1
+        PSTATE_IL = 0b1
     } else {
         AArch32_WriteMode(mode)
     }
@@ -42607,32 +42603,32 @@ function ConditionPassed () = {
 val CPSRWriteByInstr : (bits(32), bits(4)) -> unit
 
 function CPSRWriteByInstr (value_name, bytemask) = {
-    let privileged : bool = PSTATE.EL != EL0;
+    let privileged : bool = PSTATE_EL != EL0;
     if [bytemask[3]] == 0b1 then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V @ PSTATE.Q) = value_name[31 .. 27]
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V @ PSTATE_Q) = value_name[31 .. 27]
     };
     if [bytemask[2]] == 0b1 then {
         if HaveSSBSExt() then {
-            PSTATE.SSBS = [value_name[23]]
+            PSTATE_SSBS = [value_name[23]]
         };
         if privileged then {
-            PSTATE.PAN = [value_name[22]]
+            PSTATE_PAN = [value_name[22]]
         };
         if HaveDITExt() then {
-            PSTATE.DIT = [value_name[21]]
+            PSTATE_DIT = [value_name[21]]
         };
-        PSTATE.GE = value_name[19 .. 16]
+        PSTATE_GE = value_name[19 .. 16]
     };
     if [bytemask[1]] == 0b1 then {
-        PSTATE.E = [value_name[9]];
+        PSTATE_E = [value_name[9]];
         if privileged then {
-            PSTATE.A = [value_name[8]]
+            PSTATE_A = [value_name[8]]
         };
         ()
     };
     if [bytemask[0]] == 0b1 then {
         if privileged then {
-            (PSTATE.I @ PSTATE.F) = value_name[7 .. 6];
+            (PSTATE_I @ PSTATE_F) = value_name[7 .. 6];
             AArch32_WriteModeByInstr(value_name[4 .. 0])
         };
         ()
@@ -42644,7 +42640,7 @@ val InITBlock : unit -> bool
 
 function InITBlock () = {
     if CurrentInstrSet() == InstrSet_T32 then {
-        return(PSTATE.IT[3 .. 0] != 0b0000)
+        return(PSTATE_IT[3 .. 0] != 0b0000)
     } else {
         return(false)
     }
@@ -42653,7 +42649,7 @@ function InITBlock () = {
 val LastInITBlock : unit -> bool
 
 function LastInITBlock () = {
-    return(PSTATE.IT[3 .. 0] == 0b1000)
+    return(PSTATE_IT[3 .. 0] == 0b1000)
 }
 
 val SPSRaccessValid : (bits(5), bits(5)) -> unit
@@ -42787,7 +42783,7 @@ val AArch32_ESBOperation : unit -> unit
 
 function AArch32_ESBOperation () = {
     el : bits(2) = undefined;
-    route_to_aarch64 : bool = PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1));
+    route_to_aarch64 : bool = PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1));
     if (not_bool(route_to_aarch64) & EL2Enabled()) & not_bool(ELUsingAArch32(EL2)) then {
         route_to_aarch64 = HCR_EL2[TGE] == 0b1 | HCR_EL2[AMO] == 0b1
     };
@@ -42799,11 +42795,11 @@ function AArch32_ESBOperation () = {
         return()
     };
     let route_to_monitor : bool = (HaveEL(EL3) & ELUsingAArch32(EL3)) & EffectiveEA() == 0b1;
-    let route_to_hyp : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_read()[TGE] == 0b1 | HCR_read()[AMO] == 0b1);
+    let route_to_hyp : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_read()[TGE] == 0b1 | HCR_read()[AMO] == 0b1);
     target : bits(5) = undefined;
     if route_to_monitor then {
         target = M32_Monitor
-    } else if route_to_hyp | PSTATE.M == M32_Hyp then {
+    } else if route_to_hyp | PSTATE_M == M32_Hyp then {
         target = M32_Hyp
     } else {
         target = M32_Abort
@@ -42814,9 +42810,9 @@ function AArch32_ESBOperation () = {
     } else if target == M32_Monitor then {
         mask_active = SCR[AW] == 0b1 & (not_bool(HaveEL(EL2)) | HCR_read()[TGE] == 0b0 & HCR_read()[AMO] == 0b0)
     } else {
-        mask_active = target == M32_Abort | PSTATE.M == M32_Hyp
+        mask_active = target == M32_Abort | PSTATE_M == M32_Hyp
     };
-    let mask_set : bool = PSTATE.A == 0b1;
+    let mask_set : bool = PSTATE_A == 0b1;
     let (_, __tup_1 : bits(2)) = ELFromM32(target) in
       {
           el = __tup_1
@@ -42836,7 +42832,7 @@ function AArch32_ESBOperation () = {
 val AArch32_vESBOperation : unit -> unit
 
 function AArch32_vESBOperation () = {
-    assert((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled());
+    assert((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled());
     if not_bool(ELUsingAArch32(EL2)) then {
         AArch64_vESBOperation();
         return()
@@ -42844,7 +42840,7 @@ function AArch32_vESBOperation () = {
     let vSEI_enabled : bool = HCR_read()[TGE] == 0b0 & HCR_read()[AMO] == 0b1;
     let vSEI_pending : bool = vSEI_enabled & HCR_read()[VA] == 0b1;
     let vintdis : bool = Halted() | ExternalDebugInterruptsDisabled(EL1);
-    let vmasked : bool = vintdis | PSTATE.A == 0b1;
+    let vmasked : bool = vintdis | PSTATE_A == 0b1;
     if vSEI_pending & vmasked then {
         syndrome : bits(32) = Zeros(32);
         syndrome[31] = Bit(0b1);
@@ -42876,16 +42872,16 @@ function AArch32_TakeReset cold_reset = {
     };
     AArch32_ResetControlRegisters(cold_reset);
     FPEXC_write() = [FPEXC_read() with EN = 0b0];
-    (PSTATE.A @ PSTATE.I @ PSTATE.F) = 0b111;
-    PSTATE.IT = 0b00000000;
+    (PSTATE_A @ PSTATE_I @ PSTATE_F) = 0b111;
+    PSTATE_IT = 0b00000000;
     if HaveEL(EL2) & not_bool(HaveEL(EL3)) then {
-        PSTATE.T = HSCTLR_read()[TE];
-        PSTATE.E = HSCTLR_read()[EE]
+        PSTATE_T = HSCTLR_read()[TE];
+        PSTATE_E = HSCTLR_read()[EE]
     } else {
-        PSTATE.T = SCTLR_read__2()[TE];
-        PSTATE.E = SCTLR_read__2()[EE]
+        PSTATE_T = SCTLR_read__2()[TE];
+        PSTATE_E = SCTLR_read__2()[EE]
     };
-    PSTATE.IL = 0b0;
+    PSTATE_IL = 0b0;
     AArch32_ResetGeneralRegisters();
     AArch32_ResetSIMDFPRegisters();
     AArch32_ResetSpecialRegisters();
@@ -42900,7 +42896,7 @@ function AArch32_TakeReset cold_reset = {
     } else {
         rv = RVBAR[31 .. 1] @ 0b0
     };
-    assert([rv[0]] == 0b0 & (PSTATE.T == 0b1 | [rv[1]] == 0b0));
+    assert([rv[0]] == 0b0 & (PSTATE_T == 0b1 | [rv[1]] == 0b0));
     let branch_conditional : bool = false;
     BranchTo(rv, BranchType_RESET, branch_conditional)
 }
@@ -42910,7 +42906,7 @@ val AArch32_CheckAdvSIMDOrFPRegisterTraps : bits(4) -> unit
 function AArch32_CheckAdvSIMDOrFPRegisterTraps reg = {
     tid0 : bits(1) = undefined;
     tid3 : bits(1) = undefined;
-    if PSTATE.EL == EL1 & EL2Enabled() then {
+    if PSTATE_EL == EL1 & EL2Enabled() then {
         let tid0 : bits(1) = if ELUsingAArch32(EL2) then HCR_read()[TID0] else
           HCR_EL2[TID0];
         let tid3 : bits(1) = if ELUsingAArch32(EL2) then HCR_read()[TID3] else
@@ -42949,7 +42945,7 @@ function AArch32_TakeHVCException immediate = {
     let 'vect_offset = UInt(0x08);
     except : ExceptionRecord = ExceptionSyndrome(Exception_HypervisorCall);
     except.syndrome[15 .. 0] = immediate;
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         AArch32_EnterHypMode(except, preferred_exception_return, vect_offset)
     } else {
         AArch32_EnterHypMode(except, preferred_exception_return, UInt(0x14))
@@ -42973,14 +42969,14 @@ function AArch32_TakeSVCException immediate = {
     except : ExceptionRecord = undefined;
     AArch32_ITAdvance();
     SSAdvance();
-    let route_to_hyp : bool = (PSTATE.EL == EL0 & EL2Enabled()) & HCR_read()[TGE] == 0b1;
+    let route_to_hyp : bool = (PSTATE_EL == EL0 & EL2Enabled()) & HCR_read()[TGE] == 0b1;
     let preferred_exception_return : bits(32) = NextInstrAddr(32);
     let 'vect_offset = UInt(0x08);
     let 'lr_offset = 0;
-    if PSTATE.EL == EL2 | route_to_hyp then {
+    if PSTATE_EL == EL2 | route_to_hyp then {
         except : ExceptionRecord = ExceptionSyndrome(Exception_SupervisorCall);
         except.syndrome[15 .. 0] = immediate;
-        if PSTATE.EL == EL2 then {
+        if PSTATE_EL == EL2 then {
             AArch32_EnterHypMode(except, preferred_exception_return, vect_offset)
         } else {
             AArch32_EnterHypMode(except, preferred_exception_return, UInt(0x14))
@@ -43031,13 +43027,13 @@ function AArch32_CheckIllegalState () = {
     vect_offset : int = undefined;
     if AArch32_GeneralExceptionsToAArch64() then {
         AArch64_CheckIllegalState()
-    } else if PSTATE.IL == 0b1 then {
-        let route_to_hyp : bool = (PSTATE.EL == EL0 & EL2Enabled()) & HCR_read()[TGE] == 0b1;
+    } else if PSTATE_IL == 0b1 then {
+        let route_to_hyp : bool = (PSTATE_EL == EL0 & EL2Enabled()) & HCR_read()[TGE] == 0b1;
         let preferred_exception_return : bits(32) = ThisInstrAddr(32);
         let 'vect_offset = UInt(0x04);
-        if PSTATE.EL == EL2 | route_to_hyp then {
+        if PSTATE_EL == EL2 | route_to_hyp then {
             let except : ExceptionRecord = ExceptionSyndrome(Exception_IllegalState);
-            if PSTATE.EL == EL2 then {
+            if PSTATE_EL == EL2 then {
                 AArch32_EnterHypMode(except, preferred_exception_return, vect_offset)
             } else {
                 AArch32_EnterHypMode(except, preferred_exception_return, UInt(0x14))
@@ -43056,7 +43052,7 @@ function AArch32_CheckForSVCTrap immediate = {
     vect_offset : int = undefined;
     if HaveFGTExt() then {
         route_to_el2 : bool = false;
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             route_to_el2 = ((not_bool(ELUsingAArch32(EL1)) & EL2Enabled()) & HFGITR_EL2[SVC_EL0] == 0b1) & (HCR_EL2[E2H] @ HCR_EL2[TGE]) != 0b11 & (not_bool(HaveEL(EL3)) | SCR_EL3[FGTEn] == 0b1)
         };
         if route_to_el2 then {
@@ -43078,13 +43074,13 @@ val AArch32_CheckForSMCUndefOrTrap : unit -> unit
 function AArch32_CheckForSMCUndefOrTrap () = {
     except : ExceptionRecord = undefined;
     route_to_hyp : bool = undefined;
-    if not_bool(HaveEL(EL3)) | PSTATE.EL == EL0 then {
+    if not_bool(HaveEL(EL3)) | PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     };
     if EL2Enabled() & not_bool(ELUsingAArch32(EL2)) then {
         AArch64_CheckForSMCUndefOrTrap(Zeros(16))
     } else {
-        let route_to_hyp : bool = (EL2Enabled() & PSTATE.EL == EL1) & HCR_read()[TSC] == 0b1;
+        let route_to_hyp : bool = (EL2Enabled() & PSTATE_EL == EL1) & HCR_read()[TSC] == 0b1;
         if route_to_hyp then {
             let except : ExceptionRecord = ExceptionSyndrome(Exception_MonitorCall);
             AArch32_TakeHypTrapException__1(except)
@@ -43150,7 +43146,7 @@ function AArch32_CheckITEnabled mask = {
     aligned : bool = undefined;
     next_instr : bits(16) = undefined;
     it_disabled : bits(1) = undefined;
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         it_disabled = HSCTLR_read()[ITD]
     } else {
         it_disabled = if ELUsingAArch32(EL1) then SCTLR_read__2()[ITD] else
@@ -43183,7 +43179,7 @@ val AArch32_CheckSETENDEnabled : unit -> unit
 
 function AArch32_CheckSETENDEnabled () = {
     setend_disabled : bits(1) = undefined;
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         setend_disabled = HSCTLR_read()[SED]
     } else {
         setend_disabled = if ELUsingAArch32(EL1) then SCTLR_read__2()[SED] else
@@ -43200,7 +43196,7 @@ val AArch32_TakePhysicalSErrorException : forall ('implicit_esb : Bool).
   bool('implicit_esb) -> unit
 
 function AArch32_TakePhysicalSErrorException implicit_esb = {
-    route_to_aarch64 : bool = PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1));
+    route_to_aarch64 : bool = PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1));
     if (not_bool(route_to_aarch64) & EL2Enabled()) & not_bool(ELUsingAArch32(EL2)) then {
         route_to_aarch64 = HCR_EL2[TGE] == 0b1 | not_bool(IsInHost()) & HCR_EL2[AMO] == 0b1
     };
@@ -43211,14 +43207,14 @@ function AArch32_TakePhysicalSErrorException implicit_esb = {
         AArch64_TakePhysicalSErrorException(implicit_esb)
     };
     let route_to_monitor : bool = HaveEL(EL3) & SCR[EA] == 0b1;
-    let route_to_hyp : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_read()[TGE] == 0b1 | HCR_read()[AMO] == 0b1);
+    let route_to_hyp : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_read()[TGE] == 0b1 | HCR_read()[AMO] == 0b1);
     let preferred_exception_return : bits(32) = ThisInstrAddr(32);
     let 'vect_offset = UInt(0x10);
     let 'lr_offset = 8;
     target_el : bits(2) = undefined;
     if route_to_monitor then {
         target_el = EL3
-    } else if PSTATE.EL == EL2 | route_to_hyp then {
+    } else if PSTATE_EL == EL2 | route_to_hyp then {
         target_el = EL2
     } else {
         target_el = EL1
@@ -43235,7 +43231,7 @@ function AArch32_TakePhysicalSErrorException implicit_esb = {
           AArch32_EnterMonitorMode(preferred_exception_return, lr_offset, vect_offset)
       },
       ? if ? == EL2 => {
-          if PSTATE.EL == EL2 then {
+          if PSTATE_EL == EL2 then {
               AArch32_EnterHypMode(except, preferred_exception_return, vect_offset)
           } else {
               AArch32_EnterHypMode(except, preferred_exception_return, UInt(0x14))
@@ -43254,13 +43250,13 @@ function AArch32_TakePhysicalSErrorException implicit_esb = {
 val AArch32_TakeVirtualSErrorException : unit -> unit
 
 function AArch32_TakeVirtualSErrorException () = {
-    assert((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled());
+    assert((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled());
     if ELUsingAArch32(EL2) then {
         assert(HCR_read()[TGE] == 0b0 & HCR_read()[AMO] == 0b1)
     } else {
         assert(HCR_EL2[TGE] == 0b0 & HCR_EL2[AMO] == 0b1)
     };
-    if PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1)) then {
+    if PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1)) then {
         AArch64_TakeVirtualSErrorException()
     };
     let route_to_monitor : bool = false;
@@ -43300,7 +43296,7 @@ val AArch32_TakePhysicalIRQException : unit -> unit
 
 function AArch32_TakePhysicalIRQException () = {
     except : ExceptionRecord = undefined;
-    route_to_aarch64 : bool = PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1));
+    route_to_aarch64 : bool = PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1));
     if (not_bool(route_to_aarch64) & EL2Enabled()) & not_bool(ELUsingAArch32(EL2)) then {
         route_to_aarch64 = HCR_EL2[TGE] == 0b1 | HCR_EL2[IMO] == 0b1 & not_bool(IsInHost())
     };
@@ -43311,13 +43307,13 @@ function AArch32_TakePhysicalIRQException () = {
         AArch64_TakePhysicalIRQException()
     };
     let route_to_monitor : bool = HaveEL(EL3) & SCR[IRQ] == 0b1;
-    let route_to_hyp : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_read()[TGE] == 0b1 | HCR_read()[IMO] == 0b1);
+    let route_to_hyp : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_read()[TGE] == 0b1 | HCR_read()[IMO] == 0b1);
     let preferred_exception_return : bits(32) = ThisInstrAddr(32);
     let 'vect_offset = UInt(0x18);
     let 'lr_offset = 4;
     if route_to_monitor then {
         AArch32_EnterMonitorMode(preferred_exception_return, lr_offset, vect_offset)
-    } else if PSTATE.EL == EL2 | route_to_hyp then {
+    } else if PSTATE_EL == EL2 | route_to_hyp then {
         let except : ExceptionRecord = ExceptionSyndrome(Exception_IRQ);
         AArch32_EnterHypMode(except, preferred_exception_return, vect_offset)
     } else {
@@ -43328,13 +43324,13 @@ function AArch32_TakePhysicalIRQException () = {
 val AArch32_TakeVirtualIRQException : unit -> unit
 
 function AArch32_TakeVirtualIRQException () = {
-    assert((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled());
+    assert((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled());
     if ELUsingAArch32(EL2) then {
         assert(HCR_read()[TGE] == 0b0 & HCR_read()[IMO] == 0b1)
     } else {
         assert(HCR_EL2[TGE] == 0b0 & HCR_EL2[IMO] == 0b1)
     };
-    if PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1)) then {
+    if PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1)) then {
         AArch64_TakeVirtualIRQException()
     };
     let preferred_exception_return : bits(32) = ThisInstrAddr(32);
@@ -43347,7 +43343,7 @@ val AArch32_TakePhysicalFIQException : unit -> unit
 
 function AArch32_TakePhysicalFIQException () = {
     except : ExceptionRecord = undefined;
-    route_to_aarch64 : bool = PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1));
+    route_to_aarch64 : bool = PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1));
     if (not_bool(route_to_aarch64) & EL2Enabled()) & not_bool(ELUsingAArch32(EL2)) then {
         route_to_aarch64 = HCR_EL2[TGE] == 0b1 | HCR_EL2[FMO] == 0b1 & not_bool(IsInHost())
     };
@@ -43358,13 +43354,13 @@ function AArch32_TakePhysicalFIQException () = {
         AArch64_TakePhysicalFIQException()
     };
     let route_to_monitor : bool = HaveEL(EL3) & SCR[FIQ] == 0b1;
-    let route_to_hyp : bool = ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & (HCR_read()[TGE] == 0b1 | HCR_read()[FMO] == 0b1);
+    let route_to_hyp : bool = ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & (HCR_read()[TGE] == 0b1 | HCR_read()[FMO] == 0b1);
     let preferred_exception_return : bits(32) = ThisInstrAddr(32);
     let 'vect_offset = UInt(0x1C);
     let 'lr_offset = 4;
     if route_to_monitor then {
         AArch32_EnterMonitorMode(preferred_exception_return, lr_offset, vect_offset)
-    } else if PSTATE.EL == EL2 | route_to_hyp then {
+    } else if PSTATE_EL == EL2 | route_to_hyp then {
         let except : ExceptionRecord = ExceptionSyndrome(Exception_FIQ);
         AArch32_EnterHypMode(except, preferred_exception_return, vect_offset)
     } else {
@@ -43375,13 +43371,13 @@ function AArch32_TakePhysicalFIQException () = {
 val AArch32_TakeVirtualFIQException : unit -> unit
 
 function AArch32_TakeVirtualFIQException () = {
-    assert((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled());
+    assert((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled());
     if ELUsingAArch32(EL2) then {
         assert(HCR_read()[TGE] == 0b0 & HCR_read()[FMO] == 0b1)
     } else {
         assert(HCR_EL2[TGE] == 0b0 & HCR_EL2[FMO] == 0b1)
     };
-    if PSTATE.EL == EL0 & not_bool(ELUsingAArch32(EL1)) then {
+    if PSTATE_EL == EL0 & not_bool(ELUsingAArch32(EL1)) then {
         AArch64_TakeVirtualFIQException()
     };
     let preferred_exception_return : bits(32) = ThisInstrAddr(32);
@@ -43644,7 +43640,7 @@ function AArch32_PMUCycle () = {
 val AArch32_DTLBI_ALL : (SecurityState, Regime, Shareability, TLBIMemAttr) -> unit
 
 function AArch32_DTLBI_ALL (security, regime, shareability, attr) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_DALL;
     r.from_aarch64 = false;
@@ -43662,7 +43658,7 @@ function AArch32_DTLBI_ALL (security, regime, shareability, attr) = {
 val AArch32_DTLBI_ASID : (SecurityState, Regime, bits(16), Shareability, TLBIMemAttr, bits(32)) -> unit
 
 function AArch32_DTLBI_ASID (security, regime, vmid, shareability, attr, Rt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_DASID;
     r.from_aarch64 = false;
@@ -43682,7 +43678,7 @@ function AArch32_DTLBI_ASID (security, regime, vmid, shareability, attr, Rt) = {
 val AArch32_DTLBI_VA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(32)) -> unit
 
 function AArch32_DTLBI_VA (security, regime, vmid, shareability, level, attr, Rt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_DVA;
     r.from_aarch64 = false;
@@ -43703,7 +43699,7 @@ function AArch32_DTLBI_VA (security, regime, vmid, shareability, level, attr, Rt
 val AArch32_ITLBI_ALL : (SecurityState, Regime, Shareability, TLBIMemAttr) -> unit
 
 function AArch32_ITLBI_ALL (security, regime, shareability, attr) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_IALL;
     r.from_aarch64 = false;
@@ -43721,7 +43717,7 @@ function AArch32_ITLBI_ALL (security, regime, shareability, attr) = {
 val AArch32_ITLBI_ASID : (SecurityState, Regime, bits(16), Shareability, TLBIMemAttr, bits(32)) -> unit
 
 function AArch32_ITLBI_ASID (security, regime, vmid, shareability, attr, Rt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_IASID;
     r.from_aarch64 = false;
@@ -43741,7 +43737,7 @@ function AArch32_ITLBI_ASID (security, regime, vmid, shareability, attr, Rt) = {
 val AArch32_ITLBI_VA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(32)) -> unit
 
 function AArch32_ITLBI_VA (security, regime, vmid, shareability, level, attr, Rt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_IVA;
     r.from_aarch64 = false;
@@ -43762,7 +43758,7 @@ function AArch32_ITLBI_VA (security, regime, vmid, shareability, level, attr, Rt
 val AArch32_TLBI_ALL : (SecurityState, Regime, Shareability, TLBIMemAttr) -> unit
 
 function AArch32_TLBI_ALL (security, regime, shareability, attr) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_ALL;
     r.from_aarch64 = false;
@@ -43780,7 +43776,7 @@ function AArch32_TLBI_ALL (security, regime, shareability, attr) = {
 val AArch32_TLBI_VMALL : (SecurityState, Regime, bits(16), Shareability, TLBIMemAttr) -> unit
 
 function AArch32_TLBI_VMALL (security, regime, vmid, shareability, attr) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_VMALL;
     r.from_aarch64 = false;
@@ -43799,7 +43795,7 @@ function AArch32_TLBI_VMALL (security, regime, vmid, shareability, attr) = {
 val AArch32_TLBI_ASID : (SecurityState, Regime, bits(16), Shareability, TLBIMemAttr, bits(32)) -> unit
 
 function AArch32_TLBI_ASID (security, regime, vmid, shareability, attr, Rt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_ASID;
     r.from_aarch64 = false;
@@ -43819,7 +43815,7 @@ function AArch32_TLBI_ASID (security, regime, vmid, shareability, attr, Rt) = {
 val AArch32_TLBI_VA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(32)) -> unit
 
 function AArch32_TLBI_VA (security, regime, vmid, shareability, level, attr, Rt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_VA;
     r.from_aarch64 = false;
@@ -43840,7 +43836,7 @@ function AArch32_TLBI_VA (security, regime, vmid, shareability, level, attr, Rt)
 val AArch32_TLBI_VAA : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(32)) -> unit
 
 function AArch32_TLBI_VAA (security, regime, vmid, shareability, level, attr, Rt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2 | PSTATE.EL == EL1);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2 | PSTATE_EL == EL1);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_VAA;
     r.from_aarch64 = false;
@@ -43860,7 +43856,7 @@ function AArch32_TLBI_VAA (security, regime, vmid, shareability, level, attr, Rt
 val AArch32_TLBI_IPAS2 : (SecurityState, Regime, bits(16), Shareability, TLBILevel, TLBIMemAttr, bits(32)) -> unit
 
 function AArch32_TLBI_IPAS2 (security, regime, vmid, shareability, level, attr, Rt) = {
-    assert(PSTATE.EL == EL3 | PSTATE.EL == EL2);
+    assert(PSTATE_EL == EL3 | PSTATE_EL == EL2);
     assert(security == SS_NonSecure);
     r : TLBIRecord = undefined;
     r.op = TLBIOp_IPAS2;
@@ -53956,7 +53952,7 @@ val __get_ID_AA64ISAR0_EL1 : ID_AA64ISAR0_EL1_Type -> ID_AA64ISAR0_EL1_Type
 function __get_ID_AA64ISAR0_EL1 value_name = {
     tmp : ID_AA64ISAR0_EL1_Type = value_name;
     tmp : ID_AA64ISAR0_EL1_Type = Mk_ID_AA64ISAR0_EL1_Type(tmp.bits & not_vec(ZeroExtend(0xf, 64)));
-    if (PSTATE.EL == EL2 | PSTATE.EL == EL1) & SCR_EL3[TME] == 0b0 | (PSTATE.EL == EL1 & EL2Enabled()) & HCR_EL2[TME] == 0b0 then {
+    if (PSTATE_EL == EL2 | PSTATE_EL == EL1) & SCR_EL3[TME] == 0b0 | (PSTATE_EL == EL1 & EL2Enabled()) & HCR_EL2[TME] == 0b0 then {
         tmp = Mk_ID_AA64ISAR0_EL1_Type(tmp.bits & not_vec(ZeroExtend(0xf000000, 64)))
     };
     return(tmp)

@@ -123,10 +123,10 @@ function UnallocatedT32_16_Instruction instr = {
 
 function __DefaultCond enc = {
     cond : bits(4) = undefined;
-    if (enc == __A64 | enc == __A32) | PSTATE.IT[3 .. 0] == Zeros(4) then {
+    if (enc == __A64 | enc == __A32) | PSTATE_IT[3 .. 0] == Zeros(4) then {
         cond = 0xE
     } else {
-        cond = PSTATE.IT[7 .. 4]
+        cond = PSTATE_IT[7 .. 4]
     };
     return(cond)
 }
@@ -200,14 +200,14 @@ function __FetchInstr pc = {
     let accdesc : AccessDescriptor = CreateAccDescIFetch();
     SetBTypeCompatible(false);
     CheckSoftwareStep();
-    if PSTATE.nRW == 0b0 then {
+    if PSTATE_nRW == 0b0 then {
         AArch64_CheckPCAlignment();
         enc = __A64;
         instr = AArch64_MemSingle_read(PC_read(), 4, accdesc, true);
         AArch64_CheckIllegalState()
     } else {
         AArch32_CheckPCAlignment();
-        if PSTATE.T == 0b1 then {
+        if PSTATE_T == 0b1 then {
             let hw1 : bits(16) = AArch32_MemSingle_read(pc[31 .. 0], 2, accdesc, true);
             let isT16 : bool = UInt(hw1[15 .. 11]) < UInt(0b11101);
             if isT16 then {
@@ -290,7 +290,7 @@ function __InstructionExecute () = {
         CheckPendingExceptionCatch(true)
     };
     try {
-        ShouldAdvanceIT = PSTATE.nRW == 0b1 & PSTATE.T == 0b1;
+        ShouldAdvanceIT = PSTATE_nRW == 0b1 & PSTATE_T == 0b1;
         ShouldAdvanceSS = true;
         let pc : bits(64) = ThisInstrAddr(64);
         (enc, instr) = __FetchInstr(pc);
@@ -328,7 +328,7 @@ function __InstructionExecute () = {
     SPEPostExecution();
     InGuardedPage = false;
     if not_bool(AArch64_ExecutingERETInstr()) then {
-        PSTATE.BTYPE = BTypeNext
+        PSTATE_BTYPE = BTypeNext
     };
     /*
     if not_bool(__BranchTaken) then {

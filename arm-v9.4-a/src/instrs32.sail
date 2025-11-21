@@ -45,7 +45,7 @@ val execute_aarch32_instrs_ADC_i_Op_A_txt : forall 'd 'n ('setflags : Bool),
 function execute_aarch32_instrs_ADC_i_Op_A_txt (d, imm32, n, setflags) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    (result, nzcv) = AddWithCarry(R_read(n), imm32, PSTATE.C);
+    (result, nzcv) = AddWithCarry(R_read(n), imm32, PSTATE_C);
     if d == 15 then {
         if setflags then {
             ALUExceptionReturn(result)
@@ -55,7 +55,7 @@ function execute_aarch32_instrs_ADC_i_Op_A_txt (d, imm32, n, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -119,8 +119,8 @@ val execute_aarch32_instrs_ADC_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_ADC_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
-    (result, nzcv) = AddWithCarry(R_read(n), shifted, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
+    (result, nzcv) = AddWithCarry(R_read(n), shifted, PSTATE_C);
     if d == 15 then {
         if setflags then {
             ALUExceptionReturn(result)
@@ -130,7 +130,7 @@ function execute_aarch32_instrs_ADC_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -236,11 +236,11 @@ function execute_aarch32_instrs_ADC_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
-    (result, nzcv) = AddWithCarry(R_read(n), shifted, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
+    (result, nzcv) = AddWithCarry(R_read(n), shifted, PSTATE_C);
     R_set(d) = result;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -293,7 +293,7 @@ function execute_aarch32_instrs_ADD_i_OpA_A_txt (d, imm32, n, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -339,7 +339,7 @@ function execute_aarch32_instrs_ADD_i_OpT_A_txt (d, imm32, n, setflags) = {
     (result, nzcv) = AddWithCarry(R_read(n), imm32, 0b0);
     R_set(d) = result;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -457,7 +457,7 @@ val execute_aarch32_instrs_ADD_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_ADD_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(n), shifted, 0b0);
     if d == 15 then {
         if setflags then {
@@ -468,7 +468,7 @@ function execute_aarch32_instrs_ADD_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -616,11 +616,11 @@ function execute_aarch32_instrs_ADD_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(n), shifted, 0b0);
     R_set(d) = result;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -672,7 +672,7 @@ function execute_aarch32_instrs_ADD_SP_i_Op_A_txt (d, imm32, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -796,7 +796,7 @@ val execute_aarch32_instrs_ADD_SP_r_Op_A_txt : forall 'd 'm ('setflags : Bool) '
 function execute_aarch32_instrs_ADD_SP_r_Op_A_txt (d, m, setflags, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(13), shifted, 0b0);
     if d == 15 then {
         if setflags then {
@@ -807,7 +807,7 @@ function execute_aarch32_instrs_ADD_SP_r_Op_A_txt (d, m, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -1068,9 +1068,9 @@ function execute_aarch32_instrs_AND_i_Op_A_txt (carry, d, imm32, n, setflags) = 
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -1086,7 +1086,7 @@ function decode_aarch32_instrs_AND_i_A1enc_A_txt (cond, S, Rn, Rd, imm12) = {
         let 'd = UInt(Rd);
         let 'n = UInt(Rn);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE.C);
+        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE_C);
         execute_aarch32_instrs_AND_i_Op_A_txt(carry, d, imm32, n, setflags)
     };
     ()
@@ -1114,7 +1114,7 @@ function decode_aarch32_instrs_AND_i_T1enc_A_txt (i, S, Rn, imm3, Rd, imm8) = {
         let 'd = UInt(Rd);
         let 'n = UInt(Rn);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE.C);
+        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE_C);
         if d == 15 & not_bool(setflags) | n == 15 then {
             throw(Error_Unpredictable())
         };
@@ -1141,7 +1141,7 @@ val execute_aarch32_instrs_AND_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_AND_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = R_read(n) & shifted;
     if d == 15 then {
         if setflags then {
@@ -1152,9 +1152,9 @@ function execute_aarch32_instrs_AND_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -1261,13 +1261,13 @@ function execute_aarch32_instrs_AND_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = R_read(n) & shifted;
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -1310,15 +1310,15 @@ val execute_aarch32_instrs_ASR_i_Op_A_txt : forall 'd 'm ('setflags : Bool) 'shi
 function execute_aarch32_instrs_ASR_i_Op_A_txt (d, m, setflags, shift_n) = {
     carry : bits(1) = undefined;
     result : bits(32) = undefined;
-    (result, carry) = Shift_C(R_read(m), SRType_ASR, shift_n, PSTATE.C);
+    (result, carry) = Shift_C(R_read(m), SRType_ASR, shift_n, PSTATE_C);
     if d == 15 then {
         ALUWritePC(result)
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -1358,12 +1358,12 @@ function execute_aarch32_instrs_ASR_r_Op_A_txt (d, m, n, setflags) = {
     carry : bits(1) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(m)[7 .. 0]);
-    (result, carry) = Shift_C(R_read(n), SRType_ASR, shift_n, PSTATE.C);
+    (result, carry) = Shift_C(R_read(n), SRType_ASR, shift_n, PSTATE_C);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -1672,9 +1672,9 @@ function execute_aarch32_instrs_BIC_i_Op_A_txt (carry, d, imm32, n, setflags) = 
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -1690,7 +1690,7 @@ function decode_aarch32_instrs_BIC_i_A1enc_A_txt (cond, S, Rn, Rd, imm12) = {
         let 'd = UInt(Rd);
         let 'n = UInt(Rn);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE.C);
+        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE_C);
         execute_aarch32_instrs_BIC_i_Op_A_txt(carry, d, imm32, n, setflags)
     };
     ()
@@ -1715,7 +1715,7 @@ function decode_aarch32_instrs_BIC_i_T1enc_A_txt (i, S, Rn, imm3, Rd, imm8) = {
         let 'd = UInt(Rd);
         let 'n = UInt(Rn);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE.C);
+        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE_C);
         if d == 15 | n == 15 then {
             throw(Error_Unpredictable())
         };
@@ -1744,7 +1744,7 @@ val execute_aarch32_instrs_BIC_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_BIC_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = R_read(n) & not_vec(shifted);
     if d == 15 then {
         if setflags then {
@@ -1755,9 +1755,9 @@ function execute_aarch32_instrs_BIC_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -1863,13 +1863,13 @@ function execute_aarch32_instrs_BIC_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = R_read(n) & not_vec(shifted);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -2371,7 +2371,7 @@ function execute_aarch32_instrs_CMN_i_Op_A_txt (imm32, n) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     (result, nzcv) = AddWithCarry(R_read(n), imm32, 0b0);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
 }
 
 val decode_aarch32_instrs_CMN_i_A1enc_A_txt : (bits(4), bits(4), bits(12)) -> unit
@@ -2428,9 +2428,9 @@ val execute_aarch32_instrs_CMN_r_Op_A_txt : forall 'm 'n 'shift_n,
 function execute_aarch32_instrs_CMN_r_Op_A_txt (m, n, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(n), shifted, 0b0);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
 }
 
 val decode_aarch32_instrs_CMN_r_A1enc_A_txt : (bits(4), bits(4), bits(5), bits(2), bits(4)) -> unit
@@ -2527,9 +2527,9 @@ function execute_aarch32_instrs_CMN_rr_Op_A_txt (m, n, s, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(n), shifted, 0b0);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
 }
 
 val decode_aarch32_instrs_CMN_rr_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(2), bits(4)) -> unit
@@ -2570,7 +2570,7 @@ function execute_aarch32_instrs_CMP_i_Op_A_txt (imm32, n) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     (result, nzcv) = AddWithCarry(R_read(n), not_vec(imm32), 0b1);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
 }
 
 val decode_aarch32_instrs_CMP_i_A1enc_A_txt : (bits(4), bits(4), bits(12)) -> unit
@@ -2645,9 +2645,9 @@ val execute_aarch32_instrs_CMP_r_Op_A_txt : forall 'm 'n 'shift_n,
 function execute_aarch32_instrs_CMP_r_Op_A_txt (m, n, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(n), not_vec(shifted), 0b1);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
 }
 
 val decode_aarch32_instrs_CMP_r_A1enc_A_txt : (bits(4), bits(4), bits(5), bits(2), bits(4)) -> unit
@@ -2775,9 +2775,9 @@ function execute_aarch32_instrs_CMP_rr_Op_A_txt (m, n, s, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(n), not_vec(shifted), 0b1);
-    (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+    (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
 }
 
 val decode_aarch32_instrs_CMP_rr_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(2), bits(4)) -> unit
@@ -2913,7 +2913,7 @@ function execute_aarch32_instrs_DMB_Op_A_txt option_name = {
       }
     };
     let types = types;
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
         if HCR_read()[BSU] == 0b11 then {
             domain = MBReqDomain_FullSystem
         };
@@ -2971,7 +2971,7 @@ val execute_aarch32_instrs_DSB_Op_A_txt : bits(4) -> unit
 function execute_aarch32_instrs_DSB_Op_A_txt option_name = {
     nXS : bool = undefined;
     if HaveFeatXS() then {
-        nXS = (((PSTATE.EL == EL0 | PSTATE.EL == EL1) & not_bool(ELUsingAArch32(EL2))) & IsHCRXEL2Enabled()) & HCRX_EL2[FnXS] == 0b1
+        nXS = (((PSTATE_EL == EL0 | PSTATE_EL == EL1) & not_bool(ELUsingAArch32(EL2))) & IsHCRXEL2Enabled()) & HCRX_EL2[FnXS] == 0b1
     } else {
         nXS = false
     };
@@ -3032,7 +3032,7 @@ function execute_aarch32_instrs_DSB_Op_A_txt option_name = {
       }
     };
     let types = types;
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
         if HCR_read()[BSU] == 0b11 then {
             domain = MBReqDomain_FullSystem
         };
@@ -3100,9 +3100,9 @@ function execute_aarch32_instrs_EOR_i_Op_A_txt (carry, d, imm32, n, setflags) = 
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -3118,7 +3118,7 @@ function decode_aarch32_instrs_EOR_i_A1enc_A_txt (cond, S, Rn, Rd, imm12) = {
         let 'd = UInt(Rd);
         let 'n = UInt(Rn);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE.C);
+        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE_C);
         execute_aarch32_instrs_EOR_i_Op_A_txt(carry, d, imm32, n, setflags)
     };
     ()
@@ -3146,7 +3146,7 @@ function decode_aarch32_instrs_EOR_i_T1enc_A_txt (i, S, Rn, imm3, Rd, imm8) = {
         let 'd = UInt(Rd);
         let 'n = UInt(Rn);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE.C);
+        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE_C);
         if d == 15 & not_bool(setflags) | n == 15 then {
             throw(Error_Unpredictable())
         };
@@ -3173,7 +3173,7 @@ val execute_aarch32_instrs_EOR_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_EOR_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = EOR(R_read(n), shifted);
     if d == 15 then {
         if setflags then {
@@ -3184,9 +3184,9 @@ function execute_aarch32_instrs_EOR_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -3293,13 +3293,13 @@ function execute_aarch32_instrs_EOR_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = EOR(R_read(n), shifted);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -3383,7 +3383,7 @@ val execute_aarch32_instrs_IT_Op_A_txt : (bits(4), bits(4)) -> unit
 
 function execute_aarch32_instrs_IT_Op_A_txt (firstcond, mask) = {
     AArch32_CheckITEnabled(mask);
-    PSTATE.IT[7 .. 0] = firstcond @ mask;
+    PSTATE_IT[7 .. 0] = firstcond @ mask;
     ShouldAdvanceIT = false
 }
 
@@ -4093,7 +4093,7 @@ val execute_aarch32_instrs_LDRB_r_Op_A_txt : forall ('add : Bool) ('index : Bool
   (bool('add), bool('index), int('m), int('n), int('shift_n), SRType, int('t), bool('wback)) -> unit
 
 function execute_aarch32_instrs_LDRB_r_Op_A_txt (add, index, m, n, shift_n, shift_t, t, wback) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if index then offset_addr else R_read(n);
@@ -4219,17 +4219,17 @@ val execute_aarch32_instrs_LDRBT_Op_A_txt : forall ('add : Bool) 'm 'n ('postind
   (bool('add), bits(32), int('m), int('n), bool('postindex), bool('register_form), int('shift_n), SRType, int('t)) -> unit
 
 function execute_aarch32_instrs_LDRBT_Op_A_txt (add, imm32, m, n, postindex, register_form, shift_n, shift_t, t) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Unpredictable())
     };
     let offset : bits(32) = if register_form then
-      Shift(R_read(m), shift_t, shift_n, PSTATE.C)
+      Shift(R_read(m), shift_t, shift_n, PSTATE_C)
     else
       imm32;
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if postindex then R_read(n) else offset_addr;
-    if (not_bool(postindex) & t != 15) & PSTATE.T == 0b1 then {
+    if (not_bool(postindex) & t != 15) & PSTATE_T == 0b1 then {
         AArch32_SetLSInstructionSyndrome(1, false, t, false)
     };
     R_set(t) = ZeroExtend(MemU_unpriv_read(address, 1), 32);
@@ -5122,7 +5122,7 @@ val execute_aarch32_instrs_LDRH_r_Op_A_txt : forall ('add : Bool) ('index : Bool
   (bool('add), bool('index), int('m), int('n), int('shift_n), SRType, int('t), bool('wback)) -> unit
 
 function execute_aarch32_instrs_LDRH_r_Op_A_txt (add, index, m, n, shift_n, shift_t, t, wback) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if index then offset_addr else R_read(n);
@@ -5250,14 +5250,14 @@ val execute_aarch32_instrs_LDRHT_Op_A_txt : forall ('add : Bool) 'm 'n ('postind
   (bool('add), bits(32), int('m), int('n), bool('postindex), bool('register_form), int('t)) -> unit
 
 function execute_aarch32_instrs_LDRHT_Op_A_txt (add, imm32, m, n, postindex, register_form, t) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Unpredictable())
     };
     let offset : bits(32) = if register_form then R_read(m) else imm32;
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if postindex then R_read(n) else offset_addr;
-    if (not_bool(postindex) & t != 15) & PSTATE.T == 0b1 then {
+    if (not_bool(postindex) & t != 15) & PSTATE_T == 0b1 then {
         AArch32_SetLSInstructionSyndrome(2, false, t, false)
     };
     let data : bits(16) = MemU_unpriv_read(address, 2);
@@ -5673,7 +5673,7 @@ val execute_aarch32_instrs_LDR_r_OpA_A_txt : forall ('add : Bool) ('index : Bool
   (bool('add), bool('index), int('m), int('n), int('shift_n), SRType, int('t), bool('wback)) -> unit
 
 function execute_aarch32_instrs_LDR_r_OpA_A_txt (add, index, m, n, shift_n, shift_t, t, wback) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if index then offset_addr else R_read(n);
@@ -5743,7 +5743,7 @@ val execute_aarch32_instrs_LDR_r_OpT_A_txt : forall 'm 'n 'shift_n 't,
   (int('m), int('n), int('shift_n), SRType, int('t)) -> unit
 
 function execute_aarch32_instrs_LDR_r_OpT_A_txt (m, n, shift_n, shift_t, t) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let offset_addr : bits(32) = R_read(n) + offset;
     let address : bits(32) = offset_addr;
     if t != 15 then {
@@ -6017,7 +6017,7 @@ val execute_aarch32_instrs_LDRSB_r_Op_A_txt : forall ('add : Bool) ('index : Boo
   (bool('add), bool('index), int('m), int('n), int('shift_n), SRType, int('t), bool('wback)) -> unit
 
 function execute_aarch32_instrs_LDRSB_r_Op_A_txt (add, index, m, n, shift_n, shift_t, t, wback) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if index then offset_addr else R_read(n);
@@ -6145,14 +6145,14 @@ val execute_aarch32_instrs_LDRSBT_Op_A_txt : forall ('add : Bool) 'm 'n ('postin
   (bool('add), bits(32), int('m), int('n), bool('postindex), bool('register_form), int('t)) -> unit
 
 function execute_aarch32_instrs_LDRSBT_Op_A_txt (add, imm32, m, n, postindex, register_form, t) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Unpredictable())
     };
     let offset : bits(32) = if register_form then R_read(m) else imm32;
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if postindex then R_read(n) else offset_addr;
-    if (not_bool(postindex) & t != 15) & PSTATE.T == 0b1 then {
+    if (not_bool(postindex) & t != 15) & PSTATE_T == 0b1 then {
         AArch32_SetLSInstructionSyndrome(1, true, t, false)
     };
     R_set(t) = SignExtend(MemU_unpriv_read(address, 1), 32);
@@ -6467,7 +6467,7 @@ val execute_aarch32_instrs_LDRSH_r_Op_A_txt : forall ('add : Bool) ('index : Boo
   (bool('add), bool('index), int('m), int('n), int('shift_n), SRType, int('t), bool('wback)) -> unit
 
 function execute_aarch32_instrs_LDRSH_r_Op_A_txt (add, index, m, n, shift_n, shift_t, t, wback) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if index then offset_addr else R_read(n);
@@ -6595,14 +6595,14 @@ val execute_aarch32_instrs_LDRSHT_Op_A_txt : forall ('add : Bool) 'm 'n ('postin
   (bool('add), bits(32), int('m), int('n), bool('postindex), bool('register_form), int('t)) -> unit
 
 function execute_aarch32_instrs_LDRSHT_Op_A_txt (add, imm32, m, n, postindex, register_form, t) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Unpredictable())
     };
     let offset : bits(32) = if register_form then R_read(m) else imm32;
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if postindex then R_read(n) else offset_addr;
-    if (not_bool(postindex) & t != 15) & PSTATE.T == 0b1 then {
+    if (not_bool(postindex) & t != 15) & PSTATE_T == 0b1 then {
         AArch32_SetLSInstructionSyndrome(2, true, t, false)
     };
     let data : bits(16) = MemU_unpriv_read(address, 2);
@@ -6723,17 +6723,17 @@ val execute_aarch32_instrs_LDRT_Op_A_txt : forall ('add : Bool) 'm 'n ('postinde
   (bool('add), bits(32), int('m), int('n), bool('postindex), bool('register_form), int('shift_n), SRType, int('t)) -> unit
 
 function execute_aarch32_instrs_LDRT_Op_A_txt (add, imm32, m, n, postindex, register_form, shift_n, shift_t, t) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Unpredictable())
     };
     let offset : bits(32) = if register_form then
-      Shift(R_read(m), shift_t, shift_n, PSTATE.C)
+      Shift(R_read(m), shift_t, shift_n, PSTATE_C)
     else
       imm32;
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if postindex then R_read(n) else offset_addr;
-    if (not_bool(postindex) & t != 15) & PSTATE.T == 0b1 then {
+    if (not_bool(postindex) & t != 15) & PSTATE_T == 0b1 then {
         AArch32_SetLSInstructionSyndrome(4, false, t, false)
     };
     let data : bits(32) = MemU_unpriv_read(address, 4);
@@ -6859,15 +6859,15 @@ val execute_aarch32_instrs_LSL_i_Op_A_txt : forall 'd 'm ('setflags : Bool) 'shi
 function execute_aarch32_instrs_LSL_i_Op_A_txt (d, m, setflags, shift_n) = {
     carry : bits(1) = undefined;
     result : bits(32) = undefined;
-    (result, carry) = Shift_C(R_read(m), SRType_LSL, shift_n, PSTATE.C);
+    (result, carry) = Shift_C(R_read(m), SRType_LSL, shift_n, PSTATE_C);
     if d == 15 then {
         ALUWritePC(result)
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -6910,12 +6910,12 @@ function execute_aarch32_instrs_LSL_r_Op_A_txt (d, m, n, setflags) = {
     carry : bits(1) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(m)[7 .. 0]);
-    (result, carry) = Shift_C(R_read(n), SRType_LSL, shift_n, PSTATE.C);
+    (result, carry) = Shift_C(R_read(n), SRType_LSL, shift_n, PSTATE_C);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -6972,15 +6972,15 @@ val execute_aarch32_instrs_LSR_i_Op_A_txt : forall 'd 'm ('setflags : Bool) 'shi
 function execute_aarch32_instrs_LSR_i_Op_A_txt (d, m, setflags, shift_n) = {
     carry : bits(1) = undefined;
     result : bits(32) = undefined;
-    (result, carry) = Shift_C(R_read(m), SRType_LSR, shift_n, PSTATE.C);
+    (result, carry) = Shift_C(R_read(m), SRType_LSR, shift_n, PSTATE_C);
     if d == 15 then {
         ALUWritePC(result)
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -7020,12 +7020,12 @@ function execute_aarch32_instrs_LSR_r_Op_A_txt (d, m, n, setflags) = {
     carry : bits(1) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(m)[7 .. 0]);
-    (result, carry) = Shift_C(R_read(n), SRType_LSR, shift_n, PSTATE.C);
+    (result, carry) = Shift_C(R_read(n), SRType_LSR, shift_n, PSTATE_C);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -7181,8 +7181,8 @@ function execute_aarch32_instrs_MLA_Op_A_txt (a, d, m, n, setflags) = {
     let 'result = operand1 * operand2 + addend;
     R_set(d) = result[31 .. 0];
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result[31 .. 0])
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result[31 .. 0])
     };
     ()
 }
@@ -7323,9 +7323,9 @@ function execute_aarch32_instrs_MOV_i_Op_A_txt (carry, d, imm32, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -7340,7 +7340,7 @@ function decode_aarch32_instrs_MOV_i_A1enc_A_txt (cond, S, Rd, imm12) = {
         imm32 : bits(32) = undefined;
         let 'd = UInt(Rd);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE.C);
+        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE_C);
         execute_aarch32_instrs_MOV_i_Op_A_txt(carry, d, imm32, setflags)
     };
     ()
@@ -7393,7 +7393,7 @@ function decode_aarch32_instrs_MOV_i_T1enc_A_txt (Rd, imm8) = {
         let 'd = UInt(Rd);
         let setflags : bool = not_bool(InITBlock());
         let imm32 : bits(32) = ZeroExtend(imm8, 32);
-        let carry : bits(1) = PSTATE.C;
+        let carry : bits(1) = PSTATE_C;
         execute_aarch32_instrs_MOV_i_Op_A_txt(carry, d, imm32, setflags)
     };
     ()
@@ -7414,7 +7414,7 @@ function decode_aarch32_instrs_MOV_i_T2enc_A_txt (i, S, imm3, Rd, imm8) = {
         imm32 : bits(32) = undefined;
         let 'd = UInt(Rd);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE.C);
+        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE_C);
         if d == 15 then {
             throw(Error_Unpredictable())
         };
@@ -7469,7 +7469,7 @@ val execute_aarch32_instrs_MOV_r_Op_A_txt : forall 'd 'm ('setflags : Bool) 'shi
 function execute_aarch32_instrs_MOV_r_Op_A_txt (d, m, setflags, shift_n, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = shifted;
     if d == 15 then {
         if setflags then {
@@ -7480,9 +7480,9 @@ function execute_aarch32_instrs_MOV_r_Op_A_txt (d, m, setflags, shift_n, shift_t
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -7621,12 +7621,12 @@ function execute_aarch32_instrs_MOV_rr_Op_A_txt (d, m, s, setflags, shift_t) = {
     carry : bits(1) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    (result, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (result, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -7899,8 +7899,8 @@ function execute_aarch32_instrs_MUL_Op_A_txt (d, m, n, setflags) = {
     let 'result = operand1 * operand2;
     R_set(d) = result[31 .. 0];
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result[31 .. 0])
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result[31 .. 0])
     };
     ()
 }
@@ -7994,9 +7994,9 @@ function execute_aarch32_instrs_MVN_i_Op_A_txt (carry, d, imm32, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -8011,7 +8011,7 @@ function decode_aarch32_instrs_MVN_i_A1enc_A_txt (cond, S, Rd, imm12) = {
         imm32 : bits(32) = undefined;
         let 'd = UInt(Rd);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE.C);
+        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE_C);
         execute_aarch32_instrs_MVN_i_Op_A_txt(carry, d, imm32, setflags)
     };
     ()
@@ -8038,7 +8038,7 @@ function decode_aarch32_instrs_MVN_i_T1enc_A_txt (i, S, imm3, Rd, imm8) = {
         imm32 : bits(32) = undefined;
         let 'd = UInt(Rd);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE.C);
+        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE_C);
         if d == 15 then {
             throw(Error_Unpredictable())
         };
@@ -8066,7 +8066,7 @@ val execute_aarch32_instrs_MVN_r_Op_A_txt : forall 'd 'm ('setflags : Bool) 'shi
 function execute_aarch32_instrs_MVN_r_Op_A_txt (d, m, setflags, shift_n, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = not_vec(shifted);
     if d == 15 then {
         if setflags then {
@@ -8077,9 +8077,9 @@ function execute_aarch32_instrs_MVN_r_Op_A_txt (d, m, setflags, shift_n, shift_t
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -8184,13 +8184,13 @@ function execute_aarch32_instrs_MVN_rr_Op_A_txt (d, m, s, setflags, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = not_vec(shifted);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -8294,9 +8294,9 @@ function execute_aarch32_instrs_ORN_i_Op_A_txt (carry, d, imm32, n, setflags) = 
     let result : bits(32) = R_read(n) | not_vec(imm32);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -8313,7 +8313,7 @@ function decode_aarch32_instrs_ORN_i_T1enc_A_txt (i, S, Rn, imm3, Rd, imm8) = {
         let 'd = UInt(Rd);
         let 'n = UInt(Rn);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE.C);
+        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE_C);
         if d == 15 then {
             throw(Error_Unpredictable())
         };
@@ -8340,13 +8340,13 @@ val execute_aarch32_instrs_ORN_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_ORN_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = R_read(n) | not_vec(shifted);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -8405,9 +8405,9 @@ function execute_aarch32_instrs_ORR_i_Op_A_txt (carry, d, imm32, n, setflags) = 
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -8423,7 +8423,7 @@ function decode_aarch32_instrs_ORR_i_A1enc_A_txt (cond, S, Rn, Rd, imm12) = {
         let 'd = UInt(Rd);
         let 'n = UInt(Rn);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE.C);
+        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE_C);
         execute_aarch32_instrs_ORR_i_Op_A_txt(carry, d, imm32, n, setflags)
     };
     ()
@@ -8451,7 +8451,7 @@ function decode_aarch32_instrs_ORR_i_T1enc_A_txt (i, S, Rn, imm3, Rd, imm8) = {
         let 'd = UInt(Rd);
         let 'n = UInt(Rn);
         let setflags : bool = S == 0b1;
-        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE.C);
+        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE_C);
         if d == 15 then {
             throw(Error_Unpredictable())
         };
@@ -8478,7 +8478,7 @@ val execute_aarch32_instrs_ORR_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_ORR_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = R_read(n) | shifted;
     if d == 15 then {
         if setflags then {
@@ -8489,9 +8489,9 @@ function execute_aarch32_instrs_ORR_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            PSTATE.N = [result[31]];
-            PSTATE.Z = IsZeroBit(result);
-            PSTATE.C = carry
+            PSTATE_N = [result[31]];
+            PSTATE_Z = IsZeroBit(result);
+            PSTATE_C = carry
         };
         ()
     }
@@ -8598,13 +8598,13 @@ function execute_aarch32_instrs_ORR_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = R_read(n) | shifted;
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -8645,7 +8645,7 @@ val execute_aarch32_instrs_PKH_Op_A_txt : forall 'd 'm 'n 'shift_n ('tbform : Bo
   (int('d), int('m), int('n), int('shift_n), SRType, bool('tbform)) -> unit
 
 function execute_aarch32_instrs_PKH_Op_A_txt (d, m, n, shift_n, shift_t, tbform) = {
-    let operand2 : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let operand2 : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     R_set(d) = [R_read(d) with 15 .. 0 = if tbform then operand2[15 .. 0] else
       R_read(n)[15 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 16 = if tbform then R_read(n)[31 .. 16]
@@ -8872,7 +8872,7 @@ val execute_aarch32_instrs_PLD_r_Op_A_txt : forall ('add : Bool) ('is_pldw : Boo
   (bool('add), bool('is_pldw), int('m), int('n), int('shift_n), SRType) -> unit
 
 function execute_aarch32_instrs_PLD_r_Op_A_txt (add, is_pldw, m, n, shift_n, shift_t) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let address : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     if is_pldw then {
@@ -9044,7 +9044,7 @@ val execute_aarch32_instrs_PLI_r_Op_A_txt : forall ('add : Bool) 'm 'n 'shift_n,
   (bool('add), int('m), int('n), int('shift_n), SRType) -> unit
 
 function execute_aarch32_instrs_PLI_r_Op_A_txt (add, m, n, shift_n, shift_t) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let address : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     Hint_PreloadInstr(address)
@@ -9363,7 +9363,7 @@ function execute_aarch32_instrs_QADD_Op_A_txt (d, m, n) = {
           sat = __tup_1
       };
     if sat then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -9500,7 +9500,7 @@ function execute_aarch32_instrs_QDADD_Op_A_txt (d, m, n) = {
           sat2 = __tup_1
       };
     if sat1 | sat2 then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -9574,7 +9574,7 @@ function execute_aarch32_instrs_QDSUB_Op_A_txt (d, m, n) = {
           sat2 = __tup_1
       };
     if sat1 | sat2 then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -9838,7 +9838,7 @@ function execute_aarch32_instrs_QSUB_Op_A_txt (d, m, n) = {
           sat = __tup_1
       };
     if sat then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -10206,12 +10206,12 @@ function execute_aarch32_instrs_ROR_r_Op_A_txt (d, m, n, setflags) = {
     carry : bits(1) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(m)[7 .. 0]);
-    (result, carry) = Shift_C(R_read(n), SRType_ROR, shift_n, PSTATE.C);
+    (result, carry) = Shift_C(R_read(n), SRType_ROR, shift_n, PSTATE_C);
     R_set(d) = result;
     if setflags then {
-        PSTATE.N = [result[31]];
-        PSTATE.Z = IsZeroBit(result);
-        PSTATE.C = carry
+        PSTATE_N = [result[31]];
+        PSTATE_Z = IsZeroBit(result);
+        PSTATE_C = carry
     };
     ()
 }
@@ -10253,7 +10253,7 @@ function execute_aarch32_instrs_RSB_i_Op_A_txt (d, imm32, n, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -10337,7 +10337,7 @@ val execute_aarch32_instrs_RSB_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_RSB_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(not_vec(R_read(n)), shifted, 0b1);
     if d == 15 then {
         if setflags then {
@@ -10348,7 +10348,7 @@ function execute_aarch32_instrs_RSB_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -10430,11 +10430,11 @@ function execute_aarch32_instrs_RSB_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(not_vec(R_read(n)), shifted, 0b1);
     R_set(d) = result;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -10477,7 +10477,7 @@ val execute_aarch32_instrs_RSC_i_Op_A_txt : forall 'd 'n ('setflags : Bool),
 function execute_aarch32_instrs_RSC_i_Op_A_txt (d, imm32, n, setflags) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    (result, nzcv) = AddWithCarry(not_vec(R_read(n)), imm32, PSTATE.C);
+    (result, nzcv) = AddWithCarry(not_vec(R_read(n)), imm32, PSTATE_C);
     if d == 15 then {
         if setflags then {
             ALUExceptionReturn(result)
@@ -10487,7 +10487,7 @@ function execute_aarch32_instrs_RSC_i_Op_A_txt (d, imm32, n, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -10524,8 +10524,8 @@ val execute_aarch32_instrs_RSC_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_RSC_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
-    (result, nzcv) = AddWithCarry(not_vec(R_read(n)), shifted, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
+    (result, nzcv) = AddWithCarry(not_vec(R_read(n)), shifted, PSTATE_C);
     if d == 15 then {
         if setflags then {
             ALUExceptionReturn(result)
@@ -10535,7 +10535,7 @@ function execute_aarch32_instrs_RSC_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -10579,11 +10579,11 @@ function execute_aarch32_instrs_RSC_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
-    (result, nzcv) = AddWithCarry(not_vec(R_read(n)), shifted, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
+    (result, nzcv) = AddWithCarry(not_vec(R_read(n)), shifted, PSTATE_C);
     R_set(d) = result;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -10628,8 +10628,8 @@ function execute_aarch32_instrs_SADD16_Op_A_txt (d, m, n) = {
     let 'sum2 = SInt(R_read(n)[31 .. 16]) + SInt(R_read(m)[31 .. 16]);
     R_set(d) = [R_read(d) with 15 .. 0 = sum1[15 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 16 = sum2[15 .. 0]];
-    PSTATE.GE[1 .. 0] = if sum1 >= 0 then 0b11 else 0b00;
-    PSTATE.GE[3 .. 2] = if sum2 >= 0 then 0b11 else 0b00
+    PSTATE_GE[1 .. 0] = if sum1 >= 0 then 0b11 else 0b00;
+    PSTATE_GE[3 .. 2] = if sum2 >= 0 then 0b11 else 0b00
 }
 
 val decode_aarch32_instrs_SADD16_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -10697,10 +10697,10 @@ function execute_aarch32_instrs_SADD8_Op_A_txt (d, m, n) = {
     R_set(d) = [R_read(d) with 15 .. 8 = sum2[7 .. 0]];
     R_set(d) = [R_read(d) with 23 .. 16 = sum3[7 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 24 = sum4[7 .. 0]];
-    PSTATE.GE[0] = Bit(if sum1 >= 0 then 0b1 else 0b0);
-    PSTATE.GE[1] = Bit(if sum2 >= 0 then 0b1 else 0b0);
-    PSTATE.GE[2] = Bit(if sum3 >= 0 then 0b1 else 0b0);
-    PSTATE.GE[3] = Bit(if sum4 >= 0 then 0b1 else 0b0)
+    PSTATE_GE[0] = Bit(if sum1 >= 0 then 0b1 else 0b0);
+    PSTATE_GE[1] = Bit(if sum2 >= 0 then 0b1 else 0b0);
+    PSTATE_GE[2] = Bit(if sum3 >= 0 then 0b1 else 0b0);
+    PSTATE_GE[3] = Bit(if sum4 >= 0 then 0b1 else 0b0)
 }
 
 val decode_aarch32_instrs_SADD8_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -10764,8 +10764,8 @@ function execute_aarch32_instrs_SASX_Op_A_txt (d, m, n) = {
     let 'sum = SInt(R_read(n)[31 .. 16]) + SInt(R_read(m)[15 .. 0]);
     R_set(d) = [R_read(d) with 15 .. 0 = diff[15 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 16 = sum[15 .. 0]];
-    PSTATE.GE[1 .. 0] = if diff >= 0 then 0b11 else 0b00;
-    PSTATE.GE[3 .. 2] = if sum >= 0 then 0b11 else 0b00
+    PSTATE_GE[1 .. 0] = if diff >= 0 then 0b11 else 0b00;
+    PSTATE_GE[3 .. 2] = if sum >= 0 then 0b11 else 0b00
 }
 
 val decode_aarch32_instrs_SASX_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -10872,7 +10872,7 @@ val execute_aarch32_instrs_SBC_i_Op_A_txt : forall 'd 'n ('setflags : Bool),
 function execute_aarch32_instrs_SBC_i_Op_A_txt (d, imm32, n, setflags) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    (result, nzcv) = AddWithCarry(R_read(n), not_vec(imm32), PSTATE.C);
+    (result, nzcv) = AddWithCarry(R_read(n), not_vec(imm32), PSTATE_C);
     if d == 15 then {
         if setflags then {
             ALUExceptionReturn(result)
@@ -10882,7 +10882,7 @@ function execute_aarch32_instrs_SBC_i_Op_A_txt (d, imm32, n, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -10946,8 +10946,8 @@ val execute_aarch32_instrs_SBC_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_SBC_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
-    (result, nzcv) = AddWithCarry(R_read(n), not_vec(shifted), PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
+    (result, nzcv) = AddWithCarry(R_read(n), not_vec(shifted), PSTATE_C);
     if d == 15 then {
         if setflags then {
             ALUExceptionReturn(result)
@@ -10957,7 +10957,7 @@ function execute_aarch32_instrs_SBC_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -11063,11 +11063,11 @@ function execute_aarch32_instrs_SBC_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
-    (result, nzcv) = AddWithCarry(R_read(n), not_vec(shifted), PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
+    (result, nzcv) = AddWithCarry(R_read(n), not_vec(shifted), PSTATE_C);
     R_set(d) = result;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -11249,19 +11249,19 @@ val execute_aarch32_instrs_SEL_Op_A_txt : forall 'd 'm 'n,
   (int('d), int('m), int('n)) -> unit
 
 function execute_aarch32_instrs_SEL_Op_A_txt (d, m, n) = {
-    R_set(d) = [R_read(d) with 7 .. 0 = if [PSTATE.GE[0]] == 0b1 then
+    R_set(d) = [R_read(d) with 7 .. 0 = if [PSTATE_GE[0]] == 0b1 then
       R_read(n)[7 .. 0]
     else
       R_read(m)[7 .. 0]];
-    R_set(d) = [R_read(d) with 15 .. 8 = if [PSTATE.GE[1]] == 0b1 then
+    R_set(d) = [R_read(d) with 15 .. 8 = if [PSTATE_GE[1]] == 0b1 then
       R_read(n)[15 .. 8]
     else
       R_read(m)[15 .. 8]];
-    R_set(d) = [R_read(d) with 23 .. 16 = if [PSTATE.GE[2]] == 0b1 then
+    R_set(d) = [R_read(d) with 23 .. 16 = if [PSTATE_GE[2]] == 0b1 then
       R_read(n)[23 .. 16]
     else
       R_read(m)[23 .. 16]];
-    R_set(d) = [R_read(d) with 31 .. 24 = if [PSTATE.GE[3]] == 0b1 then
+    R_set(d) = [R_read(d) with 31 .. 24 = if [PSTATE_GE[3]] == 0b1 then
       R_read(n)[31 .. 24]
     else
       R_read(m)[31 .. 24]]
@@ -11324,7 +11324,7 @@ val execute_aarch32_instrs_SETEND_Op_A_txt : forall ('set_bigend : Bool).
 
 function execute_aarch32_instrs_SETEND_Op_A_txt set_bigend = {
     AArch32_CheckSETENDEnabled();
-    PSTATE.E = if set_bigend then 0b1 else 0b0
+    PSTATE_E = if set_bigend then 0b1 else 0b0
 }
 
 val decode_aarch32_instrs_SETEND_A1enc_A_txt : bits(1) -> unit
@@ -11820,7 +11820,7 @@ function execute_aarch32_instrs_SMLABB_Op_A_txt (a, d, m, m_high, n, n_high) = {
     let 'result = SInt(operand1) * SInt(operand2) + SInt(R_read(a));
     R_set(d) = result[31 .. 0];
     if result != SInt(result[31 .. 0]) then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -11899,7 +11899,7 @@ function execute_aarch32_instrs_SMLAD_Op_A_txt (a, d, m, m_swap, n) = {
     let 'result = product1 + product2 + SInt(R_read(a));
     R_set(d) = result[31 .. 0];
     if result != SInt(result[31 .. 0]) then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -11975,8 +11975,8 @@ function execute_aarch32_instrs_SMLAL_Op_A_txt (dHi, dLo, m, n, setflags) = {
     R_set(dHi) = result[63 .. 32];
     R_set(dLo) = result[31 .. 0];
     if setflags then {
-        PSTATE.N = [result[63]];
-        PSTATE.Z = IsZeroBit(result[63 .. 0])
+        PSTATE_N = [result[63]];
+        PSTATE_Z = IsZeroBit(result[63 .. 0])
     };
     ()
 }
@@ -12207,7 +12207,7 @@ function execute_aarch32_instrs_SMLAWB_Op_A_txt (a, d, m, m_high, n) = {
     let 'result = SInt(R_read(n)) * SInt(operand2) + (SInt(R_read(a)) << 16);
     R_set(d) = result[47 .. 16];
     if (result >> 16) != SInt(R_read(d)) then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -12282,7 +12282,7 @@ function execute_aarch32_instrs_SMLSD_Op_A_txt (a, d, m, m_swap, n) = {
     let 'result = product1 - product2 + SInt(R_read(a));
     R_set(d) = result[31 .. 0];
     if result != SInt(result[31 .. 0]) then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -12644,7 +12644,7 @@ function execute_aarch32_instrs_SMUAD_Op_A_txt (d, m, m_swap, n) = {
     let 'result = product1 + product2;
     R_set(d) = result[31 .. 0];
     if result != SInt(result[31 .. 0]) then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -12783,8 +12783,8 @@ function execute_aarch32_instrs_SMULL_Op_A_txt (dHi, dLo, m, n, setflags) = {
     R_set(dHi) = result[63 .. 32];
     R_set(dLo) = result[31 .. 0];
     if setflags then {
-        PSTATE.N = [result[63]];
-        PSTATE.Z = IsZeroBit(result[63 .. 0])
+        PSTATE_N = [result[63]];
+        PSTATE_Z = IsZeroBit(result[63 .. 0])
     };
     ()
 }
@@ -12995,7 +12995,7 @@ function execute_aarch32_instrs_SSAT16_Op_A_txt (d, n, saturate_to) = {
     R_set(d) = [R_read(d) with 15 .. 0 = SignExtend(result1, 16)];
     R_set(d) = [R_read(d) with 31 .. 16 = SignExtend(result2, 16)];
     if sat1 | sat2 then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -13063,11 +13063,11 @@ val execute_aarch32_instrs_SSAT_Op_A_txt : forall 'd 'n 'saturate_to 'shift_n,
 function execute_aarch32_instrs_SSAT_Op_A_txt (d, n, saturate_to, shift_n, shift_t) = {
     result : bits('saturate_to) = undefined;
     sat : bool = undefined;
-    let operand : bits(32) = Shift(R_read(n), shift_t, shift_n, PSTATE.C);
+    let operand : bits(32) = Shift(R_read(n), shift_t, shift_n, PSTATE_C);
     (result, sat) = SignedSatQ(SInt(operand), saturate_to);
     R_set(d) = SignExtend(result, 32);
     if sat then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -13151,8 +13151,8 @@ function execute_aarch32_instrs_SSAX_Op_A_txt (d, m, n) = {
     let 'diff = SInt(R_read(n)[31 .. 16]) - SInt(R_read(m)[15 .. 0]);
     R_set(d) = [R_read(d) with 15 .. 0 = sum[15 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 16 = diff[15 .. 0]];
-    PSTATE.GE[1 .. 0] = if sum >= 0 then 0b11 else 0b00;
-    PSTATE.GE[3 .. 2] = if diff >= 0 then 0b11 else 0b00
+    PSTATE_GE[1 .. 0] = if sum >= 0 then 0b11 else 0b00;
+    PSTATE_GE[3 .. 2] = if diff >= 0 then 0b11 else 0b00
 }
 
 val decode_aarch32_instrs_SSAX_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -13216,8 +13216,8 @@ function execute_aarch32_instrs_SSUB16_Op_A_txt (d, m, n) = {
     let 'diff2 = SInt(R_read(n)[31 .. 16]) - SInt(R_read(m)[31 .. 16]);
     R_set(d) = [R_read(d) with 15 .. 0 = diff1[15 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 16 = diff2[15 .. 0]];
-    PSTATE.GE[1 .. 0] = if diff1 >= 0 then 0b11 else 0b00;
-    PSTATE.GE[3 .. 2] = if diff2 >= 0 then 0b11 else 0b00
+    PSTATE_GE[1 .. 0] = if diff1 >= 0 then 0b11 else 0b00;
+    PSTATE_GE[3 .. 2] = if diff2 >= 0 then 0b11 else 0b00
 }
 
 val decode_aarch32_instrs_SSUB16_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -13285,10 +13285,10 @@ function execute_aarch32_instrs_SSUB8_Op_A_txt (d, m, n) = {
     R_set(d) = [R_read(d) with 15 .. 8 = diff2[7 .. 0]];
     R_set(d) = [R_read(d) with 23 .. 16 = diff3[7 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 24 = diff4[7 .. 0]];
-    PSTATE.GE[0] = Bit(if diff1 >= 0 then 0b1 else 0b0);
-    PSTATE.GE[1] = Bit(if diff2 >= 0 then 0b1 else 0b0);
-    PSTATE.GE[2] = Bit(if diff3 >= 0 then 0b1 else 0b0);
-    PSTATE.GE[3] = Bit(if diff4 >= 0 then 0b1 else 0b0)
+    PSTATE_GE[0] = Bit(if diff1 >= 0 then 0b1 else 0b0);
+    PSTATE_GE[1] = Bit(if diff2 >= 0 then 0b1 else 0b0);
+    PSTATE_GE[2] = Bit(if diff3 >= 0 then 0b1 else 0b0);
+    PSTATE_GE[3] = Bit(if diff4 >= 0 then 0b1 else 0b0)
 }
 
 val decode_aarch32_instrs_SSUB8_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -13877,7 +13877,7 @@ val execute_aarch32_instrs_STRB_r_Op_A_txt : forall ('add : Bool) ('index : Bool
   (bool('add), bool('index), int('m), int('n), int('shift_n), SRType, int('t), bool('wback)) -> unit
 
 function execute_aarch32_instrs_STRB_r_Op_A_txt (add, index, m, n, shift_n, shift_t, t, wback) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if index then offset_addr else R_read(n);
@@ -14000,17 +14000,17 @@ val execute_aarch32_instrs_STRBT_Op_A_txt : forall ('add : Bool) 'm 'n ('postind
   (bool('add), bits(32), int('m), int('n), bool('postindex), bool('register_form), int('shift_n), SRType, int('t)) -> unit
 
 function execute_aarch32_instrs_STRBT_Op_A_txt (add, imm32, m, n, postindex, register_form, shift_n, shift_t, t) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Unpredictable())
     };
     let offset : bits(32) = if register_form then
-      Shift(R_read(m), shift_t, shift_n, PSTATE.C)
+      Shift(R_read(m), shift_t, shift_n, PSTATE_C)
     else
       imm32;
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if postindex then R_read(n) else offset_addr;
-    if (not_bool(postindex) & t != 15) & PSTATE.T == 0b1 then {
+    if (not_bool(postindex) & t != 15) & PSTATE_T == 0b1 then {
         AArch32_SetLSInstructionSyndrome(1, false, t, false)
     };
     MemU_unpriv_set(address, 1) = R_read(t)[7 .. 0];
@@ -14781,7 +14781,7 @@ val execute_aarch32_instrs_STRH_r_Op_A_txt : forall ('add : Bool) ('index : Bool
   (bool('add), bool('index), int('m), int('n), int('shift_n), SRType, int('t), bool('wback)) -> unit
 
 function execute_aarch32_instrs_STRH_r_Op_A_txt (add, index, m, n, shift_n, shift_t, t, wback) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if index then offset_addr else R_read(n);
@@ -14906,14 +14906,14 @@ val execute_aarch32_instrs_STRHT_Op_A_txt : forall ('add : Bool) 'm 'n ('postind
   (bool('add), bits(32), int('m), int('n), bool('postindex), bool('register_form), int('t)) -> unit
 
 function execute_aarch32_instrs_STRHT_Op_A_txt (add, imm32, m, n, postindex, register_form, t) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Unpredictable())
     };
     let offset : bits(32) = if register_form then R_read(m) else imm32;
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if postindex then R_read(n) else offset_addr;
-    if t != 15 & PSTATE.T == 0b1 then {
+    if t != 15 & PSTATE_T == 0b1 then {
         AArch32_SetLSInstructionSyndrome(2, false, t, false)
     };
     MemU_unpriv_set(address, 2) = R_read(t)[15 .. 0];
@@ -15213,7 +15213,7 @@ val execute_aarch32_instrs_STR_r_Op_A_txt : forall ('add : Bool) ('index : Bool)
   (bool('add), bool('index), int('m), int('n), int('shift_n), SRType, int('t), bool('wback)) -> unit
 
 function execute_aarch32_instrs_STR_r_Op_A_txt (add, index, m, n, shift_n, shift_t, t, wback) = {
-    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let offset : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     let offset_addr : bits(32) = if add then R_read(n) + offset else
       R_read(n) - offset;
     let address : bits(32) = if index then offset_addr else R_read(n);
@@ -15342,11 +15342,11 @@ val execute_aarch32_instrs_STRT_Op_A_txt : forall ('add : Bool) 'm 'n ('postinde
   (bool('add), bits(32), int('m), int('n), bool('postindex), bool('register_form), int('shift_n), SRType, int('t)) -> unit
 
 function execute_aarch32_instrs_STRT_Op_A_txt (add, imm32, m, n, postindex, register_form, shift_n, shift_t, t) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Unpredictable())
     };
     let offset : bits(32) = if register_form then
-      Shift(R_read(m), shift_t, shift_n, PSTATE.C)
+      Shift(R_read(m), shift_t, shift_n, PSTATE_C)
     else
       imm32;
     let offset_addr : bits(32) = if add then R_read(n) + offset else
@@ -15358,7 +15358,7 @@ function execute_aarch32_instrs_STRT_Op_A_txt (add, imm32, m, n, postindex, regi
     } else {
         data = R_read(t)
     };
-    if (not_bool(postindex) & t != 15) & PSTATE.T == 0b1 then {
+    if (not_bool(postindex) & t != 15) & PSTATE_T == 0b1 then {
         AArch32_SetLSInstructionSyndrome(4, false, t, false)
     };
     MemU_unpriv_set(address, 4) = data;
@@ -15494,7 +15494,7 @@ function execute_aarch32_instrs_SUB_i_Op_A_txt (d, imm32, n, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -15676,7 +15676,7 @@ val execute_aarch32_instrs_SUB_r_Op_A_txt : forall 'd 'm 'n ('setflags : Bool) '
 function execute_aarch32_instrs_SUB_r_Op_A_txt (d, m, n, setflags, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(n), not_vec(shifted), 0b1);
     if d == 15 then {
         if setflags then {
@@ -15687,7 +15687,7 @@ function execute_aarch32_instrs_SUB_r_Op_A_txt (d, m, n, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -15801,11 +15801,11 @@ function execute_aarch32_instrs_SUB_rr_Op_A_txt (d, m, n, s, setflags, shift_t) 
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(n), not_vec(shifted), 0b1);
     R_set(d) = result;
     if setflags then {
-        (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+        (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
     };
     ()
 }
@@ -15857,7 +15857,7 @@ function execute_aarch32_instrs_SUB_SP_i_Op_A_txt (d, imm32, setflags) = {
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -15962,7 +15962,7 @@ val execute_aarch32_instrs_SUB_SP_r_Op_A_txt : forall 'd 'm ('setflags : Bool) '
 function execute_aarch32_instrs_SUB_SP_r_Op_A_txt (d, m, setflags, shift_n, shift_t) = {
     nzcv : bits(4) = undefined;
     result : bits(32) = undefined;
-    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE.C);
+    let shifted : bits(32) = Shift(R_read(m), shift_t, shift_n, PSTATE_C);
     (result, nzcv) = AddWithCarry(R_read(13), not_vec(shifted), 0b1);
     if d == 15 then {
         if setflags then {
@@ -15973,7 +15973,7 @@ function execute_aarch32_instrs_SUB_SP_r_Op_A_txt (d, m, setflags, shift_n, shif
     } else {
         R_set(d) = result;
         if setflags then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = nzcv
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = nzcv
         };
         ()
     }
@@ -16595,9 +16595,9 @@ val execute_aarch32_instrs_TEQ_i_Op_A_txt : forall 'n, (0 <= 'n & 'n <= 15).
 
 function execute_aarch32_instrs_TEQ_i_Op_A_txt (carry, imm32, n) = {
     let result : bits(32) = EOR(R_read(n), imm32);
-    PSTATE.N = [result[31]];
-    PSTATE.Z = IsZeroBit(result);
-    PSTATE.C = carry
+    PSTATE_N = [result[31]];
+    PSTATE_Z = IsZeroBit(result);
+    PSTATE_C = carry
 }
 
 val decode_aarch32_instrs_TEQ_i_A1enc_A_txt : (bits(4), bits(4), bits(12)) -> unit
@@ -16608,7 +16608,7 @@ function decode_aarch32_instrs_TEQ_i_A1enc_A_txt (cond, Rn, imm12) = {
         carry : bits(1) = undefined;
         imm32 : bits(32) = undefined;
         let 'n = UInt(Rn);
-        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE.C);
+        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE_C);
         execute_aarch32_instrs_TEQ_i_Op_A_txt(carry, imm32, n)
     };
     ()
@@ -16633,7 +16633,7 @@ function decode_aarch32_instrs_TEQ_i_T1enc_A_txt (i, Rn, imm3, imm8) = {
         carry : bits(1) = undefined;
         imm32 : bits(32) = undefined;
         let 'n = UInt(Rn);
-        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE.C);
+        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE_C);
         if n == 15 then {
             throw(Error_Unpredictable())
         };
@@ -16660,11 +16660,11 @@ val execute_aarch32_instrs_TEQ_r_Op_A_txt : forall 'm 'n 'shift_n,
 function execute_aarch32_instrs_TEQ_r_Op_A_txt (m, n, shift_n, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = EOR(R_read(n), shifted);
-    PSTATE.N = [result[31]];
-    PSTATE.Z = IsZeroBit(result);
-    PSTATE.C = carry
+    PSTATE_N = [result[31]];
+    PSTATE_Z = IsZeroBit(result);
+    PSTATE_C = carry
 }
 
 val decode_aarch32_instrs_TEQ_r_A1enc_A_txt : (bits(4), bits(4), bits(5), bits(2), bits(4)) -> unit
@@ -16739,11 +16739,11 @@ function execute_aarch32_instrs_TEQ_rr_Op_A_txt (m, n, s, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = EOR(R_read(n), shifted);
-    PSTATE.N = [result[31]];
-    PSTATE.Z = IsZeroBit(result);
-    PSTATE.C = carry
+    PSTATE_N = [result[31]];
+    PSTATE_Z = IsZeroBit(result);
+    PSTATE_C = carry
 }
 
 val decode_aarch32_instrs_TEQ_rr_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(2), bits(4)) -> unit
@@ -16782,9 +16782,9 @@ val execute_aarch32_instrs_TST_i_Op_A_txt : forall 'n, (0 <= 'n & 'n <= 15).
 
 function execute_aarch32_instrs_TST_i_Op_A_txt (carry, imm32, n) = {
     let result : bits(32) = R_read(n) & imm32;
-    PSTATE.N = [result[31]];
-    PSTATE.Z = IsZeroBit(result);
-    PSTATE.C = carry
+    PSTATE_N = [result[31]];
+    PSTATE_Z = IsZeroBit(result);
+    PSTATE_C = carry
 }
 
 val decode_aarch32_instrs_TST_i_A1enc_A_txt : (bits(4), bits(4), bits(12)) -> unit
@@ -16795,7 +16795,7 @@ function decode_aarch32_instrs_TST_i_A1enc_A_txt (cond, Rn, imm12) = {
         carry : bits(1) = undefined;
         imm32 : bits(32) = undefined;
         let 'n = UInt(Rn);
-        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE.C);
+        (imm32, carry) = A32ExpandImm_C(imm12, PSTATE_C);
         execute_aarch32_instrs_TST_i_Op_A_txt(carry, imm32, n)
     };
     ()
@@ -16820,7 +16820,7 @@ function decode_aarch32_instrs_TST_i_T1enc_A_txt (i, Rn, imm3, imm8) = {
         carry : bits(1) = undefined;
         imm32 : bits(32) = undefined;
         let 'n = UInt(Rn);
-        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE.C);
+        (imm32, carry) = T32ExpandImm_C((i @ imm3) @ imm8, PSTATE_C);
         if n == 15 then {
             throw(Error_Unpredictable())
         };
@@ -16847,11 +16847,11 @@ val execute_aarch32_instrs_TST_r_Op_A_txt : forall 'm 'n 'shift_n,
 function execute_aarch32_instrs_TST_r_Op_A_txt (m, n, shift_n, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = R_read(n) & shifted;
-    PSTATE.N = [result[31]];
-    PSTATE.Z = IsZeroBit(result);
-    PSTATE.C = carry
+    PSTATE_N = [result[31]];
+    PSTATE_Z = IsZeroBit(result);
+    PSTATE_C = carry
 }
 
 val decode_aarch32_instrs_TST_r_A1enc_A_txt : (bits(4), bits(4), bits(5), bits(2), bits(4)) -> unit
@@ -16948,11 +16948,11 @@ function execute_aarch32_instrs_TST_rr_Op_A_txt (m, n, s, shift_t) = {
     carry : bits(1) = undefined;
     shifted : bits(32) = undefined;
     let 'shift_n = UInt(R_read(s)[7 .. 0]);
-    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE.C);
+    (shifted, carry) = Shift_C(R_read(m), shift_t, shift_n, PSTATE_C);
     let result : bits(32) = R_read(n) & shifted;
-    PSTATE.N = [result[31]];
-    PSTATE.Z = IsZeroBit(result);
-    PSTATE.C = carry
+    PSTATE_N = [result[31]];
+    PSTATE_Z = IsZeroBit(result);
+    PSTATE_C = carry
 }
 
 val decode_aarch32_instrs_TST_rr_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(2), bits(4)) -> unit
@@ -16995,8 +16995,8 @@ function execute_aarch32_instrs_UADD16_Op_A_txt (d, m, n) = {
     let 'sum2 = UInt(R_read(n)[31 .. 16]) + UInt(R_read(m)[31 .. 16]);
     R_set(d) = [R_read(d) with 15 .. 0 = sum1[15 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 16 = sum2[15 .. 0]];
-    PSTATE.GE[1 .. 0] = if sum1 >= UInt(0x10000) then 0b11 else 0b00;
-    PSTATE.GE[3 .. 2] = if sum2 >= UInt(0x10000) then 0b11 else 0b00
+    PSTATE_GE[1 .. 0] = if sum1 >= UInt(0x10000) then 0b11 else 0b00;
+    PSTATE_GE[3 .. 2] = if sum2 >= UInt(0x10000) then 0b11 else 0b00
 }
 
 val decode_aarch32_instrs_UADD16_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -17064,10 +17064,10 @@ function execute_aarch32_instrs_UADD8_Op_A_txt (d, m, n) = {
     R_set(d) = [R_read(d) with 15 .. 8 = sum2[7 .. 0]];
     R_set(d) = [R_read(d) with 23 .. 16 = sum3[7 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 24 = sum4[7 .. 0]];
-    PSTATE.GE[0] = Bit(if sum1 >= UInt(0x100) then 0b1 else 0b0);
-    PSTATE.GE[1] = Bit(if sum2 >= UInt(0x100) then 0b1 else 0b0);
-    PSTATE.GE[2] = Bit(if sum3 >= UInt(0x100) then 0b1 else 0b0);
-    PSTATE.GE[3] = Bit(if sum4 >= UInt(0x100) then 0b1 else 0b0)
+    PSTATE_GE[0] = Bit(if sum1 >= UInt(0x100) then 0b1 else 0b0);
+    PSTATE_GE[1] = Bit(if sum2 >= UInt(0x100) then 0b1 else 0b0);
+    PSTATE_GE[2] = Bit(if sum3 >= UInt(0x100) then 0b1 else 0b0);
+    PSTATE_GE[3] = Bit(if sum4 >= UInt(0x100) then 0b1 else 0b0)
 }
 
 val decode_aarch32_instrs_UADD8_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -17131,8 +17131,8 @@ function execute_aarch32_instrs_UASX_Op_A_txt (d, m, n) = {
     let 'sum = UInt(R_read(n)[31 .. 16]) + UInt(R_read(m)[15 .. 0]);
     R_set(d) = [R_read(d) with 15 .. 0 = diff[15 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 16 = sum[15 .. 0]];
-    PSTATE.GE[1 .. 0] = if diff >= 0 then 0b11 else 0b00;
-    PSTATE.GE[3 .. 2] = if sum >= UInt(0x10000) then 0b11 else 0b00
+    PSTATE_GE[1 .. 0] = if diff >= 0 then 0b11 else 0b00;
+    PSTATE_GE[3 .. 2] = if sum >= UInt(0x10000) then 0b11 else 0b00
 }
 
 val decode_aarch32_instrs_UASX_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -17847,8 +17847,8 @@ function execute_aarch32_instrs_UMLAL_Op_A_txt (dHi, dLo, m, n, setflags) = {
     R_set(dHi) = result[63 .. 32];
     R_set(dLo) = result[31 .. 0];
     if setflags then {
-        PSTATE.N = [result[63]];
-        PSTATE.Z = IsZeroBit(result[63 .. 0])
+        PSTATE_N = [result[63]];
+        PSTATE_Z = IsZeroBit(result[63 .. 0])
     };
     ()
 }
@@ -17923,8 +17923,8 @@ function execute_aarch32_instrs_UMULL_Op_A_txt (dHi, dLo, m, n, setflags) = {
     R_set(dHi) = result[63 .. 32];
     R_set(dLo) = result[31 .. 0];
     if setflags then {
-        PSTATE.N = [result[63]];
-        PSTATE.Z = IsZeroBit(result[63 .. 0])
+        PSTATE_N = [result[63]];
+        PSTATE_Z = IsZeroBit(result[63 .. 0])
     };
     ()
 }
@@ -18522,7 +18522,7 @@ function execute_aarch32_instrs_USAT16_Op_A_txt (d, n, saturate_to) = {
     R_set(d) = [R_read(d) with 15 .. 0 = result1];
     R_set(d) = [R_read(d) with 31 .. 16 = result2];
     if sat1 | sat2 then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -18590,11 +18590,11 @@ val execute_aarch32_instrs_USAT_Op_A_txt : forall 'd 'n 'saturate_to 'shift_n,
 function execute_aarch32_instrs_USAT_Op_A_txt (d, n, saturate_to, shift_n, shift_t) = {
     result : bits(32) = undefined;
     sat : bool = undefined;
-    let operand : bits(32) = Shift(R_read(n), shift_t, shift_n, PSTATE.C);
+    let operand : bits(32) = Shift(R_read(n), shift_t, shift_n, PSTATE_C);
     (result, sat) = ZeroUnsignedSatQ(SInt(operand), saturate_to, 32);
     R_set(d) = result;
     if sat then {
-        PSTATE.Q = 0b1
+        PSTATE_Q = 0b1
     };
     ()
 }
@@ -18678,8 +18678,8 @@ function execute_aarch32_instrs_USAX_Op_A_txt (d, m, n) = {
     let 'diff = UInt(R_read(n)[31 .. 16]) - UInt(R_read(m)[15 .. 0]);
     R_set(d) = [R_read(d) with 15 .. 0 = sum[15 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 16 = diff[15 .. 0]];
-    PSTATE.GE[1 .. 0] = if sum >= UInt(0x10000) then 0b11 else 0b00;
-    PSTATE.GE[3 .. 2] = if diff >= 0 then 0b11 else 0b00
+    PSTATE_GE[1 .. 0] = if sum >= UInt(0x10000) then 0b11 else 0b00;
+    PSTATE_GE[3 .. 2] = if diff >= 0 then 0b11 else 0b00
 }
 
 val decode_aarch32_instrs_USAX_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -18743,8 +18743,8 @@ function execute_aarch32_instrs_USUB16_Op_A_txt (d, m, n) = {
     let 'diff2 = UInt(R_read(n)[31 .. 16]) - UInt(R_read(m)[31 .. 16]);
     R_set(d) = [R_read(d) with 15 .. 0 = diff1[15 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 16 = diff2[15 .. 0]];
-    PSTATE.GE[1 .. 0] = if diff1 >= 0 then 0b11 else 0b00;
-    PSTATE.GE[3 .. 2] = if diff2 >= 0 then 0b11 else 0b00
+    PSTATE_GE[1 .. 0] = if diff1 >= 0 then 0b11 else 0b00;
+    PSTATE_GE[3 .. 2] = if diff2 >= 0 then 0b11 else 0b00
 }
 
 val decode_aarch32_instrs_USUB16_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -18812,10 +18812,10 @@ function execute_aarch32_instrs_USUB8_Op_A_txt (d, m, n) = {
     R_set(d) = [R_read(d) with 15 .. 8 = diff2[7 .. 0]];
     R_set(d) = [R_read(d) with 23 .. 16 = diff3[7 .. 0]];
     R_set(d) = [R_read(d) with 31 .. 24 = diff4[7 .. 0]];
-    PSTATE.GE[0] = Bit(if diff1 >= 0 then 0b1 else 0b0);
-    PSTATE.GE[1] = Bit(if diff2 >= 0 then 0b1 else 0b0);
-    PSTATE.GE[2] = Bit(if diff3 >= 0 then 0b1 else 0b0);
-    PSTATE.GE[3] = Bit(if diff4 >= 0 then 0b1 else 0b0)
+    PSTATE_GE[0] = Bit(if diff1 >= 0 then 0b1 else 0b0);
+    PSTATE_GE[1] = Bit(if diff2 >= 0 then 0b1 else 0b0);
+    PSTATE_GE[2] = Bit(if diff3 >= 0 then 0b1 else 0b0);
+    PSTATE_GE[3] = Bit(if diff4 >= 0 then 0b1 else 0b0)
 }
 
 val decode_aarch32_instrs_USUB8_A1enc_A_txt : (bits(4), bits(4), bits(4), bits(4)) -> unit
@@ -40486,13 +40486,13 @@ function execute_aarch32_instrs_WFE_Op_A_txt () = {
     if IsEventRegisterSet() then {
         ClearEventRegister()
     } else {
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             AArch32_CheckForWFxTrap(EL1, WFxType_WFE)
         };
-        if ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & not_bool(IsInHost()) then {
+        if ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & not_bool(IsInHost()) then {
             AArch32_CheckForWFxTrap(EL2, WFxType_WFE)
         };
-        if HaveEL(EL3) & PSTATE.M != M32_Monitor then {
+        if HaveEL(EL3) & PSTATE_M != M32_Monitor then {
             AArch32_CheckForWFxTrap(EL3, WFxType_WFE)
         };
         let 'localtimeout = (1 << 64);
@@ -40556,13 +40556,13 @@ val execute_aarch32_instrs_WFI_Op_A_txt : unit -> unit
 
 function execute_aarch32_instrs_WFI_Op_A_txt () = {
     if not_bool(InterruptPending()) then {
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             AArch32_CheckForWFxTrap(EL1, WFxType_WFI)
         };
-        if ((PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled()) & not_bool(IsInHost()) then {
+        if ((PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled()) & not_bool(IsInHost()) then {
             AArch32_CheckForWFxTrap(EL2, WFxType_WFI)
         };
-        if HaveEL(EL3) & PSTATE.M != M32_Monitor then {
+        if HaveEL(EL3) & PSTATE_M != M32_Monitor then {
             AArch32_CheckForWFxTrap(EL3, WFxType_WFI)
         };
         let 'localtimeout = (1 << 64);
@@ -40685,28 +40685,28 @@ val execute_aarch32_instrs_CPS_OpT_AS_txt : forall ('affectA : Bool) ('affectF :
   (bool('affectA), bool('affectF), bool('affectI), bool('changemode), bool('disable), bool('enable), bits(5)) -> unit
 
 function execute_aarch32_instrs_CPS_OpT_AS_txt (affectA, affectF, affectI, changemode, disable, enable, mode) = {
-    if PSTATE.EL != EL0 then {
+    if PSTATE_EL != EL0 then {
         if enable then {
             if affectA then {
-                PSTATE.A = 0b0
+                PSTATE_A = 0b0
             };
             if affectI then {
-                PSTATE.I = 0b0
+                PSTATE_I = 0b0
             };
             if affectF then {
-                PSTATE.F = 0b0
+                PSTATE_F = 0b0
             };
             ()
         };
         if disable then {
             if affectA then {
-                PSTATE.A = 0b1
+                PSTATE_A = 0b1
             };
             if affectI then {
-                PSTATE.I = 0b1
+                PSTATE_I = 0b1
             };
             if affectF then {
-                PSTATE.F = 0b1
+                PSTATE_F = 0b1
             };
             ()
         };
@@ -40827,19 +40827,19 @@ val execute_aarch32_instrs_ERET_Op_AS_txt : unit -> unit
 function execute_aarch32_instrs_ERET_Op_AS_txt () = {
     new_pc_value : ELR_hyp_Type = undefined;
     if not_bool(Halted()) then {
-        if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+        if PSTATE_M == M32_User | PSTATE_M == M32_System then {
             throw(Error_Unpredictable())
         } else {
-            let new_pc_value : ELR_hyp_Type = if PSTATE.EL == EL2 then
+            let new_pc_value : ELR_hyp_Type = if PSTATE_EL == EL2 then
               ELR_hyp_read()
             else
               R_read(14);
             AArch32_ExceptionReturn(new_pc_value, SPSR_read(32))
         }
     } else {
-        if PSTATE.M == M32_User then {
+        if PSTATE_M == M32_User then {
             throw(Error_Undefined())
-        } else if PSTATE.M == M32_System then {
+        } else if PSTATE_M == M32_System then {
             throw(Error_Unpredictable())
         } else {
             SynchronizeContext();
@@ -40892,12 +40892,12 @@ function clause __DecodeT32 ((pc, (0b11110011110111101000111100000000 as __opcod
 val execute_aarch32_instrs_HVC_Op_AS_txt : bits(16) -> unit
 
 function execute_aarch32_instrs_HVC_Op_AS_txt imm16 = {
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL3) | not_bool(EL2Enabled()) then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL3) | not_bool(EL2Enabled()) then {
         throw(Error_Undefined())
     };
     hvc_enable : bits(1) = undefined;
     if HaveEL(EL3) then {
-        if (ELUsingAArch32(EL3) & SCR[HCE] == 0b0) & PSTATE.EL == EL2 then {
+        if (ELUsingAArch32(EL3) & SCR[HCE] == 0b0) & PSTATE_EL == EL2 then {
             throw(Error_Unpredictable())
         } else {
             hvc_enable = SCR_GEN_read()[HCE]
@@ -40957,9 +40957,9 @@ function execute_aarch32_instrs_LDM_e_Op_AS_txt (increment_name, n, registers, w
     address : bits(32) = undefined;
     length : int = undefined;
     new_pc_value : bits(32) = undefined;
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Undefined())
-    } else if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+    } else if PSTATE_M == M32_User | PSTATE_M == M32_System then {
         throw(Error_Unpredictable())
     } else {
         let 'length = 4 * BitCount(registers) + 4;
@@ -41027,9 +41027,9 @@ val execute_aarch32_instrs_LDM_u_Op_AS_txt : forall ('increment_name : Bool) 'n 
 function execute_aarch32_instrs_LDM_u_Op_AS_txt (increment_name, n, registers, wordhigher) = {
     address : bits(32) = undefined;
     length : int = undefined;
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Undefined())
-    } else if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+    } else if PSTATE_M == M32_User | PSTATE_M == M32_System then {
         throw(Error_Unpredictable())
     } else {
         let 'length = 4 * BitCount(registers);
@@ -41085,7 +41085,7 @@ val execute_aarch32_instrs_MRS_Op_AS_txt : forall 'd ('read_spsr : Bool), (0 <= 
 function execute_aarch32_instrs_MRS_Op_AS_txt (d, read_spsr) = {
     psr_val : bits(32) = undefined;
     if read_spsr then {
-        if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+        if PSTATE_M == M32_User | PSTATE_M == M32_System then {
             throw(Error_Unpredictable())
         } else {
             R_set(d) = SPSR_read(32)
@@ -41093,7 +41093,7 @@ function execute_aarch32_instrs_MRS_Op_AS_txt (d, read_spsr) = {
     } else {
         let mask : bits(32) = 0b11111000111011110000001111011111;
         psr_val : bits(32) = GetPSRFromPSTATE(AArch32_NonDebugState, 32) & mask;
-        if PSTATE.EL == EL0 then {
+        if PSTATE_EL == EL0 then {
             psr_val[22] = Bit(__UNKNOWN_bits(1));
             psr_val[9 .. 6] = __UNKNOWN_bits(4);
             psr_val[4 .. 0] = __UNKNOWN_bits(5)
@@ -41159,10 +41159,10 @@ val execute_aarch32_instrs_MRS_br_Op_AS_txt : forall 'd ('read_spsr : Bool), (0 
 
 function execute_aarch32_instrs_MRS_br_Op_AS_txt (SYSm, d, read_spsr) = {
     mode : bits(5) = undefined;
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         throw(Error_Unpredictable())
     } else {
-        let mode : bits(5) = PSTATE.M;
+        let mode : bits(5) = PSTATE_M;
         if read_spsr then {
             SPSRaccessValid(SYSm, mode);
             match SYSm {
@@ -41303,10 +41303,10 @@ val execute_aarch32_instrs_MSR_br_Op_AS_txt : forall 'n ('write_spsr : Bool),
 
 function execute_aarch32_instrs_MSR_br_Op_AS_txt (SYSm, n, write_spsr) = {
     mode : bits(5) = undefined;
-    if PSTATE.EL == EL0 then {
+    if PSTATE_EL == EL0 then {
         throw(Error_Unpredictable())
     } else {
-        let mode : bits(5) = PSTATE.M;
+        let mode : bits(5) = PSTATE_M;
         if write_spsr then {
             SPSRaccessValid(SYSm, mode);
             match SYSm {
@@ -41446,7 +41446,7 @@ val execute_aarch32_instrs_MSR_i_Op_AS_txt : forall ('write_spsr : Bool).
 
 function execute_aarch32_instrs_MSR_i_Op_AS_txt (imm32, mask, write_spsr) = {
     if write_spsr then {
-        if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+        if PSTATE_M == M32_User | PSTATE_M == M32_System then {
             throw(Error_Unpredictable())
         } else {
             SPSRWriteByInstr(imm32, mask)
@@ -41493,7 +41493,7 @@ val execute_aarch32_instrs_MSR_r_Op_AS_txt : forall 'n ('write_spsr : Bool),
 
 function execute_aarch32_instrs_MSR_r_Op_AS_txt (mask, n, write_spsr) = {
     if write_spsr then {
-        if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+        if PSTATE_M == M32_User | PSTATE_M == M32_System then {
             throw(Error_Unpredictable())
         } else {
             SPSRWriteByInstr(R_read(n), mask)
@@ -41571,9 +41571,9 @@ function execute_aarch32_instrs_RFE_Op_AS_txt (increment_name, n, wback, wordhig
     address : bits(32) = undefined;
     new_pc_value : bits(32) = undefined;
     spsr : bits(32) = undefined;
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Undefined())
-    } else if PSTATE.EL == EL0 then {
+    } else if PSTATE_EL == EL0 then {
         throw(Error_Unpredictable())
     } else {
         address : bits(32) = if increment_name then R_read(n) else R_read(n) - 8;
@@ -41756,10 +41756,10 @@ val execute_aarch32_instrs_SRS_OpA_AS_txt : forall ('increment_name : Bool) ('wb
   (bool('increment_name), bits(5), bool('wback), bool('wordhigher)) -> unit
 
 function execute_aarch32_instrs_SRS_OpA_AS_txt (increment_name, mode, wback, wordhigher) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Undefined())
     };
-    if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+    if PSTATE_M == M32_User | PSTATE_M == M32_System then {
         throw(Error_Unpredictable())
     } else if mode == M32_Hyp then {
         throw(Error_Unpredictable())
@@ -41814,10 +41814,10 @@ val execute_aarch32_instrs_SRS_OpT_AS_txt : forall ('increment_name : Bool) ('wb
   (bool('increment_name), bits(5), bool('wback), bool('wordhigher)) -> unit
 
 function execute_aarch32_instrs_SRS_OpT_AS_txt (increment_name, mode, wback, wordhigher) = {
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Undefined())
     };
-    if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+    if PSTATE_M == M32_User | PSTATE_M == M32_System then {
         throw(Error_Unpredictable())
     } else if mode == M32_Hyp then {
         throw(Error_Unpredictable())
@@ -41896,9 +41896,9 @@ val execute_aarch32_instrs_STM_u_Op_AS_txt : forall ('increment_name : Bool) 'n 
 function execute_aarch32_instrs_STM_u_Op_AS_txt (increment_name, n, registers, wordhigher) = {
     address : bits(32) = undefined;
     length : int = undefined;
-    if PSTATE.EL == EL2 then {
+    if PSTATE_EL == EL2 then {
         throw(Error_Undefined())
-    } else if PSTATE.M == M32_User | PSTATE.M == M32_System then {
+    } else if PSTATE_M == M32_User | PSTATE_M == M32_System then {
         throw(Error_Unpredictable())
     } else {
         let 'length = 4 * BitCount(registers);
@@ -41959,11 +41959,11 @@ function execute_aarch32_instrs_VMRS_Op_AS_txt (reg, t) = {
     if reg == 0b0001 then {
         CheckVFPEnabled(true);
         if t == 15 then {
-            (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = FPSR[N] @ (FPSR[Z] @ (FPSR[C] @ FPSR[V]))
+            (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = FPSR[N] @ (FPSR[Z] @ (FPSR[C] @ FPSR[V]))
         } else {
             R_set(t) = FPSCR_read__1().bits
         }
-    } else if PSTATE.EL == EL0 then {
+    } else if PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     } else {
         CheckVFPEnabled(false);
@@ -42066,7 +42066,7 @@ function execute_aarch32_instrs_VMSR_Op_AS_txt (reg, t) = {
     if reg == 0b0001 then {
         CheckVFPEnabled(true);
         FPSCR_write() = Mk_FPSCR_Type(R_read(t))
-    } else if PSTATE.EL == EL0 then {
+    } else if PSTATE_EL == EL0 then {
         throw(Error_Undefined())
     } else {
         CheckVFPEnabled(false);
@@ -42556,7 +42556,7 @@ function execute_aarch32_instrs_DCPS1_Op_A_txt () = {
     if not_bool(Halted()) then {
         throw(Error_Undefined())
     };
-    if EL2Enabled() & PSTATE.EL == EL0 then {
+    if EL2Enabled() & PSTATE_EL == EL0 then {
         let tge : bits(1) = if ELUsingAArch32(EL2) then HCR_read()[TGE] else
           HCR_EL2[TGE];
         if tge == 0b1 then {
@@ -42564,20 +42564,20 @@ function execute_aarch32_instrs_DCPS1_Op_A_txt () = {
         };
         ()
     };
-    if PSTATE.EL != EL0 | ELUsingAArch32(EL1) then {
-        if PSTATE.M == M32_Monitor then {
+    if PSTATE_EL != EL0 | ELUsingAArch32(EL1) then {
+        if PSTATE_M == M32_Monitor then {
             SCR[NS] = 0b0
         };
-        if PSTATE.EL != EL2 then {
+        if PSTATE_EL != EL2 then {
             AArch32_WriteMode(M32_Svc);
-            PSTATE.E = SCTLR_read__2()[EE];
+            PSTATE_E = SCTLR_read__2()[EE];
             if HavePANExt() & SCTLR_read__2()[SPAN] == 0b0 then {
-                PSTATE.PAN = 0b1
+                PSTATE_PAN = 0b1
             };
             LR_svc = __UNKNOWN_bits(32);
             SPSR_svc_write() = Mk_SPSR_svc_Type(__UNKNOWN_bits(32))
         } else {
-            PSTATE.E = HSCTLR_read()[EE];
+            PSTATE_E = HSCTLR_read()[EE];
             ELR_hyp_write() = __UNKNOWN_bits(32);
             HSR_write() = Mk_HSR_Type(__UNKNOWN_bits(32));
             SPSR_hyp_write() = Mk_SPSR_hyp_Type(__UNKNOWN_bits(32))
@@ -42587,14 +42587,14 @@ function execute_aarch32_instrs_DCPS1_Op_A_txt () = {
     } else {
         AArch64_MaybeZeroRegisterUppers();
         MaybeZeroSVEUppers(EL1);
-        PSTATE.nRW = 0b0;
-        PSTATE.SP = 0b1;
-        PSTATE.EL = EL1;
+        PSTATE_nRW = 0b0;
+        PSTATE_SP = 0b1;
+        PSTATE_EL = EL1;
         if HavePANExt() & SCTLR_EL1[SPAN] == 0b0 then {
-            PSTATE.PAN = 0b1
+            PSTATE_PAN = 0b1
         };
         if HaveUAOExt() then {
-            PSTATE.UAO = 0b0
+            PSTATE_UAO = 0b0
         };
         ELR_EL1 = __UNKNOWN_bits(64);
         ESR_EL1 = Mk_ESR_EL1_Type(__UNKNOWN_bits(64));
@@ -42628,7 +42628,7 @@ function execute_aarch32_instrs_DCPS2_Op_A_txt () = {
     };
     if ELUsingAArch32(EL2) then {
         AArch32_WriteMode(M32_Hyp);
-        PSTATE.E = HSCTLR_read()[EE];
+        PSTATE_E = HSCTLR_read()[EE];
         ELR_hyp_write() = __UNKNOWN_bits(32);
         HSR_write() = Mk_HSR_Type(__UNKNOWN_bits(32));
         SPSR_hyp_write() = Mk_SPSR_hyp_Type(__UNKNOWN_bits(32));
@@ -42637,14 +42637,14 @@ function execute_aarch32_instrs_DCPS2_Op_A_txt () = {
     } else {
         AArch64_MaybeZeroRegisterUppers();
         MaybeZeroSVEUppers(EL2);
-        PSTATE.nRW = 0b0;
-        PSTATE.SP = 0b1;
-        PSTATE.EL = EL2;
+        PSTATE_nRW = 0b0;
+        PSTATE_SP = 0b1;
+        PSTATE_EL = EL2;
         if ((HavePANExt() & SCTLR_EL2[SPAN] == 0b0) & HCR_EL2[E2H] == 0b1) & HCR_EL2[TGE] == 0b1 then {
-            PSTATE.PAN = 0b1
+            PSTATE_PAN = 0b1
         };
         if HaveUAOExt() then {
-            PSTATE.UAO = 0b0
+            PSTATE_UAO = 0b0
         };
         ELR_EL2 = __UNKNOWN_bits(64);
         ESR_EL2 = Mk_ESR_EL2_Type(__UNKNOWN_bits(64));
@@ -42683,18 +42683,18 @@ function execute_aarch32_instrs_DCPS3_Op_A_txt () = {
     };
     if ELUsingAArch32(EL3) then {
         let from_secure : bool = CurrentSecurityState() == SS_Secure;
-        if PSTATE.M == M32_Monitor then {
+        if PSTATE_M == M32_Monitor then {
             SCR[NS] = 0b0
         };
         AArch32_WriteMode(M32_Monitor);
         if HavePANExt() then {
             if not_bool(from_secure) then {
-                PSTATE.PAN = 0b0
+                PSTATE_PAN = 0b0
             } else if SCTLR_read__2()[SPAN] == 0b0 then {
-                PSTATE.PAN = 0b1
+                PSTATE_PAN = 0b1
             } else ()
         };
-        PSTATE.E = SCTLR_read__2()[EE];
+        PSTATE_E = SCTLR_read__2()[EE];
         LR_mon = __UNKNOWN_bits(32);
         SPSR_mon = Mk_SPSR_mon_Type(__UNKNOWN_bits(32));
         DLR_write() = __UNKNOWN_bits(32);
@@ -42702,11 +42702,11 @@ function execute_aarch32_instrs_DCPS3_Op_A_txt () = {
     } else {
         AArch64_MaybeZeroRegisterUppers();
         MaybeZeroSVEUppers(EL3);
-        PSTATE.nRW = 0b0;
-        PSTATE.SP = 0b1;
-        PSTATE.EL = EL3;
+        PSTATE_nRW = 0b0;
+        PSTATE_SP = 0b1;
+        PSTATE_EL = EL3;
         if HaveUAOExt() then {
-            PSTATE.UAO = 0b0
+            PSTATE_UAO = 0b0
         };
         ELR_EL3 = __UNKNOWN_bits(64);
         ESR_EL3 = Mk_ESR_EL3_Type(__UNKNOWN_bits(64));
@@ -45930,8 +45930,8 @@ function clause __DecodeT32 ((pc, ([bitone, bitone, bitone, bitone, bitone, bito
 val execute_aarch32_instrs_SETPAN_Op_A_txt : bits(1) -> unit
 
 function execute_aarch32_instrs_SETPAN_Op_A_txt value_name = {
-    if PSTATE.EL != EL0 then {
-        PSTATE.PAN = value_name
+    if PSTATE_EL != EL0 then {
+        PSTATE_PAN = value_name
     };
     ()
 }
@@ -45984,7 +45984,7 @@ val execute_aarch32_instrs_ESB_Op_A_txt : unit -> unit
 function execute_aarch32_instrs_ESB_Op_A_txt () = {
     SynchronizeErrors();
     AArch32_ESBOperation();
-    if (PSTATE.EL == EL0 | PSTATE.EL == EL1) & EL2Enabled() then {
+    if (PSTATE_EL == EL0 | PSTATE_EL == EL1) & EL2Enabled() then {
         AArch32_vESBOperation()
     };
     TakeUnmaskedSErrorInterrupts()

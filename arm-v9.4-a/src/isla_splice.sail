@@ -22,8 +22,8 @@ val isla_main_hook : unit -> unit
 function isla_main_hook() = {
     _PC = elf_entry()[63 .. 0];
     SP_EL0 = ZeroExtend(0x3C00, 64);
-    PSTATE.EL = EL0;
-    PSTATE.PAN = 0b0;
+    PSTATE_EL = EL0;
+    PSTATE_PAN = 0b0;
     __emulator_termination_opcode = Some(0x00000000);
     isla_reset_registers();
 }

@@ -49,8 +49,8 @@ function Auth (ptr, modifier, K, data, key_number, is_combined) = {
     original_ptr : bits(64) = undefined;
     error_code : bits(2) = undefined;
     let isgeneric : bool = false;
-    let tbi : bool = EffectiveTBI(ptr, not_bool(data), PSTATE.EL) == 0b1;
-    let mtx : bool = EffectiveMTX(ptr, not_bool(data), PSTATE.EL) == 0b1;
+    let tbi : bool = EffectiveTBI(ptr, not_bool(data), PSTATE_EL) == 0b1;
+    let mtx : bool = EffectiveMTX(ptr, not_bool(data), PSTATE_EL) == 0b1;
     let 'bottom_PAC_bit = CalculateBottomPACBit([ptr[55]]);
     let extfield : bits(64) = Replicate([ptr[55]], 64);
     if tbi & bottom_PAC_bit >= 55 then {

@@ -68,7 +68,7 @@ function __ListConfig () = {
         print_endline("cpu.unpred_tsize_aborts=0 (bool) default = '0'\\n        : Behavior when TSize is out of range.\\n        [0, 1], 0: force into range. 1: translation fault, forces unpred_tsize_pamax_aborts to 1.\\n");
         print_endline("cpu.isb_is_branch=1 (bool) default='1'\\n        : ISB is treated as branch");
         print_endline("cpu.cpu0.enable_crc32=0x0 (int) default = '0x0'\\n        : CRC32 instructions supported.\\n        [0, 1], 0: CRC32 not implemented. 1: CRC32 instructions implemented.\\n");
-        print_endline("cpu.has_pstate_pan=0x1 (int) default = '0x1' \\n        : Implement the PSTATE.PAN (Privileged Access Never) control from ARMv8.1.\\n        [0, 1], 0: not implemented. 1: Implemented\\n");
+        print_endline("cpu.has_pstate_pan=0x1 (int) default = '0x1' \\n        : Implement the PSTATE_PAN (Privileged Access Never) control from ARMv8.1.\\n        [0, 1], 0: not implemented. 1: Implemented\\n");
         print_endline("cpu.has_16bit_vmids=0x1 (int) default = '0x1'\\n        : Implement support for 16-bit VMIDs from ARMv8.1\\n        [0, 1], 0: Not enabled, 1: Implemented\\n");
         print_endline("cpu.has_dot_product=0x1 (int) default = '0x1' \\n        : Implement the dot product (UDOT, SDOT) instructions from ARMv8.4\\n        [0, 1], 0: Not implemnetd, 1: Implemnetd\\n");
         print_endline("cpu.has_fp16=0x1 (int) default = '0x1' \\n        : Implement the half-precision floating-point data processing instructions from ARMv8.2.\\n        [0, 1] 0: feature is not enabled. 1: feature is implemented\\n");

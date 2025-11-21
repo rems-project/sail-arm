@@ -80,7 +80,7 @@ function execute_aarch64_instrs_float_convert_int_core (d, fltsize, fsize, intsi
           assert(constraint('fsize == 64));
           assert(constraint('intsize == 32));
           (intval, z) = FPToFixedJS(fltval, fpcr, true, intsize);
-          (PSTATE.N @ PSTATE.Z @ PSTATE.C @ PSTATE.V) = (0b0 @ z) @ 0b00;
+          (PSTATE_N @ PSTATE_Z @ PSTATE_C @ PSTATE_V) = (0b0 @ z) @ 0b00;
           X_set(d, intsize) = intval
       }
     }

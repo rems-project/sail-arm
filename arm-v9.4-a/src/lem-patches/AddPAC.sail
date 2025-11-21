@@ -52,8 +52,8 @@ function AddPAC (ptr, modifier, K, data) = {
     ext_ptr : bits(64) = undefined;
     selbit : bits(1) = undefined;
     let isgeneric : bool = false;
-    let tbi : bool = EffectiveTBI(ptr, not_bool(data), PSTATE.EL) == 0b1;
-    let mtx : bool = EffectiveMTX(ptr, not_bool(data), PSTATE.EL) == 0b1;
+    let tbi : bool = EffectiveTBI(ptr, not_bool(data), PSTATE_EL) == 0b1;
+    let mtx : bool = EffectiveMTX(ptr, not_bool(data), PSTATE_EL) == 0b1;
     let 'top_bit = if tbi then 55 else 63;
     if PtrHasUpperAndLowerAddRanges() then {
         assert(S1TranslationRegime__1() == EL1 | S1TranslationRegime__1() == EL2);

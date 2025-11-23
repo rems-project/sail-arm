@@ -5692,6 +5692,8 @@ register __mpam_vpmr_max : bits(3) = Zeros(3)
 
 val __IMPDEF_bits : forall 'N, 'N >= 0. (int('N), string) -> bits('N)
 
+val __CoreSightTimestamp : unit -> bits(64)
+
 val GetTimestamp : TimeStamp -> bits(64)
 
 function GetTimestamp timeStampType = {
@@ -5712,7 +5714,7 @@ function GetTimestamp timeStampType = {
           return(Zeros(64))
       },
       TimeStamp_CoreSight => {
-          return(__IMPDEF_bits(64, "CoreSight timestamp"))
+          return(__CoreSightTimestamp())
       },
       _ => {
           Unreachable();

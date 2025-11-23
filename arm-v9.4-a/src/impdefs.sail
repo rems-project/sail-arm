@@ -752,13 +752,14 @@ function __IMPDEF_integer x = {
     return(ImpDefInt(x))
 }
 
+function __CoreSightTimestamp () = {
+    return(PhysicalCountInt()[63 .. 0])
+}
+
 val ImpDefBits : forall 'N, 'N >= 0. (string, int('N)) -> bits('N)
 
 function ImpDefBits (x, N) = {
-    if x == "Coresight timestamp" then {
-        assert(constraint((0 <= 'N - 1 & 'N - 1 < 64)));
-        return(PhysicalCountInt()[N - 1 .. 0])
-    } else if x == "Synchronous Error" then {
+    if x == "Synchronous Error" then {
         assert(constraint((0 <= 'N - 1 & 'N - 1 < 2)));
         return(0b00[N - 1 .. 0])
     } else if x == "Asynchronous Error" then {

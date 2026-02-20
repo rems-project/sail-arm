@@ -12949,48 +12949,36 @@ bitfield TTBR0_Type : bits(64) =
     IRGN : (0..0 @ 6..6)
   }
 
-register TTBR0_NS : TTBR0_Type
-
 register TTBR0_S : TTBR0_Type
+
+bitfield TTBR0_EL1_Type : bits(128) = {ASID : 63..48, SKL : 2..1, CnP : 0..0}
+
+register TTBR0_EL1 : TTBR0_EL1_Type
 
 val TTBR0_read : unit -> TTBR0_Type
 
 function TTBR0_read () = {
-    r : TTBR0_Type = undefined;
     if ELUsingAArch32(EL3) & CurrentSecurityState() == SS_Secure then {
-        r = TTBR0_S
+        return(TTBR0_S)
     } else {
-        r = TTBR0_NS
-    };
-    return(r)
+        return(Mk_TTBR0_Type(TTBR0_EL1.bits[63 .. 0]))
+    }
 }
-
-bitfield TTBR0_EL1_Type : bits(128) = {ASID : 63..48, SKL : 2..1, CnP : 0..0}
-
-register _TTBR0_EL1 : TTBR0_EL1_Type
 
 val TTBR0_EL1_read : unit -> TTBR0_EL1_Type
 
 function TTBR0_EL1_read () = {
-    r : TTBR0_EL1_Type = _TTBR0_EL1;
-    r.bits[63 .. 0] = Slice(TTBR0_read().bits, 0, 64);
-    return(r)
+    return(TTBR0_EL1)
 }
-
-bitfield HTTBR_Type : bits(64) = {BADDR : 47..1, CnP : 0..0}
-
-register HTTBR : HTTBR_Type
 
 bitfield TTBR0_EL2_Type : bits(128) = {ASID : 63..48, SKL : 2..1, CnP : 0..0}
 
-register _TTBR0_EL2 : TTBR0_EL2_Type
+register TTBR0_EL2 : TTBR0_EL2_Type
 
 val TTBR0_EL2_read : unit -> TTBR0_EL2_Type
 
 function TTBR0_EL2_read () = {
-    r : TTBR0_EL2_Type = _TTBR0_EL2;
-    r.bits[47 .. 1] = Slice(HTTBR.bits, 1, 47);
-    return(r)
+    return(TTBR0_EL2)
 }
 
 bitfield TTBR1_Type : bits(64) =
@@ -13006,32 +12994,26 @@ bitfield TTBR1_Type : bits(64) =
     CnP : 0..0
   }
 
-register TTBR1_NS : TTBR1_Type
-
 register TTBR1_S : TTBR1_Type
+
+bitfield TTBR1_EL1_Type : bits(128) = {ASID : 63..48, SKL : 2..1, CnP : 0..0}
+
+register TTBR1_EL1 : TTBR1_EL1_Type
 
 val TTBR1_read : unit -> TTBR1_Type
 
 function TTBR1_read () = {
-    r : TTBR1_Type = undefined;
     if ELUsingAArch32(EL3) & CurrentSecurityState() == SS_Secure then {
-        r = TTBR1_S
+        return(TTBR1_S)
     } else {
-        r = TTBR1_NS
-    };
-    return(r)
+        return(Mk_TTBR1_Type(TTBR1_EL1.bits[63 .. 0]))
+    }
 }
-
-bitfield TTBR1_EL1_Type : bits(128) = {ASID : 63..48, SKL : 2..1, CnP : 0..0}
-
-register _TTBR1_EL1 : TTBR1_EL1_Type
 
 val TTBR1_EL1_read : unit -> TTBR1_EL1_Type
 
 function TTBR1_EL1_read () = {
-    r : TTBR1_EL1_Type = _TTBR1_EL1;
-    r.bits[63 .. 0] = Slice(TTBR1_read().bits, 0, 64);
-    return(r)
+    return(TTBR1_EL1)
 }
 
 bitfield TTBR1_EL2_Type : bits(128) = {ASID : 63..48, SKL : 2..1, CnP : 0..0}
@@ -23255,20 +23237,14 @@ bitfield VTCR_EL2_Type : bits(64) =
 
 register VTCR_EL2 : VTCR_EL2_Type
 
-bitfield VTTBR_Type : bits(64) = {VMID : 55..48, BADDR : 47..1, CnP : 0..0}
-
-register VTTBR : VTTBR_Type
-
 bitfield VTTBR_EL2_Type : bits(128) = {VMID : 63..48, SKL : 2..1, CnP : 0..0}
 
-register _VTTBR_EL2 : VTTBR_EL2_Type
+register VTTBR_EL2 : VTTBR_EL2_Type
 
 val VTTBR_EL2_read : unit -> VTTBR_EL2_Type
 
 function VTTBR_EL2_read () = {
-    r : VTTBR_EL2_Type = _VTTBR_EL2;
-    r.bits[63 .. 0] = Slice(VTTBR.bits, 0, 64);
-    return(r)
+    return(VTTBR_EL2)
 }
 
 val AArch64_BreakpointValueMatch : forall ('isbreakpnt : Bool) ('linked_to : Bool) 'n_in.
@@ -24969,7 +24945,7 @@ function VMID_read () = {
                 return(ZeroExtend(VTTBR_EL2_read()[VMID][7 .. 0], 16))
             }
         } else {
-            return(ZeroExtend(VTTBR[VMID], 16))
+            return(ZeroExtend(VTTBR_EL2.bits[55 .. 48], 16))
         }
     } else if HaveEL(EL2) & HaveSecureEL2Ext() then {
         return(Zeros(16))
@@ -37599,8 +37575,8 @@ function AArch32_TLBContextEL10 (ss, va) = {
     contextidr : CONTEXTIDR_Type = undefined;
     if HaveAArch32EL(EL3) then {
         ttbcr = TTBCR_NS_read();
-        ttbr0 = TTBR0_NS;
-        ttbr1 = TTBR1_NS;
+        ttbr0 = Mk_TTBR0_Type(TTBR0_EL1.bits[63 .. 0]);
+        ttbr1 = Mk_TTBR1_Type(TTBR1_EL1.bits[63 .. 0]);
         contextidr = CONTEXTIDR_NS_read()
     } else {
         ttbcr = TTBCR_read();
@@ -37611,7 +37587,7 @@ function AArch32_TLBContextEL10 (ss, va) = {
     tlbcontext.ss = ss;
     tlbcontext.regime = Regime_EL10;
     if AArch32_EL2Enabled(ss) then {
-        tlbcontext.vmid = ZeroExtend(VTTBR[VMID], 16)
+        tlbcontext.vmid = ZeroExtend(VTTBR_EL2.bits[55 .. 48], 16)
     };
     if ttbcr[EAE] == 0b1 then {
         tlbcontext.asid = ZeroExtend(if ttbcr[A1] == 0b0 then ttbr0[ASID] else
@@ -37641,7 +37617,7 @@ function AArch32_TLBContextEL2 va = {
     tlbcontext.regime = Regime_EL2;
     tlbcontext.ia = ZeroExtend(va, 64);
     tlbcontext.tg = TGx_4KB;
-    tlbcontext.cnp = if HaveCommonNotPrivateTransExt() then HTTBR[CnP] else 0b0;
+    tlbcontext.cnp = if HaveCommonNotPrivateTransExt() then TTBR0_EL2[CnP] else 0b0;
     return(tlbcontext)
 }
 
@@ -37840,12 +37816,12 @@ function AArch32_GetS2TLBContext ipa = {
     tlbcontext.ss = SS_NonSecure;
     tlbcontext.regime = Regime_EL10;
     tlbcontext.ipaspace = ipa.paspace;
-    tlbcontext.vmid = ZeroExtend(VTTBR[VMID], 16);
+    tlbcontext.vmid = ZeroExtend(VTTBR_EL2.bits[55 .. 48], 16);
     tlbcontext.tg = TGx_4KB;
     tlbcontext.includes_s1_name = false;
     tlbcontext.includes_s2_name = true;
     tlbcontext.ia = ZeroExtend(ipa.address, 64);
-    tlbcontext.cnp = if HaveCommonNotPrivateTransExt() then VTTBR[CnP] else 0b0;
+    tlbcontext.cnp = if HaveCommonNotPrivateTransExt() then VTTBR_EL2[CnP] else 0b0;
     return(tlbcontext)
 }
 
@@ -37897,7 +37873,7 @@ function AArch32_S2Walk (fault_in, walkparams, s1level, accdesc, ipa) = {
     let 'levels = FINAL_LEVEL - startlevel;
     let 'granulebits = TGxGranuleBits(walkparams.tgx);
     let 'stride = granulebits - 3;
-    if not_bool(IsZero(VTTBR.bits[47 .. 40])) then {
+    if not_bool(IsZero(VTTBR_EL2.bits[47 .. 40])) then {
         fault.statuscode = Fault_AddressSize;
         fault.level = 0;
         return((fault, __UNKNOWN_TTWState()))
@@ -37906,7 +37882,7 @@ function AArch32_S2Walk (fault_in, walkparams, s1level, accdesc, ipa) = {
     let 'baselsb = iasize - (levels * stride + granulebits) + 3;
     baseaddress.paspace = PAS_NonSecure;
     assert(constraint((0 <= 'baselsb & 'baselsb <= 39)));
-    baseaddress.address = ZeroExtend(VTTBR.bits[39 .. baselsb] @ Zeros(baselsb), 56);
+    baseaddress.address = ZeroExtend(VTTBR_EL2.bits[39 .. baselsb] @ Zeros(baselsb), 56);
     walkstate : TTWState = undefined;
     walkstate.baseaddress = baseaddress;
     walkstate.level = startlevel;
@@ -38086,7 +38062,7 @@ function AArch32_S1WalkLD (fault_in, regime, walkparams, accdesc, va) = {
     epd : bits(1) = undefined;
     varange : VARange = undefined;
     if regime == Regime_EL2 then {
-        ttbr = HTTBR.bits;
+        ttbr = TTBR0_EL2.bits[63 .. 0];
         txsz = walkparams.t0sz;
         varange = VARange_LOWER
     } else {
@@ -38100,8 +38076,8 @@ function AArch32_S1WalkLD (fault_in, regime, walkparams, accdesc, va) = {
             ttbr1 = TTBR1_S.bits
         } else if HaveAArch32EL(EL3) then {
             ttbcr = TTBCR_NS_read();
-            ttbr0 = TTBR0_NS.bits;
-            ttbr1 = TTBR1_NS.bits
+            ttbr0 = TTBR0_EL1.bits[63 .. 0];
+            ttbr1 = TTBR1_EL1.bits[63 .. 0]
         } else {
             ttbcr = TTBCR_read();
             ttbr0 = TTBR0_read().bits;
@@ -38777,8 +38753,8 @@ function AArch32_S1WalkSD (fault_in, regime, accdesc, va) = {
     } else if HaveAArch32EL(EL3) then {
         sctlr = SCTLR_NS_read();
         ttbcr = TTBCR_NS_read();
-        ttbr0 = TTBR0_NS;
-        ttbr1 = TTBR1_NS
+        ttbr0 = Mk_TTBR0_Type(TTBR0_EL1.bits[63 .. 0]);
+        ttbr1 = Mk_TTBR1_Type(TTBR1_EL1.bits[63 .. 0])
     } else {
         sctlr = SCTLR_read__2();
         ttbcr = TTBCR_read();
@@ -40352,7 +40328,7 @@ function AArch32_BreakpointValueMatch (n_in, vaddress, linked_to) = {
         vmid : bits(16) = undefined;
         bvr_vmid : bits(16) = undefined;
         if ELUsingAArch32(EL2) then {
-            vmid = ZeroExtend(VTTBR[VMID], 16);
+            vmid = ZeroExtend(VTTBR_EL2.bits[55 .. 48], 16);
             bvr_vmid = ZeroExtend(DBGBXVR_read(n).bits[7 .. 0], 16)
         } else if not_bool(Have16bitVMID()) | VTCR_EL2[VS] == 0b0 then {
             vmid = ZeroExtend(VTTBR_EL2_read()[VMID][7 .. 0], 16);
@@ -46550,7 +46526,7 @@ function TTBR1_write value_name = {
     if ELUsingAArch32(EL3) & CurrentSecurityState() == SS_Secure then {
         TTBR1_S = r
     } else {
-        TTBR1_NS = r
+        TTBR1_EL1.bits[63 .. 0] = r.bits
     };
     return()
 }
@@ -46562,7 +46538,7 @@ function TTBR0_write value_name = {
     if ELUsingAArch32(EL3) & CurrentSecurityState() == SS_Secure then {
         TTBR0_S = r
     } else {
-        TTBR0_NS = r
+        TTBR0_EL1.bits[63 .. 0] = r.bits
     };
     return()
 }
@@ -53546,36 +53522,28 @@ register PMPIDR4 : PMPIDR4_Type
 val TTBR1_EL1_write : TTBR1_EL1_Type -> unit
 
 function TTBR1_EL1_write value_name = {
-    let r : TTBR1_EL1_Type = value_name;
-    TTBR1_write() = Mk_TTBR1_Type(SetSlice(64, TTBR1_read().bits, 0, Slice(r.bits, 0, 64)));
-    _TTBR1_EL1 = r;
+    TTBR1_EL1 = value_name;
     return()
 }
 
 val TTBR0_EL2_write : TTBR0_EL2_Type -> unit
 
 function TTBR0_EL2_write value_name = {
-    let r : TTBR0_EL2_Type = value_name;
-    HTTBR.bits[47 .. 1] = Slice(r.bits, 1, 47);
-    _TTBR0_EL2 = r;
+    TTBR0_EL2 = value_name;
     return()
 }
 
 val VTTBR_EL2_write : VTTBR_EL2_Type -> unit
 
 function VTTBR_EL2_write value_name = {
-    let r : VTTBR_EL2_Type = value_name;
-    VTTBR.bits[63 .. 0] = Slice(r.bits, 0, 64);
-    _VTTBR_EL2 = r;
+    VTTBR_EL2 = value_name;
     return()
 }
 
 val TTBR0_EL1_write : TTBR0_EL1_Type -> unit
 
 function TTBR0_EL1_write value_name = {
-    let r : TTBR0_EL1_Type = value_name;
-    TTBR0_write() = Mk_TTBR0_Type(SetSlice(64, TTBR0_read().bits, 0, Slice(r.bits, 0, 64)));
-    _TTBR0_EL1 = r;
+    TTBR0_EL1 = value_name;
     return()
 }
 

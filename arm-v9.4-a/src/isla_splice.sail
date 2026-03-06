@@ -16,7 +16,7 @@ function AArch32_ResetSIMDFPRegisters () = ()
 
 
 val isla_reset_registers = "reset_registers" : unit -> unit
-
+/*
 val isla_main_hook : unit -> unit
 
 function isla_main_hook() = {
@@ -27,3 +27,4 @@ function isla_main_hook() = {
     __emulator_termination_opcode = Some(0x00000000);
     isla_reset_registers();
 }
+*/

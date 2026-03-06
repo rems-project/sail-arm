@@ -97,17 +97,15 @@ function CP15ISB () = {
     return()
 }
 
-function CPYPostSizeChoice (toaddress, fromaddress, cpysize) = {
-    return(__UNKNOWN_bits(64))
-}
+function CPYPostSizeChoice (toaddress, fromaddress, cpysize) =
+    if cpysize == 0x0000000000000000 then 0x0000000000000000 else
+    if [cpysize[63]] == 0b1 then 0xFFFFFFFFFFFFFFFF else 0x0000000000000001
 
-function CPYPreSizeChoice (toaddress, fromaddress, cpysize) = {
-    return(__UNKNOWN_bits(64))
-}
+function CPYPreSizeChoice (toaddress, fromaddress, cpysize) =
+    if cpysize == 0x0000000000000000 then 0x0000000000000000 else
+    if [cpysize[63]] == 0b1 then 0xFFFFFFFFFFFFFFFF else 0x0000000000000001
 
-function CPYSizeChoice (toaddress, fromaddress, cpysize) = {
-    return(__UNKNOWN_integer())
-}
+function CPYSizeChoice (toaddress, fromaddress, cpysize) = 1
 
 function CTI_SetEventLevel (id, level) = {
     return()
@@ -362,16 +360,22 @@ function S2TLBLookup tlbcontext = {
     return(__UNKNOWN_TLBLine())
 }
 
-function SETPostSizeChoice (toaddress, setsize, IsSETGE) = {
-    return(__UNKNOWN_bits(64))
-}
+function SETPostSizeChoice (toaddress, setsize, IsSETGE) =
+    if setsize == 0x0000000000000000 then 0x0000000000000000 else
+    if IsSETGE then
+        if [setsize[63]] == 0b1 then 0xFFFFFFFFFFFFFFF0 else 0x0000000000000010
+    else
+        if [setsize[63]] == 0b1 then 0xFFFFFFFFFFFFFFFF else 0x0000000000000001
 
-function SETPreSizeChoice (toaddress, setsize, IsSETGP) = {
-    return(__UNKNOWN_bits(64))
-}
+function SETPreSizeChoice (toaddress, setsize, IsSETGP) =
+    if setsize == 0x0000000000000000 then 0x0000000000000000 else
+    if IsSETGP then
+        if [setsize[63]] == 0b1 then 0xFFFFFFFFFFFFFFF0 else 0x0000000000000010
+    else
+        if [setsize[63]] == 0b1 then 0xFFFFFFFFFFFFFFFF else 0x0000000000000001
 
 function SETSizeChoice (toaddress, setsize, AlignSize) = {
-    return(__UNKNOWN_integer())
+    return AlignSize
 }
 
 function SendEvent () = {

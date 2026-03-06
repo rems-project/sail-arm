@@ -46,7 +46,8 @@ make -C sail-arm-boot-master initramfs
 echo "Building device tree blob"
 make -C sail-arm-boot-master sail.dtb
 
-LINUX="https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.0.7.tar.xz"
+LINUXVERSION="6.19.5"
+LINUX="https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-$LINUXVERSION.tar.xz"
 
 while true; do
     read -p "Download Linux from $LINUX (y/n)? " yn
@@ -59,22 +60,22 @@ while true; do
     esac
 done
 
-if [ ! -f linux-6.0.7.tar.xz ]
+if [ ! -f linux-$LINUXVERSION.tar.xz ]
 then
-    echo "existing linux-6.0.7 could not be found, exiting"
+    echo "existing linux-$LINUXVERSION could not be found, exiting"
     exit 1
 fi
 
 echo "Unpacking Linux"
-tar -xf linux-6.0.7.tar.xz
+tar -xf linux-$LINUXVERSION.tar.xz
 
 echo "Copying config file"
-cp ${BOOT_DIR}/config-linux-6.0.7 linux-6.0.7/.config
+cp ${BOOT_DIR}/config-linux-${LINUXVERSION} linux-${LINUXVERSION}/.config
 
 echo "Building Linux"
-make -C linux-6.0.7 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -k -j 8
+make -C linux-${LINUXVERSION} ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -k -j 8
 
-cp linux-6.0.7/arch/arm64/boot/Image .
+cp linux-${LINUXVERSION}/arch/arm64/boot/Image .
 cp sail-arm-boot-master/bootloader.bin .
 cp sail-arm-boot-master/sail.dtb .
 

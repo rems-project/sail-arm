@@ -12,5 +12,6 @@
 /sail-arm-boot-master/
 /sail.dtb
 z3_problems
+sail_smt_cache
 /snapshots/c/armv9
 /snapshots/c/armv9.c

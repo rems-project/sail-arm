@@ -1955,16 +1955,16 @@ function AArch32_AutoGen_ArchitectureReset cold = {
     PAR_write() = Mk_PAR_Type(SetSlice(1, PAR_read().bits, 7, 0b0));
     TTBR1_write() = Mk_TTBR1_Type(SetSlice(32, TTBR1_read().bits, 32, 0b00000000000000000000000000000000));
     TTBR1_write() = Mk_TTBR1_Type(SetSlice(8, TTBR1_read().bits, 56, 0b00000000));
-    HTTBR.bits[63 .. 48] = 0b0000000000000000;
+    TTBR0_EL2.bits[63 .. 48] = 0b0000000000000000;
     TTBR0_write() = Mk_TTBR0_Type(SetSlice(32, TTBR0_read().bits, 32, 0b00000000000000000000000000000000));
     TTBR0_write() = Mk_TTBR0_Type(SetSlice(8, TTBR0_read().bits, 56, 0b00000000));
     DBGDRAR_write() = Mk_DBGDRAR_Type(SetSlice(16, DBGDRAR_read().bits, 48, 0b0000000000000000));
     DBGDRAR_write() = Mk_DBGDRAR_Type(SetSlice(10, DBGDRAR_read().bits, 2, 0b0000000000));
-    VTTBR.bits[63 .. 56] = 0b00000000;
+    VTTBR_EL2.bits[63 .. 56] = 0b00000000;
     if not_bool(cold) & __IMPDEF_boolean("the PE resets into EL2 or EL3") then {
-        VTTBR[VMID] = 0b00000000
+        VTTBR_EL2.bits[55 .. 48] = 0b00000000
     } else {
-        VTTBR[VMID] = __UNKNOWN_bits(8)
+        VTTBR_EL2.bits[55 .. 48] = __UNKNOWN_bits(8)
     };
     GITS_CREADR.bits[63 .. 20] = 0b00000000000000000000000000000000000000000000;
     GITS_CREADR.bits[4 .. 1] = 0b0000;
@@ -100673,12 +100673,12 @@ function HTTBR_SysRegWrite64_3e34efab7aaa3ec6 (el, coproc, opc1, CRm, t, t2) = {
             throw(Error_Undefined())
         }
     } else if __PSTATE_EL == EL2 then {
-        HTTBR = Mk_HTTBR_Type(R_read(t2) @ R_read(t))
+        TTBR0_EL2.bits[63 .. 0] = R_read(t2) @ R_read(t)
     } else if __PSTATE_EL == EL3 then {
         if __SCR_NS == 0b0 then {
             throw(Error_Undefined())
         } else {
-            HTTBR = Mk_HTTBR_Type(R_read(t2) @ R_read(t))
+            TTBR0_EL2.bits[63 .. 0] = R_read(t2) @ R_read(t)
         }
     } else ()
 }
@@ -101093,13 +101093,13 @@ function TTBR0_SysRegWrite64_c1a707eccbf8dd96 (el, coproc, opc1, CRm, t, t2) = {
         } else if (EL2Enabled() & ELUsingAArch32(EL2)) & __HCR_TVM == 0b1 then {
             AArch32_TakeHypTrapException(UInt(0x04))
         } else if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            TTBR0_NS = Mk_TTBR0_Type(R_read(t2) @ R_read(t))
+            TTBR0_EL1.bits[63 .. 0] = R_read(t2) @ R_read(t)
         } else {
             TTBR0_write() = Mk_TTBR0_Type(R_read(t2) @ R_read(t))
         }
     } else if __PSTATE_EL == EL2 then {
         if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            TTBR0_NS = Mk_TTBR0_Type(R_read(t2) @ R_read(t))
+            TTBR0_EL1.bits[63 .. 0] = R_read(t2) @ R_read(t)
         } else {
             TTBR0_write() = Mk_TTBR0_Type(R_read(t2) @ R_read(t))
         }
@@ -101110,7 +101110,7 @@ function TTBR0_SysRegWrite64_c1a707eccbf8dd96 (el, coproc, opc1, CRm, t, t2) = {
             if __SCR_NS == 0b0 then {
                 TTBR0_S = Mk_TTBR0_Type(R_read(t2) @ R_read(t))
             } else {
-                TTBR0_NS = Mk_TTBR0_Type(R_read(t2) @ R_read(t))
+                TTBR0_EL1.bits[63 .. 0] = R_read(t2) @ R_read(t)
             }
         }
     } else ()
@@ -101138,13 +101138,13 @@ function TTBR1_SysRegWrite64_7d88e184b6073f76 (el, coproc, opc1, CRm, t, t2) = {
         } else if (EL2Enabled() & ELUsingAArch32(EL2)) & __HCR_TVM == 0b1 then {
             AArch32_TakeHypTrapException(UInt(0x04))
         } else if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            TTBR1_NS = Mk_TTBR1_Type(R_read(t2) @ R_read(t))
+            TTBR1_EL1.bits[63 .. 0] = R_read(t2) @ R_read(t)
         } else {
             TTBR1_write() = Mk_TTBR1_Type(R_read(t2) @ R_read(t))
         }
     } else if __PSTATE_EL == EL2 then {
         if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            TTBR1_NS = Mk_TTBR1_Type(R_read(t2) @ R_read(t))
+            TTBR1_EL1.bits[63 .. 0] = R_read(t2) @ R_read(t)
         } else {
             TTBR1_write() = Mk_TTBR1_Type(R_read(t2) @ R_read(t))
         }
@@ -101155,7 +101155,7 @@ function TTBR1_SysRegWrite64_7d88e184b6073f76 (el, coproc, opc1, CRm, t, t2) = {
             if __SCR_NS == 0b0 then {
                 TTBR1_S = Mk_TTBR1_Type(R_read(t2) @ R_read(t))
             } else {
-                TTBR1_NS = Mk_TTBR1_Type(R_read(t2) @ R_read(t))
+                TTBR1_EL1.bits[63 .. 0] = R_read(t2) @ R_read(t)
             }
         }
     } else ()
@@ -101180,12 +101180,12 @@ function VTTBR_SysRegWrite64_ab86e13c6c48344f (el, coproc, opc1, CRm, t, t2) = {
             throw(Error_Undefined())
         }
     } else if __PSTATE_EL == EL2 then {
-        VTTBR = Mk_VTTBR_Type(R_read(t2) @ R_read(t))
+        VTTBR_EL2.bits[63 .. 0] = R_read(t2) @ R_read(t)
     } else if __PSTATE_EL == EL3 then {
         if __SCR_NS == 0b0 then {
             throw(Error_Undefined())
         } else {
-            VTTBR = Mk_VTTBR_Type(R_read(t2) @ R_read(t))
+            VTTBR_EL2.bits[63 .. 0] = R_read(t2) @ R_read(t)
         }
     } else ()
 }
@@ -125322,13 +125322,13 @@ function TTBR0_SysRegRead32_ba6eb6544c3c44a1 (el, coproc, opc1, CRn, opc2, CRm, 
         } else if (EL2Enabled() & ELUsingAArch32(EL2)) & __HCR_TRVM == 0b1 then {
             AArch32_TakeHypTrapException(UInt(0x03))
         } else if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            R_set(t) = TTBR0_NS.bits[31 .. 0]
+            R_set(t) = TTBR0_EL1.bits[31 .. 0]
         } else {
             R_set(t) = TTBR0_read().bits[31 .. 0]
         }
     } else if __PSTATE_EL == EL2 then {
         if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            R_set(t) = TTBR0_NS.bits[31 .. 0]
+            R_set(t) = TTBR0_EL1.bits[31 .. 0]
         } else {
             R_set(t) = TTBR0_read().bits[31 .. 0]
         }
@@ -125336,7 +125336,7 @@ function TTBR0_SysRegRead32_ba6eb6544c3c44a1 (el, coproc, opc1, CRn, opc2, CRm, 
         if __SCR_NS == 0b0 then {
             R_set(t) = TTBR0_S.bits[31 .. 0]
         } else {
-            R_set(t) = TTBR0_NS.bits[31 .. 0]
+            R_set(t) = TTBR0_EL1.bits[31 .. 0]
         }
     } else ()
 }
@@ -125363,13 +125363,13 @@ function TTBR1_SysRegRead32_bbb7c8fdac68a224 (el, coproc, opc1, CRn, opc2, CRm, 
         } else if (EL2Enabled() & ELUsingAArch32(EL2)) & __HCR_TRVM == 0b1 then {
             AArch32_TakeHypTrapException(UInt(0x03))
         } else if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            R_set(t) = TTBR1_NS.bits[31 .. 0]
+            R_set(t) = TTBR1_EL1.bits[31 .. 0]
         } else {
             R_set(t) = TTBR1_read().bits[31 .. 0]
         }
     } else if __PSTATE_EL == EL2 then {
         if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            R_set(t) = TTBR1_NS.bits[31 .. 0]
+            R_set(t) = TTBR1_EL1.bits[31 .. 0]
         } else {
             R_set(t) = TTBR1_read().bits[31 .. 0]
         }
@@ -125377,7 +125377,7 @@ function TTBR1_SysRegRead32_bbb7c8fdac68a224 (el, coproc, opc1, CRn, opc2, CRm, 
         if __SCR_NS == 0b0 then {
             R_set(t) = TTBR1_S.bits[31 .. 0]
         } else {
-            R_set(t) = TTBR1_NS.bits[31 .. 0]
+            R_set(t) = TTBR1_EL1.bits[31 .. 0]
         }
     } else ()
 }
@@ -130179,14 +130179,14 @@ function HTTBR_SysRegRead64_5b679aebf4474d8a (el, coproc, opc1, CRm, t, t2) = {
             throw(Error_Undefined())
         }
     } else if __PSTATE_EL == EL2 then {
-        let (__tup_0 : bits(32), __tup_1 : bits(32)) = (HTTBR.bits[63 .. 32], HTTBR.bits[31 .. 0]);
+        let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR0_EL2.bits[63 .. 32], TTBR0_EL2.bits[31 .. 0]);
         R_set(t2) = __tup_0;
         R_set(t) = __tup_1
     } else if __PSTATE_EL == EL3 then {
         if __SCR_NS == 0b0 then {
             throw(Error_Undefined())
         } else {
-            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (HTTBR.bits[63 .. 32], HTTBR.bits[31 .. 0]);
+            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR0_EL2.bits[63 .. 32], TTBR0_EL2.bits[31 .. 0]);
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         }
@@ -130357,7 +130357,7 @@ function TTBR0_SysRegRead64_9396816aa24cfa90 (el, coproc, opc1, CRm, t, t2) = {
         } else if (EL2Enabled() & ELUsingAArch32(EL2)) & __HCR_TRVM == 0b1 then {
             AArch32_TakeHypTrapException(UInt(0x04))
         } else if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR0_NS.bits[63 .. 32], TTBR0_NS.bits[31 .. 0]);
+            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR0_EL1.bits[63 .. 32], TTBR0_EL1.bits[31 .. 0]);
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         } else {
@@ -130367,7 +130367,7 @@ function TTBR0_SysRegRead64_9396816aa24cfa90 (el, coproc, opc1, CRm, t, t2) = {
         }
     } else if __PSTATE_EL == EL2 then {
         if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR0_NS.bits[63 .. 32], TTBR0_NS.bits[31 .. 0]);
+            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR0_EL1.bits[63 .. 32], TTBR0_EL1.bits[31 .. 0]);
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         } else {
@@ -130381,7 +130381,7 @@ function TTBR0_SysRegRead64_9396816aa24cfa90 (el, coproc, opc1, CRm, t, t2) = {
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         } else {
-            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR0_NS.bits[63 .. 32], TTBR0_NS.bits[31 .. 0]);
+            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR0_EL1.bits[63 .. 32], TTBR0_EL1.bits[31 .. 0]);
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         }
@@ -130410,7 +130410,7 @@ function TTBR1_SysRegRead64_6988488afc2dce1a (el, coproc, opc1, CRm, t, t2) = {
         } else if (EL2Enabled() & ELUsingAArch32(EL2)) & __HCR_TRVM == 0b1 then {
             AArch32_TakeHypTrapException(UInt(0x04))
         } else if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR1_NS.bits[63 .. 32], TTBR1_NS.bits[31 .. 0]);
+            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR1_EL1.bits[63 .. 32], TTBR1_EL1.bits[31 .. 0]);
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         } else {
@@ -130420,7 +130420,7 @@ function TTBR1_SysRegRead64_6988488afc2dce1a (el, coproc, opc1, CRm, t, t2) = {
         }
     } else if __PSTATE_EL == EL2 then {
         if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR1_NS.bits[63 .. 32], TTBR1_NS.bits[31 .. 0]);
+            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR1_EL1.bits[63 .. 32], TTBR1_EL1.bits[31 .. 0]);
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         } else {
@@ -130434,7 +130434,7 @@ function TTBR1_SysRegRead64_6988488afc2dce1a (el, coproc, opc1, CRm, t, t2) = {
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         } else {
-            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR1_NS.bits[63 .. 32], TTBR1_NS.bits[31 .. 0]);
+            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (TTBR1_EL1.bits[63 .. 32], TTBR1_EL1.bits[31 .. 0]);
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         }
@@ -130460,14 +130460,14 @@ function VTTBR_SysRegRead64_aec948eb11ac7d09 (el, coproc, opc1, CRm, t, t2) = {
             throw(Error_Undefined())
         }
     } else if __PSTATE_EL == EL2 then {
-        let (__tup_0 : bits(32), __tup_1 : bits(32)) = (VTTBR.bits[63 .. 32], VTTBR.bits[31 .. 0]);
+        let (__tup_0 : bits(32), __tup_1 : bits(32)) = (VTTBR_EL2.bits[63 .. 32], VTTBR_EL2.bits[31 .. 0]);
         R_set(t2) = __tup_0;
         R_set(t) = __tup_1
     } else if __PSTATE_EL == EL3 then {
         if __SCR_NS == 0b0 then {
             throw(Error_Undefined())
         } else {
-            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (VTTBR.bits[63 .. 32], VTTBR.bits[31 .. 0]);
+            let (__tup_0 : bits(32), __tup_1 : bits(32)) = (VTTBR_EL2.bits[63 .. 32], VTTBR_EL2.bits[31 .. 0]);
             R_set(t2) = __tup_0;
             R_set(t) = __tup_1
         }
@@ -152649,13 +152649,13 @@ function TTBR0_SysRegWrite32_455c3a8e0a51a871 (el, coproc, opc1, CRn, opc2, CRm,
         } else if (EL2Enabled() & ELUsingAArch32(EL2)) & __HCR_TVM == 0b1 then {
             AArch32_TakeHypTrapException(UInt(0x03))
         } else if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            TTBR0_NS.bits[31 .. 0] = R_read(t)
+            TTBR0_EL1.bits[31 .. 0] = R_read(t)
         } else {
             TTBR0_write() = Mk_TTBR0_Type([TTBR0_read().bits with 31 .. 0 = R_read(t)])
         }
     } else if __PSTATE_EL == EL2 then {
         if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            TTBR0_NS.bits[31 .. 0] = R_read(t)
+            TTBR0_EL1.bits[31 .. 0] = R_read(t)
         } else {
             TTBR0_write() = Mk_TTBR0_Type([TTBR0_read().bits with 31 .. 0 = R_read(t)])
         }
@@ -152666,7 +152666,7 @@ function TTBR0_SysRegWrite32_455c3a8e0a51a871 (el, coproc, opc1, CRn, opc2, CRm,
             if __SCR_NS == 0b0 then {
                 TTBR0_S.bits[31 .. 0] = R_read(t)
             } else {
-                TTBR0_NS.bits[31 .. 0] = R_read(t)
+                TTBR0_EL1.bits[31 .. 0] = R_read(t)
             }
         }
     } else ()
@@ -152694,13 +152694,13 @@ function TTBR1_SysRegWrite32_388bd96b6dea14cc (el, coproc, opc1, CRn, opc2, CRm,
         } else if (EL2Enabled() & ELUsingAArch32(EL2)) & __HCR_TVM == 0b1 then {
             AArch32_TakeHypTrapException(UInt(0x03))
         } else if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            TTBR1_NS.bits[31 .. 0] = R_read(t)
+            TTBR1_EL1.bits[31 .. 0] = R_read(t)
         } else {
             TTBR1_write() = Mk_TTBR1_Type([TTBR1_read().bits with 31 .. 0 = R_read(t)])
         }
     } else if __PSTATE_EL == EL2 then {
         if HaveEL(EL3) & ELUsingAArch32(EL3) then {
-            TTBR1_NS.bits[31 .. 0] = R_read(t)
+            TTBR1_EL1.bits[31 .. 0] = R_read(t)
         } else {
             TTBR1_write() = Mk_TTBR1_Type([TTBR1_read().bits with 31 .. 0 = R_read(t)])
         }
@@ -152711,7 +152711,7 @@ function TTBR1_SysRegWrite32_388bd96b6dea14cc (el, coproc, opc1, CRn, opc2, CRm,
             if __SCR_NS == 0b0 then {
                 TTBR1_S.bits[31 .. 0] = R_read(t)
             } else {
-                TTBR1_NS.bits[31 .. 0] = R_read(t)
+                TTBR1_EL1.bits[31 .. 0] = R_read(t)
             }
         }
     } else ()

@@ -38890,6 +38890,7 @@ val execute_aarch64_instrs_system_register_system_128 : forall ('read : Bool) 's
   (bool('read), int('sys_crm), int('sys_crn), int('sys_op0), int('sys_op1), int('sys_op2), int('t), int('t2)) -> unit
 
 function execute_aarch64_instrs_system_register_system_128 (read, sys_crm, sys_crn, sys_op0, sys_op1, sys_op2, t, t2) = {
+    PCNormalStep();
     if read then {
         AArch64_SysRegRead128(sys_op0, sys_op1, sys_crn, sys_crm, sys_op2, t, t2)
     } else {
@@ -38968,6 +38969,7 @@ val execute_aarch64_instrs_system_register_system : forall ('read : Bool) 'sys_c
   (bool('read), int('sys_crm), int('sys_crn), int('sys_op0), int('sys_op1), int('sys_op2), int('t)) -> unit
 
 function execute_aarch64_instrs_system_register_system (read, sys_crm, sys_crn, sys_op0, sys_op1, sys_op2, t) = {
+    PCNormalStep();
     if read then {
         AArch64_SysRegRead(sys_op0, sys_op1, sys_crn, sys_crm, sys_op2, t)
     } else {
@@ -39030,6 +39032,7 @@ function clause __DecodeA64_BranchExcSys ((pc, ([bitone, bitone, bitzero, bitone
 val execute_aarch64_instrs_system_register_cpsr : (PSTATEField, bits(4)) -> unit
 
 function execute_aarch64_instrs_system_register_cpsr (field, operand) = {
+    PCNormalStep();
     match field {
       PSTATEField_SSBS => {
           PSTATE_SSBS = [operand[0]]
@@ -51993,6 +51996,7 @@ val execute_aarch64_instrs_system_sysops : forall ('has_result : Bool) 'sys_crm 
   (bool('has_result), int('sys_crm), int('sys_crn), int('sys_op0), int('sys_op1), int('sys_op2), int('t)) -> unit
 
 function execute_aarch64_instrs_system_sysops (has_result, sys_crm, sys_crn, sys_op0, sys_op1, sys_op2, t) = {
+    PCNormalStep();
     if has_result then {
         AArch64_SysInstrWithResult(sys_op0, sys_op1, sys_crn, sys_crm, sys_op2, t)
     } else {
@@ -52055,6 +52059,7 @@ val execute_aarch64_instrs_system_sysops_128 : forall 'sys_crm 'sys_crn 'sys_op0
   (int('sys_crm), int('sys_crn), int('sys_op0), int('sys_op1), int('sys_op2), int('t), int('t2)) -> unit
 
 function execute_aarch64_instrs_system_sysops_128 (sys_crm, sys_crn, sys_op0, sys_op1, sys_op2, t, t2) = {
+    PCNormalStep();
     AArch64_SysInstr128(sys_op0, sys_op1, sys_crn, sys_crm, sys_op2, t, t2)
 }
 

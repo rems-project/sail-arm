@@ -18,7 +18,25 @@ synopsis: "The sail specification of the Arm architecture"
 
 depends: [
   "coq" { (>= "8.15") }
-  "coq-sail-stdpp"
+  "coq-sail-stdpp" { = "0.20" }
+]
+pin-depends: [
+  [ "coq-sail-stdpp.0.20" "git+https://github.com/rems-project/coq-sail.git#6136421"]
+  # This is not a direct dependency, but it must have a compatible version with
+  # coq-sail-stdpp, so we lock it anyways
+  [ "libsail.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_c_backend.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_coq_backend.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_doc_backend.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_latex_backend.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_lean_backend.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_lem_backend.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_smt_backend.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_sv_backend.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_ocaml_backend.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_output.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
+  [ "sail_manifest.0.20" "git+https://github.com/rems-project/sail.git#89165dcc"]
 ]
 
 build: ["%{make}%" "-C" "arm-v9.4-a/snapshots/coq" "-j%{jobs}%"]

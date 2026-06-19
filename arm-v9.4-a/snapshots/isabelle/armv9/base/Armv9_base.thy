@@ -592,7 +592,7 @@ definition unsigned_subrange  :: \<open>('n::len)Word.word \<Rightarrow> int \<R
      ((shiftr
         ((and_vec xs
             ((slice_mask ((int (size xs))) j ((((i - j)) + (( 1 :: int)::ii)))  :: ( 'n::len)Word.word))
-           :: ( 'n::len)Word.word)) i
+           :: ( 'n::len)Word.word)) j
        :: ( 'n::len)Word.word)) in
    ((Word.uint xs)) mod ((pow2 ((((i - j)) + (( 1 :: int)::ii)))))))\<close> 
   for  "xs"  :: "('n::len)Word.word " 

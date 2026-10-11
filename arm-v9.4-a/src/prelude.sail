@@ -108,7 +108,7 @@ val emod_nat = pure {
   lem: "integerMod",
   c: "emod_int",
   coq: "ZEuclid.modulo",
-  lean: "Nat.div"
+  lean: "Nat.mod"
 } : forall 'n 'm, 'n >= 0 & 'm > 0. (int('n), int('m)) -> int(mod('n, 'm))
 
 overload DIV = {ediv_nat, fdiv_int}

@@ -19789,13 +19789,17 @@ val GPTTLBLookup : (bits(56), PGSe) -> GPTTLBLine
 
 register __tlb_enabled : bool = false
 
+val __IsTLBEnabled : unit -> bool
+
+function __IsTLBEnabled() = __tlb_enabled
+
 val GPTWalk : (bits(56), AccessDescriptor) -> (GPCFRecord, GPTEntry)
 
 function GPTWalk (pa, accdesc) = {
     gpi_index : int = undefined;
     gpttlbline : GPTTLBLine = undefined;
     let pgs : PGSe = DecodePGS(GPCCR_EL3[PGS]);
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         let gpttlbline : GPTTLBLine = GPTTLBLookup(pa, pgs);
         if gpttlbline.valid_name then {
             return((GPCNoFault(), gpttlbline.gpt_entry))
@@ -19827,7 +19831,7 @@ function GPTWalk (pa, accdesc) = {
       ? if ? == GPT_Block => {
           (gpf, result) = DecodeGPTBlock(pgs, level_0_entry);
           result.pa = pa;
-          if __tlb_enabled & gpf == GPCF_None then {
+          if __IsTLBEnabled() & gpf == GPCF_None then {
               GPTTLBCache(pgs, result)
           };
           return((GPCFault(gpf, 0), result))
@@ -19864,7 +19868,7 @@ function GPTWalk (pa, accdesc) = {
         return((GPCFault(gpf, 1), __UNKNOWN_GPTEntry()))
     };
     result.pa = pa;
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         GPTTLBCache(pgs, result)
     };
     return((GPCNoFault(), result))
@@ -19880,7 +19884,7 @@ function GranuleProtectionCheck (addrdesc, accdesc) = {
     gpcf : GPCFRecord = undefined;
     gpt_entry : GPTEntry = undefined;
     assert(HaveRME());
-    if __tlb_enabled & accdesc.acctype != AccessType_TTW then {
+    if __IsTLBEnabled() & accdesc.acctype != AccessType_TTW then {
         if TLBIncludesGPT(addrdesc.tlbcontext) then {
             return(GPCNoFault())
         };
@@ -19888,7 +19892,7 @@ function GranuleProtectionCheck (addrdesc, accdesc) = {
     };
     let address : FullAddress = addrdesc.paddress;
     if GPCCR_EL3[GPC] == 0b0 then {
-        if __tlb_enabled then {
+        if __IsTLBEnabled() then {
             SetTLBIncludesGPT(addrdesc.tlbcontext, 56)
         };
         return(GPCNoFault())
@@ -19898,7 +19902,7 @@ function GranuleProtectionCheck (addrdesc, accdesc) = {
     };
     if AbovePPS(address.address) then {
         if address.paspace == PAS_NonSecure then {
-            if __tlb_enabled & accdesc.acctype != AccessType_TTW then {
+            if __IsTLBEnabled() & accdesc.acctype != AccessType_TTW then {
                 SetTLBIncludesGPT(addrdesc.tlbcontext, 56)
             };
             return(GPCNoFault())
@@ -19919,7 +19923,7 @@ function GranuleProtectionCheck (addrdesc, accdesc) = {
         let gpcf : GPCFRecord = GPCFault(GPCF_Fail, gpt_entry.level);
         return(gpcf)
     };
-    if __tlb_enabled & accdesc.acctype != AccessType_TTW then {
+    if __IsTLBEnabled() & accdesc.acctype != AccessType_TTW then {
         SetTLBIncludesGPT(addrdesc.tlbcontext, gpt_entry.contig_size)
     };
     return(GPCNoFault())
@@ -27039,7 +27043,7 @@ function AArch64_S2Walk (fault_in, ipa, walkparams, accdesc, s1level, N) = {
     let ipa_64 : bits(64) = ZeroExtend(ipa.paddress.address, 64);
     tlbcontext : TLBContext = undefined;
     tlbrecord : TLBRecord = undefined;
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         tlbcontext = AArch64_GetS2TLBContext(accdesc.ss, ipa.paddress, walkparams.tgx);
         let tlbentry : TLBLine = S2TLBLookup(tlbcontext);
         tlbrecord = tlbentry.tlbrecord;
@@ -27163,7 +27167,7 @@ function AArch64_S2Walk (fault_in, ipa, walkparams, accdesc, s1level, N) = {
     } else if ([descriptor[10]] == 0b0 & walkparams.ha == 0b0) & not_bool((accdesc.acctype == AccessType_DC | accdesc.acctype == AccessType_IC) & not_bool(__IMPDEF_boolean("Generate access flag fault on IC/DC operations"))) then {
         fault.statuscode = Fault_AccessFlag
     } else ();
-    if (__tlb_enabled & fault.statuscode == Fault_None) & [descriptor[10]] == 0b1 then {
+    if (__IsTLBEnabled() & fault.statuscode == Fault_None) & [descriptor[10]] == 0b1 then {
         tlbcontext.xs = walkstate.memattrs.xs;
         tlbcontext.level = walkstate.level;
         tlbcontext.isd128 = walkparams.d128 == 0b1;
@@ -27297,7 +27301,7 @@ function AArch64_S2Translate (fault_in, ipa, s1aarch64, s1level, aligned, accdes
         };
         ()
     } until new_desc == descriptor | mem_desc == new_desc;
-    if (__tlb_enabled & new_desc != descriptor) & [mem_desc[10]] == 0b1 then {
+    if (__IsTLBEnabled() & new_desc != descriptor) & [mem_desc[10]] == 0b1 then {
         tlbrecord : TLBRecord = undefined;
         if [descriptor[10]] == 0b1 then {
             let tlbentry : TLBLine = S2TLBLookup(descpaddr.tlbcontext);
@@ -27371,7 +27375,7 @@ function AArch64_S1Walk (fault_in, walkparams, va, regime, accdesc, N) = {
     aligned : bool = undefined;
     tlbcontext : TLBContext = undefined;
     tlbrecord : TLBRecord = undefined;
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         tlbcontext = AArch64_GetS1TLBContext(regime, accdesc.ss, va, walkparams.tgx);
         let tlbentry : TLBLine = S1TLBLookup(tlbcontext);
         tlbrecord = tlbentry.tlbrecord;
@@ -27530,7 +27534,7 @@ function AArch64_S1Walk (fault_in, walkparams, va, regime, accdesc, N) = {
     if fault.statuscode != Fault_None then {
         return((fault, __UNKNOWN_AddressDescriptor(), __UNKNOWN_TTWState(), __UNKNOWN_bits(N)))
     };
-    if (__tlb_enabled & fault.statuscode == Fault_None) & [descriptor[10]] == 0b1 then {
+    if (__IsTLBEnabled() & fault.statuscode == Fault_None) & [descriptor[10]] == 0b1 then {
         tlbcontext.xs = walkstate.memattrs.xs;
         tlbcontext.level = walkstate.level;
         tlbcontext.nG = walkstate.nG;
@@ -27693,7 +27697,7 @@ function AArch64_S1Translate (fault_in, regime, va, aligned, accdesc) = {
         };
         ()
     } until new_desc == descriptor | mem_desc == new_desc;
-    if (__tlb_enabled & new_desc != descriptor) & [mem_desc[10]] == 0b1 then {
+    if (__IsTLBEnabled() & new_desc != descriptor) & [mem_desc[10]] == 0b1 then {
         tlbrecord : TLBRecord = undefined;
         if [descriptor[10]] == 0b1 then {
             let tlbentry : TLBLine = S1TLBLookup(descipaddr.tlbcontext);
@@ -37844,7 +37848,7 @@ function AArch32_S2Walk (fault_in, walkparams, s1level, accdesc, ipa) = {
     finalwalkstate : TTWState = undefined;
     fault : FaultRecord = fault_in;
     tlbcontext : TLBContext = undefined;
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         tlbcontext = AArch32_GetS2TLBContext(ipa.paddress);
         let tlbentry : TLBLine = S2TLBLookup(tlbcontext);
         if tlbentry.valid_name then {
@@ -37966,7 +37970,7 @@ function AArch32_S2Walk (fault_in, walkparams, s1level, accdesc, ipa) = {
     let s2aarch64 : bool = false;
     walkstate.memattrs = S2DecodeMemAttrs(memattr, sh, s2aarch64);
     walkstate.contiguous = [descriptor[52]];
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         tlbcontext.xs = walkstate.memattrs.xs;
         tlbcontext.level = walkstate.level;
         tlbrecord : TLBRecord = undefined;
@@ -38041,7 +38045,7 @@ function AArch32_S1WalkLD (fault_in, regime, walkparams, accdesc, va) = {
     s2walkaddress : AddressDescriptor = undefined;
     fault : FaultRecord = fault_in;
     tlbcontext : TLBContext = undefined;
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         tlbcontext = AArch32_GetS1TLBContext(regime, accdesc.ss, va);
         let tlbentry : TLBLine = S1TLBLookup(tlbcontext);
         if tlbentry.valid_name then {
@@ -38233,7 +38237,7 @@ function AArch32_S1WalkLD (fault_in, regime, walkparams, accdesc, va) = {
     let attr : bits(8) = AArch32_MAIRAttr(UInt(memattr), walkparams.mair);
     let s1aarch64 : bool = false;
     walkstate.memattrs = S1DecodeMemAttrs(attr, sh, s1aarch64, walkparams);
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         tlbcontext.xs = walkstate.memattrs.xs;
         tlbcontext.level = walkstate.level;
         tlbcontext.nG = walkstate.nG;
@@ -38725,7 +38729,7 @@ function AArch32_S1WalkSD (fault_in, regime, accdesc, va) = {
     s2walkaddress : AddressDescriptor = undefined;
     fault : FaultRecord = fault_in;
     tlbcontext : TLBContext = undefined;
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         tlbcontext = AArch32_GetS1TLBContext(regime, accdesc.ss, va);
         let tlbentry : TLBLine = S1TLBLookup(tlbcontext);
         if tlbentry.valid_name then {
@@ -38952,7 +38956,7 @@ function AArch32_S1WalkSD (fault_in, regime, accdesc, va) = {
     } else {
         walkstate.baseaddress.paspace = PAS_NonSecure
     };
-    if __tlb_enabled then {
+    if __IsTLBEnabled() then {
         tlbcontext.xs = walkstate.memattrs.xs;
         tlbcontext.nG = walkstate.nG;
         tlbrecord : TLBRecord = undefined;

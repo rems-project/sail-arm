@@ -43,7 +43,6 @@ default Order dec
 $include <smt.sail>
 $include <flow.sail>
 $include <arith.sail>
-$include <trace.sail>
 $include <vector_dec.sail>
 $include <string.sail>
 $include <real.sail>

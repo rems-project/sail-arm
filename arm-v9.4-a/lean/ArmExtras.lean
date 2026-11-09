@@ -1,9 +1,9 @@
 
-import THE_MODULE_NAME.Sail.Sail
+import Sail
 import THE_MODULE_NAME.Defs
-import THE_MODULE_NAME.Specialization
+import THE_MODULE_NAME.SpecializationV1
 
-open Sail
+open Sail Sail.ConcurrencyInterfaceV1 THE_MODULE_NAME
 
 abbrev sign_extend {w : Nat} (x : BitVec w) (w' : Nat) := Sail.BitVec.signExtend x w'
 
@@ -18,5 +18,4 @@ def wakeup_request (_ : Unit) : SailM Unit := pure ()
 macro_rules | `(tactic| decreasing_trivial) => `(tactic|
   first
   | grind
-  | decide
-  | sorry)
+  | decide)

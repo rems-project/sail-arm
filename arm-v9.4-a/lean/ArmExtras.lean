@@ -1,9 +1,10 @@
 
-import THE_MODULE_NAME.Sail.Sail
+import Sail.Sail
 import THE_MODULE_NAME.Defs
-import THE_MODULE_NAME.Specialization
+import THE_MODULE_NAME.SpecializationV1
 
 open Sail
+open Armv9
 
 abbrev sign_extend {w : Nat} (x : BitVec w) (w' : Nat) := Sail.BitVec.signExtend x w'
 

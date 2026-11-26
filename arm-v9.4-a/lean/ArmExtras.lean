@@ -16,8 +16,11 @@ def putchar (_ : Int) : Unit := ()
 def sleep_request (_ : Unit) : SailM Unit := pure ()
 def wakeup_request (_ : Unit) : SailM Unit := pure ()
 
+macro_rules | `(tactic| decreasing_trivial) => `(tactic| unfold Int.ediv <;> decreasing_trivial)
+/-
 macro_rules | `(tactic| decreasing_trivial) => `(tactic|
   first
   | grind
   | decide
   | sorry)
+  -/

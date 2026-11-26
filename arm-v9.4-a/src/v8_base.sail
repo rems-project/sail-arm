@@ -30828,7 +30828,8 @@ function Reduce (op, input, esize) = {
 function Reduce__1 (op, input, esize, altfp) = {
     assert(esize == 8 | esize == 16 | esize == 32 | esize == 64);
     result : bits('esize) = undefined;
-    if 'N == esize then {
+    // Strengthened to make Lean termination obvious (was `N == esize)
+    if 'N <= esize | 'N <= 8 then {
         return(input[esize - 1 .. 0])
     };
     let 'half = DIV('N, 2);

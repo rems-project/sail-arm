@@ -236,6 +236,7 @@ declare hol target_rep type ty73728 = `73728`
 type ty86528
 instance (Size ty86528) let size = 86528 end
 declare isabelle target_rep type ty86528 = `86528`
+declare hol target_rep type ty86528 = `86528`
 
 type ty100352
 instance (Size ty100352) let size = 100352 end
